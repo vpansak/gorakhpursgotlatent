@@ -70,27 +70,31 @@ export default function Navbar() {
 
             {/* Header Right Action Buttons */}
             <div className="hidden sm:flex items-center gap-3">
-              <Link
-                href="/tickets"
+              <a
+                href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+                target="_blank"
+                rel="noreferrer"
                 className="relative group overflow-hidden rounded-xl p-[1px] font-semibold text-sm transition-all duration-300 shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:shadow-[0_0_30px_rgba(255,160,0,0.6)]"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 rounded-xl animate-shimmer" />
                 <span className="relative flex items-center gap-2 px-4 py-2.5 rounded-[11px] bg-[#07080e] text-amber-300 font-bold group-hover:bg-transparent group-hover:text-black transition-all">
                   <Ticket className="w-4 h-4 text-amber-400 group-hover:text-black transition-colors" />
-                  BOOK TICKET
+                  BOOK ON BOOKMYSHOW
                 </span>
-              </Link>
+              </a>
             </div>
 
             {/* Mobile Hamburger Toggle */}
             <div className="flex items-center lg:hidden gap-2">
-              <Link
-                href="/tickets"
+              <a
+                href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+                target="_blank"
+                rel="noreferrer"
                 className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-black font-extrabold text-xs flex items-center gap-1"
               >
                 <Ticket className="w-3.5 h-3.5" />
-                TICKETS
-              </Link>
+                BOOK TICKET
+              </a>
 
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -126,12 +130,17 @@ export default function Navbar() {
           <Sparkles className="w-5 h-5 text-amber-400" />
           <span>Home</span>
         </Link>
-        <Link href="/tickets" className="flex flex-col items-center gap-0.5 text-xs text-amber-400 font-bold">
+        <a
+          href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-col items-center gap-0.5 text-xs text-amber-400 font-bold"
+        >
           <div className="p-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg">
             <Ticket className="w-5 h-5" />
           </div>
           <span>Tickets</span>
-        </Link>
+        </a>
         <Link href="/apply" className="flex flex-col items-center gap-0.5 text-xs text-slate-300 hover:text-amber-400">
           <UserCheck className="w-5 h-5 text-orange-400" />
           <span>Apply</span>

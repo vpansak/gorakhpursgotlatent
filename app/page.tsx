@@ -125,32 +125,29 @@ export default async function HomePage() {
         />
       </section>
 
-      {/* 3. ABOUT THE SHOW */}
-      <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      {/* 3. PROMOTIONAL SHOWCASE BANNER / VIDEO SPOTLIGHT */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          {/* Left Text */}
           <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider">
-              <Star className="w-4 h-4 text-amber-400" />
-              ABOUT THE SHOW
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase">
+              <Sparkles className="w-4 h-4 text-amber-400" /> UNFILTERED COMEDY & TALENT HUNT
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Purvanchal's Ultimate <span className="gold-gradient-text">Stage Phenomenon</span>
+            <h2 className="text-3xl sm:text-5xl font-black text-white leading-tight">
+              LIVE ROAST, AUDITIONS & <span className="gold-gradient-text">EPIC PERFORMANCES</span>
             </h2>
-            <p className="text-slate-300 leading-relaxed text-base sm:text-lg">
-              Gorakhpur’s Got Latent was created with a clear vision: to unearth, celebrate, and spotlight the rawest, most unique talent hidden across North India. From grassroots acoustic singers and Bhojpuri beatboxers to high-octane dancers and hilarious standup comedians.
-            </p>
-            <p className="text-slate-400 leading-relaxed text-sm sm:text-base">
-              Unlike generic corporate competitions, GGL offers an unfiltered, electrifying live audience atmosphere with celebrity judges, interactive audience scoring, and real stage glory.
+            <p className="text-slate-300 text-base leading-relaxed">
+              Gorakhpur’s Got Latent is Purvanchal’s premier raw talent hunt show bringing together singers, beatboxers, dancers, standup comedians, and viral internet sensation panel guests live on stage.
             </p>
 
-            <div className="grid grid-cols-2 gap-4 pt-4">
+            <div className="grid grid-cols-2 gap-4 pt-2">
               <div className="p-4 rounded-2xl bg-slate-900/80 border border-amber-500/20 space-y-1">
-                <span className="text-3xl font-black text-amber-400">100%</span>
-                <p className="text-xs text-slate-400 font-semibold uppercase">Live & Unscripted</p>
+                <span className="text-3xl font-black text-amber-400">10,000+</span>
+                <p className="text-xs text-slate-400 font-medium">Live Audience Seats</p>
               </div>
               <div className="p-4 rounded-2xl bg-slate-900/80 border border-amber-500/20 space-y-1">
-                <span className="text-3xl font-black text-orange-400">1,200+</span>
-                <p className="text-xs text-slate-400 font-semibold uppercase">Live Capacity</p>
+                <span className="text-3xl font-black text-orange-400">100+</span>
+                <p className="text-xs text-slate-400 font-medium">Shortlisted Performers</p>
               </div>
             </div>
           </div>
@@ -173,81 +170,55 @@ export default async function HomePage() {
               </div>
 
               <div className="space-y-3">
-                <h4 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Mic2 className="w-5 h-5 text-amber-400" />
-                  What Makes GGL Unique?
-                </h4>
-                <ul className="space-y-2 text-sm text-slate-300">
-                  <li className="flex items-center gap-2">
-                    <ChevronRight className="w-4 h-4 text-amber-400" />
-                    Open for Singers, Comedians, Beatboxers, Dancers & Unique Acts
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <ChevronRight className="w-4 h-4 text-amber-400" />
-                    Celebrity Judges & Guest Creator Panel
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <ChevronRight className="w-4 h-4 text-amber-400" />
-                    Official E-Tickets with instant QR Gate Pass Verification
-                  </li>
-                </ul>
+                <h3 className="text-xl font-black text-white">Purvanchal’s Biggest Stage Is Ready</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Book your pass now on BookMyShow to witness raw talent and live roasts directly from front-row seats.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 4. UPCOMING SHOW & TICKET PREVIEW */}
-      {activeEvent && (
-        <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-slate-950/60 border-y border-amber-500/20">
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-              Upcoming Event & <span className="gold-gradient-text">Ticket Passes</span>
+      {/* 4. SHOWCASE TICKET PASSES TIERS */}
+      {categories.length > 0 && (
+        <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
+          <div className="text-center space-y-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase">
+              <Ticket className="w-4 h-4 text-amber-400" /> EXCLUSIVE SHOW PASSES
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black text-white">
+              SELECT YOUR <span className="gold-gradient-text">SHOW EXPERIENCE</span>
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base">
-              Secure your pass early before capacity sells out! Choose your preferred category.
-            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {categories.map((cat: any) => (
-              <div
-                key={cat.id}
-                className="relative rounded-3xl glass-card p-6 sm:p-8 flex flex-col justify-between space-y-6 group hover:border-amber-400 transition-all duration-300"
-              >
-                {cat.name.includes('VVIP') && (
-                  <div className="absolute -top-3 right-6 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-black text-[10px] font-black uppercase tracking-widest shadow-lg">
-                    MOST POPULAR
-                  </div>
-                )}
-
+              <div key={cat.id} className="glass-card p-6 sm:p-8 rounded-3xl border border-amber-500/30 flex flex-col justify-between space-y-6 hover:border-amber-400 transition-all group">
                 <div className="space-y-4">
-                  <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">
-                    TICKET PASS
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-black text-white">{cat.name}</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">{cat.description}</p>
-                  <div className="pt-2">
-                    <span className="text-3xl sm:text-4xl font-black text-amber-400">
-                      {formatINR(cat.price)}
-                    </span>
-                    <span className="text-xs text-slate-400 ml-1">/ person</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">{cat.name} PASS</span>
+                    <span className="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">SELLING FAST</span>
                   </div>
+                  <div className="text-3xl font-black text-white">{formatINR(cat.price)}</div>
+                  <p className="text-xs text-slate-300 leading-relaxed">{cat.description}</p>
                 </div>
 
                 <div className="space-y-4 pt-4 border-t border-slate-800">
                   <div className="flex items-center justify-between text-xs text-slate-300">
-                    <span>Remaining Seats:</span>
-                    <span className="font-bold text-amber-400">{cat.available_qty} passes left</span>
+                    <span>Status:</span>
+                    <span className="font-bold text-amber-400">BookMyShow Verified</span>
                   </div>
 
-                  <Link
-                    href={`/tickets?category=${cat.id}`}
+                  <a
+                    href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+                    target="_blank"
+                    rel="noreferrer"
                     className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-sm flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,215,0,0.3)] transition-all"
                   >
                     <Ticket className="w-4 h-4" />
-                    SELECT & BOOK
-                  </Link>
+                    BOOK ON BOOKMYSHOW ↗
+                  </a>
                 </div>
               </div>
             ))}

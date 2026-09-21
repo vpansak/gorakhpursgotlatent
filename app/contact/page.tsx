@@ -75,9 +75,14 @@ export default function ContactPage() {
             <Link href="/track" className="w-full py-3.5 rounded-xl bg-amber-500 text-black font-extrabold text-sm flex items-center justify-center gap-2">
               TRACK APPLICATION STATUS
             </Link>
-            <Link href="/tickets" className="w-full py-3.5 rounded-xl bg-slate-800 text-white font-bold text-sm flex items-center justify-center gap-2">
-              BOOK TICKETS
-            </Link>
+            <a
+              href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+              target="_blank"
+              rel="noreferrer"
+              className="w-full py-3.5 rounded-xl bg-slate-800 text-amber-400 font-bold text-sm flex items-center justify-center gap-2"
+            >
+              BOOK TICKETS ON BOOKMYSHOW ↗
+            </a>
           </div>
         </div>
       </div>

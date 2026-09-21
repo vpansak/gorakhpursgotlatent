@@ -33,8 +33,32 @@ export default async function TicketsPage() {
     );
   }
 
+  const BOOKMYSHOW_URL = "https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio";
+
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
+      {/* BookMyShow Banner Callout */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white shadow-[0_0_40px_rgba(225,29,72,0.4)] flex flex-col md:flex-row items-center justify-between gap-6 border border-white/20">
+        <div className="space-y-2 text-center md:text-left">
+          <span className="px-3 py-1 rounded-full bg-black/40 text-amber-300 text-xs font-black uppercase tracking-wider">
+            OFFICIAL TICKETING PARTNER
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black">Tickets Now Live on BookMyShow!</h2>
+          <p className="text-sm text-white/90">
+            Book your official Gorakhpur’s Got Latent show passes directly on BookMyShow.
+          </p>
+        </div>
+        <a
+          href={BOOKMYSHOW_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="px-8 py-4 rounded-2xl bg-white text-rose-600 hover:bg-slate-100 font-extrabold text-base flex items-center gap-2 shrink-0 shadow-2xl hover:scale-105 transition-all"
+        >
+          <Ticket className="w-5 h-5 text-rose-600" />
+          BOOK ON BOOKMYSHOW ↗
+        </a>
+      </div>
+
       {/* Event Header Banner */}
       <div className="relative rounded-3xl glass-card p-6 sm:p-10 overflow-hidden border border-amber-500/30 space-y-6">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
@@ -107,13 +131,10 @@ export default async function TicketsPage() {
                 <div className="space-y-4 pt-4 border-t border-slate-800">
                   <ul className="space-y-2 text-xs text-slate-300">
                     <li className="flex items-center gap-2">
-                      <CheckCircle className="w-3.5 h-3.5 text-amber-400" /> Instant Digital E-Ticket Pass
+                      <CheckCircle className="w-3.5 h-3.5 text-amber-400" /> BookMyShow Instant E-Ticket Confirmation
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-3.5 h-3.5 text-amber-400" /> Verified QR Gate Scanner Entry
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-3.5 h-3.5 text-amber-400" /> Max {cat.max_per_order} tickets per order
                     </li>
                   </ul>
 
@@ -122,13 +143,15 @@ export default async function TicketsPage() {
                       SOLD OUT
                     </button>
                   ) : (
-                    <Link
-                      href={`/tickets/${event.id}/checkout?category=${cat.id}`}
-                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-black font-extrabold text-sm flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:scale-105 transition-all"
+                    <a
+                      href={BOOKMYSHOW_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-600 to-amber-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:scale-105 transition-all"
                     >
-                      <Ticket className="w-4 h-4 text-black" />
-                      BOOK NOW ({cat.available_qty} LEFT)
-                    </Link>
+                      <Ticket className="w-4 h-4 text-white" />
+                      BOOK ON BOOKMYSHOW ↗
+                    </a>
                   )}
                 </div>
               </div>

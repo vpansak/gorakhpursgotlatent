@@ -78,7 +78,7 @@ export default async function HomePage() {
               alt="Gorakhpur's Got Latent Official Title Logo"
               fill
               priority
-              className="object-contain mix-blend-screen filter drop-shadow-[0_0_40px_rgba(255,215,0,0.7)]"
+              className="object-contain filter drop-shadow-[0_0_35px_rgba(255,215,0,0.6)]"
             />
           </div>
 

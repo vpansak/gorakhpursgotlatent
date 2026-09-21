@@ -16,7 +16,7 @@ export default function Navbar() {
     { name: 'Performers', href: '/performers' },
     { name: 'Guests', href: '/guests' },
     { name: 'Sponsors', href: '/sponsors' },
-    { name: 'Tickets', href: '/tickets' },
+    { name: 'Tickets', href: 'https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio', isExternal: true },
     { name: 'Apply Now', href: '/apply' },
     { name: 'Track App', href: '/track' },
     { name: 'Contact', href: '/contact' },
@@ -52,6 +52,19 @@ export default function Navbar() {
             <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
+                if (link.isExternal) {
+                  return (
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-2 rounded-lg text-sm font-semibold text-amber-400 hover:text-amber-300 hover:bg-white/5 transition-all duration-200"
+                    >
+                      {link.name} ↗
+                    </a>
+                  );
+                }
                 return (
                   <Link
                     key={link.href}
@@ -110,16 +123,32 @@ export default function Navbar() {
         {/* Mobile Slide-Out Drawer */}
         {mobileMenuOpen && (
           <div className="lg:hidden border-b border-amber-500/20 bg-[#07080e]/95 backdrop-blur-2xl px-4 pt-3 pb-6 space-y-2 animate-in slide-in-from-top duration-300">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20 transition-all"
-              >
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              if (link.isExternal) {
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-4 py-3 rounded-xl text-base font-semibold text-amber-400 hover:bg-amber-500/10 border border-transparent transition-all"
+                  >
+                    {link.name} ↗
+                  </a>
+                );
+              }
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20 transition-all"
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </div>
         )}
       </header>

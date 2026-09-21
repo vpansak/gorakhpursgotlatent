@@ -32,3 +32,29 @@ export function verifyWebhookSignature(body: string, signature: string, webhookS
     .digest('hex');
   return expectedSignature === signature;
 }
+
+export async function processRazorpayRefund(
+  paymentId: string,
+  amountInRupees?: number,
+  notes?: string
+): Promise<{ success: boolean; refundId?: string; error?: string }> {
+  if (!razorpay) {
+    return { success: false, error: 'Razorpay API credentials not configured on server' };
+  }
+
+  try {
+    const refundOptions: any = {};
+    if (amountInRupees && amountInRupees > 0) {
+      refundOptions.amount = Math.round(amountInRupees * 100); // Amount in paise
+    }
+    if (notes) {
+      refundOptions.notes = { reason: notes };
+    }
+
+    const refund = await razorpay.payments.refund(paymentId, refundOptions);
+    return { success: true, refundId: refund.id };
+  } catch (err: any) {
+    console.error('Razorpay Refund API Error:', err);
+    return { success: false, error: err?.error?.description || err.message || 'Refund failed' };
+  }
+}

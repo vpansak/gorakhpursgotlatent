@@ -106,7 +106,11 @@ export async function PATCH(req: Request) {
 
     // Update status if changed
     if (status && status !== currentRecord.status) {
-      db.prepare(`UPDATE ${tableName} SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE app_id = ?`).run(status, appId);
+      if (tableName === 'performer_applications') {
+        db.prepare(`UPDATE ${tableName} SET status = ?, application_status = ?, updated_at = CURRENT_TIMESTAMP WHERE app_id = ?`).run(status, status, appId);
+      } else {
+        db.prepare(`UPDATE ${tableName} SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE app_id = ?`).run(status, appId);
+      }
 
       db.prepare(`
         INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)

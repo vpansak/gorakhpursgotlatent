@@ -1,8 +1,15 @@
 import crypto from 'crypto';
 
 export function generateAppId(prefix: 'PER' | 'GST' | 'SPN' | 'EVT'): string {
+  const year = new Date().getFullYear();
   const randomNum = Math.floor(100000 + Math.random() * 900000);
-  return `GGL-${prefix}-${randomNum}`;
+  return `GGL-${year}-${randomNum}`;
+}
+
+export function generatePerformerAppId(): string {
+  const year = new Date().getFullYear();
+  const randomNum = Math.floor(100000 + Math.random() * 900000);
+  return `GGL-${year}-${randomNum}`;
 }
 
 export function generateOrderNumber(): string {

@@ -116,20 +116,48 @@ export function initDatabase() {
     CREATE TABLE IF NOT EXISTS performer_applications (
       id TEXT PRIMARY KEY,
       app_id TEXT UNIQUE NOT NULL,
-      user_id TEXT,
       full_name TEXT NOT NULL,
-      dob TEXT,
-      gender TEXT,
       email TEXT NOT NULL,
-      whatsapp TEXT NOT NULL,
-      alt_phone TEXT,
-      city TEXT NOT NULL,
-      state TEXT NOT NULL,
+      mobile_number TEXT NOT NULL,
+      whatsapp_number TEXT NOT NULL,
+      alternate_contact TEXT,
+      performance_category TEXT NOT NULL,
+      performance_title TEXT NOT NULL,
+      performance_description TEXT NOT NULL,
+      performance_type TEXT,
+      performer_count INTEGER DEFAULT 1,
+      performance_duration TEXT,
+      performance_language TEXT,
+      special_requirements TEXT,
       instagram_url TEXT,
       youtube_url TEXT,
+      facebook_url TEXT,
+      city TEXT NOT NULL,
+      age INTEGER NOT NULL,
+      discovery_source TEXT,
+      additional_message TEXT,
+      payment_status TEXT DEFAULT 'PAYMENT_PENDING',
+      payment_id TEXT,
+      order_id TEXT,
+      payment_amount REAL DEFAULT 499.00,
+      payment_currency TEXT DEFAULT 'INR',
+      payment_verified_at DATETIME,
+      application_status TEXT DEFAULT 'PAYMENT_PENDING',
+      email_status TEXT DEFAULT 'PENDING',
+      admin_email_status TEXT DEFAULT 'PENDING',
+      refund_id TEXT,
+      refund_amount REAL,
+      refund_status TEXT,
+      refund_requested_at DATETIME,
+      refund_processed_at DATETIME,
+      refund_reason TEXT,
+      user_id TEXT,
+      dob TEXT,
+      gender TEXT,
+      state TEXT,
       social_url TEXT,
-      talent_category TEXT NOT NULL,
-      primary_talent TEXT NOT NULL,
+      talent_category TEXT,
+      primary_talent TEXT,
       experience_yrs INTEGER DEFAULT 0,
       short_bio TEXT,
       performance_desc TEXT,
@@ -138,7 +166,7 @@ export function initDatabase() {
       preferred_type TEXT,
       stage_req TEXT,
       sound_req TEXT,
-      equipment_req,
+      equipment_req TEXT,
       travel_req TEXT,
       accommodation_req TEXT,
       important_info TEXT,
@@ -146,13 +174,60 @@ export function initDatabase() {
       perf_photo_url TEXT,
       doc_url TEXT,
       opt_doc_url TEXT,
-      status TEXT DEFAULT 'SUBMITTED' CHECK(status IN ('SUBMITTED', 'UNDER REVIEW', 'SHORTLISTED', 'INTERVIEW / AUDITION', 'APPROVED', 'REJECTED', 'ON HOLD')),
+      status TEXT DEFAULT 'PAYMENT_PENDING',
       tags TEXT DEFAULT '',
       is_featured INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
+  `);
 
+  // Auto-migrate missing columns for performer_applications
+  try {
+    const columns = (db.prepare("PRAGMA table_info(performer_applications)").all() as any[]).map(c => c.name);
+    const requiredCols = [
+      { name: 'mobile_number', type: 'TEXT' },
+      { name: 'whatsapp_number', type: 'TEXT' },
+      { name: 'alternate_contact', type: 'TEXT' },
+      { name: 'performance_category', type: 'TEXT' },
+      { name: 'performance_title', type: 'TEXT' },
+      { name: 'performance_description', type: 'TEXT' },
+      { name: 'performance_type', type: 'TEXT' },
+      { name: 'performer_count', type: 'INTEGER DEFAULT 1' },
+      { name: 'performance_duration', type: 'TEXT' },
+      { name: 'performance_language', type: 'TEXT' },
+      { name: 'special_requirements', type: 'TEXT' },
+      { name: 'facebook_url', type: 'TEXT' },
+      { name: 'age', type: 'INTEGER' },
+      { name: 'discovery_source', type: 'TEXT' },
+      { name: 'additional_message', type: 'TEXT' },
+      { name: 'payment_status', type: "TEXT DEFAULT 'PAYMENT_PENDING'" },
+      { name: 'payment_id', type: 'TEXT' },
+      { name: 'order_id', type: 'TEXT' },
+      { name: 'payment_amount', type: 'REAL DEFAULT 499.00' },
+      { name: 'payment_currency', type: "TEXT DEFAULT 'INR'" },
+      { name: 'payment_verified_at', type: 'DATETIME' },
+      { name: 'application_status', type: "TEXT DEFAULT 'PAYMENT_PENDING'" },
+      { name: 'email_status', type: "TEXT DEFAULT 'PENDING'" },
+      { name: 'admin_email_status', type: "TEXT DEFAULT 'PENDING'" },
+      { name: 'refund_id', type: 'TEXT' },
+      { name: 'refund_amount', type: 'REAL' },
+      { name: 'refund_status', type: 'TEXT' },
+      { name: 'refund_requested_at', type: 'DATETIME' },
+      { name: 'refund_processed_at', type: 'DATETIME' },
+      { name: 'refund_reason', type: 'TEXT' },
+    ];
+
+    for (const col of requiredCols) {
+      if (!columns.includes(col.name)) {
+        db.exec(`ALTER TABLE performer_applications ADD COLUMN ${col.name} ${col.type}`);
+      }
+    }
+  } catch (err) {
+    console.error('Migration error on performer_applications:', err);
+  }
+
+  db.exec(`
     -- Guest Applications
     CREATE TABLE IF NOT EXISTS guest_applications (
       id TEXT PRIMARY KEY,

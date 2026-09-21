@@ -1,6 +1,24 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Globe, Video, Share2, ShieldCheck, Mail, Phone, MapPin, Award, MessageCircle } from 'lucide-react';
+import { ShieldCheck, Mail, Phone, MapPin, Award } from 'lucide-react';
+
+function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+    </svg>
+  );
+}
+
+function FacebookIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+    </svg>
+  );
+}
 
 export default function Footer() {
   return (
@@ -28,31 +46,22 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="https://instagram.com/gorakhpur_got_latent"
+                href="https://www.instagram.com/gkp_got_latent/"
                 target="_blank"
                 rel="noreferrer"
                 className="w-10 h-10 rounded-xl bg-slate-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:text-black hover:bg-amber-400 transition-all shadow-[0_0_10px_rgba(255,215,0,0.2)]"
                 aria-label="Instagram"
               >
-                <Globe className="w-5 h-5" />
+                <InstagramIcon className="w-5 h-5" />
               </a>
               <a
-                href="https://youtube.com/@gorakhpurgotlatent"
+                href="https://www.facebook.com/profile.php?id=61593154024693"
                 target="_blank"
                 rel="noreferrer"
                 className="w-10 h-10 rounded-xl bg-slate-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:text-black hover:bg-amber-400 transition-all shadow-[0_0_10px_rgba(255,215,0,0.2)]"
-                aria-label="YouTube"
+                aria-label="Facebook"
               >
-                <Video className="w-5 h-5" />
-              </a>
-              <a
-                href="https://x.com/ggllive"
-                target="_blank"
-                rel="noreferrer"
-                className="w-10 h-10 rounded-xl bg-slate-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:text-black hover:bg-amber-400 transition-all shadow-[0_0_10px_rgba(255,215,0,0.2)]"
-                aria-label="X Twitter"
-              >
-                <Share2 className="w-5 h-5" />
+                <FacebookIcon className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -97,11 +106,11 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>contact@ggllive.in</span>
+                <a href="mailto:Gkpgotlatent@gmail.com" className="hover:text-amber-400">Gkpgotlatent@gmail.com</a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>+91 98765 43210</span>
+                <a href="tel:+918423858424" className="hover:text-amber-400">+91 8423858424</a>
               </li>
             </ul>
             <div className="pt-2 flex flex-col gap-1 text-xs text-slate-400">

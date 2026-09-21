@@ -120,9 +120,7 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
   const publicKey = process.env.EMAILJS_PUBLIC_KEY || 'jjG3XUesW7Yt8McRJ';
   const privateKey = process.env.EMAILJS_PRIVATE_KEY || 'G-re211vGlwHrNVCniNgz';
 
-  const recipients = ['gkpgotlatent@gmail.com', 'alooksingh1@gmail.com'];
-  let allSuccess = true;
-  const errors: string[] = [];
+  const recipientEmails = 'gkpgotlatent@gmail.com, alooksingh1@gmail.com';
 
   // Format social URLs with "Not Provided" fallback for optional ones
   const youtubeUrlFormatted = (params.youtube_url && params.youtube_url.trim()) ? params.youtube_url.trim() : 'Not Provided';
@@ -131,75 +129,70 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
   const addMsgFormatted = (params.additional_message && params.additional_message.trim()) ? params.additional_message.trim() : 'Not Provided';
   const callNumFormatted = params.call_number || params.alternate_contact || params.mobile_number || 'N/A';
 
-  for (const recipientEmail of recipients) {
-    const payload = {
-      service_id: serviceId,
-      template_id: templateId,
-      user_id: publicKey,
-      accessToken: privateKey,
-      template_params: {
-        to_email: recipientEmail,
-        to_name: 'Gorakhpur’s Got Latent Admin Team',
-        subject: `🎤 GGL Application | ${params.application_id}`,
-        application_id: params.application_id,
-        created_at: params.created_at || new Date().toISOString(),
-        application_status: params.application_status,
-        full_name: params.full_name,
-        age: String(params.age || 'N/A'),
-        email: params.email,
-        mobile_number: params.mobile_number,
-        whatsapp_number: params.whatsapp_number,
-        call_number: callNumFormatted,
-        alternate_contact: callNumFormatted,
-        city: params.city,
-        performance_category: params.performance_category,
-        performance_title: params.performance_title,
-        performance_description: params.performance_description,
-        performance_type: params.performance_type || 'Solo',
-        performer_count: String(params.performer_count || 1),
-        performance_duration: params.performance_duration || 'N/A',
-        performance_language: params.performance_language || 'Hindi / English',
-        special_requirements: specialReqFormatted,
-        instagram_url: params.instagram_url,
-        youtube_url: youtubeUrlFormatted,
-        facebook_url: facebookUrlFormatted,
-        discovery_source: params.discovery_source || 'Not Provided',
-        additional_message: addMsgFormatted,
-        payment_status: params.payment_status,
-        payment_amount: String(params.payment_amount || 499),
-        payment_currency: params.payment_currency || 'INR',
-        razorpay_order_id: params.order_id || 'N/A',
-        razorpay_payment_id: params.payment_id || 'N/A',
-        payment_verified_at: params.payment_verified_at || new Date().toISOString(),
-        admin_notes: params.admin_notes || '',
+  const payload = {
+    service_id: serviceId,
+    template_id: templateId,
+    user_id: publicKey,
+    accessToken: privateKey,
+    template_params: {
+      to_email: recipientEmails,
+      to_name: 'Gorakhpur’s Got Latent Admin Team',
+      subject: `🎤 GGL Application | ${params.application_id}`,
+      application_id: params.application_id,
+      created_at: params.created_at || new Date().toISOString(),
+      application_status: params.application_status,
+      full_name: params.full_name,
+      age: String(params.age || 'N/A'),
+      email: params.email,
+      mobile_number: params.mobile_number,
+      whatsapp_number: params.whatsapp_number,
+      call_number: callNumFormatted,
+      alternate_contact: callNumFormatted,
+      city: params.city,
+      performance_category: params.performance_category,
+      performance_title: params.performance_title,
+      performance_description: params.performance_description,
+      performance_type: params.performance_type || 'Solo',
+      performer_count: String(params.performer_count || 1),
+      performance_duration: params.performance_duration || 'N/A',
+      performance_language: params.performance_language || 'Hindi / English',
+      special_requirements: specialReqFormatted,
+      instagram_url: params.instagram_url,
+      youtube_url: youtubeUrlFormatted,
+      facebook_url: facebookUrlFormatted,
+      discovery_source: params.discovery_source || 'Not Provided',
+      additional_message: addMsgFormatted,
+      payment_status: params.payment_status,
+      payment_amount: String(params.payment_amount || 499),
+      payment_currency: params.payment_currency || 'INR',
+      razorpay_order_id: params.order_id || 'N/A',
+      razorpay_payment_id: params.payment_id || 'N/A',
+      payment_verified_at: params.payment_verified_at || new Date().toISOString(),
+      admin_notes: params.admin_notes || '',
+    },
+  };
+
+  try {
+    const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Origin': 'https://gorakhpursgotlatent.vercel.app',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       },
-    };
+      body: JSON.stringify(payload),
+    });
 
-    try {
-      const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Origin': 'https://gorakhpursgotlatent.vercel.app',
-          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error(`❌ EmailJS Error for ${recipientEmail}: ${errorText}`);
-        allSuccess = false;
-        errors.push(`${recipientEmail}: ${errorText}`);
-      } else {
-        console.log(`📧 EmailJS: Performer application notification sent to ${recipientEmail}`);
-      }
-    } catch (err: any) {
-      console.error(`❌ EmailJS Exception for ${recipientEmail}:`, err);
-      allSuccess = false;
-      errors.push(`${recipientEmail}: ${err.message}`);
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error(`❌ EmailJS Error: ${errorText}`);
+      return { success: false, message: errorText };
+    } else {
+      console.log(`📧 EmailJS: Performer application notification sent successfully to ${recipientEmails}`);
+      return { success: true };
     }
+  } catch (err: any) {
+    console.error('❌ EmailJS Exception:', err);
+    return { success: false, message: err.message };
   }
-
-  return { success: allSuccess, message: errors.join('; ') };
 }

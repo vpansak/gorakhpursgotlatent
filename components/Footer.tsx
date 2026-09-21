@@ -20,6 +20,14 @@ function FacebookIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
+function BookMyShowIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19.5 3h-15A2.5 2.5 0 0 0 2 5.5v3a1.5 1.5 0 0 0 0 3v3A2.5 2.5 0 0 0 4.5 17h15a2.5 2.5 0 0 0 2.5-2.5v-3a1.5 1.5 0 0 0 0-3v-3A2.5 2.5 0 0 0 19.5 3zM12 13.5l-2.06 1.08.39-2.3-1.67-1.63 2.3-.33L12 8.25l1.04 2.07 2.3.33-1.67 1.63.39 2.3L12 13.5z" />
+    </svg>
+  );
+}
+
 export default function Footer() {
   return (
     <footer className="bg-[#05060a] border-t border-amber-500/20 text-slate-300 pt-16 pb-24 lg:pb-12 relative overflow-hidden">
@@ -51,6 +59,7 @@ export default function Footer() {
                 rel="noreferrer"
                 className="w-10 h-10 rounded-xl bg-slate-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:text-black hover:bg-amber-400 transition-all shadow-[0_0_10px_rgba(255,215,0,0.2)]"
                 aria-label="Instagram"
+                title="Instagram"
               >
                 <InstagramIcon className="w-5 h-5" />
               </a>
@@ -60,8 +69,19 @@ export default function Footer() {
                 rel="noreferrer"
                 className="w-10 h-10 rounded-xl bg-slate-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:text-black hover:bg-amber-400 transition-all shadow-[0_0_10px_rgba(255,215,0,0.2)]"
                 aria-label="Facebook"
+                title="Facebook"
               >
                 <FacebookIcon className="w-5 h-5" />
+              </a>
+              <a
+                href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-xl bg-slate-900 border border-red-500/40 flex items-center justify-center text-red-500 hover:text-white hover:bg-red-600 transition-all shadow-[0_0_12px_rgba(236,28,36,0.3)]"
+                aria-label="BookMyShow Tickets"
+                title="Book Tickets on BookMyShow"
+              >
+                <BookMyShowIcon className="w-5 h-5" />
               </a>
             </div>
           </div>

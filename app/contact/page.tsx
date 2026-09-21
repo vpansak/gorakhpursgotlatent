@@ -19,6 +19,14 @@ function FacebookIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
+function BookMyShowIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19.5 3h-15A2.5 2.5 0 0 0 2 5.5v3a1.5 1.5 0 0 0 0 3v3A2.5 2.5 0 0 0 4.5 17h15a2.5 2.5 0 0 0 2.5-2.5v-3a1.5 1.5 0 0 0 0-3v-3A2.5 2.5 0 0 0 19.5 3zM12 13.5l-2.06 1.08.39-2.3-1.67-1.63 2.3-.33L12 8.25l1.04 2.07 2.3.33-1.67 1.63.39 2.3L12 13.5z" />
+    </svg>
+  );
+}
+
 export default function ContactPage() {
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-10">
@@ -65,13 +73,16 @@ export default function ContactPage() {
           </div>
 
           <div className="pt-4 border-t border-slate-800 space-y-2">
-            <span className="text-xs font-bold text-slate-400 uppercase">Official Social Channels</span>
+            <span className="text-xs font-bold text-slate-400 uppercase">Official Social & Ticketing Channels</span>
             <div className="flex items-center gap-3">
-              <a href="https://www.instagram.com/gkp_got_latent/" target="_blank" rel="noreferrer" className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="Instagram">
+              <a href="https://www.instagram.com/gkp_got_latent/" target="_blank" rel="noreferrer" className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="Instagram" title="Instagram">
                 <InstagramIcon className="w-5 h-5" />
               </a>
-              <a href="https://www.facebook.com/profile.php?id=61593154024693" target="_blank" rel="noreferrer" className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="Facebook">
+              <a href="https://www.facebook.com/profile.php?id=61593154024693" target="_blank" rel="noreferrer" className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="Facebook" title="Facebook">
                 <FacebookIcon className="w-5 h-5" />
+              </a>
+              <a href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio" target="_blank" rel="noreferrer" className="p-2.5 rounded-xl bg-slate-900 border border-red-500/40 text-red-500 hover:text-white hover:bg-red-600 transition-all shadow-[0_0_10px_rgba(236,28,36,0.3)]" aria-label="BookMyShow Tickets" title="Book Tickets on BookMyShow">
+                <BookMyShowIcon className="w-5 h-5" />
               </a>
             </div>
           </div>

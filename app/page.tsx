@@ -72,13 +72,13 @@ export default async function HomePage() {
           </div>
 
           {/* Official Logo Banner */}
-          <div className="relative w-40 h-40 sm:w-52 sm:h-52 md:w-60 md:h-60 mx-auto rounded-3xl overflow-hidden border-2 border-amber-500/50 shadow-[0_0_60px_rgba(255,215,0,0.5)] animate-float bg-black p-1.5">
+          <div className="relative w-72 sm:w-96 md:w-[540px] h-36 sm:h-48 md:h-64 mx-auto animate-float">
             <Image
-              src="/logo-curtain.png"
-              alt="Gorakhpur's Got Latent Official Logo"
+              src="/logo.png"
+              alt="Gorakhpur's Got Latent Official Title Logo"
               fill
               priority
-              className="object-cover rounded-[20px]"
+              className="object-contain mix-blend-screen filter drop-shadow-[0_0_40px_rgba(255,215,0,0.7)]"
             />
           </div>
 

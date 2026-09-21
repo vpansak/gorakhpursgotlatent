@@ -330,22 +330,22 @@ async function seed() {
 
   insertEvent.run(
     eventId,
-    "Gorakhpur's Got Latent - Season 1 Live Showcase",
+    "Gorakhpur's Got Latent - 1st Show Live Showcase",
     "ggl-season-1-live",
     "Where Talent Meets the Stage • Live Performance & Celebrity Roast",
     "Experience the biggest raw talent hunt and live entertainment phenomenon of Purvanchal! Watch top musicians, stand-up comedians, dancers, beatboxers, and unique performers compete live in front of celebrity judges.",
-    "2026-11-28",
-    "17:00",
-    "22:00",
+    "2026-09-26",
+    "13:00",
+    "18:00",
     "Gorakhpur Club Ground",
     "Civil Lines, Near Town Hall, Gorakhpur, Uttar Pradesh 273001",
     "Gorakhpur",
     "/logo.png",
     "/logo.png",
     "PUBLISHED",
-    "1. Entry allowed only with a valid digital QR ticket.\n2. Gates open at 4:00 PM. Event starts strictly at 5:00 PM.\n3. Tickets are non-refundable.\n4. Age limit 12+.\n5. Outside food and professional cameras strictly prohibited.",
+    "1. Entry allowed only with a valid digital QR ticket.\n2. Gates open at 12:00 PM. Event starts strictly at 1:00 PM.\n3. Tickets are non-refundable.\n4. Age limit 12+.\n5. Outside food and professional cameras strictly prohibited.",
     "2026-09-01T00:00:00Z",
-    "2026-11-28T17:00:00Z",
+    "2026-09-26T13:00:00Z",
     1200
   );
 

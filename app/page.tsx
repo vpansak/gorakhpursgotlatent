@@ -121,7 +121,7 @@ export default async function HomePage() {
       {/* 2. EVENT COUNTDOWN */}
       <section className="px-4 sm:px-6 lg:px-8">
         <CountdownTimer
-          targetDate={activeEvent?.event_date ? `${activeEvent.event_date}T${activeEvent.start_time}` : "2026-11-28T17:00:00"}
+          targetDate={activeEvent?.event_date ? `${activeEvent.event_date}T${activeEvent.start_time}` : "2026-09-26T13:00:00"}
           venue={activeEvent?.venue_name || "Gorakhpur Club Ground"}
           city={activeEvent?.city || "Gorakhpur"}
         />

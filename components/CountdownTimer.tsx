@@ -9,7 +9,7 @@ interface CountdownTimerProps {
   city?: string;
 }
 
-export default function CountdownTimer({ targetDate = "2026-11-28T17:00:00", venue = "Gorakhpur Club Ground", city = "Gorakhpur" }: CountdownTimerProps) {
+export default function CountdownTimer({ targetDate = "2026-09-26T13:00:00", venue = "Gorakhpur Club Ground", city = "Gorakhpur" }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number } | null>(null);
 
   useEffect(() => {
@@ -48,12 +48,12 @@ export default function CountdownTimer({ targetDate = "2026-11-28T17:00:00", ven
             NEXT SHOW COUNTDOWN
           </div>
           <h3 className="text-xl sm:text-2xl font-black text-white gold-gradient-text">
-            SEASON 1 LIVE SHOWCASE
+            1ST SHOW • LIVE SHOWCASE
           </h3>
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs sm:text-sm text-slate-300">
             <span className="flex items-center gap-1 text-amber-400 font-medium">
               <Calendar className="w-4 h-4 text-amber-400" />
-              Nov 28, 2026 • 5:00 PM
+              Sep 26, 2026 • 1:00 PM
             </span>
             <span className="flex items-center gap-1 text-slate-300">
               <MapPin className="w-4 h-4 text-orange-400" />

@@ -82,7 +82,6 @@ export default function Footer() {
               <li><Link href="/apply/guest" className="hover:text-amber-400 transition-colors">Guest / Influencer Application</Link></li>
               <li><Link href="/apply/sponsor" className="hover:text-amber-400 transition-colors">Brand Sponsor Application</Link></li>
               <li><Link href="/apply/event-booking" className="hover:text-amber-400 transition-colors">Show & Event Booking</Link></li>
-              <li><Link href="/admin" className="hover:text-amber-400 transition-colors flex items-center gap-1 text-amber-400"><ShieldCheck className="w-4 h-4" /> Admin Portal</Link></li>
             </ul>
           </div>
 

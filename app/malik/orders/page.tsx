@@ -24,7 +24,7 @@ export default function OrdersLedgerPage() {
     setLoading(true);
     try {
       const query = new URLSearchParams({ status: statusFilter, search });
-      const res = await fetch(`/api/admin/orders?${query.toString()}`);
+      const res = await fetch(`/api/malik/orders?${query.toString()}`);
       const data = await res.json();
       if (data.success) {
         setOrders(data.orders);
@@ -40,7 +40,7 @@ export default function OrdersLedgerPage() {
     if (!selectedOrder) return;
 
     try {
-      const res = await fetch('/api/admin/orders', {
+      const res = await fetch('/api/malik/orders', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -65,7 +65,7 @@ export default function OrdersLedgerPage() {
     <div className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <Link href="/admin" className="inline-flex items-center gap-1 text-xs text-amber-400 font-bold hover:underline mb-2">
+          <Link href="/malik" className="inline-flex items-center gap-1 text-xs text-amber-400 font-bold hover:underline mb-2">
             <ArrowLeft className="w-3.5 h-3.5" /> Back to Dashboard
           </Link>
           <h1 className="text-3xl font-black text-white">Orders & Payment Ledger</h1>

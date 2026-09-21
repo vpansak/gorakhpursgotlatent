@@ -57,7 +57,7 @@ export default async function AdminDashboardPage() {
   const data = await getAdminData();
 
   if (!data) {
-    redirect('/admin/login');
+    redirect('/malik/login');
   }
 
   const { session, stats, recentOrders } = data;
@@ -80,7 +80,7 @@ export default async function AdminDashboardPage() {
           <Link href="/verify" className="px-4 py-2.5 rounded-xl bg-amber-500 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg">
             <QrCode className="w-4 h-4" /> GATE TICKET SCANNER
           </Link>
-          <form action="/api/admin/logout" method="POST">
+          <form action="/api/malik/logout" method="POST">
             <button type="submit" className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-red-400 text-xs flex items-center gap-1">
               <LogOut className="w-4 h-4" />
             </button>
@@ -139,9 +139,9 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Admin Modules Navigation */}
+      {/* Malik Modules Navigation */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <Link href="/admin/applications" className="p-6 rounded-3xl glass-panel border border-amber-500/30 space-y-3 hover:border-amber-400 transition-all group">
+        <Link href="/malik/applications" className="p-6 rounded-3xl glass-panel border border-amber-500/30 space-y-3 hover:border-amber-400 transition-all group">
           <div className="flex items-center justify-between">
             <div className="p-3 rounded-2xl bg-amber-500/20 text-amber-400">
               <FileText className="w-6 h-6" />
@@ -152,7 +152,7 @@ export default async function AdminDashboardPage() {
           <p className="text-xs text-slate-400">Manage status, search, add internal notes, tags, and contact applicants via WhatsApp/Email.</p>
         </Link>
 
-        <Link href="/admin/orders" className="p-6 rounded-3xl glass-panel border border-amber-500/30 space-y-3 hover:border-amber-400 transition-all group">
+        <Link href="/malik/orders" className="p-6 rounded-3xl glass-panel border border-amber-500/30 space-y-3 hover:border-amber-400 transition-all group">
           <div className="flex items-center justify-between">
             <div className="p-3 rounded-2xl bg-amber-500/20 text-amber-400">
               <TrendingUp className="w-6 h-6" />

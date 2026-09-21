@@ -63,14 +63,6 @@ export default function Navbar() {
             {/* Header Right Action Buttons */}
             <div className="hidden sm:flex items-center gap-3">
               <Link
-                href="/admin"
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-300 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all"
-              >
-                <ShieldCheck className="w-4 h-4 text-amber-400" />
-                Admin Portal
-              </Link>
-              
-              <Link
                 href="/tickets"
                 className="relative group overflow-hidden rounded-xl p-[1px] font-semibold text-sm transition-all duration-300 shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:shadow-[0_0_30px_rgba(255,160,0,0.6)]"
               >
@@ -116,16 +108,6 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
-            <div className="pt-4 border-t border-slate-800/80 flex flex-col gap-3">
-              <Link
-                href="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold text-slate-300 bg-slate-800/80 border border-slate-700"
-              >
-                <ShieldCheck className="w-4 h-4 text-amber-400" />
-                Admin Management Portal
-              </Link>
-            </div>
           </div>
         )}
       </header>

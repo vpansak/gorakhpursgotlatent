@@ -18,7 +18,7 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/admin/login', {
+      const res = await fetch('/api/malik/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Authentication failed');
 
-      router.push('/admin');
+      router.push('/malik');
     } catch (err: any) {
       setError(err.message || 'Invalid credentials');
     } finally {
@@ -43,7 +43,7 @@ export default function AdminLoginPage() {
             <Image src="/logo.png" alt="Gorakhpur's Got Latent" fill className="object-contain" />
           </div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-bold uppercase tracking-wider">
-            <ShieldCheck className="w-4 h-4" /> ADMIN & STAFF PORTAL
+            <ShieldCheck className="w-4 h-4" /> MALIK & STAFF PORTAL
           </div>
           <h1 className="text-2xl font-black text-white">Management Login</h1>
         </div>
@@ -85,7 +85,7 @@ export default function AdminLoginPage() {
 
           <div className="p-3 rounded-xl bg-slate-900/80 text-[11px] text-slate-400 space-y-1">
             <span className="text-amber-400 font-bold block">Default Seeded Credentials:</span>
-            <p>Admin: admin@ggllive.in / admin123</p>
+            <p>Malik: admin@ggllive.in / admin123</p>
             <p>Staff: staff@ggllive.in / staff123</p>
             <p>Gate Scanner: scanner@ggllive.in / scanner123</p>
           </div>

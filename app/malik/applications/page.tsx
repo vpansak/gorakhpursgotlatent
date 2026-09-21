@@ -35,7 +35,7 @@ export default function ApplicationsManagerPage() {
         status: statusFilter,
       });
 
-      const res = await fetch(`/api/admin/applications?${query.toString()}`);
+      const res = await fetch(`/api/malik/applications?${query.toString()}`);
       const data = await res.json();
       if (data.success) {
         setItems(data.items);
@@ -59,7 +59,7 @@ export default function ApplicationsManagerPage() {
     if (!selectedItem) return;
 
     try {
-      const res = await fetch('/api/admin/applications', {
+      const res = await fetch('/api/malik/applications', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -87,7 +87,7 @@ export default function ApplicationsManagerPage() {
     <div className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <Link href="/admin" className="inline-flex items-center gap-1 text-xs text-amber-400 font-bold hover:underline mb-2">
+          <Link href="/malik" className="inline-flex items-center gap-1 text-xs text-amber-400 font-bold hover:underline mb-2">
             <ArrowLeft className="w-3.5 h-3.5" /> Back to Dashboard
           </Link>
           <h1 className="text-3xl font-black text-white">Application Manager</h1>

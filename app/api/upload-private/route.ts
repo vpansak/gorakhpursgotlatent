@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       fileKey: safeName,
-      docUrl: `/api/admin/documents/${safeName}`,
+      docUrl: `/api/malik/documents/${safeName}`,
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Private upload failed' }, { status: 500 });

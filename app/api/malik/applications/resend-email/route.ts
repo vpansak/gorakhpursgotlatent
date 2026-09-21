@@ -22,13 +22,16 @@ export async function POST(req: Request) {
 
     const result = await sendPerformerApplicationEmail({
       application_id: app.app_id,
+      created_at: app.created_at,
       full_name: app.full_name,
       email: app.email,
       mobile_number: app.mobile_number,
       whatsapp_number: app.whatsapp_number,
-      alternate_contact: app.alternate_contact,
+      call_number: app.call_number || app.alternate_contact || app.mobile_number,
+      alternate_contact: app.alternate_contact || app.call_number || app.mobile_number,
       performance_category: app.performance_category,
       performance_title: app.performance_title,
+      performance_description: app.performance_description,
       performance_type: app.performance_type,
       performer_count: app.performer_count,
       performance_duration: app.performance_duration,
@@ -47,6 +50,7 @@ export async function POST(req: Request) {
       payment_amount: app.payment_amount || 499,
       payment_verified_at: app.payment_verified_at || new Date().toISOString(),
       application_status: app.application_status || 'PAYMENT_VERIFIED',
+      admin_notes: app.admin_notes || '',
     });
 
     if (result.success) {

@@ -186,6 +186,8 @@ export function initDatabase() {
   try {
     const columns = (db.prepare("PRAGMA table_info(performer_applications)").all() as any[]).map(c => c.name);
     const requiredCols = [
+      { name: 'call_number', type: 'TEXT' },
+      { name: 'admin_notes', type: 'TEXT' },
       { name: 'mobile_number', type: 'TEXT' },
       { name: 'whatsapp_number', type: 'TEXT' },
       { name: 'alternate_contact', type: 'TEXT' },

@@ -70,13 +70,16 @@ export async function POST(req: Request) {
     const updatedApp = db.prepare('SELECT * FROM performer_applications WHERE app_id = ?').get(appId) as any;
     const emailResult = await sendPerformerApplicationEmail({
       application_id: updatedApp.app_id,
+      created_at: updatedApp.created_at,
       full_name: updatedApp.full_name,
       email: updatedApp.email,
       mobile_number: updatedApp.mobile_number,
       whatsapp_number: updatedApp.whatsapp_number,
-      alternate_contact: updatedApp.alternate_contact,
+      call_number: updatedApp.call_number || updatedApp.alternate_contact || updatedApp.mobile_number,
+      alternate_contact: updatedApp.alternate_contact || updatedApp.call_number || updatedApp.mobile_number,
       performance_category: updatedApp.performance_category,
       performance_title: updatedApp.performance_title,
+      performance_description: updatedApp.performance_description,
       performance_type: updatedApp.performance_type,
       performer_count: updatedApp.performer_count,
       performance_duration: updatedApp.performance_duration,
@@ -95,6 +98,7 @@ export async function POST(req: Request) {
       payment_amount: updatedApp.payment_amount || 499,
       payment_verified_at: verifiedAt,
       application_status: 'PAYMENT_VERIFIED',
+      admin_notes: updatedApp.admin_notes || '',
     });
 
     if (emailResult.success) {

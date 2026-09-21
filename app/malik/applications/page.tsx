@@ -365,28 +365,41 @@ export default function ApplicationsManagerPage() {
             </div>
 
             {/* Social Media Links */}
-            {(selectedItem.instagram_url || selectedItem.youtube_url || selectedItem.facebook_url) && (
-              <div className="space-y-2 text-xs">
-                <span className="text-amber-400 font-bold uppercase block">Social Media Handles</span>
-                <div className="flex flex-wrap gap-2">
-                  {selectedItem.instagram_url && (
-                    <a href={selectedItem.instagram_url} target="_blank" rel="noreferrer" className="px-3 py-1.5 rounded-xl bg-slate-800 text-amber-300 underline flex items-center gap-1">
-                      <ExternalLink className="w-3.5 h-3.5" /> Instagram
+            <div className="space-y-2 text-xs bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+              <span className="text-amber-400 font-bold uppercase block mb-1">Social Media Profiles</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <span className="text-slate-400 block text-[11px]">Instagram (Required):</span>
+                  {selectedItem.instagram_url ? (
+                    <a href={selectedItem.instagram_url} target="_blank" rel="noreferrer" className="text-amber-400 underline font-bold flex items-center gap-1 mt-0.5">
+                      <ExternalLink className="w-3.5 h-3.5" /> View Instagram
                     </a>
+                  ) : (
+                    <span className="text-slate-400 font-semibold italic">Not Provided</span>
                   )}
-                  {selectedItem.youtube_url && (
-                    <a href={selectedItem.youtube_url} target="_blank" rel="noreferrer" className="px-3 py-1.5 rounded-xl bg-slate-800 text-amber-300 underline flex items-center gap-1">
-                      <ExternalLink className="w-3.5 h-3.5" /> YouTube
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[11px]">YouTube (Optional):</span>
+                  {selectedItem.youtube_url && selectedItem.youtube_url !== 'Not Provided' ? (
+                    <a href={selectedItem.youtube_url} target="_blank" rel="noreferrer" className="text-amber-400 underline font-bold flex items-center gap-1 mt-0.5">
+                      <ExternalLink className="w-3.5 h-3.5" /> View YouTube
                     </a>
+                  ) : (
+                    <span className="text-slate-400 font-semibold italic">Not Provided</span>
                   )}
-                  {selectedItem.facebook_url && (
-                    <a href={selectedItem.facebook_url} target="_blank" rel="noreferrer" className="px-3 py-1.5 rounded-xl bg-slate-800 text-amber-300 underline flex items-center gap-1">
-                      <ExternalLink className="w-3.5 h-3.5" /> Facebook
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[11px]">Facebook (Optional):</span>
+                  {selectedItem.facebook_url && selectedItem.facebook_url !== 'Not Provided' ? (
+                    <a href={selectedItem.facebook_url} target="_blank" rel="noreferrer" className="text-amber-400 underline font-bold flex items-center gap-1 mt-0.5">
+                      <ExternalLink className="w-3.5 h-3.5" /> View Facebook
                     </a>
+                  ) : (
+                    <span className="text-slate-400 font-semibold italic">Not Provided</span>
                   )}
                 </div>
               </div>
-            )}
+            </div>
 
             {/* PAYMENT INFORMATION */}
             <div className="p-4 rounded-2xl bg-slate-900 border border-amber-500/30 text-xs space-y-2">
@@ -432,6 +445,17 @@ export default function ApplicationsManagerPage() {
                   {resendingEmail ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4 text-amber-400" />}
                   Resend Application Email (EmailJS)
                 </button>
+
+                {selectedItem.email_status === 'FAILED' && (
+                  <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 text-[10px] font-black uppercase flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5 text-red-400" /> Email Failed
+                  </span>
+                )}
+                {selectedItem.email_status === 'SENT' && (
+                  <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black uppercase flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5 text-emerald-400" /> Email Sent
+                  </span>
+                )}
 
                 {selectedItem.payment_id && selectedItem.payment_status === 'PAYMENT_VERIFIED' && (
                   <div className="flex-1 min-w-[280px] flex items-center gap-2">

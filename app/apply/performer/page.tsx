@@ -390,7 +390,7 @@ export default function PerformerApplyPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Mobile Number (For Calls) *</label>
+              <label className="block text-xs font-bold text-slate-300 mb-1">Mobile Number *</label>
               <input
                 type="tel"
                 name="mobileNumber"
@@ -416,10 +416,11 @@ export default function PerformerApplyPage() {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block text-xs font-bold text-slate-300 mb-1">Alternate Contact Number (Optional)</label>
+              <label className="block text-xs font-bold text-slate-300 mb-1">Call Number / Alternate Contact *</label>
               <input
                 type="tel"
                 name="alternateContact"
+                required
                 value={formData.alternateContact}
                 onChange={handleChange}
                 placeholder="+91 98112 23344"
@@ -560,13 +561,14 @@ export default function PerformerApplyPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Profile URL</label>
+              <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Profile URL *</label>
               <input
                 type="url"
                 name="instagramUrl"
+                required
                 value={formData.instagramUrl}
                 onChange={handleChange}
-                placeholder="https://instagram.com/..."
+                placeholder="https://instagram.com/yourhandle"
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:border-amber-400 focus:outline-none"
               />
             </div>
@@ -578,7 +580,7 @@ export default function PerformerApplyPage() {
                 name="youtubeUrl"
                 value={formData.youtubeUrl}
                 onChange={handleChange}
-                placeholder="https://youtube.com/..."
+                placeholder="https://youtube.com/@channel (Optional)"
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:border-amber-400 focus:outline-none"
               />
             </div>
@@ -590,7 +592,7 @@ export default function PerformerApplyPage() {
                 name="facebookUrl"
                 value={formData.facebookUrl}
                 onChange={handleChange}
-                placeholder="https://facebook.com/..."
+                placeholder="https://facebook.com/page (Optional)"
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:border-amber-400 focus:outline-none"
               />
             </div>

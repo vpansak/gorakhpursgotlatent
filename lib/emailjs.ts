@@ -80,42 +80,54 @@ export async function sendBookingConfirmationEmail(params: BookingEmailParams): 
 
 export interface PerformerEmailParams {
   application_id: string;
+  created_at?: string;
   full_name: string;
+  age: number | string;
   email: string;
   mobile_number: string;
   whatsapp_number: string;
-  alternate_contact: string;
+  call_number?: string;
+  alternate_contact?: string;
+  city: string;
   performance_category: string;
   performance_title: string;
+  performance_description: string;
   performance_type: string;
   performer_count: number | string;
   performance_duration: string;
   performance_language: string;
-  city: string;
-  age: number | string;
+  special_requirements?: string;
   instagram_url: string;
-  youtube_url: string;
-  facebook_url: string;
-  special_requirements: string;
-  discovery_source: string;
-  additional_message: string;
+  youtube_url?: string;
+  facebook_url?: string;
+  discovery_source?: string;
+  additional_message?: string;
   payment_status: string;
+  payment_amount: number | string;
+  payment_currency?: string;
   order_id: string;
   payment_id: string;
-  payment_amount: number | string;
   payment_verified_at: string;
   application_status: string;
+  admin_notes?: string;
 }
 
 export async function sendPerformerApplicationEmail(params: PerformerEmailParams): Promise<{ success: boolean; message?: string }> {
-  const serviceId = process.env.EMAILJS_SERVICE_ID || 'service_15li5i6';
-  const templateId = process.env.EMAILJS_PERFORMER_TEMPLATE_ID || process.env.EMAILJS_TEMPLATE_ID || 'template_41t6fmb';
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY || 'K2hOwDJVfSGpJ3nih';
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY || '30mafPjRgPPn5im53Idzh';
+  const serviceId = process.env.EMAILJS_SERVICE_ID || 'vpansak';
+  const templateId = process.env.EMAILJS_PERFORMER_TEMPLATE_ID || process.env.EMAILJS_TEMPLATE_ID || 'template_b3h1egs';
+  const publicKey = process.env.EMAILJS_PUBLIC_KEY || 'jjG3XUesW7Yt8McRJ';
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY || 'G-re211vGlwHrNVCniNgz';
 
   const recipients = ['gkpgotlatent@gmail.com', 'alooksingh1@gmail.com'];
   let allSuccess = true;
   const errors: string[] = [];
+
+  // Format social URLs with "Not Provided" fallback for optional ones
+  const youtubeUrlFormatted = (params.youtube_url && params.youtube_url.trim()) ? params.youtube_url.trim() : 'Not Provided';
+  const facebookUrlFormatted = (params.facebook_url && params.facebook_url.trim()) ? params.facebook_url.trim() : 'Not Provided';
+  const specialReqFormatted = (params.special_requirements && params.special_requirements.trim()) ? params.special_requirements.trim() : 'Not Provided';
+  const addMsgFormatted = (params.additional_message && params.additional_message.trim()) ? params.additional_message.trim() : 'Not Provided';
+  const callNumFormatted = params.call_number || params.alternate_contact || params.mobile_number || 'N/A';
 
   for (const recipientEmail of recipients) {
     const payload = {
@@ -126,33 +138,38 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
       template_params: {
         to_email: recipientEmail,
         to_name: 'Gorakhpur’s Got Latent Admin Team',
-        subject: `New Performer Application – ${params.application_id} – ${params.full_name}`,
+        subject: `🎤 GGL Application | ${params.application_id}`,
         application_id: params.application_id,
+        created_at: params.created_at || new Date().toISOString(),
+        application_status: params.application_status,
         full_name: params.full_name,
+        age: String(params.age || 'N/A'),
         email: params.email,
         mobile_number: params.mobile_number,
         whatsapp_number: params.whatsapp_number,
-        alternate_contact: params.alternate_contact || 'N/A',
+        call_number: callNumFormatted,
+        alternate_contact: callNumFormatted,
+        city: params.city,
         performance_category: params.performance_category,
         performance_title: params.performance_title,
+        performance_description: params.performance_description,
         performance_type: params.performance_type || 'Solo',
         performer_count: String(params.performer_count || 1),
         performance_duration: params.performance_duration || 'N/A',
-        performance_language: params.performance_language || 'N/A',
-        city: params.city,
-        age: String(params.age || 'N/A'),
-        instagram_url: params.instagram_url || 'N/A',
-        youtube_url: params.youtube_url || 'N/A',
-        facebook_url: params.facebook_url || 'N/A',
-        special_requirements: params.special_requirements || 'None',
-        discovery_source: params.discovery_source || 'N/A',
-        additional_message: params.additional_message || 'N/A',
+        performance_language: params.performance_language || 'Hindi / English',
+        special_requirements: specialReqFormatted,
+        instagram_url: params.instagram_url,
+        youtube_url: youtubeUrlFormatted,
+        facebook_url: facebookUrlFormatted,
+        discovery_source: params.discovery_source || 'Not Provided',
+        additional_message: addMsgFormatted,
         payment_status: params.payment_status,
-        order_id: params.order_id || 'N/A',
-        payment_id: params.payment_id || 'N/A',
         payment_amount: String(params.payment_amount || 499),
+        payment_currency: params.payment_currency || 'INR',
+        razorpay_order_id: params.order_id || 'N/A',
+        razorpay_payment_id: params.payment_id || 'N/A',
         payment_verified_at: params.payment_verified_at || new Date().toISOString(),
-        application_status: params.application_status,
+        admin_notes: params.admin_notes || '',
       },
     };
 

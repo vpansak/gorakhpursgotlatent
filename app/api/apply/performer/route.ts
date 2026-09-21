@@ -11,6 +11,7 @@ export async function POST(req: Request) {
       email,
       mobileNumber,
       whatsappNumber,
+      callNumber,
       alternateContact,
       performanceCategory,
       performanceTitle,
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
       consent,
     } = body;
 
-    // 1. Validation
+    // 1. Required field validation
     if (!fullName || !email || !mobileNumber || !whatsappNumber || !city || !age || !performanceCategory || !performanceTitle || !performanceDescription) {
       return NextResponse.json({ error: 'Please fill in all required fields' }, { status: 400 });
     }
@@ -39,13 +40,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'You must agree to the terms and consent declaration to proceed' }, { status: 400 });
     }
 
-    // Email validation regex
+    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json({ error: 'Please enter a valid email address' }, { status: 400 });
     }
 
-    // Mobile validation
+    // Phone numbers validation
     const cleanMobile = (mobileNumber || '').replace(/[^0-9]/g, '');
     const cleanWhatsapp = (whatsappNumber || '').replace(/[^0-9]/g, '');
     if (cleanMobile.length < 10) {
@@ -55,9 +56,42 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Please enter a valid 10-digit WhatsApp number' }, { status: 400 });
     }
 
+    // Social Media Rules:
+    // Instagram is REQUIRED
+    if (!instagramUrl || !instagramUrl.trim()) {
+      return NextResponse.json({ error: 'Instagram Profile URL is required' }, { status: 400 });
+    }
+    try {
+      const parsedInsta = new URL(instagramUrl.trim());
+      if (!parsedInsta.protocol.startsWith('http')) throw new Error();
+    } catch {
+      return NextResponse.json({ error: 'Please enter a valid Instagram Profile URL (e.g. https://instagram.com/yourhandle)' }, { status: 400 });
+    }
+
+    // YouTube is OPTIONAL (validate if provided)
+    if (youtubeUrl && youtubeUrl.trim()) {
+      try {
+        const parsedYt = new URL(youtubeUrl.trim());
+        if (!parsedYt.protocol.startsWith('http')) throw new Error();
+      } catch {
+        return NextResponse.json({ error: 'Please enter a valid YouTube URL or leave it empty' }, { status: 400 });
+      }
+    }
+
+    // Facebook is OPTIONAL (validate if provided)
+    if (facebookUrl && facebookUrl.trim()) {
+      try {
+        const parsedFb = new URL(facebookUrl.trim());
+        if (!parsedFb.protocol.startsWith('http')) throw new Error();
+      } catch {
+        return NextResponse.json({ error: 'Please enter a valid Facebook URL or leave it empty' }, { status: 400 });
+      }
+    }
+
     const appId = generatePerformerAppId();
     const id = `per-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     const feeAmount = 499; // Rs. 499 audition registration fee
+    const effectiveCallNumber = (callNumber || alternateContact || mobileNumber).trim();
 
     // 2. Create Razorpay Order
     let razorpayOrderId = `ord_demo_${Date.now()}`;
@@ -82,14 +116,14 @@ export async function POST(req: Request) {
     // 3. Save to database with PAYMENT_PENDING
     const insert = db.prepare(`
       INSERT INTO performer_applications (
-        id, app_id, full_name, email, mobile_number, whatsapp_number, alternate_contact,
+        id, app_id, full_name, email, mobile_number, whatsapp_number, call_number, alternate_contact,
         performance_category, performance_title, performance_description, performance_type,
         performer_count, performance_duration, performance_language, special_requirements,
         instagram_url, youtube_url, facebook_url, city, age, discovery_source, additional_message,
         payment_status, application_status, order_id, payment_amount, payment_currency,
         talent_category, primary_talent, status
       ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?,
         ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?, ?,
@@ -99,10 +133,10 @@ export async function POST(req: Request) {
     `);
 
     insert.run(
-      id, appId, fullName, email, mobileNumber, whatsappNumber, alternateContact || '',
+      id, appId, fullName, email, mobileNumber, whatsappNumber, effectiveCallNumber, alternateContact || '',
       performanceCategory, performanceTitle, performanceDescription, performanceType || 'Solo',
       Number(performerCount) || 1, performanceDuration || '', performanceLanguage || '', specialRequirements || '',
-      instagramUrl || '', youtubeUrl || '', facebookUrl || '', city, Number(age) || 18, discoverySource || '', additionalMessage || '',
+      instagramUrl.trim(), (youtubeUrl && youtubeUrl.trim()) ? youtubeUrl.trim() : '', (facebookUrl && facebookUrl.trim()) ? facebookUrl.trim() : '', city, Number(age) || 18, discoverySource || '', additionalMessage || '',
       razorpayOrderId, feeAmount,
       performanceCategory, performanceTitle
     );

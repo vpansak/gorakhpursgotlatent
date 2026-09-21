@@ -12,8 +12,8 @@ export async function POST(req: Request) {
       message, requirements, logoUrl, brandDeckUrl, docUrl
     } = body;
 
-    if (!companyName || !contactPerson || !bizEmail || !whatsapp || !sponsorshipType) {
-      return NextResponse.json({ error: 'Please complete all required brand sponsorship fields' }, { status: 400 });
+    if (!companyName || !contactPerson || !bizEmail || !whatsapp) {
+      return NextResponse.json({ error: 'Please complete all required brand sponsorship details' }, { status: 400 });
     }
 
     const appId = generateAppId('SPN');
@@ -31,7 +31,8 @@ export async function POST(req: Request) {
     insert.run(
       id, appId, companyName, contactPerson, designation || '', bizEmail, whatsapp,
       phone || '', website || '', instagramUrl || '', socialUrl || '', industry || '',
-      location || '', description || '', sponsorshipType, budgetEst || '', preferredPackage || '',
+      location || '', description || '', sponsorshipType || 'General Brand Sponsorship',
+      budgetEst || 'Custom Quote by Management', preferredPackage || 'Custom Package',
       campaignObj || '', expectedAudience || '', eventPreference || '', message || '',
       requirements || '', logoUrl || '', brandDeckUrl || '', docUrl || ''
     );

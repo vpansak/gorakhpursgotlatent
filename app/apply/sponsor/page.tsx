@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Building2, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
+import { Building2, CheckCircle2, ArrowRight, Loader2, Sparkles, MessageSquare } from 'lucide-react';
 
 export default function SponsorApplyPage() {
   const [loading, setLoading] = useState(false);
@@ -15,24 +15,11 @@ export default function SponsorApplyPage() {
     designation: '',
     bizEmail: '',
     whatsapp: '',
-    phone: '',
     website: '',
-    instagramUrl: '',
-    socialUrl: '',
-    industry: 'Automotive / EV',
-    location: 'Gorakhpur / Uttar Pradesh',
-    description: '',
-    sponsorshipType: 'Title Sponsor',
-    budgetEst: '₹2,50,000 - ₹5,00,000',
-    preferredPackage: 'Platinum Package',
-    campaignObj: '',
-    expectedAudience: '100,000+ Online & 1,200+ On-ground',
-    eventPreference: 'Season 1 Live Showcase',
+    industry: '',
     message: '',
-    requirements: '',
     logoUrl: '',
     brandDeckUrl: '',
-    docUrl: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -84,17 +71,17 @@ export default function SponsorApplyPage() {
         <div className="w-20 h-20 rounded-full bg-blue-500/20 border-2 border-blue-500 text-blue-400 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(59,130,246,0.4)]">
           <CheckCircle2 className="w-10 h-10" />
         </div>
-        <h1 className="text-3xl font-extrabold text-white">BRAND SPONSORSHIP INQUIRY SUBMITTED!</h1>
-        <p className="text-slate-300">Thank you for choosing Gorakhpur’s Got Latent. Our partnership manager will reach out within 24 hours.</p>
+        <h1 className="text-3xl font-extrabold text-white">BRAND DETAILS SUBMITTED SUCCESSFULLY!</h1>
+        <p className="text-slate-300">Thank you for your interest in Gorakhpur’s Got Latent. Our team will review your brand details and contact you directly with customized sponsorship options & budget details.</p>
 
         <div className="p-6 rounded-2xl bg-slate-900 border border-blue-500/30 space-y-2">
-          <span className="text-xs text-blue-400 font-bold uppercase tracking-widest">SPONSORSHIP PROPOSAL ID</span>
+          <span className="text-xs text-blue-400 font-bold uppercase tracking-widest">SPONSORSHIP INQUIRY ID</span>
           <div className="text-3xl sm:text-4xl font-black text-blue-300 font-mono tracking-wider">{submittedAppId}</div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
           <Link href={`/track?appId=${submittedAppId}`} className="px-6 py-3.5 rounded-xl bg-blue-500 text-white font-extrabold text-sm">
-            TRACK PROPOSAL STATUS
+            TRACK INQUIRY STATUS
           </Link>
           <Link href="/" className="px-6 py-3.5 rounded-xl bg-slate-800 text-white font-bold text-sm">
             Return to Homepage
@@ -105,87 +92,148 @@ export default function SponsorApplyPage() {
   }
 
   return (
-    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-8">
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold uppercase tracking-wider">
+    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto space-y-8">
+      <div className="text-center space-y-3">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold uppercase tracking-wider">
           <Building2 className="w-4 h-4" /> BRAND SPONSORSHIP PORTAL
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black text-white">Become a Sponsor</h1>
-        <p className="text-xs sm:text-sm text-slate-300">Amplify your brand visibility across North India’s biggest entertainment stage.</p>
+        <h1 className="text-3xl sm:text-5xl font-black text-white">Become a Sponsor</h1>
+        <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
+          Partner your brand with North India’s biggest live entertainment show. Please share your details below — our management team will reach out directly with customized sponsorship proposals and budget options.
+        </p>
+      </div>
+
+      {/* Info Banner */}
+      <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-start gap-3 text-xs sm:text-sm text-blue-200">
+        <Sparkles className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+        <div>
+          <strong className="text-white block font-bold">Custom Budget & Sponsorship Options:</strong>
+          Sponsors will receive customized package quotes directly from our team based on brand placement requirements.
+        </div>
       </div>
 
       {error && <div className="p-4 rounded-xl bg-red-500/20 text-red-300 text-sm">{error}</div>}
 
-      <form onSubmit={handleSubmit} className="space-y-8 glass-panel p-6 sm:p-10 rounded-3xl border border-blue-500/20">
+      <form onSubmit={handleSubmit} className="space-y-6 glass-panel p-6 sm:p-10 rounded-3xl border border-blue-500/20">
         <div className="space-y-4">
-          <h3 className="text-lg font-bold text-blue-400 border-b border-blue-500/20 pb-2">1. Company & Brand Information</h3>
+          <h3 className="text-lg font-bold text-blue-400 border-b border-blue-500/20 pb-2">Brand & Contact Details</h3>
+          
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1">Company / Brand Name *</label>
-              <input type="text" name="companyName" required value={formData.companyName} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+              <input
+                type="text"
+                name="companyName"
+                required
+                value={formData.companyName}
+                onChange={handleChange}
+                placeholder="e.g. Acme Motors / ABC Beverages"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-blue-500 outline-none"
+              />
             </div>
+
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Contact Person *</label>
-              <input type="text" name="contactPerson" required value={formData.contactPerson} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+              <label className="block text-xs font-bold text-slate-300 mb-1">Contact Person Name *</label>
+              <input
+                type="text"
+                name="contactPerson"
+                required
+                value={formData.contactPerson}
+                onChange={handleChange}
+                placeholder="e.g. Rahul Sharma"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-blue-500 outline-none"
+              />
             </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1">Designation</label>
-              <input type="text" name="designation" value={formData.designation} onChange={handleChange} placeholder="e.g. Marketing Head" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+              <input
+                type="text"
+                name="designation"
+                value={formData.designation}
+                onChange={handleChange}
+                placeholder="e.g. Marketing Head / Founder"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-blue-500 outline-none"
+              />
             </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-300 mb-1">Industry / Category</label>
+              <input
+                type="text"
+                name="industry"
+                value={formData.industry}
+                onChange={handleChange}
+                placeholder="e.g. FMCG, Automobile, Education"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-blue-500 outline-none"
+              />
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1">Business Email *</label>
-              <input type="email" name="bizEmail" required value={formData.bizEmail} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+              <input
+                type="email"
+                name="bizEmail"
+                required
+                value={formData.bizEmail}
+                onChange={handleChange}
+                placeholder="name@company.com"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-blue-500 outline-none"
+              />
             </div>
+
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">WhatsApp / Phone *</label>
-              <input type="tel" name="whatsapp" required value={formData.whatsapp} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+              <label className="block text-xs font-bold text-slate-300 mb-1">WhatsApp / Mobile Number *</label>
+              <input
+                type="tel"
+                name="whatsapp"
+                required
+                value={formData.whatsapp}
+                onChange={handleChange}
+                placeholder="+91 98765 43210"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-blue-500 outline-none"
+              />
             </div>
-            <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Website URL</label>
-              <input type="url" name="website" value={formData.website} onChange={handleChange} placeholder="https://..." className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs" />
-            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Website or Social Media Link</label>
+            <input
+              type="url"
+              name="website"
+              value={formData.website}
+              onChange={handleChange}
+              placeholder="https://..."
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-blue-500 outline-none text-xs"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Proposal Message / Brand Requirements</label>
+            <textarea
+              name="message"
+              rows={3}
+              value={formData.message}
+              onChange={handleChange}
+              placeholder="Tell us a little bit about your brand or specific placement goals..."
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-blue-500 outline-none text-xs"
+            />
           </div>
         </div>
 
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold text-blue-400 border-b border-blue-500/20 pb-2">2. Sponsorship Scope & Budget</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Sponsorship Type *</label>
-              <select name="sponsorshipType" value={formData.sponsorshipType} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white">
-                <option value="Title Sponsor">Title Sponsor</option>
-                <option value="Powered By Sponsor">Powered By Sponsor</option>
-                <option value="Stage / Lighting Sponsor">Stage / Lighting Partner</option>
-                <option value="Beverage & Food Partner">Beverage & Food Partner</option>
-                <option value="Digital Media Partner">Digital Media Partner</option>
-                <option value="Gift / Prize Partner">Gift / Prize Partner</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Estimated Budget Range</label>
-              <select name="budgetEst" value={formData.budgetEst} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white">
-                <option value="₹50,000 - ₹1,00,000">₹50,000 - ₹1,00,000</option>
-                <option value="₹1,00,000 - ₹2,50,000">₹1,00,000 - ₹2,50,000</option>
-                <option value="₹2,50,000 - ₹5,00,000">₹2,50,000 - ₹5,00,000</option>
-                <option value="₹5,00,000+">₹5,00,000+</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold text-blue-400 border-b border-purple-500/20 pb-2">3. Upload Brand Logo & Deck</h3>
+        <div className="space-y-3">
+          <h3 className="text-sm font-bold text-blue-400 border-b border-blue-500/20 pb-1">Upload Brand Logo or Presentation Deck (Optional)</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div className="p-4 rounded-xl bg-slate-900 border border-slate-700 space-y-2">
-              <label className="font-bold text-slate-300 block">Brand Logo (PNG Transparent)</label>
-              <input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'logoUrl')} />
+              <label className="font-bold text-slate-300 block">Brand Logo (PNG / JPG)</label>
+              <input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'logoUrl')} className="text-slate-400 text-xs" />
               {formData.logoUrl && <span className="text-emerald-400 font-semibold block">✓ Logo Uploaded</span>}
             </div>
 
             <div className="p-4 rounded-xl bg-slate-900 border border-slate-700 space-y-2">
-              <label className="font-bold text-slate-300 block">Company Deck / Proposal PDF (Private)</label>
-              <input type="file" accept=".pdf,image/*" onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'brandDeckUrl', true)} />
-              {formData.brandDeckUrl && <span className="text-emerald-400 font-semibold block">✓ Brand Deck Uploaded</span>}
+              <label className="font-bold text-slate-300 block">Company Deck / PDF (Optional)</label>
+              <input type="file" accept=".pdf,image/*" onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'brandDeckUrl', true)} className="text-slate-400 text-xs" />
+              {formData.brandDeckUrl && <span className="text-emerald-400 font-semibold block">✓ Document Uploaded</span>}
             </div>
           </div>
         </div>
@@ -195,7 +243,7 @@ export default function SponsorApplyPage() {
           disabled={loading}
           className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-base flex items-center justify-center gap-2 shadow-lg transition-all"
         >
-          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>SUBMIT SPONSORSHIP INQUIRY <ArrowRight className="w-5 h-5" /></>}
+          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>SUBMIT BRAND DETAILS <ArrowRight className="w-5 h-5" /></>}
         </button>
       </form>
     </div>

@@ -84,7 +84,12 @@ export default async function SponsorsPage() {
 
       {/* Configurable Sponsorship Packages */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-black text-white text-center">Sponsorship Packages</h2>
+        <div className="text-center space-y-2">
+          <h2 className="text-2xl font-black text-white">Sponsorship Opportunities</h2>
+          <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
+            Submit your brand details — customized sponsorship proposals and budget options will be shared directly by our management team.
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {packages.map((pkg, idx) => (
@@ -111,7 +116,7 @@ export default async function SponsorsPage() {
                   href="/apply/sponsor"
                   className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition-all"
                 >
-                  INQUIRE PACKAGE <ChevronRight className="w-4 h-4" />
+                  SUBMIT BRAND DETAILS <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>

@@ -47,7 +47,7 @@ export default function PerformerApplyPage() {
     performanceDescription: '',
     performanceType: 'Solo',
     performerCount: '1',
-    performanceDuration: '5 Minutes',
+    performanceDuration: '3 to 5 Minutes',
     performanceLanguage: 'Hindi',
     specialRequirements: '',
     instagramUrl: '',
@@ -502,15 +502,14 @@ export default function PerformerApplyPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Performance Duration *</label>
+              <label className="block text-xs font-bold text-slate-300 mb-1">Performance Duration (Fixed)</label>
               <input
                 type="text"
                 name="performanceDuration"
-                required
-                value={formData.performanceDuration}
-                onChange={handleChange}
-                placeholder="e.g. 5 to 7 Minutes"
-                className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:border-amber-400 focus:outline-none"
+                value="3 to 5 Minutes (Fixed Audition Slot)"
+                disabled
+                readOnly
+                className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-amber-500/30 text-amber-300 font-bold text-sm cursor-not-allowed"
               />
             </div>
 

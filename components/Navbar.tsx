@@ -24,17 +24,17 @@ export default function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#07080e]/85 border-b border-amber-500/20 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo Brand */}
-            <Link href="/" className="flex items-center group">
-              <div className="relative w-44 sm:w-52 h-12 transition-transform duration-300 group-hover:scale-105">
+            <Link href="/" className="flex items-center group -ml-2 sm:-ml-4 lg:-ml-6">
+              <div className="relative w-56 sm:w-64 lg:w-72 h-14 sm:h-16 transition-transform duration-300 group-hover:scale-105">
                 <Image
                   src="/logo.png"
                   alt="Gorakhpur's Got Latent Golden Title Logo"
                   fill
                   priority
-                  className="object-contain filter drop-shadow-[0_0_12px_rgba(255,215,0,0.5)]"
+                  className="object-contain object-left filter drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]"
                 />
               </div>
             </Link>

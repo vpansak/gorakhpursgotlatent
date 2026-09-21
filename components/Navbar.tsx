@@ -29,14 +29,22 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-20">
             {/* Logo Brand */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative w-36 h-12 sm:w-44 sm:h-14 transition-transform duration-300 group-hover:scale-105">
+              <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden border border-amber-500/40 shadow-[0_0_15px_rgba(255,215,0,0.35)] transition-transform duration-300 group-hover:scale-105 bg-black">
                 <Image
                   src="/logo.png"
                   alt="Gorakhpur's Got Latent Official Logo"
                   fill
                   priority
-                  className="object-contain filter drop-shadow-[0_0_12px_rgba(255,215,0,0.4)]"
+                  className="object-cover"
                 />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm sm:text-base font-black tracking-tight text-white leading-none gold-gradient-text">
+                  GORAKHPUR’S GOT
+                </span>
+                <span className="text-xs sm:text-sm font-extrabold tracking-widest text-amber-400 uppercase leading-tight">
+                  LATENT
+                </span>
               </div>
             </Link>
 

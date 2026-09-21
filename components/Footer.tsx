@@ -13,14 +13,22 @@ export default function Footer() {
           
           {/* Col 1: Brand & Logo */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="inline-block">
-              <div className="relative w-48 h-16">
+            <Link href="/" className="inline-flex items-center gap-3.5 group">
+              <div className="relative w-14 h-14 rounded-2xl overflow-hidden border border-amber-500/40 shadow-[0_0_20px_rgba(255,215,0,0.4)] bg-black group-hover:scale-105 transition-transform">
                 <Image
                   src="/logo.png"
                   alt="Gorakhpur's Got Latent Official Logo"
                   fill
-                  className="object-contain filter drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]"
+                  className="object-cover"
                 />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-lg font-black tracking-tight text-white leading-none gold-gradient-text">
+                  GORAKHPUR’S GOT
+                </span>
+                <span className="text-sm font-extrabold tracking-widest text-amber-400 uppercase leading-tight">
+                  LATENT
+                </span>
               </div>
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed pr-4">

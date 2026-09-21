@@ -163,7 +163,7 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
       discovery_source: params.discovery_source || 'Not Provided',
       additional_message: addMsgFormatted,
       payment_status: params.payment_status,
-      payment_amount: String(params.payment_amount || 499),
+      payment_amount: String(params.payment_amount || 199),
       payment_currency: params.payment_currency || 'INR',
       razorpay_order_id: params.order_id || 'N/A',
       razorpay_payment_id: params.payment_id || 'N/A',

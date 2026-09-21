@@ -116,7 +116,7 @@ export default function ApplicationsManagerPage() {
   const handleProcessRefund = async () => {
     if (!selectedItem) return;
 
-    const confirmRefund = confirm(`Are you sure you want to process a Razorpay refund of ₹${selectedItem.payment_amount || 499} for ${selectedItem.full_name}?`);
+    const confirmRefund = confirm(`Are you sure you want to process a Razorpay refund of ₹${selectedItem.payment_amount || 199} for ${selectedItem.full_name}?`);
     if (!confirmRefund) return;
 
     setProcessingRefund(true);
@@ -406,7 +406,7 @@ export default function ApplicationsManagerPage() {
               <span className="text-amber-400 font-bold uppercase block">Razorpay Payment Information</span>
               <div className="grid grid-cols-2 gap-2 text-slate-300">
                 <div>Payment Status: <strong className="text-emerald-400">{selectedItem.payment_status || 'PENDING'}</strong></div>
-                <div>Amount Paid: <strong className="text-amber-400">₹{selectedItem.payment_amount || 499}</strong></div>
+                <div>Amount Paid: <strong className="text-amber-400">₹{selectedItem.payment_amount || 199}</strong></div>
                 <div>Razorpay Order ID: <strong className="font-mono text-white">{selectedItem.order_id || 'N/A'}</strong></div>
                 <div>Razorpay Payment ID: <strong className="font-mono text-white">{selectedItem.payment_id || 'N/A'}</strong></div>
                 {selectedItem.payment_verified_at && (

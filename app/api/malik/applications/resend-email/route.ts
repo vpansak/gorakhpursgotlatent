@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       payment_status: app.payment_status || 'PAYMENT_VERIFIED',
       order_id: app.order_id || 'N/A',
       payment_id: app.payment_id || 'N/A',
-      payment_amount: app.payment_amount || 499,
+      payment_amount: app.payment_amount || 199,
       payment_verified_at: app.payment_verified_at || new Date().toISOString(),
       application_status: app.application_status || 'PAYMENT_VERIFIED',
       admin_notes: app.admin_notes || '',

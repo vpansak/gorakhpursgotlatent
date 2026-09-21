@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No verified Razorpay Payment ID associated with this application to refund' }, { status: 400 });
     }
 
-    const refundAmount = app.payment_amount || 499;
+    const refundAmount = app.payment_amount || 199;
 
     // Call Razorpay Refund API
     const refundResult = await processRazorpayRefund(app.payment_id, refundAmount, refundReason || 'Performer application rejection refund');

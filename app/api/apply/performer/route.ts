@@ -90,7 +90,7 @@ export async function POST(req: Request) {
 
     const appId = generatePerformerAppId();
     const id = `per-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-    const feeAmount = 499; // Rs. 499 audition registration fee
+    const feeAmount = 199; // Rs. 199 audition registration fee
     const effectiveCallNumber = (callNumber || alternateContact || mobileNumber).trim();
 
     // 2. Create Razorpay Order

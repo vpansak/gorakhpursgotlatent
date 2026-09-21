@@ -228,7 +228,7 @@ export default function PerformerApplyPage() {
       const orderData = {
         appId: data.appId,
         razorpayOrderId: data.razorpayOrderId,
-        amount: data.amount || 499,
+        amount: data.amount || 199,
         currency: data.currency || 'INR',
         keyId: data.keyId || '',
       };

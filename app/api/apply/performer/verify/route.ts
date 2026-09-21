@@ -95,7 +95,7 @@ export async function POST(req: Request) {
       payment_status: 'PAYMENT_VERIFIED',
       order_id: razorpay_order_id,
       payment_id: razorpay_payment_id,
-      payment_amount: updatedApp.payment_amount || 499,
+      payment_amount: updatedApp.payment_amount || 199,
       payment_verified_at: verifiedAt,
       application_status: 'PAYMENT_VERIFIED',
       admin_notes: updatedApp.admin_notes || '',

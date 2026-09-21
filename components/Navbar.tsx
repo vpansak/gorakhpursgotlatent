@@ -18,7 +18,6 @@ export default function Navbar() {
     { name: 'Sponsors', href: '/sponsors' },
     { name: 'Tickets', href: 'https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio', isExternal: true },
     { name: 'Apply Now', href: '/apply' },
-    { name: 'Track App', href: '/track' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -166,9 +165,9 @@ export default function Navbar() {
           <UserCheck className="w-5 h-5 text-orange-400" />
           <span>Apply</span>
         </Link>
-        <Link href="/track" className="flex flex-col items-center gap-0.5 text-xs text-slate-300 hover:text-amber-400">
+        <Link href="/contact" className="flex flex-col items-center gap-0.5 text-xs text-slate-300 hover:text-amber-400">
           <PhoneCall className="w-5 h-5 text-amber-400" />
-          <span>Track</span>
+          <span>Contact</span>
         </Link>
       </div>
     </>

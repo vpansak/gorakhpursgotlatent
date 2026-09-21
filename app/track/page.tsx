@@ -10,20 +10,17 @@ function TrackContent() {
   const initialAppId = searchParams.get('appId') || '';
 
   const [appIdInput, setAppIdInput] = useState(initialAppId);
+  const [emailInput, setEmailInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [trackData, setTrackData] = useState<any>(null);
 
-  useEffect(() => {
-    if (initialAppId) {
-      handleTrack(initialAppId);
-    }
-  }, [initialAppId]);
-
-  const handleTrack = async (idToTrack?: string) => {
+  const handleTrack = async (idToTrack?: string, emailToTrack?: string) => {
     const queryId = (idToTrack || appIdInput).trim();
-    if (!queryId) {
-      setError('Please enter an Application ID (e.g. GGL-PER-109283)');
+    const queryEmail = (emailToTrack || emailInput).trim();
+
+    if (!queryId || !queryEmail) {
+      setError('Please enter both your Application ID and your Registered Email Address.');
       return;
     }
 
@@ -32,7 +29,7 @@ function TrackContent() {
     setTrackData(null);
 
     try {
-      const res = await fetch(`/api/track?appId=${encodeURIComponent(queryId)}`);
+      const res = await fetch(`/api/track?appId=${encodeURIComponent(queryId)}&email=${encodeURIComponent(queryEmail)}`);
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.error || 'Failed to fetch application status');
@@ -47,58 +44,71 @@ function TrackContent() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
+      case 'PAYMENT_VERIFIED':
       case 'APPROVED':
       case 'CONFIRMED':
       case 'ACTIVE':
         return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40';
       case 'SHORTLISTED':
       case 'INTERVIEW / AUDITION':
-        return 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+        return 'bg-purple-500/20 text-purple-300 border-purple-500/40';
+      case 'UNDER_REVIEW':
       case 'UNDER REVIEW':
-      case 'NEGOTIATION':
-      case 'PROPOSAL SENT':
         return 'bg-blue-500/20 text-blue-300 border-blue-500/40';
       case 'REJECTED':
       case 'CANCELLED':
         return 'bg-red-500/20 text-red-400 border-red-500/40';
+      case 'REFUNDED':
+        return 'bg-pink-500/20 text-pink-300 border-pink-500/40';
       default:
-        return 'bg-slate-700/50 text-slate-300 border-slate-600';
+        return 'bg-amber-500/20 text-amber-300 border-amber-500/40';
     }
   };
 
   return (
     <div className="space-y-8">
       {/* Search Input Box */}
-      <div className="glass-panel p-6 rounded-3xl border border-amber-500/30 space-y-4">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="w-5 h-5 text-amber-400 absolute left-4 top-3.5" />
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/30 space-y-5">
+        <div className="space-y-1">
+          <h3 className="text-lg font-bold text-amber-400 uppercase tracking-wide">PERFORMER SECURITY VERIFICATION</h3>
+          <p className="text-xs text-slate-300">Enter your unique Application ID and the email address you registered with.</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Application ID *</label>
+            <div className="relative">
+              <Search className="w-4 h-4 text-amber-400 absolute left-3.5 top-3.5" />
+              <input
+                type="text"
+                value={appIdInput}
+                onChange={(e) => setAppIdInput(e.target.value)}
+                placeholder="e.g. GGL-2026-483921"
+                className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900 border border-slate-700 text-white font-mono uppercase text-xs sm:text-sm focus:border-amber-400 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Registered Email Address *</label>
             <input
-              type="text"
-              value={appIdInput}
-              onChange={(e) => setAppIdInput(e.target.value)}
-              placeholder="e.g. GGL-PER-109283"
-              className="w-full pl-12 pr-4 py-3 rounded-2xl bg-slate-900 border border-slate-700 text-white font-mono uppercase text-sm sm:text-base focus:border-amber-400 focus:outline-none"
+              type="email"
+              value={emailInput}
+              onChange={(e) => setEmailInput(e.target.value)}
+              placeholder="rahul@gmail.com"
+              className="w-full px-4 py-3 rounded-2xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm focus:border-amber-400 focus:outline-none"
               onKeyDown={(e) => e.key === 'Enter' && handleTrack()}
             />
           </div>
-          <button
-            onClick={() => handleTrack()}
-            disabled={loading}
-            className="px-8 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-black font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
-          >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'CHECK STATUS'}
-          </button>
         </div>
 
-        <div className="text-[11px] text-slate-400 flex flex-wrap gap-2">
-          <span className="font-bold text-slate-300">Format Examples:</span>
-          <button onClick={() => { setAppIdInput('GGL-PER-109283'); handleTrack('GGL-PER-109283'); }} className="hover:text-amber-400 underline font-mono">GGL-PER-109283</button>
-          <span>•</span>
-          <button onClick={() => { setAppIdInput('GGL-GST-592019'); handleTrack('GGL-GST-592019'); }} className="hover:text-amber-400 underline font-mono">GGL-GST-592019</button>
-          <span>•</span>
-          <button onClick={() => { setAppIdInput('GGL-SPN-294012'); handleTrack('GGL-SPN-294012'); }} className="hover:text-amber-400 underline font-mono">GGL-SPN-294012</button>
-        </div>
+        <button
+          onClick={() => handleTrack()}
+          disabled={loading}
+          className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 hover:scale-[1.01] transition-all"
+        >
+          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'VERIFY CREDENTIALS & TRACK STATUS'}
+        </button>
       </div>
 
       {error && (

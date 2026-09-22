@@ -109,7 +109,9 @@ export async function POST(req: Request) {
         });
         razorpayOrderId = order.id;
       } catch (rzErr: any) {
-        console.error('Razorpay Order Creation Warning:', rzErr);
+        console.error('Razorpay Order Creation Error:', rzErr);
+        const errMsg = rzErr?.error?.description || rzErr?.message || (rzErr?.statusCode === 401 ? 'Razorpay Authentication Failed: Key ID and Secret do not match' : 'Failed to create Razorpay order');
+        return NextResponse.json({ error: `Razorpay Error: ${errMsg}` }, { status: 400 });
       }
     }
 

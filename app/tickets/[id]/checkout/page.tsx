@@ -77,7 +77,13 @@ function CheckoutContent({ params }: { params: Promise<{ id: string }> }) {
         }),
       });
 
-      const orderResult = await res.json();
+      const text = await res.text();
+      let orderResult: any = {};
+      try {
+        orderResult = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error(`Server Error (${res.status}): ${res.statusText || 'Invalid response from server'}`);
+      }
       if (!res.ok) throw new Error(orderResult.error || 'Failed to create payment order');
 
       if (typeof window !== 'undefined' && (window as any).Razorpay && orderResult.keyId) {

@@ -57,7 +57,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <strong className="block text-white font-bold">Email Support:</strong>
-                <a href="mailto:Gkpgotlatent@gmail.com" className="text-xs text-amber-300 font-mono hover:underline">Gkpgotlatent@gmail.com</a>
+                <a href="mailto:help@gkpgotlatent.in" className="text-xs text-amber-300 font-mono hover:underline">help@gkpgotlatent.in</a>
               </div>
             </div>
 

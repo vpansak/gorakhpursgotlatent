@@ -43,19 +43,25 @@ export async function POST(req: Request) {
 
     // 4. Call Razorpay if configured
     if (isRazorpayConfigured() && razorpay) {
-      const rzpOrder = await razorpay.orders.create({
-        amount: Math.round(totalAmount * 100), // Amount in paise
-        currency: 'INR',
-        receipt: orderNumber,
-        notes: {
-          event: event.title,
-          category: category.name,
-          quantity: String(quantity),
-          customer_name: customerName,
-          customer_email: customerEmail,
-        },
-      });
-      razorpayOrderId = rzpOrder.id;
+      try {
+        const rzpOrder = await razorpay.orders.create({
+          amount: Math.round(totalAmount * 100), // Amount in paise
+          currency: 'INR',
+          receipt: orderNumber,
+          notes: {
+            event: event.title,
+            category: category.name,
+            quantity: String(quantity),
+            customer_name: customerName,
+            customer_email: customerEmail,
+          },
+        });
+        razorpayOrderId = rzpOrder.id;
+      } catch (rzpErr: any) {
+        console.error('Razorpay order creation failed:', rzpErr);
+        const errMsg = rzpErr?.error?.description || rzpErr?.message || (rzpErr?.statusCode === 401 ? 'Razorpay Authentication Failed: Key ID and Secret do not match' : 'Failed to create Razorpay order');
+        return NextResponse.json({ error: `Razorpay Error: ${errMsg}` }, { status: 400 });
+      }
     } else {
       console.warn("⚠️ Razorpay is not configured with live keys. Mode: Sandbox Order Simulation.");
     }
@@ -96,6 +102,7 @@ export async function POST(req: Request) {
     });
   } catch (error: any) {
     console.error('Error creating ticket order:', error);
-    return NextResponse.json({ error: error.message || 'Failed to create payment order' }, { status: 500 });
+    const msg = error?.error?.description || error?.message || 'Failed to create payment order';
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

@@ -126,7 +126,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-amber-400 shrink-0" />
-                <a href="mailto:Gkpgotlatent@gmail.com" className="hover:text-amber-400">Gkpgotlatent@gmail.com</a>
+                <a href="mailto:help@gkpgotlatent.in" className="hover:text-amber-400">help@gkpgotlatent.in</a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-amber-400 shrink-0" />

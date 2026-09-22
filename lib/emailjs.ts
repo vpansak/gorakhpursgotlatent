@@ -120,7 +120,7 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
   const publicKey = process.env.EMAILJS_PUBLIC_KEY || 'jjG3XUesW7Yt8McRJ';
   const privateKey = process.env.EMAILJS_PRIVATE_KEY || 'G-re211vGlwHrNVCniNgz';
 
-  const recipientEmails = 'gkpgotlatent@gmail.com, alooksingh1@gmail.com';
+  const recipientEmails = 'help@gkpgotlatent.in, alooksingh1@gmail.com';
 
   // Format social URLs with "Not Provided" fallback for optional ones
   const youtubeUrlFormatted = (params.youtube_url && params.youtube_url.trim()) ? params.youtube_url.trim() : 'Not Provided';

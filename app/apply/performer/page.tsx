@@ -222,7 +222,13 @@ export default function PerformerApplyPage() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error(`Server Error (${res.status}): ${res.statusText || 'Invalid response from server'}`);
+      }
       if (!res.ok) throw new Error(data.error || 'Failed to submit registration');
 
       const orderData = {

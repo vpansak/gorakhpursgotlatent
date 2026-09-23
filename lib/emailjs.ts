@@ -36,6 +36,9 @@ export async function sendBookingConfirmationEmail(params: BookingEmailParams): 
     template_params: {
       to_name: params.customerName,
       to_email: params.customerEmail,
+      email: params.customerEmail,
+      user_email: params.customerEmail,
+      reply_to: params.customerEmail,
       customer_name: params.customerName,
       customer_email: params.customerEmail,
       order_id: params.orderNumber,
@@ -69,11 +72,33 @@ export async function sendBookingConfirmationEmail(params: BookingEmailParams): 
     if (res.ok) {
       console.log(`📧 EmailJS: Booking confirmation email sent successfully to ${params.customerEmail}`);
       return { success: true };
-    } else {
-      const errorText = await res.text();
-      console.error(`❌ EmailJS Error (${res.status}): ${errorText}`);
-      return { success: false, message: `EmailJS HTTP ${res.status}: ${errorText}` };
     }
+
+    const errorText = await res.text();
+    console.warn(`⚠️ Primary EmailJS booking failed (${res.status}): ${errorText}. Trying backup service...`);
+
+    // Backup failover service
+    const backupRes = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Origin': 'https://gorakhpursgotlatent.vercel.app',
+      },
+      body: JSON.stringify({
+        service_id: 'vpansak',
+        template_id: 'template_b3h1egs',
+        user_id: 'jjG3XUesW7Yt8McRJ',
+        accessToken: 'G-re211vGlwHrNVCniNgz',
+        template_params: payload.template_params,
+      }),
+    });
+
+    if (backupRes.ok) {
+      console.log(`📧 EmailJS (Backup): Booking confirmation email sent successfully to ${params.customerEmail}`);
+      return { success: true };
+    }
+
+    return { success: false, message: `EmailJS HTTP ${res.status}: ${errorText}` };
   } catch (err: any) {
     console.error('❌ EmailJS Exception:', err);
     return { success: false, message: err.message || 'Network error sending email' };

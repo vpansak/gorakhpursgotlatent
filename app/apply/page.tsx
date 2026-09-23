@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mic2, Star, Building2, CalendarCheck, ChevronRight, ShieldAlert } from 'lucide-react';
+import { Mic2, Star, Building2, Users, ChevronRight, ShieldAlert } from 'lucide-react';
 
 export default function ApplyPage() {
   const streams = [
@@ -38,12 +38,12 @@ export default function ApplyPage() {
       btnBg: 'bg-blue-500 text-white hover:bg-blue-400',
     },
     {
-      title: 'Show / Event Booking',
-      subtitle: 'College Fest, Corporate & Private Show Collaboration',
-      desc: 'Book Gorakhpur’s Got Latent live team or top performers for your college fest, corporate showcase, or private event.',
-      href: '/apply/event-booking',
-      icon: CalendarCheck,
-      badge: 'COLLAB',
+      title: 'Join Team',
+      subtitle: 'Event Crew, Volunteers, Media & Operations',
+      desc: 'Become a core part of Gorakhpur’s Got Latent! Join backstage management, artist coordination, crowd management, or social media team.',
+      href: '/apply/join-team',
+      icon: Users,
+      badge: 'HIRING / CREW',
       color: 'from-emerald-500/20 via-emerald-500/10 to-transparent',
       borderColor: 'border-emerald-500/40',
       btnBg: 'bg-emerald-500 text-black hover:bg-emerald-400',

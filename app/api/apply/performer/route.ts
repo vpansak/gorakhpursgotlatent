@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { syncSheetsToS3 } from '@/lib/storage';
 import { generatePerformerAppId } from '@/lib/helpers';
 import { razorpay } from '@/lib/razorpay';
 
@@ -116,7 +117,7 @@ export async function POST(req: Request) {
     }
 
     // 3. Save to database with PAYMENT_PENDING
-    const insert = db.prepare(`
+    await db.execute(`
       INSERT INTO performer_applications (
         id, app_id, full_name, email, mobile_number, whatsapp_number, call_number, alternate_contact,
         performance_category, performance_title, performance_description, performance_type,
@@ -132,22 +133,20 @@ export async function POST(req: Request) {
         'PAYMENT_PENDING', 'PAYMENT_PENDING', ?, ?, 'INR',
         ?, ?, 'PAYMENT_PENDING'
       )
-    `);
-
-    insert.run(
+    `, [
       id, appId, fullName, email, mobileNumber, whatsappNumber, effectiveCallNumber, alternateContact || '',
       performanceCategory, performanceTitle, performanceDescription, performanceType || 'Solo',
       Number(performerCount) || 1, performanceDuration || '3 to 5 Minutes', performanceLanguage || '', specialRequirements || '',
       instagramUrl.trim(), (youtubeUrl && youtubeUrl.trim()) ? youtubeUrl.trim() : '', (facebookUrl && facebookUrl.trim()) ? facebookUrl.trim() : '', city, Number(age) || 18, discoverySource || '', additionalMessage || '',
       razorpayOrderId, feeAmount,
       performanceCategory, performanceTitle
-    );
+    ]);
 
     // Audit status log
-    db.prepare(`
+    await db.execute(`
       INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
       VALUES (?, 'PERFORMER', ?, NULL, 'PAYMENT_PENDING', 'SYSTEM', 'Performer Application Created')
-    `).run(`his-${Date.now()}`, appId);
+    `, [`his-${Date.now()}`, appId]);
 
     return NextResponse.json({
       success: true,

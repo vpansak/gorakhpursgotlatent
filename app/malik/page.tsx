@@ -15,35 +15,43 @@ async function getAdminData() {
     return null;
   }
 
-  const revenueRow = db.prepare("SELECT SUM(total_amount) as total FROM ticket_orders WHERE payment_status = 'PAID'").get() as any;
-  const totalRevenue = revenueRow?.total || 0;
+  const revenueRow = await db.queryOne<any>("SELECT SUM(total_amount) as total FROM ticket_orders WHERE payment_status = 'PAID'");
+  const totalRevenue = Number(revenueRow?.total) || 0;
 
-  const paidOrdersRow = db.prepare("SELECT COUNT(*) as count FROM ticket_orders WHERE payment_status = 'PAID'").get() as any;
-  const totalOrders = paidOrdersRow?.count || 0;
+  const paidOrdersRow = await db.queryOne<any>("SELECT COUNT(*) as count FROM ticket_orders WHERE payment_status = 'PAID'");
+  const totalOrders = Number(paidOrdersRow?.count) || 0;
 
-  const ticketsRow = db.prepare('SELECT COUNT(*) as count FROM tickets').get() as any;
-  const checkedInRow = db.prepare('SELECT COUNT(*) as count FROM tickets WHERE status = "USED"').get() as any;
+  const ticketsRow = await db.queryOne<any>('SELECT COUNT(*) as count FROM tickets');
+  const checkedInRow = await db.queryOne<any>('SELECT COUNT(*) as count FROM tickets WHERE status = \'USED\'');
 
-  const perfCount = (db.prepare('SELECT COUNT(*) as count FROM performer_applications').get() as any)?.count || 0;
-  const guestCount = (db.prepare('SELECT COUNT(*) as count FROM guest_applications').get() as any)?.count || 0;
-  const sponsorCount = (db.prepare('SELECT COUNT(*) as count FROM sponsor_applications').get() as any)?.count || 0;
-  const eventCount = (db.prepare('SELECT COUNT(*) as count FROM event_booking_applications').get() as any)?.count || 0;
+  const perfCountRow = await db.queryOne<any>('SELECT COUNT(*) as count FROM performer_applications');
+  const perfPaidCountRow = await db.queryOne<any>("SELECT COUNT(*) as count FROM performer_applications WHERE payment_status = 'PAID'");
+  const guestCountRow = await db.queryOne<any>('SELECT COUNT(*) as count FROM guest_applications');
+  const sponsorCountRow = await db.queryOne<any>('SELECT COUNT(*) as count FROM sponsor_applications');
+  const eventCountRow = await db.queryOne<any>('SELECT COUNT(*) as count FROM event_booking_applications');
 
-  const recentOrders = db.prepare(`
+  const perfCount = Number(perfCountRow?.count) || 0;
+  const perfPaidCount = Number(perfPaidCountRow?.count) || 0;
+  const guestCount = Number(guestCountRow?.count) || 0;
+  const sponsorCount = Number(sponsorCountRow?.count) || 0;
+  const eventCount = Number(eventCountRow?.count) || 0;
+
+  const recentOrders = await db.query(`
     SELECT o.*, e.title as event_title
     FROM ticket_orders o
     JOIN events e ON o.event_id = e.id
     ORDER BY o.created_at DESC LIMIT 5
-  `).all();
+  `);
 
   return {
     session,
     stats: {
       totalRevenue,
       totalOrders,
-      totalTickets: ticketsRow?.count || 0,
-      totalCheckedIn: checkedInRow?.count || 0,
+      totalTickets: Number(ticketsRow?.count) || 0,
+      totalCheckedIn: Number(checkedInRow?.count) || 0,
       perfCount,
+      perfPaidCount,
       guestCount,
       sponsorCount,
       eventCount,

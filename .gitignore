@@ -31,3 +31,6 @@ yarn-error.log*
 # uploads private storage
 /storage/private/*
 !/storage/private/.gitkeep
+
+*.tsbuildinfo
+*.neon.ts

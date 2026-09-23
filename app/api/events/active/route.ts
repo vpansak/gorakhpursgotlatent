@@ -3,13 +3,13 @@ import { db } from '@/lib/db';
 
 export async function GET() {
   try {
-    const event = db.prepare("SELECT * FROM events WHERE status = 'PUBLISHED' ORDER BY event_date ASC LIMIT 1").get() as any;
+    const event = await db.queryOne<any>("SELECT * FROM events WHERE status = 'PUBLISHED' ORDER BY event_date ASC LIMIT 1");
 
     if (!event) {
       return NextResponse.json({ success: false, message: 'No upcoming published events' });
     }
 
-    const categories = db.prepare("SELECT * FROM ticket_categories WHERE event_id = ? AND status = 'ACTIVE' ORDER BY sort_order ASC").all(event.id);
+    const categories = await db.query("SELECT * FROM ticket_categories WHERE event_id = ? AND status = 'ACTIVE' ORDER BY sort_order ASC", [event.id]);
 
     return NextResponse.json({
       success: true,

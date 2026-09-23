@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Building2, Award, ChevronRight, CheckCircle2 } from 'lucide-react';
 
 export default async function SponsorsPage() {
-  const sponsors = db.prepare("SELECT * FROM sponsor_applications WHERE status = 'APPROVED' ORDER BY created_at DESC").all();
+  const sponsors = await db.query("SELECT * FROM sponsor_applications WHERE status = 'APPROVED' ORDER BY created_at DESC");
 
   const packages = [
     {

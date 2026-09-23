@@ -56,7 +56,7 @@ export async function clearSessionCookie() {
 }
 
 export async function authenticateUser(email: string, password: string): Promise<UserSession | null> {
-  const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email) as any;
+  const user = await db.queryOne<any>('SELECT * FROM users WHERE email = ?', [email]);
   if (!user) return null;
 
   const valid = await bcrypt.compare(password, user.password_hash);

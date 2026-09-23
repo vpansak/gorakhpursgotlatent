@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { syncSheetsToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
 
 export async function POST(req: Request) {
@@ -19,28 +20,28 @@ export async function POST(req: Request) {
     const appId = generateAppId('SPN');
     const id = `spn-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-    const insert = db.prepare(`
+    await db.execute(`
       INSERT INTO sponsor_applications (
         id, app_id, company_name, contact_person, designation, biz_email, whatsapp,
         phone, website, instagram_url, social_url, industry, location, description,
         sponsorship_type, budget_est, preferred_package, campaign_obj, expected_audience,
         event_preference, message, requirements, logo_url, brand_deck_url, doc_url, status
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'SUBMITTED')
-    `);
-
-    insert.run(
+    `, [
       id, appId, companyName, contactPerson, designation || '', bizEmail, whatsapp,
       phone || '', website || '', instagramUrl || '', socialUrl || '', industry || '',
       location || '', description || '', sponsorshipType || 'General Brand Sponsorship',
       budgetEst || 'Custom Quote by Management', preferredPackage || 'Custom Package',
       campaignObj || '', expectedAudience || '', eventPreference || '', message || '',
       requirements || '', logoUrl || '', brandDeckUrl || '', docUrl || ''
-    );
+    ]);
 
-    db.prepare(`
+    await db.execute(`
       INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
       VALUES (?, 'SPONSOR', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Sponsor Application Submission')
-    `).run(`his-${Date.now()}`, appId);
+    `, [`his-${Date.now()}`, appId]);
+
+    syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
 
     return NextResponse.json({
       success: true,

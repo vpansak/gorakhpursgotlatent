@@ -7,25 +7,25 @@ import { CheckCircle2, Ticket, Calendar, MapPin, Download, Printer, ArrowRight }
 
 async function getOrderConfirmation(orderId: string) {
   try {
-    const order = db.prepare(`
+    const order = await db.queryOne<any>(`
       SELECT o.*, e.title as event_title, e.event_date, e.start_time, e.venue_name, e.venue_address, e.city
       FROM ticket_orders o
       JOIN events e ON o.event_id = e.id
       WHERE o.id = ? OR o.order_number = ?
-    `).get(orderId, orderId) as any;
+    `, [orderId, orderId]);
 
     if (!order) return null;
 
-    const tickets = db.prepare(`
+    const tickets = await db.query<any>(`
       SELECT t.*, c.name as category_name
       FROM tickets t
       JOIN ticket_categories c ON t.category_id = c.id
       WHERE t.order_id = ?
-    `).all(order.id) as any[];
+    `, [order.id]);
 
     // Generate QR Code data URL for each ticket (containing secure hash verification reference)
     const ticketsWithQr = await Promise.all(
-      tickets.map(async (t) => {
+      tickets.map(async (t: any) => {
         const qrUrl = await QRCode.toDataURL(t.qr_code_hash, {
           width: 240,
           margin: 1,

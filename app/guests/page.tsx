@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Star, MapPin } from 'lucide-react';
 
 export default async function GuestsPage() {
-  const guests = db.prepare("SELECT * FROM guest_applications WHERE status = 'APPROVED' ORDER BY created_at DESC").all();
+  const guests = await db.query("SELECT * FROM guest_applications WHERE status = 'APPROVED' ORDER BY created_at DESC");
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">

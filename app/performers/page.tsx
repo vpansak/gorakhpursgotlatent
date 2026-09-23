@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Mic2, Music, UserCheck, Star, MapPin } from 'lucide-react';
 
 export default async function PerformersPage() {
-  const performers = db.prepare("SELECT * FROM performer_applications WHERE status = 'APPROVED' ORDER BY created_at DESC").all();
+  const performers = await db.query("SELECT * FROM performer_applications WHERE status = 'APPROVED' ORDER BY created_at DESC");
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">

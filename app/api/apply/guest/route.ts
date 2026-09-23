@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { syncSheetsToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
 
 export async function POST(req: Request) {
@@ -19,7 +20,7 @@ export async function POST(req: Request) {
     const appId = generateAppId('GST');
     const id = `gst-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-    const insert = db.prepare(`
+    await db.execute(`
       INSERT INTO guest_applications (
         id, app_id, full_name, stage_name, dob, email, whatsapp, phone, instagram_url,
         youtube_url, social_url, city, location, profession, category, short_intro,
@@ -27,21 +28,21 @@ export async function POST(req: Request) {
         availability, preferred_date, travel_req, accommodation_req, special_req,
         important_info, profile_photo_url, press_kit_url, doc_url, status
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'SUBMITTED')
-    `);
-
-    insert.run(
+    `, [
       id, appId, fullName, stageName || '', dob || '', email, whatsapp, phone || '',
       instagramUrl || '', youtubeUrl || '', socialUrl || '', city, location || '',
       profession, category, shortIntro || '', whyGgl || '', previousShows || '',
       socialInfo || '', managementName || '', managerContact || '', availability || '',
       preferredDate || '', travelReq || '', accommodationReq || '', specialReq || '',
       importantInfo || '', profilePhotoUrl || '', pressKitUrl || '', docUrl || ''
-    );
+    ]);
 
-    db.prepare(`
+    await db.execute(`
       INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
       VALUES (?, 'GUEST', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Guest Application Submission')
-    `).run(`his-${Date.now()}`, appId);
+    `, [`his-${Date.now()}`, appId]);
+
+    syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
 
     return NextResponse.json({
       success: true,

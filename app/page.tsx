@@ -10,19 +10,20 @@ import {
 
 async function getHomepageData() {
   try {
-    const activeEvent = db.prepare("SELECT * FROM events WHERE status = 'PUBLISHED' ORDER BY event_date ASC LIMIT 1").get() as any;
+    const activeEvent = await db.queryOne<any>("SELECT * FROM events WHERE status = 'PUBLISHED' ORDER BY event_date ASC LIMIT 1");
 
     let categories: any[] = [];
     if (activeEvent) {
-      categories = db.prepare("SELECT * FROM ticket_categories WHERE event_id = ? AND status = 'ACTIVE' ORDER BY sort_order ASC").all(activeEvent.id);
+      categories = await db.query("SELECT * FROM ticket_categories WHERE event_id = ? AND status = 'ACTIVE' ORDER BY sort_order ASC", [activeEvent.id]);
     }
 
-    const performers = db.prepare("SELECT * FROM performer_applications WHERE status = 'APPROVED' AND is_featured = 1").all();
-    const guests = db.prepare("SELECT * FROM guest_applications WHERE status = 'APPROVED' AND is_featured = 1").all();
-    const sponsors = db.prepare("SELECT * FROM sponsor_applications WHERE status = 'APPROVED' AND is_featured = 1").all();
+    const performers = await db.query("SELECT * FROM performer_applications WHERE status = 'APPROVED' AND is_featured = 1");
+    const guests = await db.query("SELECT * FROM guest_applications WHERE status = 'APPROVED' AND is_featured = 1");
+    const sponsors = await db.query("SELECT * FROM sponsor_applications WHERE status = 'APPROVED' AND is_featured = 1");
 
     return { activeEvent, categories, performers, guests, sponsors };
   } catch (err) {
+    console.error('getHomepageData error:', err);
     return { activeEvent: null, categories: [], performers: [], guests: [], sponsors: [] };
   }
 }

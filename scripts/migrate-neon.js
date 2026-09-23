@@ -1,33 +1,17 @@
-import Database from 'better-sqlite3';
-import path from 'path';
-import fs from 'fs';
+import { Pool } from 'pg';
+import bcrypt from 'bcryptjs';
 
-const dbPath = process.env.DATABASE_PATH || './data/ggl.db';
-const fullPath = path.resolve(process.cwd(), dbPath);
+const databaseUrl = 'postgresql://neondb_owner:npg_N3PsaDziloM4@ep-cold-paper-b5liftd3-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
 
-// Ensure directory exists
-const dir = path.dirname(fullPath);
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir, { recursive: true });
-}
+const pool = new Pool({
+  connectionString: databaseUrl,
+  ssl: { rejectUnauthorized: false }
+});
 
-// Initialize SQLite database instance
-const rawDb = new Database(fullPath);
-
-// Enable Foreign Keys and WAL Mode for high performance
-rawDb.pragma('journal_mode = WAL');
-rawDb.pragma('foreign_keys = ON');
-
-export type AppDatabase = typeof rawDb & {
-  query: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
-  queryOne: <T = any>(sql: string, params?: any[]) => Promise<T | null>;
-  execute: (sql: string, params?: any[]) => Promise<{ rowCount: number }>;
-};
-
-export const db: AppDatabase = rawDb as AppDatabase;
-
-export function initDatabase() {
-  db.exec(`
+async function init() {
+  console.log('Starting Neon Postgres Schema Setup...');
+  
+  await pool.query(`
     -- Users Table
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
@@ -37,8 +21,8 @@ export function initDatabase() {
       full_name TEXT NOT NULL,
       role TEXT DEFAULT 'USER' CHECK(role IN ('SUPER_ADMIN', 'ADMIN', 'STAFF', 'TICKET_STAFF', 'USER')),
       avatar_url TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Events Table
@@ -61,22 +45,21 @@ export function initDatabase() {
       sales_start_at TEXT,
       sales_end_at TEXT,
       capacity INTEGER DEFAULT 1000,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Ticket Categories Table
     CREATE TABLE IF NOT EXISTS ticket_categories (
       id TEXT PRIMARY KEY,
-      event_id TEXT NOT NULL,
+      event_id TEXT NOT NULL REFERENCES events(id) ON DELETE CASCADE,
       name TEXT NOT NULL,
-      price REAL NOT NULL,
+      price NUMERIC(10,2) NOT NULL,
       available_qty INTEGER NOT NULL,
       max_per_order INTEGER DEFAULT 5,
       description TEXT,
       status TEXT DEFAULT 'ACTIVE' CHECK(status IN ('ACTIVE', 'INACTIVE', 'SOLD_OUT')),
-      sort_order INTEGER DEFAULT 0,
-      FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
+      sort_order INTEGER DEFAULT 0
     );
 
     -- Ticket Orders Table
@@ -87,37 +70,33 @@ export function initDatabase() {
       customer_name TEXT NOT NULL,
       customer_email TEXT NOT NULL,
       customer_phone TEXT NOT NULL,
-      event_id TEXT NOT NULL,
-      total_amount REAL NOT NULL,
+      event_id TEXT NOT NULL REFERENCES events(id),
+      total_amount NUMERIC(10,2) NOT NULL,
       currency TEXT DEFAULT 'INR',
       payment_status TEXT DEFAULT 'PENDING' CHECK(payment_status IN ('PENDING', 'PAID', 'FAILED', 'REFUNDED')),
       confirmation_email_status TEXT DEFAULT 'PENDING' CHECK(confirmation_email_status IN ('PENDING', 'SENT', 'FAILED')),
       razorpay_order_id TEXT,
       razorpay_payment_id TEXT,
       razorpay_signature TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (event_id) REFERENCES events(id)
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Tickets Table
     CREATE TABLE IF NOT EXISTS tickets (
       id TEXT PRIMARY KEY,
       ticket_number TEXT UNIQUE NOT NULL,
-      order_id TEXT NOT NULL,
-      category_id TEXT NOT NULL,
-      event_id TEXT NOT NULL,
+      order_id TEXT NOT NULL REFERENCES ticket_orders(id),
+      category_id TEXT NOT NULL REFERENCES ticket_categories(id),
+      event_id TEXT NOT NULL REFERENCES events(id),
       customer_name TEXT NOT NULL,
       customer_email TEXT NOT NULL,
       customer_phone TEXT NOT NULL,
       qr_code_hash TEXT UNIQUE NOT NULL,
       status TEXT DEFAULT 'VALID' CHECK(status IN ('VALID', 'USED', 'CANCELLED')),
-      checked_in_at DATETIME,
+      checked_in_at TIMESTAMP WITH TIME ZONE,
       checked_in_by TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (order_id) REFERENCES ticket_orders(id),
-      FOREIGN KEY (category_id) REFERENCES ticket_categories(id),
-      FOREIGN KEY (event_id) REFERENCES events(id)
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Performer Applications
@@ -128,6 +107,7 @@ export function initDatabase() {
       email TEXT NOT NULL,
       mobile_number TEXT NOT NULL,
       whatsapp_number TEXT NOT NULL,
+      call_number TEXT,
       alternate_contact TEXT,
       performance_category TEXT NOT NULL,
       performance_title TEXT NOT NULL,
@@ -147,17 +127,18 @@ export function initDatabase() {
       payment_status TEXT DEFAULT 'PAYMENT_PENDING',
       payment_id TEXT,
       order_id TEXT,
-      payment_amount REAL DEFAULT 199.00,
+      payment_amount NUMERIC(10,2) DEFAULT 199.00,
       payment_currency TEXT DEFAULT 'INR',
-      payment_verified_at DATETIME,
+      payment_verified_at TIMESTAMP WITH TIME ZONE,
       application_status TEXT DEFAULT 'PAYMENT_PENDING',
       email_status TEXT DEFAULT 'PENDING',
       admin_email_status TEXT DEFAULT 'PENDING',
+      admin_notes TEXT,
       refund_id TEXT,
-      refund_amount REAL,
+      refund_amount NUMERIC(10,2),
       refund_status TEXT,
-      refund_requested_at DATETIME,
-      refund_processed_at DATETIME,
+      refund_requested_at TIMESTAMP WITH TIME ZONE,
+      refund_processed_at TIMESTAMP WITH TIME ZONE,
       refund_reason TEXT,
       user_id TEXT,
       dob TEXT,
@@ -185,60 +166,11 @@ export function initDatabase() {
       status TEXT DEFAULT 'PAYMENT_PENDING',
       tags TEXT DEFAULT '',
       is_featured INTEGER DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
-  `);
 
-  // Auto-migrate missing columns for performer_applications
-  try {
-    const columns = (db.prepare("PRAGMA table_info(performer_applications)").all() as any[]).map(c => c.name);
-    const requiredCols = [
-      { name: 'call_number', type: 'TEXT' },
-      { name: 'admin_notes', type: 'TEXT' },
-      { name: 'mobile_number', type: 'TEXT' },
-      { name: 'whatsapp_number', type: 'TEXT' },
-      { name: 'alternate_contact', type: 'TEXT' },
-      { name: 'performance_category', type: 'TEXT' },
-      { name: 'performance_title', type: 'TEXT' },
-      { name: 'performance_description', type: 'TEXT' },
-      { name: 'performance_type', type: 'TEXT' },
-      { name: 'performer_count', type: 'INTEGER DEFAULT 1' },
-      { name: 'performance_duration', type: 'TEXT' },
-      { name: 'performance_language', type: 'TEXT' },
-      { name: 'special_requirements', type: 'TEXT' },
-      { name: 'facebook_url', type: 'TEXT' },
-      { name: 'age', type: 'INTEGER' },
-      { name: 'discovery_source', type: 'TEXT' },
-      { name: 'additional_message', type: 'TEXT' },
-      { name: 'payment_status', type: "TEXT DEFAULT 'PAYMENT_PENDING'" },
-      { name: 'payment_id', type: 'TEXT' },
-      { name: 'order_id', type: 'TEXT' },
-      { name: 'payment_amount', type: 'REAL DEFAULT 199.00' },
-      { name: 'payment_currency', type: "TEXT DEFAULT 'INR'" },
-      { name: 'payment_verified_at', type: 'DATETIME' },
-      { name: 'application_status', type: "TEXT DEFAULT 'PAYMENT_PENDING'" },
-      { name: 'email_status', type: "TEXT DEFAULT 'PENDING'" },
-      { name: 'admin_email_status', type: "TEXT DEFAULT 'PENDING'" },
-      { name: 'refund_id', type: 'TEXT' },
-      { name: 'refund_amount', type: 'REAL' },
-      { name: 'refund_status', type: 'TEXT' },
-      { name: 'refund_requested_at', type: 'DATETIME' },
-      { name: 'refund_processed_at', type: 'DATETIME' },
-      { name: 'refund_reason', type: 'TEXT' },
-    ];
-
-    for (const col of requiredCols) {
-      if (!columns.includes(col.name)) {
-        db.exec(`ALTER TABLE performer_applications ADD COLUMN ${col.name} ${col.type}`);
-      }
-    }
-  } catch (err) {
-    console.error('Migration error on performer_applications:', err);
-  }
-
-  db.exec(`
-    -- Guest Applications
+    -- Guest Applications (Panel Guests & Judges)
     CREATE TABLE IF NOT EXISTS guest_applications (
       id TEXT PRIMARY KEY,
       app_id TEXT UNIQUE NOT NULL,
@@ -274,8 +206,8 @@ export function initDatabase() {
       status TEXT DEFAULT 'SUBMITTED' CHECK(status IN ('SUBMITTED', 'UNDER REVIEW', 'CONTACTED', 'SHORTLISTED', 'APPROVED', 'SCHEDULED', 'COMPLETED', 'REJECTED')),
       tags TEXT DEFAULT '',
       is_featured INTEGER DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Sponsor Applications
@@ -309,8 +241,8 @@ export function initDatabase() {
       status TEXT DEFAULT 'SUBMITTED' CHECK(status IN ('SUBMITTED', 'UNDER REVIEW', 'CONTACTED', 'NEGOTIATION', 'PROPOSAL SENT', 'APPROVED', 'ACTIVE', 'COMPLETED', 'REJECTED')),
       tags TEXT DEFAULT '',
       is_featured INTEGER DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Event Booking Applications
@@ -339,8 +271,8 @@ export function initDatabase() {
       doc_url TEXT,
       status TEXT DEFAULT 'SUBMITTED' CHECK(status IN ('SUBMITTED', 'UNDER REVIEW', 'CONTACTED', 'DISCUSSION', 'PROPOSAL', 'CONFIRMED', 'COMPLETED', 'CANCELLED')),
       tags TEXT DEFAULT '',
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Application Notes
@@ -351,7 +283,7 @@ export function initDatabase() {
       author_id TEXT NOT NULL,
       author_name TEXT NOT NULL,
       note TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Application Status History
@@ -363,7 +295,7 @@ export function initDatabase() {
       new_status TEXT NOT NULL,
       changed_by TEXT NOT NULL,
       reason TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Payments Audit Table
@@ -373,15 +305,14 @@ export function initDatabase() {
       razorpay_order_id TEXT NOT NULL,
       razorpay_payment_id TEXT,
       razorpay_signature TEXT,
-      amount REAL NOT NULL,
+      amount NUMERIC(10,2) NOT NULL,
       currency TEXT DEFAULT 'INR',
       status TEXT NOT NULL,
       payment_method TEXT,
       error_code TEXT,
       error_description TEXT,
       raw_response TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (order_id) REFERENCES ticket_orders(id)
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Audit Logs
@@ -392,54 +323,76 @@ export function initDatabase() {
       target_type TEXT,
       target_id TEXT,
       details TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
     -- Settings Table
     CREATE TABLE IF NOT EXISTS settings (
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
+
+    -- Dedicated Views for Paid vs All Performers
+    CREATE OR REPLACE VIEW view_paid_performers AS
+      SELECT * FROM performer_applications WHERE payment_status = 'PAID';
+
+    CREATE OR REPLACE VIEW view_all_performers AS
+      SELECT * FROM performer_applications;
   `);
-}
 
-// Auto initialize schema on module load
-initDatabase();
+  console.log('All tables and views created successfully!');
 
-export async function query<T = any>(sql: string, params: any[] = []): Promise<T[]> {
-  try {
-    const stmt = db.prepare(sql);
-    return stmt.all(...params) as T[];
-  } catch (err) {
-    console.error('Database query error:', err);
-    return [];
+  // Check if admin exists
+  const adminCheck = await pool.query("SELECT id FROM users WHERE email = 'admin@gorakhpurgotlatent.com'");
+  if (adminCheck.rows.length === 0) {
+    console.log('Seeding default admin user...');
+    const hash = await bcrypt.hash('Malik@GGL2026', 10);
+    await pool.query(`
+      INSERT INTO users (id, email, phone, password_hash, full_name, role)
+      VALUES ($1, $2, $3, $4, $5, $6)
+    `, ['user-admin-1', 'admin@gorakhpurgotlatent.com', '+919999999999', hash, 'Malik (Super Admin)', 'SUPER_ADMIN']);
+    console.log('Admin user seeded: admin@gorakhpurgotlatent.com / Malik@GGL2026');
   }
-}
 
-export async function queryOne<T = any>(sql: string, params: any[] = []): Promise<T | null> {
-  try {
-    const stmt = db.prepare(sql);
-    const row = stmt.get(...params);
-    return (row as T) || null;
-  } catch (err) {
-    console.error('Database queryOne error:', err);
-    return null;
+  // Check if active event exists
+  const eventCheck = await pool.query("SELECT id FROM events WHERE slug = 'gorakhpur-live-auditions-2026'");
+  if (eventCheck.rows.length === 0) {
+    console.log('Seeding default launch event...');
+    await pool.query(`
+      INSERT INTO events (id, title, slug, subtitle, description, event_date, start_time, venue_name, venue_address, city, capacity, status)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    `, [
+      'evt-ggl-2026-1',
+      "Gorakhpur's Got Latent - Live Mega Auditions & Roast",
+      'gorakhpur-live-auditions-2026',
+      "Purvanchal's #1 Live Talent & Comedy Show",
+      "Experience raw talent, hilarious judge roasts, and unscripted performances live in Gorakhpur.",
+      '2026-09-26',
+      '13:00',
+      'Gorakhpur Club Ground',
+      'Civil Lines, Near Golghar, Gorakhpur, UP 273001',
+      'Gorakhpur',
+      1000,
+      'PUBLISHED'
+    ]);
+
+    // Add ticket categories
+    await pool.query(`
+      INSERT INTO ticket_categories (id, event_id, name, price, available_qty, description, sort_order)
+      VALUES 
+      ('cat-general', 'evt-ggl-2026-1', 'General Entry', 199.00, 500, 'Access to ground seating arena', 1),
+      ('cat-vip', 'evt-ggl-2026-1', 'VIP Front Row', 499.00, 200, 'Front row seating & closest view to the stage', 2),
+      ('cat-fan', 'evt-ggl-2026-1', 'Celebrity Fan Pit', 999.00, 50, 'Exclusive access with judge interaction zone & badge', 3)
+    `);
+    console.log('Event & ticket categories seeded!');
   }
+
+  console.log('Neon Database Setup Complete!');
+  await pool.end();
 }
 
-export async function execute(sql: string, params: any[] = []): Promise<{ rowCount: number }> {
-  try {
-    const stmt = db.prepare(sql);
-    const result = stmt.run(...params);
-    return { rowCount: result.changes };
-  } catch (err) {
-    console.error('Database execute error:', err);
-    return { rowCount: 0 };
-  }
-}
-
-// Assign to db object as well for convenience
-(db as any).query = query;
-(db as any).queryOne = queryOne;
-(db as any).execute = execute;
+init().catch(e => {
+  console.error('Setup failed:', e);
+  process.exit(1);
+});

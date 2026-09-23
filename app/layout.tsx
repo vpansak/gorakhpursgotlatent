@@ -1,8 +1,15 @@
 import type { Metadata } from 'next';
-import { Anton, Barlow_Condensed, Outfit, Inter } from 'next/font/google';
+import { Bebas_Neue, Barlow_Condensed, Anton, Outfit, Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+
+const bebas = Bebas_Neue({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-bebas',
+  display: 'swap',
+});
 
 const anton = Anton({
   weight: '400',
@@ -68,7 +75,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${outfit.variable} ${inter.variable} scroll-smooth`}>
+    <html lang="en" className={`${bebas.variable} ${barlow.variable} ${anton.variable} ${outfit.variable} ${inter.variable} scroll-smooth`}>
       <head>
         <script src="https://checkout.razorpay.com/v1/checkout.js" async />
       </head>

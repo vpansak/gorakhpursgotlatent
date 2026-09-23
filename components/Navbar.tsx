@@ -14,30 +14,30 @@ export default function Navbar() {
   if (isLiveRoute) return null;
 
   const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'About Show', href: '/#about' },
-    { name: 'Performers', href: '/performers' },
-    { name: 'Guests', href: '/guests' },
-    { name: 'Sponsors', href: '/sponsors' },
-    { name: 'Tickets', href: 'https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio', isExternal: true },
-    { name: 'Apply Now', href: '/apply' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'HOME', href: '/' },
+    { name: 'ABOUT US', href: '/#about' },
+    { name: 'REGISTER NOW', href: '/apply' },
+    { name: 'SPONSORS', href: '/sponsors' },
+    { name: 'PARTICIPANTS', href: '/performers' },
+    { name: 'GUESTS', href: '/guests' },
+    { name: 'TICKETS', href: 'https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio', isExternal: true },
+    { name: 'MY ACCOUNT', href: '/malik/login' },
   ];
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#07080e]/85 border-b border-amber-500/20 transition-all duration-300">
+      <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#07080e]/90 border-b border-amber-500/20 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo Brand */}
             <Link href="/" className="flex items-center group -ml-2 sm:-ml-4 lg:-ml-6">
-              <div className="relative w-56 sm:w-64 lg:w-72 h-14 sm:h-16 transition-transform duration-300 group-hover:scale-105">
+              <div className="relative w-52 sm:w-64 lg:w-72 h-14 sm:h-16 transition-transform duration-300 group-hover:scale-105">
                 <Image
-                  src="/logo.png"
-                  alt="Gorakhpur's Got Latent Golden Title Logo"
+                  src="/ggl-logo.png"
+                  alt="Gorakhpur's Got Latent Official Brand Logo"
                   fill
                   priority
-                  className="object-contain object-left filter drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]"
+                  className="object-contain object-left filter drop-shadow-[0_0_18px_rgba(255,215,0,0.5)]"
                 />
               </div>
             </Link>
@@ -53,7 +53,7 @@ export default function Navbar() {
                       href={link.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-3 py-2 rounded-lg text-sm font-semibold text-amber-400 hover:text-amber-300 hover:bg-white/5 transition-all duration-200"
+                      className="px-3 py-1.5 rounded-lg font-barlow text-sm font-bold uppercase tracking-wider text-amber-400 hover:text-amber-300 hover:bg-white/5 transition-all duration-200"
                     >
                       {link.name} ↗
                     </a>
@@ -61,9 +61,9 @@ export default function Navbar() {
                 }
                 return (
                   <Link
-                    key={link.href}
+                    key={link.name}
                     href={link.href}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    className={`px-3 py-1.5 rounded-lg font-barlow text-sm font-bold uppercase tracking-wider transition-all duration-200 ${
                       isActive
                         ? 'text-amber-400 bg-amber-500/10 border border-amber-500/30 shadow-[0_0_12px_rgba(255,215,0,0.15)]'
                         : 'text-slate-300 hover:text-amber-300 hover:bg-white/5'
@@ -126,7 +126,7 @@ export default function Navbar() {
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 rounded-xl text-base font-semibold text-amber-400 hover:bg-amber-500/10 border border-transparent transition-all"
+                    className="block px-4 py-3 rounded-xl font-barlow text-base font-bold uppercase tracking-wider text-amber-400 hover:bg-amber-500/10 border border-transparent transition-all"
                   >
                     {link.name} ↗
                   </a>
@@ -134,10 +134,10 @@ export default function Navbar() {
               }
               return (
                 <Link
-                  key={link.href}
+                  key={link.name}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20 transition-all"
+                  className="block px-4 py-3 rounded-xl font-barlow text-base font-bold uppercase tracking-wider text-slate-200 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20 transition-all"
                 >
                   {link.name}
                 </Link>

@@ -22,7 +22,9 @@ export default {
       },
       fontFamily: {
         sans: ['var(--font-outfit)', 'Inter', 'sans-serif'],
-        display: ['var(--font-display)', 'Outfit', 'sans-serif'],
+        display: ['var(--font-bebas)', 'var(--font-anton)', 'Impact', 'sans-serif'],
+        bebas: ['var(--font-bebas)', 'Impact', 'sans-serif'],
+        barlow: ['var(--font-barlow)', 'sans-serif'],
       },
       boxShadow: {
         'stage-glow': '0 0 40px rgba(255, 215, 0, 0.25)',

@@ -22,6 +22,15 @@
   }
 }
 
+.font-bebas {
+  font-family: var(--font-bebas), 'Anton', Impact, sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.font-barlow {
+  font-family: var(--font-barlow), sans-serif;
+}
+
 /* Custom Stage Effects & Styling */
 .bg-stage-radial {
   background: radial-gradient(ellipse at top, rgba(255, 215, 0, 0.22) 0%, rgba(255, 87, 34, 0.1) 40%, rgba(7, 8, 14, 1) 85%);

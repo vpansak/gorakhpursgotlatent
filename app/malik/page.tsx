@@ -6,7 +6,8 @@ import { db } from '@/lib/db';
 import { formatINR } from '@/lib/helpers';
 import {
   TrendingUp, Ticket, Users, FileText, CheckCircle2, ShieldCheck,
-  ChevronRight, Mic2, Star, Building2, QrCode, LogOut
+  ChevronRight, Mic2, Star, Building2, QrCode, LogOut,
+  FileSpreadsheet, Folder, Download, Database
 } from 'lucide-react';
 
 async function getAdminData() {
@@ -181,6 +182,101 @@ export default async function AdminDashboardPage() {
           <h3 className="text-xl font-black text-white">Gate Ticket Scanner</h3>
           <p className="text-xs text-slate-400">Live QR camera scanner and ticket verification tool with duplicate entry prevention.</p>
         </Link>
+      </div>
+
+      {/* Neon S3 Live Sheets Section */}
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/30 space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+          <div>
+            <h3 className="text-lg font-black text-white flex items-center gap-2">
+              <FileSpreadsheet className="w-5 h-5 text-emerald-400" /> Neon S3 Cloud Sheets & Master Folders
+            </h3>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Live automated CSV sheets synchronized in real-time to bucket: <strong className="text-amber-400 font-mono">gorakhpur-got-latent</strong>
+            </p>
+          </div>
+          <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-1.5 w-fit">
+            <Database className="w-3.5 h-3.5" /> Neon PostgreSQL Connected
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            {
+              title: "Paid Performers (₹199 Paid)",
+              folder: "sheets/performers/paid_performers.csv",
+              badge: "PAID ONLY",
+              badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+              url: "https://br-shy-meadow-b5n9zrpd.storage.c-7.us-east-2.aws.neon.tech/gorakhpur-got-latent/sheets/performers/paid_performers.csv",
+              desc: "Applicants who completed the audition registration fee on Razorpay."
+            },
+            {
+              title: "All Performers (Master List)",
+              folder: "sheets/performers/all_performers.csv",
+              badge: "ALL APPLICANTS",
+              badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+              url: "https://br-shy-meadow-b5n9zrpd.storage.c-7.us-east-2.aws.neon.tech/gorakhpur-got-latent/sheets/performers/all_performers.csv",
+              desc: "Master list of all performers who filled the audition form."
+            },
+            {
+              title: "Brand Sponsors & Partners",
+              folder: "sheets/sponsors/sponsors.csv",
+              badge: "SPONSORS",
+              badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/40",
+              url: "https://br-shy-meadow-b5n9zrpd.storage.c-7.us-east-2.aws.neon.tech/gorakhpur-got-latent/sheets/sponsors/sponsors.csv",
+              desc: "Corporate leads, company contacts, sponsorship types & budgets."
+            },
+            {
+              title: "Celebrity Panel & Judges",
+              folder: "sheets/panel/panel_guests.csv",
+              badge: "VIP PANEL",
+              badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40",
+              url: "https://br-shy-meadow-b5n9zrpd.storage.c-7.us-east-2.aws.neon.tech/gorakhpur-got-latent/sheets/panel/panel_guests.csv",
+              desc: "Celebrity judges, influencer appearances, and guest applications."
+            },
+            {
+              title: "Join Team / Volunteer Crew",
+              folder: "sheets/team/team_applications.csv",
+              badge: "CREW / RECRUITS",
+              badgeColor: "bg-orange-500/20 text-orange-300 border-orange-500/40",
+              url: "https://br-shy-meadow-b5n9zrpd.storage.c-7.us-east-2.aws.neon.tech/gorakhpur-got-latent/sheets/team/team_applications.csv",
+              desc: "Backstage operations, media volunteers, and event coordination team."
+            },
+            {
+              title: "Ticket Orders & Sales Ledger",
+              folder: "sheets/orders/ticket_orders.csv",
+              badge: "TICKET SALES",
+              badgeColor: "bg-pink-500/20 text-pink-300 border-pink-500/40",
+              url: "https://br-shy-meadow-b5n9zrpd.storage.c-7.us-east-2.aws.neon.tech/gorakhpur-got-latent/sheets/orders/ticket_orders.csv",
+              desc: "Bookings, attendee contact numbers, order values & Razorpay IDs."
+            },
+          ].map((sheet, idx) => (
+            <div key={idx} className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between space-y-3">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase border ${sheet.badgeColor}`}>
+                    {sheet.badge}
+                  </span>
+                  <Folder className="w-4 h-4 text-amber-400" />
+                </div>
+                <h4 className="text-sm font-bold text-white">{sheet.title}</h4>
+                <p className="text-[11px] text-slate-400 leading-relaxed">{sheet.desc}</p>
+                <div className="font-mono text-[10px] text-slate-500 truncate pt-1">
+                  📁 {sheet.folder}
+                </div>
+              </div>
+
+              <a
+                href={sheet.url}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition-colors border border-amber-500/20"
+              >
+                <Download className="w-3.5 h-3.5 text-amber-400" /> Open / Download CSV Sheet
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Recent Orders Ledger Table */}

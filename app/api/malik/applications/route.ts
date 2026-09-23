@@ -72,6 +72,20 @@ export async function GET(req: Request) {
       }
       query += ' ORDER BY created_at DESC';
       items = db.prepare(query).all(...params);
+    } else if (type === 'team') {
+      let query = 'SELECT * FROM team_applications WHERE 1=1';
+      const params: any[] = [];
+      if (status) {
+        query += ' AND status = ?';
+        params.push(status);
+      }
+      if (search) {
+        query += ' AND (full_name LIKE ? OR email LIKE ? OR mobile_number LIKE ? OR app_id LIKE ?)';
+        const term = `%${search}%`;
+        params.push(term, term, term, term);
+      }
+      query += ' ORDER BY created_at DESC';
+      items = db.prepare(query).all(...params);
     }
 
     return NextResponse.json({ success: true, items });
@@ -98,6 +112,7 @@ export async function PATCH(req: Request) {
     else if (type === 'guest') tableName = 'guest_applications';
     else if (type === 'sponsor') tableName = 'sponsor_applications';
     else if (type === 'event') tableName = 'event_booking_applications';
+    else if (type === 'team') tableName = 'team_applications';
 
     if (!tableName) return NextResponse.json({ error: 'Invalid application type' }, { status: 400 });
 

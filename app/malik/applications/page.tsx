@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 
 export default function ApplicationsManagerPage() {
-  const [appType, setAppType] = useState<'performer' | 'guest' | 'sponsor' | 'event'>('performer');
+  const [appType, setAppType] = useState<'performer' | 'guest' | 'sponsor' | 'event' | 'team'>('performer');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
 
@@ -169,6 +169,7 @@ export default function ApplicationsManagerPage() {
             { id: 'performer', label: 'Performers' },
             { id: 'guest', label: 'Guests' },
             { id: 'sponsor', label: 'Sponsors' },
+            { id: 'team', label: 'Join Team' },
             { id: 'event', label: 'Show Bookings' },
           ].map((tab) => (
             <button

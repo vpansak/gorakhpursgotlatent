@@ -63,10 +63,13 @@ export default function JoinTeamPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const constructWhatsAppMessage = (data: typeof formData) => {
+  const [loading, setLoading] = useState(false);
+  const [submittedAppId, setSubmittedAppId] = useState('');
+
+  const constructWhatsAppMessage = (data: typeof formData, appId?: string) => {
     return (
 `🌟 *GORAKHPUR'S GOT LATENT - JOIN TEAM APPLICATION* 🌟
-
+${appId ? `🆔 *Application ID:* ${appId}\n` : ''}
 👤 *Full Name:* ${data.name.trim()}
 📱 *Mobile Number:* ${data.mobile.trim()}
 📧 *Email Address:* ${data.email.trim()}
@@ -82,7 +85,7 @@ ${data.about.trim()}
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
 
@@ -117,7 +120,28 @@ ${data.about.trim()}
       return;
     }
 
-    const messageText = constructWhatsAppMessage(formData);
+    setLoading(true);
+    let assignedAppId = '';
+
+    // Save to Database
+    try {
+      const res = await fetch('/api/apply/join-team', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success && data.appId) {
+        assignedAppId = data.appId;
+        setSubmittedAppId(data.appId);
+      }
+    } catch (err) {
+      console.warn('API save warning (proceeding to WhatsApp):', err);
+    } finally {
+      setLoading(false);
+    }
+
+    const messageText = constructWhatsAppMessage(formData, assignedAppId);
     const waUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(messageText)}`;
 
     setGeneratedWhatsAppUrl(waUrl);

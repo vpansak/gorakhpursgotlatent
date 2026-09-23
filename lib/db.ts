@@ -343,6 +343,24 @@ export function initDatabase() {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
+    -- Team / Volunteer Applications
+    CREATE TABLE IF NOT EXISTS team_applications (
+      id TEXT PRIMARY KEY,
+      app_id TEXT UNIQUE NOT NULL,
+      user_id TEXT,
+      full_name TEXT NOT NULL,
+      mobile_number TEXT NOT NULL,
+      email TEXT NOT NULL,
+      dob TEXT,
+      address TEXT NOT NULL,
+      instagram_url TEXT,
+      about TEXT,
+      status TEXT DEFAULT 'SUBMITTED' CHECK(status IN ('SUBMITTED', 'UNDER REVIEW', 'CONTACTED', 'SHORTLISTED', 'APPROVED', 'REJECTED')),
+      tags TEXT DEFAULT '',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
     -- Application Notes
     CREATE TABLE IF NOT EXISTS application_notes (
       id TEXT PRIMARY KEY,

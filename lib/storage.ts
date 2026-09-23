@@ -109,7 +109,7 @@ export async function uploadSheetToS3(sheetName: string, csvContent: string): Pr
  */
 export async function syncSheetsToS3() {
   try {
-    // 1. Paid Performers Sheet
+    // 1. Paid Performers Sheet (In folder sheets/performers/paid_performers.csv)
     const paidPerformers = await query(`
       SELECT 
         app_id, full_name, email, mobile_number, whatsapp_number, city, age,
@@ -118,13 +118,13 @@ export async function syncSheetsToS3() {
         payment_status, payment_id, order_id, payment_amount, payment_verified_at,
         application_status, created_at
       FROM performer_applications 
-      WHERE payment_status = 'PAID'
-      ORDER BY payment_verified_at DESC NULLS LAST, created_at DESC
+      WHERE payment_status = 'PAID' OR payment_status = 'PAYMENT_VERIFIED'
+      ORDER BY created_at DESC
     `);
     const paidCsv = jsonToCSV(paidPerformers);
-    const paidUrl = await uploadSheetToS3('performers_paid.csv', paidCsv);
+    const paidUrl = await uploadSheetToS3('performers/paid_performers.csv', paidCsv);
 
-    // 2. All Performers Sheet
+    // 2. All Performers Sheet (In folder sheets/performers/all_performers.csv)
     const allPerformers = await query(`
       SELECT 
         app_id, full_name, email, mobile_number, whatsapp_number, city, age,
@@ -136,9 +136,9 @@ export async function syncSheetsToS3() {
       ORDER BY created_at DESC
     `);
     const allPerfCsv = jsonToCSV(allPerformers);
-    const allPerfUrl = await uploadSheetToS3('performers_all.csv', allPerfCsv);
+    const allPerfUrl = await uploadSheetToS3('performers/all_performers.csv', allPerfCsv);
 
-    // 3. Sponsors Sheet
+    // 3. Sponsors Sheet (In folder sheets/sponsors/sponsors.csv)
     const sponsors = await query(`
       SELECT 
         app_id, company_name, contact_person, designation, biz_email, whatsapp, phone,
@@ -148,9 +148,9 @@ export async function syncSheetsToS3() {
       ORDER BY created_at DESC
     `);
     const sponsorsCsv = jsonToCSV(sponsors);
-    const sponsorsUrl = await uploadSheetToS3('sponsors.csv', sponsorsCsv);
+    const sponsorsUrl = await uploadSheetToS3('sponsors/sponsors.csv', sponsorsCsv);
 
-    // 4. Panel / Guests Sheet
+    // 4. Panel / Guests Sheet (In folder sheets/panel/panel_guests.csv)
     const panelGuests = await query(`
       SELECT 
         app_id, full_name, stage_name, email, whatsapp, phone, city, profession,
@@ -160,18 +160,27 @@ export async function syncSheetsToS3() {
       ORDER BY created_at DESC
     `);
     const panelCsv = jsonToCSV(panelGuests);
-    const panelUrl = await uploadSheetToS3('panel_guests.csv', panelCsv);
+    const panelUrl = await uploadSheetToS3('panel/panel_guests.csv', panelCsv);
 
-    // 5. Event Bookings Sheet
-    const eventBookings = await query(`
+    // 5. Team / Crew Applications Sheet (In folder sheets/team/team_applications.csv)
+    const teamApps = await query(`
       SELECT 
-        app_id, org_name, contact_person, email, whatsapp, phone, city, venue,
-        event_date, expected_audience, event_type, budget_range, status, created_at
-      FROM event_booking_applications
+        app_id, full_name, mobile_number, email, dob, address, instagram_url, about, status, created_at
+      FROM team_applications
       ORDER BY created_at DESC
     `);
-    const eventCsv = jsonToCSV(eventBookings);
-    const eventUrl = await uploadSheetToS3('event_bookings.csv', eventCsv);
+    const teamCsv = jsonToCSV(teamApps);
+    const teamUrl = await uploadSheetToS3('team/team_applications.csv', teamCsv);
+
+    // 6. Ticket Orders Sheet (In folder sheets/orders/ticket_orders.csv)
+    const orders = await query(`
+      SELECT 
+        order_number, customer_name, customer_email, customer_phone, total_amount, payment_status, razorpay_payment_id, created_at
+      FROM ticket_orders
+      ORDER BY created_at DESC
+    `);
+    const ordersCsv = jsonToCSV(orders);
+    const ordersUrl = await uploadSheetToS3('orders/ticket_orders.csv', ordersCsv);
 
     return {
       success: true,
@@ -180,7 +189,8 @@ export async function syncSheetsToS3() {
         performersAll: allPerfUrl,
         sponsors: sponsorsUrl,
         panelGuests: panelUrl,
-        eventBookings: eventUrl,
+        teamApps: teamUrl,
+        ticketOrders: ordersUrl,
       },
     };
   } catch (err: any) {

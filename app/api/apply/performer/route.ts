@@ -148,6 +148,9 @@ export async function POST(req: Request) {
       VALUES (?, 'PERFORMER', ?, NULL, 'PAYMENT_PENDING', 'SYSTEM', 'Performer Application Created')
     `, [`his-${Date.now()}`, appId]);
 
+    // Live S3 sheet sync for performers
+    syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
+
     return NextResponse.json({
       success: true,
       appId,

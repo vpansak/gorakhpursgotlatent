@@ -1,6 +1,26 @@
 import Database from 'better-sqlite3';
+import { Pool } from 'pg';
 import path from 'path';
 import fs from 'fs';
+
+const databaseUrl = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_N3PsaDziloM4@ep-cold-paper-b5liftd3-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+
+// Neon PostgreSQL Connection Pool
+export const pool: Pool = new Pool({
+  connectionString: databaseUrl,
+  ssl: { rejectUnauthorized: false },
+  max: 10,
+  idleTimeoutMillis: 30000,
+});
+
+/**
+ * Converts SQLite '?' placeholders to PostgreSQL '$1, $2, ...' syntax
+ */
+export function normalizeSql(sql: string): string {
+  if (!sql.includes('?')) return sql;
+  let index = 1;
+  return sql.replace(/\?/g, () => `$${index++}`);
+}
 
 const dbPath = process.env.DATABASE_PATH || './data/ggl.db';
 const fullPath = path.resolve(process.cwd(), dbPath);
@@ -22,6 +42,7 @@ export type AppDatabase = typeof rawDb & {
   query: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
   queryOne: <T = any>(sql: string, params?: any[]) => Promise<T | null>;
   execute: (sql: string, params?: any[]) => Promise<{ rowCount: number }>;
+  pool: Pool;
 };
 
 export const db: AppDatabase = rawDb as AppDatabase;
@@ -427,37 +448,48 @@ initDatabase();
 
 export async function query<T = any>(sql: string, params: any[] = []): Promise<T[]> {
   try {
-    const stmt = db.prepare(sql);
-    return stmt.all(...params) as T[];
-  } catch (err) {
-    console.error('Database query error:', err);
-    return [];
+    const normalized = normalizeSql(sql);
+    const result = await pool.query(normalized, params);
+    return result.rows as T[];
+  } catch (neonErr) {
+    try {
+      const stmt = rawDb.prepare(sql);
+      return stmt.all(...params) as T[];
+    } catch (err) {
+      console.error('Database query fallback error:', err);
+      return [];
+    }
   }
 }
 
 export async function queryOne<T = any>(sql: string, params: any[] = []): Promise<T | null> {
-  try {
-    const stmt = db.prepare(sql);
-    const row = stmt.get(...params);
-    return (row as T) || null;
-  } catch (err) {
-    console.error('Database queryOne error:', err);
-    return null;
-  }
+  const rows = await query<T>(sql, params);
+  return rows.length > 0 ? rows[0] : null;
 }
 
 export async function execute(sql: string, params: any[] = []): Promise<{ rowCount: number }> {
+  let rowCount = 0;
   try {
-    const stmt = db.prepare(sql);
-    const result = stmt.run(...params);
-    return { rowCount: result.changes };
-  } catch (err) {
-    console.error('Database execute error:', err);
-    return { rowCount: 0 };
+    const normalized = normalizeSql(sql);
+    const result = await pool.query(normalized, params);
+    rowCount = result.rowCount || 0;
+  } catch (neonErr) {
+    console.error('Neon execute error:', neonErr);
   }
+
+  // Also dual-write to local SQLite if applicable
+  try {
+    const stmt = rawDb.prepare(sql);
+    const res = stmt.run(...params);
+    if (!rowCount) rowCount = res.changes;
+  } catch (e) {}
+
+  return { rowCount };
 }
 
 // Assign to db object as well for convenience
 (db as any).query = query;
 (db as any).queryOne = queryOne;
 (db as any).execute = execute;
+(db as any).pool = pool;
+

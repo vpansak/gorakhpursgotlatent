@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { generateAppId } from '@/lib/helpers';
+import { syncSheetsToS3 } from '@/lib/storage';
 
 export async function POST(req: Request) {
   try {
@@ -14,13 +15,11 @@ export async function POST(req: Request) {
     const appId = generateAppId('EVT');
     const id = `tem-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-    const insert = db.prepare(`
+    await db.execute(`
       INSERT INTO team_applications (
         id, app_id, full_name, mobile_number, email, dob, address, instagram_url, about, status
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'SUBMITTED')
-    `);
-
-    insert.run(
+    `, [
       id,
       appId,
       name.trim(),
@@ -30,17 +29,20 @@ export async function POST(req: Request) {
       address.trim(),
       instagram?.trim() || '',
       about?.trim() || ''
-    );
+    ]);
 
     // Record status history
     try {
-      db.prepare(`
+      await db.execute(`
         INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
         VALUES (?, 'TEAM', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Team Application Submission')
-      `).run(`his-${Date.now()}`, appId);
+      `, [`his-${Date.now()}`, appId]);
     } catch (e) {
       // Ignore history error if table not present
     }
+
+    // Trigger instant background sync to Neon S3 sheets/team/team_applications.csv
+    syncSheetsToS3().catch(err => console.error('S3 sheet sync warning:', err));
 
     return NextResponse.json({
       success: true,

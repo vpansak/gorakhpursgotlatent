@@ -231,27 +231,27 @@ export interface AdminOtpEmailParams {
  * Send secure 6-digit OTP to authorized admin email address using EmailJS
  */
 export async function sendAdminLoginOtpEmail(params: AdminOtpEmailParams): Promise<{ success: boolean; message?: string }> {
-  const serviceId = process.env.EMAILJS_SERVICE_ID || 'service_15li5i6';
-  const templateId = process.env.EMAILJS_TEMPLATE_ID || 'template_41t6fmb';
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY || 'K2hOwDJVfSGpJ3nih';
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY || '30mafPjRgPPn5im53Idzh';
+  const serviceId = process.env.EMAILJS_OTP_SERVICE_ID || 'service_uvjpamq';
+  const templateId = process.env.EMAILJS_OTP_TEMPLATE_ID || 'template_6l63rff';
+  const publicKey = process.env.EMAILJS_OTP_PUBLIC_KEY || 'YRdAw-LarammkaqtX';
+  const privateKey = process.env.EMAILJS_OTP_PRIVATE_KEY || 'ur81P_T37pPwE0ivVNSkq';
 
   const { toEmail, otp } = params;
 
   const templateParams = {
     to_email: toEmail,
-    customer_email: toEmail,
     email: toEmail,
     user_email: toEmail,
+    customer_email: toEmail,
     reply_to: toEmail,
     to_name: 'Administrator',
     otp: otp,
     verification_code: otp,
-    subject: `🔐 GGL Admin Verification Code: ${otp}`,
-    title: "GORAKHPUR'S GOT LATENT — ADMIN PORTAL",
-    heading: 'Secure administrator verification',
+    subject: `GORAKHPUR’S GOT LATENT — Admin Verification Code: ${otp}`,
+    title: "GORAKHPUR'S GOT LATENT",
+    heading: 'ADMIN PORTAL',
     system_name: "GORAKHPUR'S GOT LATENT ADMIN PORTAL",
-    message: `Verification requested for ${toEmail}\n\nYOUR ONE-TIME PASSWORD:\n${otp}\n\nThis OTP is valid for 5 minutes. Do not share this code with anyone.`,
+    message: `GORAKHPUR'S GOT LATENT\nADMIN PORTAL\n\nVerification requested for:\n${toEmail}\n\nYOUR ONE-TIME PASSWORD:\n${otp}\n\nOTP validity:\n5 minutes`,
   };
 
   const payload = {

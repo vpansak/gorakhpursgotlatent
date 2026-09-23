@@ -220,12 +220,12 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
             <ShieldCheck className="w-3.5 h-3.5" /> GGL ADMIN PORTAL
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">
-            Secure Administrator Verification
+            ADMIN PORTAL
           </h1>
           <p className="text-xs text-slate-400 leading-relaxed">
             {step === 'ENTER_EMAIL'
-              ? 'Enter your authorized administrator email to receive a secure one-time passcode.'
-              : 'Enter the 6-digit security code sent to your authorized email address.'}
+              ? 'Only authorized administrator email addresses may request access.'
+              : 'Verification code sent to your authorized email.'}
           </p>
         </div>
 
@@ -233,14 +233,24 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
         {error && (
           <div className="p-3.5 rounded-2xl bg-red-500/15 border border-red-500/40 text-red-300 text-xs font-semibold flex items-start gap-2.5 shadow-sm">
             <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-            <span className="leading-snug">{error}</span>
+            <div className="space-y-0.5">
+              <span className="font-bold uppercase tracking-wider text-[10px] block text-red-400">
+                {isExpired ? 'OTP EXPIRED' : error.toLowerCase().includes('attempt') ? 'TOO MANY ATTEMPTS' : error.toLowerCase().includes('email') ? 'EMAIL REQUIRED' : 'INVALID OTP'}
+              </span>
+              <span className="leading-snug">{error}</span>
+            </div>
           </div>
         )}
 
         {successMsg && !error && (
           <div className="p-3.5 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs font-semibold flex items-start gap-2.5 shadow-sm">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-            <span className="leading-snug">{successMsg}</span>
+            <div className="space-y-0.5">
+              <span className="font-bold uppercase tracking-wider text-[10px] block text-emerald-400">
+                {step === 'VERIFY_OTP' ? 'OTP SENT' : 'VERIFIED'}
+              </span>
+              <span className="leading-snug">{successMsg}</span>
+            </div>
           </div>
         )}
 
@@ -256,7 +266,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
                 <input
                   type="email"
                   required
-                  placeholder="Enter authorized admin email"
+                  placeholder="Enter admin email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder:text-slate-500 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 focus:outline-none transition-all"
@@ -265,7 +275,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
                 />
               </div>
               <p className="text-[11px] text-slate-500 pt-0.5">
-                Only authorized GGL administrators can receive verification codes.
+                Only authorized administrator email addresses may request access.
               </p>
             </div>
 
@@ -277,7 +287,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>GENERATING SECURE OTP...</span>
+                  <span>SENDING OTP...</span>
                 </>
               ) : (
                 <>

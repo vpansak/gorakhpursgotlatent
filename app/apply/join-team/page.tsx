@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { parseResponse } from '@/lib/client-fetch';
 import {
   Users,
   User,
@@ -130,7 +131,7 @@ ${data.about.trim()}
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
+      const data = await parseResponse(res);
       if (data.success && data.appId) {
         assignedAppId = data.appId;
         setSubmittedAppId(data.appId);

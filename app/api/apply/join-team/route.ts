@@ -6,10 +6,14 @@ import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, mobile, email, dob, address, instagram, about } = body;
+    const { name, fullName, mobile, phone, whatsapp, email, dob, address, city, instagram, about } = body;
+    const effectiveName = (name || fullName || '').trim();
+    const effectiveMobile = (mobile || phone || whatsapp || '').trim();
+    const effectiveEmail = (email || '').trim();
+    const effectiveAddress = (address || city || '').trim();
 
-    if (!name || !mobile || !email || !address) {
-      return NextResponse.json({ error: 'Please fill in all required fields' }, { status: 400 });
+    if (!effectiveName || !effectiveMobile || !effectiveEmail) {
+      return NextResponse.json({ error: 'Please fill in all required fields (Name, Mobile, Email)' }, { status: 400 });
     }
 
     const appId = generateAppId('EVT');

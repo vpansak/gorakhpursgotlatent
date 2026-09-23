@@ -7,13 +7,16 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const {
-      companyName, contactPerson, designation, bizEmail, whatsapp, phone, website,
+      companyName, contactPerson, designation, bizEmail, email, whatsapp, phone, mobile, website,
       instagramUrl, socialUrl, industry, location, description, sponsorshipType,
       budgetEst, preferredPackage, campaignObj, expectedAudience, eventPreference,
       message, requirements, logoUrl, brandDeckUrl, docUrl
     } = body;
 
-    if (!companyName || !contactPerson || !bizEmail || !whatsapp) {
+    const effectiveEmail = (bizEmail || email || '').trim();
+    const effectiveWhatsapp = (whatsapp || phone || mobile || '').trim();
+
+    if (!companyName || !contactPerson || !effectiveEmail || !effectiveWhatsapp) {
       return NextResponse.json({ error: 'Please complete all required brand sponsorship details' }, { status: 400 });
     }
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Building2, CheckCircle2, ArrowRight, Loader2, Sparkles, MessageSquare } from 'lucide-react';
+import { parseResponse } from '@/lib/client-fetch';
 
 export default function SponsorApplyPage() {
   const [loading, setLoading] = useState(false);
@@ -33,8 +34,7 @@ export default function SponsorApplyPage() {
       fd.append('file', file);
       const endpoint = isPrivate ? '/api/upload-private' : '/api/upload';
       const res = await fetch(endpoint, { method: 'POST', body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      const data = await parseResponse(res);
       const url = isPrivate ? data.docUrl : data.url;
       setFormData(prev => ({ ...prev, [targetField]: url }));
     } catch (err: any) {
@@ -54,9 +54,7 @@ export default function SponsorApplyPage() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Submission failed');
-
+      const data = await parseResponse(res);
       setSubmittedAppId(data.appId);
     } catch (err: any) {
       setError(err.message || 'Error submitting application');

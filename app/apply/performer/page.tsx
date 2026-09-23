@@ -6,6 +6,7 @@ import {
   Mic2, CheckCircle2, AlertCircle, ShieldCheck, ArrowRight, Loader2,
   RefreshCw, Info, Sparkles, Check, Phone, Mail
 } from 'lucide-react';
+import { parseResponse } from '@/lib/client-fetch';
 
 declare global {
   interface Window {
@@ -117,8 +118,7 @@ export default function PerformerApplyPage() {
           }),
         });
 
-        const verifyData = await verifyRes.json();
-        if (!verifyRes.ok) throw new Error(verifyData.error || 'Payment verification failed');
+        const verifyData = await parseResponse(verifyRes);
 
         setSuccessData({
           appId: orderData.appId,

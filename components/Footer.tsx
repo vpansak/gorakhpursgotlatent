@@ -47,12 +47,12 @@ export default function Footer() {
           {/* Col 1: Brand & Logo */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-block group -ml-2 sm:-ml-3">
-              <div className="relative w-56 sm:w-64 h-16 sm:h-18 transition-transform group-hover:scale-105">
+              <div className="relative w-64 sm:w-72 h-20 sm:h-22 transition-transform group-hover:scale-105">
                 <Image
-                  src="/ggl-logo.png"
+                  src="/logo.png"
                   alt="Gorakhpur's Got Latent Official Logo"
                   fill
-                  className="object-contain object-left filter drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]"
+                  className="object-contain object-left filter drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]"
                 />
               </div>
             </Link>

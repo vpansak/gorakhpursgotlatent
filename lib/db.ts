@@ -22,33 +22,40 @@ export function normalizeSql(sql: string): string {
   return sql.replace(/\?/g, () => `$${index++}`);
 }
 
-const dbPath = process.env.DATABASE_PATH || './data/ggl.db';
-const fullPath = path.resolve(process.cwd(), dbPath);
-
-// Ensure directory exists
-const dir = path.dirname(fullPath);
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir, { recursive: true });
+let rawDb: any = null;
+try {
+  const dbPath = process.env.DATABASE_PATH || (process.env.VERCEL ? '/tmp/ggl.db' : './data/ggl.db');
+  const fullPath = path.resolve(process.cwd(), dbPath);
+  const dir = path.dirname(fullPath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  rawDb = new Database(fullPath);
+  rawDb.pragma('journal_mode = WAL');
+  rawDb.pragma('foreign_keys = ON');
+} catch (sqliteErr) {
+  console.warn('SQLite init skipped (using Neon PostgreSQL):', sqliteErr);
+  rawDb = {
+    prepare: () => ({ all: () => [], run: () => ({ changes: 0 }), get: () => null }),
+    exec: () => {},
+    pragma: () => {},
+  };
 }
 
-// Initialize SQLite database instance
-const rawDb = new Database(fullPath);
-
-// Enable Foreign Keys and WAL Mode for high performance
-rawDb.pragma('journal_mode = WAL');
-rawDb.pragma('foreign_keys = ON');
-
-export type AppDatabase = typeof rawDb & {
+export interface AppDatabase {
   query: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
   queryOne: <T = any>(sql: string, params?: any[]) => Promise<T | null>;
   execute: (sql: string, params?: any[]) => Promise<{ rowCount: number }>;
   pool: Pool;
-};
+  [key: string]: any;
+}
 
 export const db: AppDatabase = rawDb as AppDatabase;
 
 export function initDatabase() {
-  db.exec(`
+  try {
+    if (rawDb && typeof rawDb.exec === 'function') {
+      rawDb.exec(`
     -- Users Table
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
@@ -566,10 +573,18 @@ export function initDatabase() {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `);
+    }
+  } catch (err) {
+    console.warn('SQLite initDatabase skipped:', err);
+  }
 }
 
-// Auto initialize schema on module load
-initDatabase();
+// Auto initialize schema on module load safely
+try {
+  initDatabase();
+} catch (e) {
+  console.warn('Auto initDatabase error:', e);
+}
 
 export async function query<T = any>(sql: string, params: any[] = []): Promise<T[]> {
   try {

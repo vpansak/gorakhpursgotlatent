@@ -5,14 +5,10 @@ import { UserSession } from './auth';
 
 const OTP_SECRET_SALT = process.env.JWT_SECRET || 'ggl_otp_secure_salt_2026';
 
-// List of pre-authorized administrator emails
+// List of authorized administrator emails
 const AUTHORIZED_ADMIN_EMAILS = [
-  'admin@gorakhpurgotlatent.com',
-  'admin@ggllive.in',
-  'staff@ggllive.in',
-  'scanner@ggllive.in',
   'alooksingh1@gmail.com',
-  'help@gkpgotlatent.in',
+  'gkpgotlatent@gmail.com',
   ...(process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase()) : [])
 ];
 
@@ -260,7 +256,7 @@ export async function verifyAdminOtp(email: string, enteredOtp: string): Promise
   if (!user) {
     // Auto-provision authorized admin in users table
     const newUserId = `usr-${Date.now()}`;
-    const defaultName = cleanEmail.includes('alook') ? 'Alok Singh' : 'Administrator';
+    const defaultName = cleanEmail.includes('alook') ? 'Alok Singh (Malik)' : cleanEmail.includes('gkp') ? 'GGL Official Admin' : 'Administrator';
     const role = 'SUPER_ADMIN';
 
     await db.execute(

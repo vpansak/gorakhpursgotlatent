@@ -6,9 +6,13 @@ import Image from 'next/image';
 import {
   Play, Pause, RotateCcw, AlertTriangle, Shield, CheckCircle2, Lock, Unlock,
   Volume2, VolumeX, Eye, EyeOff, Award, Users, Mic2, Tv, ExternalLink,
-  ChevronRight, Sparkles, RefreshCw, Radio, Settings, Copy, Check, Flame
+  ChevronRight, Sparkles, RefreshCw, Radio, Settings, Copy, Check, Flame,
+  Upload, Sliders, Music, Volume1, ArrowRight, CornerDownLeft
 } from 'lucide-react';
-import { playSound, stopAllSounds } from '@/lib/soundboard';
+import {
+  getSoundEngine, playSound, stopAllSounds,
+  SoundType, SoundState, SOUND_CONFIGS
+} from '@/lib/soundboard';
 
 export default function OperatorControlRoomPage() {
   const [activeTab, setActiveTab] = useState<'run' | 'performers' | 'judges' | 'soundboard' | 'sponsors' | 'history'>('run');
@@ -21,6 +25,33 @@ export default function OperatorControlRoomPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+  // Scorekeeper focus refs for auto-tabbing between judge 1 to 5
+  const judgeInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  // Sound Engine state
+  const [soundStates, setSoundStates] = useState<Record<SoundType, SoundState>>({
+    THEME: 'READY',
+    ENTRY: 'READY',
+    LAUGH: 'READY',
+    APPLAUSE: 'READY',
+    SUSPENSE: 'READY',
+    WINNER: 'READY'
+  });
+  const [masterVolume, setMasterVolume] = useState<number>(85);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isAudioUnlocked, setIsAudioUnlocked] = useState<boolean>(false);
+  const [audioFilesList, setAudioFilesList] = useState<any[]>([]);
+  const [uploadingSound, setUploadingSound] = useState<string | null>(null);
+
+  // Configurable Auto Play switches
+  const [autoPlayOnStage, setAutoPlayOnStage] = useState(true);
+  const [autoPlayFiveScores, setAutoPlayFiveScores] = useState(true);
+  const [autoPlayCalculate, setAutoPlayCalculate] = useState(true);
+  const [autoPlayReveal, setAutoPlayReveal] = useState(true);
+
+  // Track previous 5-score state to prevent repeated auto-chime
+  const prevScoredCountRef = useRef<number>(0);
+
   // New Performer Form
   const [newPerfName, setNewPerfName] = useState('');
   const [newPerfAct, setNewPerfAct] = useState('');
@@ -28,6 +59,33 @@ export default function OperatorControlRoomPage() {
 
   // Local Timer countdown state
   const [displaySeconds, setDisplaySeconds] = useState(180);
+
+  // Initialize Sound Engine and subscribe to state
+  useEffect(() => {
+    const engine = getSoundEngine();
+    const unsubscribe = engine.subscribe((states, vol, muted, unlocked) => {
+      setSoundStates({ ...states });
+      setMasterVolume(Math.round(vol * 100));
+      setIsMuted(muted);
+      setIsAudioUnlocked(unlocked);
+    });
+
+    fetchAudioFilesStatus();
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const fetchAudioFilesStatus = async () => {
+    try {
+      const res = await fetch('/api/live/audio/status', { cache: 'no-store' });
+      const data = await res.json();
+      if (data.success) {
+        setAudioFilesList(data.audioFiles);
+      }
+    } catch (e) {}
+  };
 
   // Poll state every 1.5 seconds for real-time synchronization
   const fetchLiveState = async () => {
@@ -99,9 +157,22 @@ export default function OperatorControlRoomPage() {
         setErrorMsg(result.error || 'Operation failed');
       } else {
         setSuccessMsg(`Action '${action}' executed successfully`);
-        // If sound trigger exists
-        if (action === 'REVEAL_RESULT' && result.result) {
-          playSound(result.result === 'WINNER' ? 'WINNER' : 'SUSPENSE');
+
+        // Sound triggers for actions
+        if (action === 'SET_PERFORMER' && autoPlayOnStage) {
+          playSound('ENTRY');
+        } else if (action === 'CALCULATE_AVERAGE' && autoPlayCalculate) {
+          playSound('ENTRY');
+        } else if (action === 'REVEAL_RESULT') {
+          if (autoPlayReveal) {
+            // Suspense cue
+            playSound('SUSPENSE');
+            setTimeout(() => {
+              if (result.result === 'WINNER') {
+                playSound('WINNER');
+              }
+            }, 1200);
+          }
         }
         await fetchLiveState();
       }
@@ -126,8 +197,8 @@ export default function OperatorControlRoomPage() {
     });
   };
 
-  // Submit direct judge score from operator
-  const handleSetJudgeScore = (judgeId: string, val: string) => {
+  // Scorekeeper manual score change for single judge
+  const handleSetJudgeScore = (judgeId: string, val: string, index: number) => {
     setLocalScores(prev => ({ ...prev, [judgeId]: val }));
     const num = parseFloat(val);
     if (!isNaN(num) && num >= 0 && num <= 10 && liveData?.currentPerformer?.id) {
@@ -136,6 +207,54 @@ export default function OperatorControlRoomPage() {
         judgeId,
         score: num
       });
+    }
+  };
+
+  // Master Volume Handler
+  const handleVolumeChange = (newVal: number) => {
+    setMasterVolume(newVal);
+    getSoundEngine().setMasterVolume(newVal / 100);
+  };
+
+  // Toggle Mute All
+  const handleToggleMute = () => {
+    const muted = getSoundEngine().toggleMute();
+    setIsMuted(muted);
+    setMasterVolume(Math.round(getSoundEngine().getMasterVolume() * 100));
+  };
+
+  // Enable Live Audio click
+  const handleEnableAudio = () => {
+    const success = getSoundEngine().unlockAudio();
+    if (success) {
+      setIsAudioUnlocked(true);
+      setSuccessMsg('Live audio output enabled! Soundboard is ready for broadcast.');
+    }
+  };
+
+  // Upload/Replace custom audio file
+  const handleFileUpload = async (soundId: string, file: File) => {
+    setUploadingSound(soundId);
+    try {
+      const formData = new FormData();
+      formData.append('soundId', soundId);
+      formData.append('file', file);
+
+      const res = await fetch('/api/live/audio/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSuccessMsg(`Updated ${soundId} audio file successfully!`);
+        await fetchAudioFilesStatus();
+      } else {
+        setErrorMsg(data.error || 'Upload failed');
+      }
+    } catch (e: any) {
+      setErrorMsg(e.message || 'Upload error');
+    } finally {
+      setUploadingSound(null);
     }
   };
 
@@ -165,6 +284,14 @@ export default function OperatorControlRoomPage() {
   const isScoresLocked = state.status === 'SCORES_LOCKED' || state.status === 'AVERAGE_CALCULATED' || state.status === 'RESULT_REVEALED';
   const isAverageCalculated = state.calculated_average !== null && state.calculated_average !== undefined;
   const isRevealed = state.reveal_status === 'REVEALED' && state.status === 'RESULT_REVEALED';
+
+  // Auto trigger chime when 5/5 judges are scored
+  useEffect(() => {
+    if (scoredCount === 5 && prevScoredCountRef.current < 5 && autoPlayFiveScores) {
+      playSound('APPLAUSE');
+    }
+    prevScoredCountRef.current = scoredCount;
+  }, [scoredCount, autoPlayFiveScores]);
 
   // Calculate live diff & result preview for operator
   const currentAvg = isAverageCalculated ? Number(state.calculated_average) : null;
@@ -202,6 +329,28 @@ export default function OperatorControlRoomPage() {
               <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
               {isEmergencyBlank ? 'BLANK SCREEN ACTIVE' : 'ON AIR LIVE'}
             </div>
+          </div>
+
+          {/* Master Volume Strip in Header */}
+          <div className="hidden md:flex items-center gap-2 bg-black/50 px-3 py-1.5 rounded-xl border border-white/10">
+            <button
+              onClick={handleToggleMute}
+              className={`p-1.5 rounded-lg transition-colors ${isMuted ? 'text-red-400 bg-red-500/20' : 'text-amber-400 hover:bg-white/10'}`}
+              title={isMuted ? 'Unmute All' : 'Mute All'}
+            >
+              {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            </button>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={isMuted ? 0 : masterVolume}
+              onChange={e => handleVolumeChange(Number(e.target.value))}
+              className="w-20 accent-amber-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+            />
+            <span className="text-[10px] font-mono font-bold text-slate-400 w-8 text-right">
+              {isMuted ? '0%' : `${masterVolume}%`}
+            </span>
           </div>
 
           {/* Top Quick Links */}
@@ -280,6 +429,20 @@ export default function OperatorControlRoomPage() {
           </div>
         </div>
       </header>
+
+      {/* 1B. AUTOPLAY UNLOCK BANNER (If browser restricted audio) */}
+      {!isAudioUnlocked && (
+        <div className="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 text-black px-4 py-2 text-center text-xs font-extrabold flex items-center justify-center gap-3 shadow-lg">
+          <Volume2 className="w-4 h-4 animate-bounce" />
+          <span>Browser audio output requires 1-click permission for live sound effects:</span>
+          <button
+            onClick={handleEnableAudio}
+            className="px-4 py-1 rounded-full bg-black text-amber-400 hover:text-white font-black uppercase text-[11px] tracking-wider shadow-md transition-all active:scale-95"
+          >
+            ENABLE LIVE AUDIO 🔊
+          </button>
+        </div>
+      )}
 
       {/* 2. LIVE SHOW OPERATOR TOOLBAR (Timer, Emergency Blank, Judges Toggle) */}
       <div className="bg-[#101322] border-b border-amber-500/15 py-3 px-4 shadow-inner">
@@ -509,29 +672,29 @@ export default function OperatorControlRoomPage() {
               </div>
             </div>
 
-            {/* CENTER COLUMN: 5-JUDGE SCORING & CALCULATION ENGINE (5 COLS) */}
+            {/* CENTER COLUMN: SCOREKEEPER MANUAL 5-JUDGE SCORE ENTRY (5 COLS) */}
             <div className="lg:col-span-5 space-y-6">
               <div className="bg-[#0f111c] border border-amber-500/30 rounded-3xl p-6 shadow-xl space-y-5">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
                   <div>
                     <h3 className="text-lg font-black text-white flex items-center gap-2">
-                      <Shield className="w-5 h-5 text-amber-400" /> JUDGE SCORES
+                      <Shield className="w-5 h-5 text-amber-400" /> SCOREKEEPER MANUAL ENTRY
                     </h3>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      5 Judges • Individual private PIN input • Scale: 0.00 – 10.00
+                      Judges announce scores on stage • Scorekeeper enters 5 scores here
                     </p>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-black uppercase border ${
+                  <span className={`px-3 py-1 rounded-full text-xs font-black uppercase border transition-all ${
                     scoredCount === totalJudges
-                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
+                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.3)] animate-pulse'
                       : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                   }`}>
-                    {scoredCount} / {totalJudges} JUDGES SCORED
+                    {scoredCount} / {totalJudges} SCORES ENTERED
                   </span>
                 </div>
 
-                {/* 5 Judges Scoring Inputs */}
+                {/* 5 Judges Scoring Inputs with Quick Pills */}
                 <div className="space-y-3">
                   {judges.map((judge: any, idx: number) => {
                     const currentScore = localScores[judge.id] || '';
@@ -540,39 +703,73 @@ export default function OperatorControlRoomPage() {
                     return (
                       <div
                         key={judge.id}
-                        className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all ${
+                        className={`p-3.5 rounded-2xl border transition-all ${
                           isSubmitted
                             ? 'bg-[#141829] border-amber-500/40 shadow-sm'
                             : 'bg-black/30 border-white/5 opacity-80'
                         }`}
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 font-black text-xs flex items-center justify-center border border-amber-500/30">
-                            J{judge.slot_number || idx + 1}
-                          </div>
-                          <div>
-                            <div className="font-extrabold text-sm text-white flex items-center gap-2">
-                              {judge.name}
-                              {isSubmitted && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 font-black text-xs flex items-center justify-center border border-amber-500/30 shrink-0">
+                              J{judge.slot_number || idx + 1}
                             </div>
-                            <span className="text-[10px] text-slate-400 font-mono">PIN: {judge.pin || '••••'}</span>
+                            <div>
+                              <div className="font-extrabold text-sm text-white flex items-center gap-1.5">
+                                <span>{judge.name}</span>
+                                {isSubmitted && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+                              </div>
+                              <span className="text-[10px] text-slate-400 font-mono">
+                                {isSubmitted ? `Entered: [ ${Number(currentScore).toFixed(2)} ]` : 'Waiting for score...'}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Large Score Input */}
+                          <div className="flex items-center gap-2">
+                            <input
+                              ref={el => { judgeInputRefs.current[idx] = el; }}
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="10"
+                              disabled={isScoresLocked}
+                              value={currentScore}
+                              onChange={e => handleSetJudgeScore(judge.id, e.target.value, idx)}
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  // Jump to next judge input
+                                  const nextIdx = (idx + 1) % judges.length;
+                                  judgeInputRefs.current[nextIdx]?.focus();
+                                }
+                              }}
+                              placeholder="0–10"
+                              className="w-24 bg-black/70 border-2 border-amber-500/50 rounded-xl px-3 py-2 text-center text-lg font-mono font-black text-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-60"
+                            />
+                            <span className="text-xs text-slate-400 font-bold">/10</span>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="number"
-                            step="0.1"
-                            min="0"
-                            max="10"
-                            disabled={isScoresLocked}
-                            value={currentScore}
-                            onChange={e => handleSetJudgeScore(judge.id, e.target.value)}
-                            placeholder="0-10"
-                            className="w-20 bg-black/60 border border-amber-500/40 rounded-xl px-3 py-2 text-center text-base font-mono font-black text-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-60"
-                          />
-                          <span className="text-xs text-slate-400 font-bold">/10</span>
-                        </div>
+                        {/* Fast Quick-Click Score Buttons */}
+                        {!isScoresLocked && (
+                          <div className="flex items-center gap-1.5 overflow-x-auto pt-2 mt-2 border-t border-white/5">
+                            <span className="text-[9px] text-slate-500 uppercase font-bold shrink-0">QUICK:</span>
+                            {[6, 7, 7.5, 8, 8.5, 9, 9.5, 10].map(val => (
+                              <button
+                                key={val}
+                                type="button"
+                                onClick={() => handleSetJudgeScore(judge.id, String(val), idx)}
+                                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border transition-colors ${
+                                  currentScore === String(val)
+                                    ? 'bg-amber-500 text-black border-amber-400'
+                                    : 'bg-white/5 text-slate-300 border-white/5 hover:bg-white/10 hover:text-amber-400'
+                                }`}
+                              >
+                                {val}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -590,7 +787,8 @@ export default function OperatorControlRoomPage() {
                   ) : (
                     <button
                       onClick={() => handleOperatorAction('LOCK_SCORES', { performerId: currentPerf?.id })}
-                      className="w-full py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 border border-slate-600 transition-colors"
+                      disabled={scoredCount < 1}
+                      className="w-full py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 border border-slate-600 transition-colors disabled:opacity-50"
                     >
                       <Lock className="w-4 h-4 text-slate-400" /> LOCK JUDGE SCORES
                     </button>
@@ -605,15 +803,19 @@ export default function OperatorControlRoomPage() {
                   <div className="space-y-2">
                     <button
                       onClick={() => handleOperatorAction('CALCULATE_AVERAGE', { performerId: currentPerf?.id, force: true })}
-                      disabled={actionLoading || scoredCount < 1}
-                      className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-sm uppercase tracking-wider shadow-lg shadow-amber-500/25 transition-all transform active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+                      disabled={actionLoading || scoredCount < 5}
+                      className={`w-full py-3.5 rounded-2xl font-black text-sm uppercase tracking-wider shadow-lg transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 ${
+                        scoredCount >= 5
+                          ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-amber-500/25'
+                          : 'bg-white/5 text-slate-500 border border-white/10 cursor-not-allowed opacity-60'
+                      }`}
                     >
                       <Sparkles className="w-4 h-4" /> CALCULATE AVERAGE
                     </button>
 
                     {scoredCount < totalJudges && (
-                      <p className="text-[11px] text-amber-400/80 text-center font-semibold">
-                        Notice: {scoredCount}/{totalJudges} judges have scored. All 5 recommended before calculating.
+                      <p className="text-[11px] text-amber-400/90 text-center font-semibold">
+                        Notice: {scoredCount}/{totalJudges} judge scores entered. All 5 required before calculating.
                       </p>
                     )}
                   </div>
@@ -778,7 +980,7 @@ export default function OperatorControlRoomPage() {
                 </div>
               </div>
 
-              {/* QUICK SOUNDBOARD MINI STRIP */}
+              {/* QUICK SOUNDBOARD MINI STRIP WITH REAL AUDIO */}
               <div className="bg-[#0f111c] border border-white/10 rounded-3xl p-5 shadow-xl space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -800,24 +1002,32 @@ export default function OperatorControlRoomPage() {
 
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { label: 'Theme', sound: 'THEME', color: 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30' },
-                    { label: 'Fanfare', sound: 'ENTRY', color: 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30' },
-                    { label: 'Applause', sound: 'APPLAUSE', color: 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30' },
-                    { label: 'Suspense', sound: 'SUSPENSE', color: 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30' },
-                    { label: 'Laugh', sound: 'LAUGH', color: 'bg-pink-500/20 text-pink-300 hover:bg-pink-500/30' },
-                    { label: 'Winner!', sound: 'WINNER', color: 'bg-emerald-600 text-white hover:bg-emerald-500' }
-                  ].map(s => (
-                    <button
-                      key={s.sound}
-                      onClick={() => {
-                        playSound(s.sound as any);
-                        handleOperatorAction('TRIGGER_SOUND', { sound: s.sound });
-                      }}
-                      className={`p-2.5 rounded-xl font-bold text-xs transition-all text-center ${s.color}`}
-                    >
-                      {s.label}
-                    </button>
-                  ))}
+                    { id: 'THEME', label: 'Theme', color: 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30' },
+                    { id: 'ENTRY', label: 'Fanfare', color: 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30' },
+                    { id: 'APPLAUSE', label: 'Applause', color: 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30' },
+                    { id: 'SUSPENSE', label: 'Suspense', color: 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30' },
+                    { id: 'LAUGH', label: 'Laugh', color: 'bg-pink-500/20 text-pink-300 hover:bg-pink-500/30' },
+                    { id: 'WINNER', label: 'Winner!', color: 'bg-emerald-600 text-white hover:bg-emerald-500' }
+                  ].map(s => {
+                    const status = soundStates[s.id as SoundType] || 'READY';
+                    return (
+                      <button
+                        key={s.id}
+                        onClick={() => {
+                          playSound(s.id as SoundType);
+                          handleOperatorAction('TRIGGER_SOUND', { sound: s.id });
+                        }}
+                        className={`p-2.5 rounded-xl font-bold text-xs transition-all text-center relative ${s.color} ${
+                          status === 'PLAYING' ? 'ring-2 ring-white animate-pulse' : ''
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span>{s.label}</span>
+                          <span className="text-[9px] uppercase opacity-75 font-mono">{status}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -959,7 +1169,7 @@ export default function OperatorControlRoomPage() {
                     <Users className="w-5 h-5 text-amber-400" /> Judge Access & Private PINs
                   </h2>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Share individual PINs with judges. Each judge uses their private PIN at <strong className="text-amber-400">/judge</strong> to submit scores from their phone/tablet.
+                    Judges announce their scores verbally on stage to the Scorekeeper. The optional scorepad at <strong className="text-amber-400">/judge</strong> is also active.
                   </p>
                 </div>
                 <Link
@@ -967,7 +1177,7 @@ export default function OperatorControlRoomPage() {
                   target="_blank"
                   className="px-4 py-2 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30 font-extrabold text-xs flex items-center gap-2 hover:bg-purple-500/30"
                 >
-                  <ExternalLink className="w-4 h-4" /> Open Judge Pad
+                  <ExternalLink className="w-4 h-4" /> Open Optional Judge Pad
                 </Link>
               </div>
 
@@ -1014,52 +1224,243 @@ export default function OperatorControlRoomPage() {
           </div>
         )}
 
-        {/* TAB 4: FULL SOUNDBOARD */}
+        {/* TAB 4: COMPLETE PRODUCTION SOUNDBOARD */}
         {activeTab === 'soundboard' && (
           <div className="space-y-6">
             <div className="bg-[#0f111c] border border-amber-500/30 rounded-3xl p-6 shadow-xl space-y-6">
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              {/* Header with Master Audio Controls */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
                 <div>
                   <h2 className="text-xl font-black text-white flex items-center gap-2">
-                    <Volume2 className="w-5 h-5 text-amber-400" /> GGL Live Soundboard
+                    <Volume2 className="w-5 h-5 text-amber-400" /> GGL Live Broadcast Soundboard
                   </h2>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Live entertainment sound cues, fanfare, suspense rolls, laughter, applause, and winner cues.
+                    Real production audio engine with active ducking, master gain control, and automatic show triggers.
                   </p>
                 </div>
-                <button
-                  onClick={() => {
-                    stopAllSounds();
-                    handleOperatorAction('TRIGGER_SOUND', { sound: 'STOP' });
-                  }}
-                  className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg"
-                >
-                  <VolumeX className="w-4 h-4" /> STOP ALL SOUNDS
-                </button>
+
+                {/* Master Audio Controls */}
+                <div className="flex items-center gap-4 bg-black/60 p-3 rounded-2xl border border-white/10">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={handleToggleMute}
+                      className={`p-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-colors ${
+                        isMuted
+                          ? 'bg-red-600 text-white shadow-lg shadow-red-600/30'
+                          : 'bg-white/10 text-slate-300 hover:text-white'
+                      }`}
+                    >
+                      {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                      <span>{isMuted ? 'UNMUTE ALL' : 'MUTE ALL'}</span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-400 uppercase">VOLUME:</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={isMuted ? 0 : masterVolume}
+                      onChange={e => handleVolumeChange(Number(e.target.value))}
+                      className="w-32 accent-amber-500 h-2 bg-slate-800 rounded-lg cursor-pointer"
+                    />
+                    <span className="text-xs font-mono font-black text-amber-400 w-10 text-right">
+                      {isMuted ? '0%' : `${masterVolume}%`}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      stopAllSounds();
+                      handleOperatorAction('TRIGGER_SOUND', { sound: 'STOP' });
+                    }}
+                    className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg"
+                  >
+                    <VolumeX className="w-4 h-4" /> STOP ALL
+                  </button>
+                </div>
               </div>
 
+              {/* 6 Real Sound Cue Buttons with Working Status */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                 {[
-                  { name: 'THEME', label: 'Show Theme', icon: Sparkles, color: 'from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600' },
-                  { name: 'ENTRY', label: 'Entry Fanfare', icon: Play, color: 'from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600' },
-                  { name: 'APPLAUSE', label: 'Crowd Applause', icon: Users, color: 'from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600' },
-                  { name: 'SUSPENSE', label: 'Suspense Drum', icon: Flame, color: 'from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600' },
-                  { name: 'LAUGH', label: 'Comedy Rimshot', icon: Mic2, color: 'from-pink-600 to-pink-700 hover:from-pink-500 hover:to-pink-600' },
-                  { name: 'WINNER', label: 'Winner Celebration', icon: Award, color: 'from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black' }
-                ].map(item => (
+                  { id: 'THEME', name: 'THEME', label: 'Event Theme', icon: Sparkles, color: 'from-amber-600 to-amber-700' },
+                  { id: 'ENTRY', name: 'ENTRY', label: 'Entrance Fanfare', icon: Play, color: 'from-blue-600 to-blue-700' },
+                  { id: 'LAUGH', name: 'LAUGH', label: 'Comedy Rimshot', icon: Mic2, color: 'from-pink-600 to-pink-700' },
+                  { id: 'APPLAUSE', name: 'APPLAUSE', label: 'Audience Applause', icon: Users, color: 'from-emerald-600 to-emerald-700' },
+                  { id: 'SUSPENSE', name: 'SUSPENSE', label: 'Suspense Drum', icon: Flame, color: 'from-purple-600 to-purple-700' },
+                  { id: 'WINNER', name: 'WINNER', label: 'Winner Celebration', icon: Award, color: 'from-yellow-500 to-amber-600 text-black' }
+                ].map(item => {
+                  const status = soundStates[item.id as SoundType] || 'READY';
+                  const isPlaying = status === 'PLAYING';
+
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        playSound(item.id as SoundType);
+                        handleOperatorAction('TRIGGER_SOUND', { sound: item.id });
+                      }}
+                      className={`p-6 rounded-3xl bg-gradient-to-br ${item.color} flex flex-col items-center justify-center gap-2 shadow-xl transition-all transform active:scale-95 group relative overflow-hidden ${
+                        isPlaying ? 'ring-4 ring-white animate-pulse' : 'hover:brightness-110'
+                      }`}
+                    >
+                      <item.icon className="w-8 h-8 opacity-90 group-hover:scale-110 transition-transform" />
+                      <span className="font-black text-base tracking-wider uppercase">{item.name}</span>
+                      <span className="text-[10px] opacity-75">{item.label}</span>
+
+                      {/* Working State Badge */}
+                      <span className={`mt-1 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${
+                        isPlaying
+                          ? 'bg-white text-black font-extrabold shadow'
+                          : status === 'ERROR'
+                          ? 'bg-red-950 text-red-300 border border-red-500'
+                          : 'bg-black/40 text-white/90'
+                      }`}>
+                        {status === 'PLAYING' ? 'PLAYING 🔊' : status}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Automatic Show Integration Settings */}
+              <div className="bg-black/40 p-5 rounded-2xl border border-white/10 space-y-3">
+                <h4 className="text-sm font-black text-amber-300 uppercase tracking-wider flex items-center gap-2">
+                  <Sliders className="w-4 h-4" /> Configurable Automatic Show Triggers
+                </h4>
+                <p className="text-xs text-slate-400">
+                  Select which live stage events should automatically play audio cues during the broadcast:
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                  <label className="flex items-center gap-3 p-3 rounded-xl bg-[#121524] border border-white/5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoPlayOnStage}
+                      onChange={e => setAutoPlayOnStage(e.target.checked)}
+                      className="w-4 h-4 accent-amber-500 rounded"
+                    />
+                    <div>
+                      <span className="text-xs font-bold text-white block">Auto Play: ON STAGE</span>
+                      <span className="text-[10px] text-slate-400">Plays ENTRY fanfare</span>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center gap-3 p-3 rounded-xl bg-[#121524] border border-white/5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoPlayFiveScores}
+                      onChange={e => setAutoPlayFiveScores(e.target.checked)}
+                      className="w-4 h-4 accent-amber-500 rounded"
+                    />
+                    <div>
+                      <span className="text-xs font-bold text-white block">Auto Play: 5/5 SCORES</span>
+                      <span className="text-[10px] text-slate-400">Plays short crowd transition</span>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center gap-3 p-3 rounded-xl bg-[#121524] border border-white/5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoPlayCalculate}
+                      onChange={e => setAutoPlayCalculate(e.target.checked)}
+                      className="w-4 h-4 accent-amber-500 rounded"
+                    />
+                    <div>
+                      <span className="text-xs font-bold text-white block">Auto Play: AVERAGE</span>
+                      <span className="text-[10px] text-slate-400">Plays subtle transition sound</span>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center gap-3 p-3 rounded-xl bg-[#121524] border border-white/5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoPlayReveal}
+                      onChange={e => setAutoPlayReveal(e.target.checked)}
+                      className="w-4 h-4 accent-amber-500 rounded"
+                    />
+                    <div>
+                      <span className="text-xs font-bold text-white block">Auto Play: REVEAL RESULT</span>
+                      <span className="text-[10px] text-slate-400">Plays SUSPENSE $\rightarrow$ WINNER</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Real Audio Assets & Upload / Replace Manager */}
+              <div className="bg-black/40 p-5 rounded-2xl border border-white/10 space-y-4">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <div>
+                    <h4 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                      <Music className="w-4 h-4 text-amber-400" /> Audio Asset Management
+                    </h4>
+                    <p className="text-xs text-slate-400">
+                      Real audio assets stored in <code className="text-amber-400">public/audio/</code>. Authorized operators can replace tracks below.
+                    </p>
+                  </div>
                   <button
-                    key={item.name}
-                    onClick={() => {
-                      playSound(item.name as any);
-                      handleOperatorAction('TRIGGER_SOUND', { sound: item.name });
-                    }}
-                    className={`p-6 rounded-2xl bg-gradient-to-br ${item.color} flex flex-col items-center justify-center gap-3 shadow-xl transition-all transform active:scale-95 group`}
+                    onClick={fetchAudioFilesStatus}
+                    className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold flex items-center gap-1.5"
                   >
-                    <item.icon className="w-8 h-8 opacity-90 group-hover:scale-110 transition-transform" />
-                    <span className="font-black text-sm tracking-wider uppercase">{item.name}</span>
-                    <span className="text-[10px] opacity-75">{item.label}</span>
+                    <RefreshCw className="w-3.5 h-3.5" /> Refresh Files
                   </button>
-                ))}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {audioFilesList.map((file: any) => (
+                    <div
+                      key={file.id}
+                      className="p-4 rounded-xl bg-[#121524] border border-white/5 space-y-2 flex flex-col justify-between"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-black text-amber-400 uppercase tracking-wider">
+                          {file.id}
+                        </span>
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase ${
+                          file.status === 'READY'
+                            ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                            : file.status === 'ERROR'
+                            ? 'bg-red-500/20 text-red-300 border border-red-500/30'
+                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                        }`}>
+                          {file.status}
+                        </span>
+                      </div>
+
+                      <div className="text-xs text-slate-300 font-semibold">{file.name}</div>
+                      <div className="text-[10px] text-slate-500 font-mono flex items-center justify-between">
+                        <span>{file.filename}</span>
+                        <span>{file.sizeFormatted}</span>
+                      </div>
+
+                      <div className="pt-2 border-t border-white/5 flex items-center justify-between">
+                        <button
+                          onClick={() => playSound(file.id as SoundType)}
+                          className="px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-[10px] font-black uppercase flex items-center gap-1"
+                        >
+                          <Play className="w-3 h-3" /> Test
+                        </button>
+
+                        <label className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-[10px] font-bold cursor-pointer flex items-center gap-1 transition-colors">
+                          <Upload className="w-3 h-3" />
+                          <span>{uploadingSound === file.id ? 'Uploading...' : 'Replace'}</span>
+                          <input
+                            type="file"
+                            accept="audio/*"
+                            className="hidden"
+                            onChange={e => {
+                              if (e.target.files?.[0]) {
+                                handleFileUpload(file.id, e.target.files[0]);
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

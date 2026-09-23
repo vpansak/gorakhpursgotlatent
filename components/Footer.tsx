@@ -33,7 +33,7 @@ function BookMyShowIcon({ className = "w-5 h-5" }: { className?: string }) {
 
 export default function Footer() {
   const pathname = usePathname();
-  const isLiveRoute = pathname.startsWith('/display') || pathname.startsWith('/live') || pathname.startsWith('/judge') || pathname.startsWith('/vote') || pathname.startsWith('/malik/live');
+  const isLiveRoute = pathname.startsWith('/display') || pathname.startsWith('/live') || pathname.startsWith('/operator') || pathname.startsWith('/judge') || pathname.startsWith('/vote') || pathname.startsWith('/malik/live');
   if (isLiveRoute) return null;
 
   return (

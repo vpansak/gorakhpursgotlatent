@@ -157,6 +157,37 @@ export async function POST(req: NextRequest) {
         break;
       }
 
+      // 7b. BATCH SCORE ENTRY FOR ALL 5 JUDGES
+      case 'SET_ALL_JUDGE_SCORES': {
+        const { performerId, scores } = body;
+        if (!performerId || !scores || typeof scores !== 'object') {
+          return NextResponse.json({ success: false, error: 'Missing parameters' }, { status: 400 });
+        }
+
+        for (const [judgeId, rawVal] of Object.entries(scores)) {
+          if (rawVal !== '' && rawVal !== null && rawVal !== undefined) {
+            const numScore = Math.min(10, Math.max(0, Math.round(Number(rawVal) * 100) / 100));
+            if (!isNaN(numScore)) {
+              const scoreId = `sc-${performerId}-${judgeId}`;
+              await execute(`
+                INSERT INTO live_scores (id, performer_id, judge_id, score, is_locked)
+                VALUES (?, ?, ?, ?, 0)
+                ON CONFLICT(performer_id, judge_id) 
+                DO UPDATE SET score = EXCLUDED.score, is_locked = 0, updated_at = CURRENT_TIMESTAMP
+              `, [scoreId, performerId, judgeId, numScore]);
+            }
+          }
+        }
+
+        await execute(`
+          UPDATE live_show_state 
+          SET status = CASE WHEN status = 'BEFORE_SCORING' THEN 'JUDGING' ELSE status END,
+              updated_at = CURRENT_TIMESTAMP
+          WHERE id = 'main'
+        `);
+        break;
+      }
+
       // 8. LOCK / UNLOCK JUDGE SCORES
       case 'LOCK_SCORES': {
         const { performerId } = body;

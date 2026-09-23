@@ -196,3 +196,92 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
     return { success: false, message: err.message };
   }
 }
+
+export interface AdminOtpEmailParams {
+  toEmail: string;
+  otp: string;
+}
+
+/**
+ * Send secure 6-digit OTP to authorized admin email address using EmailJS
+ */
+export async function sendAdminLoginOtpEmail(params: AdminOtpEmailParams): Promise<{ success: boolean; message?: string }> {
+  const serviceId = process.env.EMAILJS_SERVICE_ID || 'service_15li5i6';
+  const templateId = process.env.EMAILJS_TEMPLATE_ID || 'template_41t6fmb';
+  const publicKey = process.env.EMAILJS_PUBLIC_KEY || 'K2hOwDJVfSGpJ3nih';
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY || '30mafPjRgPPn5im53Idzh';
+
+  const { toEmail, otp } = params;
+
+  const templateParams = {
+    to_email: toEmail,
+    customer_email: toEmail,
+    email: toEmail,
+    user_email: toEmail,
+    reply_to: toEmail,
+    to_name: 'Administrator',
+    otp: otp,
+    verification_code: otp,
+    subject: `🔐 GGL Admin Verification Code: ${otp}`,
+    title: "GORAKHPUR'S GOT LATENT — ADMIN PORTAL",
+    heading: 'Secure administrator verification',
+    system_name: "GORAKHPUR'S GOT LATENT ADMIN PORTAL",
+    message: `Verification requested for ${toEmail}\n\nYOUR ONE-TIME PASSWORD:\n${otp}\n\nThis OTP is valid for 5 minutes. Do not share this code with anyone.`,
+  };
+
+  const payload = {
+    service_id: serviceId,
+    template_id: templateId,
+    user_id: publicKey,
+    accessToken: privateKey,
+    template_params: templateParams,
+  };
+
+  try {
+    const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Origin': 'https://gorakhpursgotlatent.vercel.app',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+      console.log(`📧 EmailJS: Admin OTP sent successfully to ${toEmail}`);
+      return { success: true };
+    }
+
+    const errText = await res.text();
+    console.warn(`⚠️ Primary EmailJS failed (${res.status}): ${errText}. Trying backup service...`);
+
+    // Fallback service
+    const backupRes = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Origin': 'https://gorakhpursgotlatent.vercel.app',
+      },
+      body: JSON.stringify({
+        service_id: 'vpansak',
+        template_id: 'template_b3h1egs',
+        user_id: 'jjG3XUesW7Yt8McRJ',
+        accessToken: 'G-re211vGlwHrNVCniNgz',
+        template_params: templateParams,
+      }),
+    });
+
+    if (backupRes.ok) {
+      console.log(`📧 EmailJS (Backup): Admin OTP sent successfully to ${toEmail}`);
+      return { success: true };
+    }
+
+    const backupErr = await backupRes.text();
+    console.error(`❌ EmailJS Backup Error: ${backupErr}`);
+    return { success: false, message: backupErr || errText };
+  } catch (err: any) {
+    console.error('❌ EmailJS OTP exception:', err);
+    return { success: false, message: err.message || 'Network error sending OTP' };
+  }
+}

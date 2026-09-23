@@ -10,6 +10,7 @@ import {
   FileSpreadsheet, Folder, Download, Database, Radio, Tv
 } from 'lucide-react';
 import MalikExcelSheets from '@/components/MalikExcelSheets';
+import AdminOtpLogin from '@/components/AdminOtpLogin';
 
 async function getAdminData() {
   const session = await getSession();
@@ -67,7 +68,7 @@ export default async function AdminDashboardPage() {
   const data = await getAdminData();
 
   if (!data) {
-    redirect('/malik/login');
+    return <AdminOtpLogin />;
   }
 
   const { session, stats, recentOrders } = data;
@@ -95,8 +96,13 @@ export default async function AdminDashboardPage() {
             <QrCode className="w-4 h-4" /> GATE TICKET SCANNER
           </Link>
           <form action="/api/malik/logout" method="POST">
-            <button type="submit" className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-red-400 text-xs flex items-center gap-1">
-              <LogOut className="w-4 h-4" />
+            <button
+              type="submit"
+              className="px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-red-500/50 text-slate-300 hover:text-red-400 font-bold text-xs flex items-center gap-2 transition-all shadow-sm"
+              title="End session and return to login"
+            >
+              <LogOut className="w-4 h-4 text-red-400" />
+              <span>LOG OUT</span>
             </button>
           </form>
         </div>

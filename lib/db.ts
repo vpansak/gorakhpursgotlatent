@@ -553,6 +553,18 @@ export function initDatabase() {
       tier TEXT DEFAULT 'PLATINUM',
       is_active INTEGER DEFAULT 1
     );
+
+    -- Admin OTP Verification Table
+    CREATE TABLE IF NOT EXISTS admin_otps (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL,
+      otp_hash TEXT NOT NULL,
+      attempts INTEGER DEFAULT 0,
+      max_attempts INTEGER DEFAULT 5,
+      expires_at TIMESTAMP NOT NULL,
+      is_used INTEGER DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 }
 

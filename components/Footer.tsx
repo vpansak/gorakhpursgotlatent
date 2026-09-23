@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { ShieldCheck, Mail, Phone, MapPin, Award } from 'lucide-react';
 
 function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
@@ -29,6 +32,10 @@ function BookMyShowIcon({ className = "w-5 h-5" }: { className?: string }) {
 }
 
 export default function Footer() {
+  const pathname = usePathname();
+  const isLiveRoute = pathname.startsWith('/display') || pathname.startsWith('/live') || pathname.startsWith('/judge') || pathname.startsWith('/vote') || pathname.startsWith('/malik/live');
+  if (isLiveRoute) return null;
+
   return (
     <footer className="bg-[#05060a] border-t border-amber-500/20 text-slate-300 pt-16 pb-24 lg:pb-12 relative overflow-hidden">
       {/* Ambient background light glow */}

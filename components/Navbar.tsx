@@ -10,6 +10,9 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  const isLiveRoute = pathname.startsWith('/display') || pathname.startsWith('/live') || pathname.startsWith('/judge') || pathname.startsWith('/vote') || pathname.startsWith('/malik/live');
+  if (isLiveRoute) return null;
+
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'About Show', href: '/#about' },

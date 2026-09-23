@@ -440,6 +440,89 @@ export function initDatabase() {
       value TEXT NOT NULL,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
+
+    -- GGL Live Show Control Room State
+    CREATE TABLE IF NOT EXISTS live_show_state (
+      id TEXT PRIMARY KEY,
+      current_performer_id TEXT,
+      status TEXT DEFAULT 'BEFORE_SCORING',
+      timer_seconds INTEGER DEFAULT 180,
+      timer_running INTEGER DEFAULT 0,
+      timer_started_at INTEGER,
+      emergency_blank INTEGER DEFAULT 0,
+      judges_open INTEGER DEFAULT 1,
+      audience_open INTEGER DEFAULT 1,
+      calculated_average REAL,
+      reveal_status TEXT DEFAULT 'HIDDEN',
+      sound_trigger TEXT,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- GGL Live Show Performers
+    CREATE TABLE IF NOT EXISTS live_performers (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      act TEXT NOT NULL,
+      photo_url TEXT,
+      running_order INTEGER DEFAULT 1,
+      secret_prediction REAL,
+      status TEXT DEFAULT 'READY',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- GGL Live Judges
+    CREATE TABLE IF NOT EXISTS live_judges (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      pin TEXT NOT NULL,
+      slot_number INTEGER NOT NULL,
+      is_active INTEGER DEFAULT 1,
+      avatar_url TEXT
+    );
+
+    -- GGL Live Scores
+    CREATE TABLE IF NOT EXISTS live_scores (
+      id TEXT PRIMARY KEY,
+      performer_id TEXT NOT NULL,
+      judge_id TEXT NOT NULL,
+      score REAL NOT NULL,
+      is_locked INTEGER DEFAULT 0,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(performer_id, judge_id)
+    );
+
+    -- GGL Live Results History
+    CREATE TABLE IF NOT EXISTS live_history (
+      id TEXT PRIMARY KEY,
+      performer_id TEXT NOT NULL,
+      performer_name TEXT NOT NULL,
+      act TEXT NOT NULL,
+      judge_scores TEXT NOT NULL,
+      judge_average REAL NOT NULL,
+      contestant_prediction REAL NOT NULL,
+      difference REAL NOT NULL,
+      result TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- GGL Live Audience Votes
+    CREATE TABLE IF NOT EXISTS live_audience_votes (
+      id TEXT PRIMARY KEY,
+      performer_id TEXT NOT NULL,
+      vote_value INTEGER DEFAULT 1,
+      voter_id TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- GGL Live Sponsors
+    CREATE TABLE IF NOT EXISTS live_sponsors (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      tagline TEXT,
+      logo_url TEXT,
+      tier TEXT DEFAULT 'PLATINUM',
+      is_active INTEGER DEFAULT 1
+    );
   `);
 }
 

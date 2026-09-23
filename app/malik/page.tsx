@@ -7,7 +7,7 @@ import { formatINR } from '@/lib/helpers';
 import {
   TrendingUp, Ticket, Users, FileText, CheckCircle2, ShieldCheck,
   ChevronRight, Mic2, Star, Building2, QrCode, LogOut,
-  FileSpreadsheet, Folder, Download, Database
+  FileSpreadsheet, Folder, Download, Database, Radio, Tv
 } from 'lucide-react';
 
 async function getAdminData() {
@@ -86,6 +86,10 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          <Link href="/live" className="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-red-600/30 animate-pulse">
+            <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
+            GGL LIVE CONTROL ROOM
+          </Link>
           <Link href="/verify" className="px-4 py-2.5 rounded-xl bg-amber-500 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg">
             <QrCode className="w-4 h-4" /> GATE TICKET SCANNER
           </Link>
@@ -149,7 +153,18 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Malik Modules Navigation */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Link href="/live" className="p-6 rounded-3xl glass-panel border-2 border-red-500/50 space-y-3 hover:border-red-400 transition-all group relative overflow-hidden bg-gradient-to-b from-red-950/20 to-transparent">
+          <div className="flex items-center justify-between">
+            <div className="p-3 rounded-2xl bg-red-600/20 text-red-400 animate-pulse">
+              <Radio className="w-6 h-6" />
+            </div>
+            <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-red-600 text-white">LIVE</span>
+          </div>
+          <h3 className="text-xl font-black text-white">Live Show Control Room</h3>
+          <p className="text-xs text-slate-400">5-judge live scoring, secret prediction engine, public display, timer, and soundboard.</p>
+        </Link>
+
         <Link href="/malik/applications" className="p-6 rounded-3xl glass-panel border border-amber-500/30 space-y-3 hover:border-amber-400 transition-all group">
           <div className="flex items-center justify-between">
             <div className="p-3 rounded-2xl bg-amber-500/20 text-amber-400">

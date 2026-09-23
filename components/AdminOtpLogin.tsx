@@ -7,6 +7,7 @@ import {
   ShieldCheck, Mail, KeyRound, Loader2, ArrowRight,
   RefreshCw, AlertCircle, CheckCircle2, Clock, ArrowLeft
 } from 'lucide-react';
+import { parseResponse } from '@/lib/client-fetch';
 
 interface AdminOtpLoginProps {
   onSuccess?: () => void;
@@ -93,9 +94,9 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
         body: JSON.stringify({ email: cleanEmail }),
       });
 
-      const data = await res.json();
+      const data = await parseResponse(res);
 
-      if (!res.ok || !data.success) {
+      if (!data.success) {
         throw new Error(data.error || 'Unable to send verification code. Please check your administrator access.');
       }
 
@@ -182,9 +183,9 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
         body: JSON.stringify({ email: email.trim().toLowerCase(), otp: fullOtp }),
       });
 
-      const data = await res.json();
+      const data = await parseResponse(res);
 
-      if (!res.ok || !data.success) {
+      if (!data.success) {
         throw new Error(data.error || 'Invalid verification code.');
       }
 

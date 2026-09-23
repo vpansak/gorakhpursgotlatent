@@ -73,7 +73,7 @@ export default async function HomePage() {
           </div>
 
           {/* Official Logo Banner */}
-          <div className="relative w-72 sm:w-96 md:w-[540px] h-36 sm:h-48 md:h-64 mx-auto animate-float">
+          <div className="relative w-80 sm:w-[460px] md:w-[580px] h-40 sm:h-56 md:h-72 mx-auto animate-float">
             <Image
               src="/logo.png"
               alt="Gorakhpur's Got Latent Official Title Logo"
@@ -83,15 +83,13 @@ export default async function HomePage() {
             />
           </div>
 
-          {/* Title & Tagline */}
-          <div className="space-y-4 max-w-3xl mx-auto">
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white uppercase">
-              GORAKHPUR’S GOT <span className="gold-gradient-text">LATENT</span>
-            </h1>
-            <p className="text-xl sm:text-2xl font-bold text-amber-200/90 italic">
+          {/* Tagline & Description */}
+          <div className="space-y-3 max-w-3xl mx-auto -mt-2">
+            <h1 className="sr-only">Gorakhpur's Got Latent</h1>
+            <p className="text-xl sm:text-3xl font-extrabold text-amber-300 italic tracking-wide drop-shadow-[0_0_12px_rgba(255,215,0,0.3)]">
               "Where Talent Meets the Stage"
             </p>
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-xs sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
               Unfiltered performances, raw energy, music fusion, standup comedy roasts, and extraordinary talent judged live in front of thousands!
             </p>
           </div>

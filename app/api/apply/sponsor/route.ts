@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { syncSheetsToS3 } from '@/lib/storage';
+import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
 
 export async function POST(req: Request) {
@@ -40,6 +40,25 @@ export async function POST(req: Request) {
       INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
       VALUES (?, 'SPONSOR', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Sponsor Application Submission')
     `, [`his-${Date.now()}`, appId]);
+
+    // Save individual brand record to Neon S3 folder: sponsors/
+    saveIndividualEntryToS3('sponsors', appId, {
+      id,
+      app_id: appId,
+      company_name: companyName,
+      contact_person: contactPerson,
+      designation: designation || '',
+      biz_email: bizEmail,
+      whatsapp,
+      phone: phone || '',
+      website: website || '',
+      sponsorship_type: sponsorshipType || 'General Brand Sponsorship',
+      budget_est: budgetEst || 'Custom Quote',
+      industry: industry || '',
+      location: location || '',
+      status: 'SUBMITTED',
+      created_at: new Date().toISOString()
+    }).catch(err => console.error('S3 individual sponsor save error:', err));
 
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
 

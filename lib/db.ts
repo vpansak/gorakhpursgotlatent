@@ -247,6 +247,8 @@ export function initDatabase() {
       { name: 'refund_requested_at', type: 'DATETIME' },
       { name: 'refund_processed_at', type: 'DATETIME' },
       { name: 'refund_reason', type: 'TEXT' },
+      { name: 'is_read', type: 'INTEGER DEFAULT 0' },
+      { name: 'read_at', type: 'DATETIME' },
     ];
 
     for (const col of requiredCols) {
@@ -254,6 +256,34 @@ export function initDatabase() {
         db.exec(`ALTER TABLE performer_applications ADD COLUMN ${col.name} ${col.type}`);
       }
     }
+
+    // Auto-migrate is_read on guest_applications
+    try {
+      const gCols = (db.prepare("PRAGMA table_info(guest_applications)").all() as any[]).map(c => c.name);
+      if (!gCols.includes('is_read')) db.exec('ALTER TABLE guest_applications ADD COLUMN is_read INTEGER DEFAULT 0');
+      if (!gCols.includes('read_at')) db.exec('ALTER TABLE guest_applications ADD COLUMN read_at DATETIME');
+    } catch (e) {}
+
+    // Auto-migrate is_read on sponsor_applications
+    try {
+      const sCols = (db.prepare("PRAGMA table_info(sponsor_applications)").all() as any[]).map(c => c.name);
+      if (!sCols.includes('is_read')) db.exec('ALTER TABLE sponsor_applications ADD COLUMN is_read INTEGER DEFAULT 0');
+      if (!sCols.includes('read_at')) db.exec('ALTER TABLE sponsor_applications ADD COLUMN read_at DATETIME');
+    } catch (e) {}
+
+    // Auto-migrate is_read on team_applications
+    try {
+      const tCols = (db.prepare("PRAGMA table_info(team_applications)").all() as any[]).map(c => c.name);
+      if (!tCols.includes('is_read')) db.exec('ALTER TABLE team_applications ADD COLUMN is_read INTEGER DEFAULT 0');
+      if (!tCols.includes('read_at')) db.exec('ALTER TABLE team_applications ADD COLUMN read_at DATETIME');
+    } catch (e) {}
+
+    // Auto-migrate is_read on ticket_orders
+    try {
+      const oCols = (db.prepare("PRAGMA table_info(ticket_orders)").all() as any[]).map(c => c.name);
+      if (!oCols.includes('is_read')) db.exec('ALTER TABLE ticket_orders ADD COLUMN is_read INTEGER DEFAULT 0');
+      if (!oCols.includes('read_at')) db.exec('ALTER TABLE ticket_orders ADD COLUMN read_at DATETIME');
+    } catch (e) {}
   } catch (err) {
     console.error('Migration error on performer_applications:', err);
   }

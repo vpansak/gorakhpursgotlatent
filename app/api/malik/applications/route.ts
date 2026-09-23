@@ -17,75 +17,75 @@ export async function GET(req: Request) {
     let items: any[] = [];
 
     if (type === 'performer') {
-      let query = 'SELECT * FROM performer_applications WHERE 1=1';
+      let q = 'SELECT * FROM performer_applications WHERE 1=1';
       const params: any[] = [];
       if (status) {
-        query += ' AND status = ?';
-        params.push(status);
+        q += ' AND (status = ? OR application_status = ? OR payment_status = ?)';
+        params.push(status, status, status);
       }
       if (search) {
-        query += ' AND (full_name LIKE ? OR email LIKE ? OR app_id LIKE ? OR city LIKE ?)';
+        q += ' AND (full_name LIKE ? OR email LIKE ? OR app_id LIKE ? OR city LIKE ?)';
         const term = `%${search}%`;
         params.push(term, term, term, term);
       }
-      query += ' ORDER BY created_at DESC';
-      items = db.prepare(query).all(...params);
+      q += ' ORDER BY created_at DESC';
+      items = await db.query(q, params);
     } else if (type === 'guest') {
-      let query = 'SELECT * FROM guest_applications WHERE 1=1';
+      let q = 'SELECT * FROM guest_applications WHERE 1=1';
       const params: any[] = [];
       if (status) {
-        query += ' AND status = ?';
+        q += ' AND status = ?';
         params.push(status);
       }
       if (search) {
-        query += ' AND (full_name LIKE ? OR stage_name LIKE ? OR email LIKE ? OR app_id LIKE ?)';
+        q += ' AND (full_name LIKE ? OR stage_name LIKE ? OR email LIKE ? OR app_id LIKE ?)';
         const term = `%${search}%`;
         params.push(term, term, term, term);
       }
-      query += ' ORDER BY created_at DESC';
-      items = db.prepare(query).all(...params);
+      q += ' ORDER BY created_at DESC';
+      items = await db.query(q, params);
     } else if (type === 'sponsor') {
-      let query = 'SELECT * FROM sponsor_applications WHERE 1=1';
+      let q = 'SELECT * FROM sponsor_applications WHERE 1=1';
       const params: any[] = [];
       if (status) {
-        query += ' AND status = ?';
+        q += ' AND status = ?';
         params.push(status);
       }
       if (search) {
-        query += ' AND (company_name LIKE ? OR contact_person LIKE ? OR biz_email LIKE ? OR app_id LIKE ?)';
+        q += ' AND (company_name LIKE ? OR contact_person LIKE ? OR biz_email LIKE ? OR app_id LIKE ?)';
         const term = `%${search}%`;
         params.push(term, term, term, term);
       }
-      query += ' ORDER BY created_at DESC';
-      items = db.prepare(query).all(...params);
+      q += ' ORDER BY created_at DESC';
+      items = await db.query(q, params);
     } else if (type === 'event') {
-      let query = 'SELECT * FROM event_booking_applications WHERE 1=1';
+      let q = 'SELECT * FROM event_booking_applications WHERE 1=1';
       const params: any[] = [];
       if (status) {
-        query += ' AND status = ?';
+        q += ' AND status = ?';
         params.push(status);
       }
       if (search) {
-        query += ' AND (org_name LIKE ? OR contact_person LIKE ? OR email LIKE ? OR app_id LIKE ?)';
+        q += ' AND (org_name LIKE ? OR contact_person LIKE ? OR email LIKE ? OR app_id LIKE ?)';
         const term = `%${search}%`;
         params.push(term, term, term, term);
       }
-      query += ' ORDER BY created_at DESC';
-      items = db.prepare(query).all(...params);
+      q += ' ORDER BY created_at DESC';
+      items = await db.query(q, params);
     } else if (type === 'team') {
-      let query = 'SELECT * FROM team_applications WHERE 1=1';
+      let q = 'SELECT * FROM team_applications WHERE 1=1';
       const params: any[] = [];
       if (status) {
-        query += ' AND status = ?';
+        q += ' AND status = ?';
         params.push(status);
       }
       if (search) {
-        query += ' AND (full_name LIKE ? OR email LIKE ? OR mobile_number LIKE ? OR app_id LIKE ?)';
+        q += ' AND (full_name LIKE ? OR email LIKE ? OR mobile_number LIKE ? OR app_id LIKE ?)';
         const term = `%${search}%`;
         params.push(term, term, term, term);
       }
-      query += ' ORDER BY created_at DESC';
-      items = db.prepare(query).all(...params);
+      q += ' ORDER BY created_at DESC';
+      items = await db.query(q, params);
     }
 
     return NextResponse.json({ success: true, items });

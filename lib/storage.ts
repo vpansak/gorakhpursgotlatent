@@ -29,33 +29,37 @@ export const STORAGE_FOLDERS = {
 export type StorageCategory = keyof typeof STORAGE_FOLDERS;
 
 /**
- * Upload a binary buffer or string directly to Neon S3 storage
+ * Save an individual application/payment record into its dedicated category folder in S3
  */
-export async function uploadToS3(params: {
-  buffer: Buffer;
-  key: string;
-  contentType: string;
-}): Promise<{ success: boolean; key: string; url: string }> {
-  const { buffer, key, contentType } = params;
+export async function saveIndividualEntryToS3(
+  category: 'performers/paid' | 'performers/all' | 'sponsors' | 'panel' | 'team' | 'orders',
+  id: string,
+  data: any
+): Promise<string | null> {
+  try {
+    const safeName = (data.full_name || data.company_name || data.customer_name || 'entry').replace(/[^a-zA-Z0-9_-]/g, '_');
+    const key = `${category}/${id}_${safeName}.json`;
+    const jsonContent = JSON.stringify({
+      ...data,
+      synced_at: new Date().toISOString(),
+      s3_folder: category
+    }, null, 2);
 
-  await s3.send(
-    new PutObjectCommand({
-      Bucket: S3_BUCKET,
-      Key: key,
-      Body: buffer,
-      ContentType: contentType,
-    })
-  );
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: S3_BUCKET,
+        Key: key,
+        Body: Buffer.from(jsonContent, 'utf-8'),
+        ContentType: 'application/json; charset=utf-8',
+      })
+    );
 
-  // Return formatted public access / direct URL through endpoint or api proxy
-  const cleanEndpoint = endpoint.replace(/\/$/, '');
-  const url = `${cleanEndpoint}/${S3_BUCKET}/${key}`;
-
-  return {
-    success: true,
-    key,
-    url,
-  };
+    const cleanEndpoint = endpoint.replace(/\/$/, '');
+    return `${cleanEndpoint}/${S3_BUCKET}/${key}`;
+  } catch (err) {
+    console.error(`Error saving individual entry to S3 for ${category}/${id}:`, err);
+    return null;
+  }
 }
 
 /**

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { syncSheetsToS3 } from '@/lib/storage';
+import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { verifyRazorpaySignature, isRazorpayConfigured } from '@/lib/razorpay';
 import { generateTicketNumber, generateQrHash } from '@/lib/helpers';
 import { sendBookingConfirmationEmail } from '@/lib/emailjs';
@@ -141,6 +141,23 @@ export async function POST(req: Request) {
     }
 
     db.prepare("UPDATE ticket_orders SET confirmation_email_status = ? WHERE id = ?").run(emailStatus, orderId);
+
+    // Save individual ticket order to Neon S3 folder: orders/
+    saveIndividualEntryToS3('orders', order.order_number || orderId, {
+      order_id: orderId,
+      order_number: order.order_number,
+      customer_name: order.customer_name,
+      customer_email: order.customer_email,
+      customer_phone: order.customer_phone,
+      total_amount: Number(order.total_amount),
+      payment_status: 'PAID',
+      razorpay_order_id: razorpayOrderId,
+      razorpay_payment_id: razorpayPaymentId,
+      event_title: order.event_title,
+      event_date: order.event_date,
+      quantity: Number(quantity),
+      created_at: new Date().toISOString()
+    }).catch(err => console.error('S3 individual order save error:', err));
 
     // Sync updated ticket orders sheet to S3
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));

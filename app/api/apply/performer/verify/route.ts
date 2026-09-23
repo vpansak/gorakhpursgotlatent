@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { syncSheetsToS3 } from '@/lib/storage';
+import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { verifyRazorpaySignature } from '@/lib/razorpay';
 import { sendPerformerApplicationEmail } from '@/lib/emailjs';
 
@@ -66,11 +66,17 @@ export async function POST(req: Request) {
       VALUES (?, 'PERFORMER', ?, 'PAYMENT_PENDING', 'PAYMENT_VERIFIED', 'SYSTEM', 'Server-side Razorpay Payment Verified')
     `, [`his-${Date.now()}`, appId]);
 
-    // Live S3 sheet sync for paid performers
+    // Fetch updated app with paid status
+    const updatedApp = await db.queryOne<any>('SELECT * FROM performer_applications WHERE app_id = ?', [appId]);
+
+    // Save individual paid performer details into Neon S3 folder: performers/paid/
+    saveIndividualEntryToS3('performers/paid', appId, updatedApp || { app_id: appId, payment_status: 'PAID' })
+      .catch(err => console.error('S3 individual entry save error:', err));
+
+    // Live S3 sheet sync for paid performers master CSV
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
 
     // ONLY AFTER VERIFIED PAYMENT: Trigger EmailJS to both recipients
-    const updatedApp = await db.queryOne<any>('SELECT * FROM performer_applications WHERE app_id = ?', [appId]);
     const emailResult = await sendPerformerApplicationEmail({
       application_id: updatedApp.app_id,
       created_at: updatedApp.created_at,

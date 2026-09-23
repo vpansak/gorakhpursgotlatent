@@ -9,6 +9,7 @@ import {
   ChevronRight, Mic2, Star, Building2, QrCode, LogOut,
   FileSpreadsheet, Folder, Download, Database, Radio, Tv
 } from 'lucide-react';
+import MalikExcelSheets from '@/components/MalikExcelSheets';
 
 async function getAdminData() {
   const session = await getSession();
@@ -198,6 +199,9 @@ export default async function AdminDashboardPage() {
           <p className="text-xs text-slate-400">Live QR camera scanner and ticket verification tool with duplicate entry prevention.</p>
         </Link>
       </div>
+
+      {/* Interactive Malik Excel Sheets (Neon Database + S3) */}
+      <MalikExcelSheets />
 
       {/* Neon S3 Live Sheets Section */}
       <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/30 space-y-5">

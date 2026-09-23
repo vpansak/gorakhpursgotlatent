@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { generateAppId } from '@/lib/helpers';
-import { syncSheetsToS3 } from '@/lib/storage';
+import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 
 export async function POST(req: Request) {
   try {
@@ -40,6 +40,21 @@ export async function POST(req: Request) {
     } catch (e) {
       // Ignore history error if table not present
     }
+
+    // Save individual team recruit record to Neon S3 folder: team/
+    saveIndividualEntryToS3('team', appId, {
+      id,
+      app_id: appId,
+      full_name: name.trim(),
+      mobile_number: mobile.trim(),
+      email: email.trim(),
+      dob: dob || '',
+      address: address.trim(),
+      instagram_url: instagram?.trim() || '',
+      about: about?.trim() || '',
+      status: 'SUBMITTED',
+      created_at: new Date().toISOString()
+    }).catch(err => console.error('S3 individual team save error:', err));
 
     // Trigger instant background sync to Neon S3 sheets/team/team_applications.csv
     syncSheetsToS3().catch(err => console.error('S3 sheet sync warning:', err));

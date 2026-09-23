@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { syncSheetsToS3 } from '@/lib/storage';
+import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
 
 export async function POST(req: Request) {
@@ -41,6 +41,23 @@ export async function POST(req: Request) {
       INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
       VALUES (?, 'GUEST', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Guest Application Submission')
     `, [`his-${Date.now()}`, appId]);
+
+    // Save individual panel guest record to Neon S3 folder: panel/
+    saveIndividualEntryToS3('panel', appId, {
+      id,
+      app_id: appId,
+      full_name: fullName,
+      stage_name: stageName || '',
+      email,
+      whatsapp,
+      phone: phone || '',
+      city,
+      profession,
+      category,
+      short_intro: shortIntro || '',
+      status: 'SUBMITTED',
+      created_at: new Date().toISOString()
+    }).catch(err => console.error('S3 individual panel save error:', err));
 
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
 

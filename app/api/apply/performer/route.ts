@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { syncSheetsToS3 } from '@/lib/storage';
+import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generatePerformerAppId } from '@/lib/helpers';
 import { razorpay } from '@/lib/razorpay';
 
@@ -147,6 +147,25 @@ export async function POST(req: Request) {
       INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
       VALUES (?, 'PERFORMER', ?, NULL, 'PAYMENT_PENDING', 'SYSTEM', 'Performer Application Created')
     `, [`his-${Date.now()}`, appId]);
+
+    // Save individual applicant to Neon S3 folder: performers/all/
+    saveIndividualEntryToS3('performers/all', appId, {
+      id,
+      app_id: appId,
+      full_name: fullName,
+      email,
+      mobile_number: mobileNumber,
+      whatsapp_number: whatsappNumber,
+      performance_category: performanceCategory,
+      performance_title: performanceTitle,
+      performance_description: performanceDescription,
+      city,
+      age: Number(age) || 18,
+      instagram_url: instagramUrl,
+      payment_status: 'PAYMENT_PENDING',
+      payment_amount: feeAmount,
+      created_at: new Date().toISOString()
+    }).catch(err => console.error('S3 individual entry save error:', err));
 
     // Live S3 sheet sync for performers
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));

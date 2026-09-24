@@ -58,7 +58,7 @@ const CONTESTANTS_LIST: Contestant[] = [
   { id: 18, name: 'rustam', category: 'dance', phone: '8545943855' },
   { id: 19, name: 'Kritika singh', category: 'Singing', phone: '8127421810' },
   { id: 20, name: 'Khushee madhyeshiya', category: 'Singing', phone: '9336550642' },
-  { id: 21, name: 'kv6304860@gmail.com', category: 'Dance', phone: '9335477452' },
+  { id: 21, name: 'Kamya verma', category: 'Dance', phone: '9335477452' },
   { id: 22, name: 'Neha', category: 'Couple dance', phone: '7992159035' },
   { id: 23, name: 'Atul sharma', category: 'Dance', phone: '8604057703' },
 ];

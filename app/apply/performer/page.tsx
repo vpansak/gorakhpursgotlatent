@@ -48,7 +48,7 @@ export default function PerformerApplyPage() {
     performanceDescription: '',
     performanceType: 'Solo',
     performerCount: '1',
-    performanceDuration: '3 to 5 Minutes',
+    performanceDuration: '2 Minutes',
     performanceLanguage: 'Hindi',
     specialRequirements: '',
     instagramUrl: '',
@@ -512,7 +512,7 @@ export default function PerformerApplyPage() {
               <input
                 type="text"
                 name="performanceDuration"
-                value="3 to 5 Minutes (Fixed Audition Slot)"
+                value="2 Minutes (Fixed Audition Slot)"
                 disabled
                 readOnly
                 className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-amber-500/30 text-amber-300 font-bold text-sm cursor-not-allowed"

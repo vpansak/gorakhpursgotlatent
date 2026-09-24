@@ -136,7 +136,7 @@ export async function POST(req: Request) {
     `, [
       id, appId, fullName, email, mobileNumber, whatsappNumber, effectiveCallNumber, alternateContact || '',
       performanceCategory, performanceTitle, performanceDescription, performanceType || 'Solo',
-      Number(performerCount) || 1, performanceDuration || '3 to 5 Minutes', performanceLanguage || '', specialRequirements || '',
+      Number(performerCount) || 1, performanceDuration || '2 Minutes', performanceLanguage || '', specialRequirements || '',
       instagramUrl.trim(), (youtubeUrl && youtubeUrl.trim()) ? youtubeUrl.trim() : '', (facebookUrl && facebookUrl.trim()) ? facebookUrl.trim() : '', city, Number(age) || 18, discoverySource || '', additionalMessage || '',
       razorpayOrderId, feeAmount,
       performanceCategory, performanceTitle

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import confetti from 'canvas-confetti';
+import { SOUND_EFFECTS, stopAllComputerJiSounds } from '@/lib/computerji-sounds';
 import {
   Sparkles,
   Calculator,
@@ -25,7 +26,10 @@ import {
   AlertOctagon,
   ArrowRight,
   Database,
+  Square,
+  Volume2,
 } from 'lucide-react';
+
 
 // ============================================================
 // CONTESTANT LIST (Exact 23 Records)
@@ -143,6 +147,30 @@ export default function ComputerJiControlPanel() {
   // 2-Minute Timer
   const [timerSeconds, setTimerSeconds] = useState<number>(120);
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
+
+  // Live Soundboard State
+  const [activeSoundId, setActiveSoundId] = useState<string | null>(null);
+  const [soundVolume, setSoundVolume] = useState<number>(0.8);
+  const soundTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handlePlaySound = (sound: typeof SOUND_EFFECTS[0]) => {
+    stopAllComputerJiSounds();
+    if (soundTimeoutRef.current) clearTimeout(soundTimeoutRef.current);
+    setActiveSoundId(sound.id);
+    sound.play(soundVolume);
+
+    soundTimeoutRef.current = setTimeout(() => {
+      setActiveSoundId(null);
+    }, 3800);
+  };
+
+  const handleStopAllSounds = () => {
+    stopAllComputerJiSounds();
+    if (soundTimeoutRef.current) clearTimeout(soundTimeoutRef.current);
+    setActiveSoundId(null);
+  };
+
+
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -500,43 +528,82 @@ export default function ComputerJiControlPanel() {
   return (
     <div className="h-screen max-h-screen bg-[#07080e] text-slate-100 flex flex-col justify-between overflow-hidden p-2 sm:p-3 selection:bg-amber-500 selection:text-black">
       {/* ============================================================
-          COMPACT TOP HEADER STRIP (Takes ~40px)
+          TOP SOUNDBOARD STRIP (Replaces old navbar in exact same space)
           ============================================================ */}
-      <header className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-[#0e111d] border border-amber-500/20 shrink-0">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-amber-500 text-black font-black text-sm flex items-center justify-center shadow-[0_0_10px_rgba(255,215,0,0.5)]">
-            GGL
+      <header className="flex items-center justify-between px-2.5 sm:px-3 py-1.5 rounded-2xl bg-[#0b0e1b] border border-amber-500/30 shrink-0 gap-2 shadow-2xl">
+        {/* Left: Brand Badge */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-black font-black text-sm flex items-center justify-center shadow-[0_0_12px_rgba(255,215,0,0.5)]">
+            🎙️
           </div>
-          <span className="text-sm font-bebas tracking-widest text-white uppercase">
-            COMPUTER JI <span className="text-amber-400">— CONTROL PANEL</span>
-          </span>
-          <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-[10px] font-black text-emerald-400 border border-emerald-500/30">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-            LIVE
-          </span>
+          <div className="hidden sm:block">
+            <span className="text-xs font-black tracking-wider text-amber-400 uppercase block font-barlow leading-none">
+              GGL SOUNDBOARD
+            </span>
+            <span className="text-[9px] text-slate-400 font-mono">
+              Live Sound Effects
+            </span>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3 text-xs">
-          <div className="text-[11px] font-mono text-slate-300">
-            Completed:{' '}
-            <strong className="text-emerald-400 font-black">
-              {completedCount} / {totalCount}
-            </strong>
+        {/* Center: 9 Sound Effect Buttons (Sad, Crowd, Laugh, Funny Effects) */}
+        <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 px-1 scrollbar-none flex-1 justify-start md:justify-center">
+          {SOUND_EFFECTS.map((s) => {
+            const isPlaying = activeSoundId === s.id;
+            return (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => handlePlaySound(s)}
+                className={`px-2.5 py-1.5 rounded-xl font-black text-[11px] sm:text-xs transition-all flex items-center gap-1.5 border whitespace-nowrap cursor-pointer active:scale-95 shadow-sm ${
+                  isPlaying
+                    ? `${s.color} ring-2 ring-white scale-105 animate-pulse shadow-lg`
+                    : 'bg-white/5 hover:bg-white/15 text-slate-200 border-white/10 hover:border-amber-400/40'
+                }`}
+                title={`Play ${s.label} (${s.desc})`}
+              >
+                <span>{s.label}</span>
+                {isPlaying && (
+                  <span className="flex items-center gap-0.5 ml-0.5">
+                    <span className="w-1 h-2 bg-current animate-bounce rounded-full" />
+                    <span className="w-1 h-3 bg-current animate-bounce delay-75 rounded-full" />
+                    <span className="w-1 h-1.5 bg-current animate-bounce delay-150 rounded-full" />
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Right: Stop SFX, Status & Reset */}
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={handleStopAllSounds}
+            className="px-2.5 py-1.5 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/40 text-[10px] sm:text-[11px] font-black uppercase flex items-center gap-1 transition-all cursor-pointer active:scale-95"
+            title="Stop all currently playing sounds"
+          >
+            <Square className="w-3 h-3 fill-current" />
+            <span className="hidden lg:inline">STOP SFX</span>
+          </button>
+
+          <div className="h-5 w-px bg-white/10 hidden xl:block" />
+
+          <div className="text-[11px] font-mono text-slate-300 hidden xl:block">
+            Saved: <strong className="text-emerald-400 font-bold">{completedCount}/{totalCount}</strong>
           </div>
-          {lastSavedTime && (
-            <span className="hidden md:inline text-[10px] font-mono text-slate-400">
-              Saved: {lastSavedTime}
-            </span>
-          )}
+
           <button
             type="button"
             onClick={() => setShowResetAllModal(true)}
-            className="text-[10px] text-red-400 hover:text-red-300 font-bold uppercase transition-colors"
+            className="text-[10px] text-slate-500 hover:text-red-400 font-bold uppercase transition-colors px-1 cursor-pointer"
+            title="Reset All Scores"
           >
-            Reset All
+            Reset
           </button>
         </div>
       </header>
+
 
       {/* ============================================================
           MAIN BODY GRID (FITS IN SINGLE SCREEN WITHOUT SCROLLING)

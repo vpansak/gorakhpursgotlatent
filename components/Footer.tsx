@@ -33,8 +33,9 @@ function BookMyShowIcon({ className = "w-5 h-5" }: { className?: string }) {
 
 export default function Footer() {
   const pathname = usePathname();
-  const isLiveRoute = pathname.startsWith('/display') || pathname.startsWith('/live') || pathname.startsWith('/operator') || pathname.startsWith('/judge') || pathname.startsWith('/vote') || pathname.startsWith('/malik/live');
+  const isLiveRoute = pathname.startsWith('/display') || pathname.startsWith('/live') || pathname.startsWith('/operator') || pathname.startsWith('/judge') || pathname.startsWith('/vote') || pathname.startsWith('/malik/live') || pathname.startsWith('/computerji');
   if (isLiveRoute) return null;
+
 
   return (
     <footer className="bg-[#05060a] border-t border-amber-500/20 text-slate-300 pt-16 pb-24 lg:pb-12 relative overflow-hidden">

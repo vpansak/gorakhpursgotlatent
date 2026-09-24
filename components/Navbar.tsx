@@ -10,8 +10,9 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const isLiveRoute = pathname.startsWith('/display') || pathname.startsWith('/live') || pathname.startsWith('/operator') || pathname.startsWith('/judge') || pathname.startsWith('/vote') || pathname.startsWith('/malik/live');
+  const isLiveRoute = pathname.startsWith('/display') || pathname.startsWith('/live') || pathname.startsWith('/operator') || pathname.startsWith('/judge') || pathname.startsWith('/vote') || pathname.startsWith('/malik/live') || pathname.startsWith('/computerji');
   if (isLiveRoute) return null;
+
 
   const navLinks = [
     { name: 'Home', href: '/' },

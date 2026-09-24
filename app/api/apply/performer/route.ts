@@ -176,7 +176,7 @@ export async function POST(req: Request) {
       razorpayOrderId,
       amount: feeAmount,
       currency: 'INR',
-      keyId: process.env.RAZORPAY_KEY_ID || '',
+      keyId: process.env.RAZORPAY_KEY_ID || 'rzp_live_Tfu7PlxOWV6ohp',
       message: 'Application recorded. Please complete payment.',
     });
   } catch (err: any) {

@@ -18,6 +18,7 @@ import {
   Pause,
   Download,
   Plus,
+  Trash2,
   Clock,
   Check,
   Sliders,
@@ -27,7 +28,7 @@ import {
 } from 'lucide-react';
 
 // ============================================================
-// CONTESTANT LIST (Exact 24 Records)
+// CONTESTANT LIST (Exact 23 Records)
 // ============================================================
 export interface Contestant {
   id: number;
@@ -44,23 +45,22 @@ const CONTESTANTS_LIST: Contestant[] = [
   { id: 5, name: 'Ayush jaiswal', category: 'Singing', phone: '7317438659' },
   { id: 6, name: 'Aryan kushwaha', category: 'Shayri', phone: '9670730687' },
   { id: 7, name: 'Alka patel', category: 'Dance', phone: '919026839256' },
-  { id: 8, name: 'Ravi Vishwakarma', category: 'Dance', phone: '6386479690' },
-  { id: 9, name: 'Arpita singh', category: 'Dance', phone: '9792844219' },
-  { id: 10, name: 'Aftab', category: 'Singing', phone: '7991789469' },
-  { id: 11, name: 'Misthi Mishra', category: 'Dance', phone: '8299388799' },
-  { id: 12, name: 'Kirti Gupta', category: 'Singing', phone: '9565865240' },
-  { id: 13, name: 'Ashik Ansari', category: 'Poetry', phone: '9569639253' },
-  { id: 14, name: 'Aradhya', category: 'Singing', phone: '7080718509' },
-  { id: 15, name: 'Shraddha Pandey', category: 'Singing', phone: '7307468833' },
-  { id: 16, name: 'Nandani Kumari', category: 'Dance', phone: '7052273166' },
-  { id: 17, name: 'Himanshu bhatt', category: 'Poetry', phone: '8112585745' },
-  { id: 18, name: 'MD Arman', category: 'Mimicry', phone: '+9779817455559' },
-  { id: 19, name: 'rustam', category: 'dance', phone: '8545943855' },
-  { id: 20, name: 'Kritika singh', category: 'Singing', phone: '8127421810' },
-  { id: 21, name: 'Khushee madhyeshiya', category: 'Singing', phone: '9336550642' },
-  { id: 22, name: 'kv6304860@gmail.com', category: 'Dance', phone: '9335477452' },
-  { id: 23, name: 'Neha', category: 'Couple dance', phone: '7992159035' },
-  { id: 24, name: 'Atul sharma', category: 'Dance', phone: '8604057703' },
+  { id: 8, name: 'Arpita singh', category: 'Dance', phone: '9792844219' },
+  { id: 9, name: 'Aftab', category: 'Singing', phone: '7991789469' },
+  { id: 10, name: 'Misthi Mishra', category: 'Dance', phone: '8299388799' },
+  { id: 11, name: 'Kirti Gupta', category: 'Singing', phone: '9565865240' },
+  { id: 12, name: 'Ashik Ansari', category: 'Poetry', phone: '9569639253' },
+  { id: 13, name: 'Aradhya', category: 'Singing', phone: '7080718509' },
+  { id: 14, name: 'Shraddha Pandey', category: 'Singing', phone: '7307468833' },
+  { id: 15, name: 'Nandani Kumari', category: 'Dance', phone: '7052273166' },
+  { id: 16, name: 'Himanshu bhatt', category: 'Poetry', phone: '8112585745' },
+  { id: 17, name: 'MD Arman', category: 'Mimicry', phone: '+9779817455559' },
+  { id: 18, name: 'rustam', category: 'dance', phone: '8545943855' },
+  { id: 19, name: 'Kritika singh', category: 'Singing', phone: '8127421810' },
+  { id: 20, name: 'Khushee madhyeshiya', category: 'Singing', phone: '9336550642' },
+  { id: 21, name: 'kv6304860@gmail.com', category: 'Dance', phone: '9335477452' },
+  { id: 22, name: 'Neha', category: 'Couple dance', phone: '7992159035' },
+  { id: 23, name: 'Atul sharma', category: 'Dance', phone: '8604057703' },
 ];
 
 export interface Judge {
@@ -77,6 +77,8 @@ const DEFAULT_JUDGES: Judge[] = [
   { id: 'j_ananya', name: 'ANANYA GUPTA', role: 'Panel Judge', isActive: true },
   { id: 'j_vivek', name: 'VIVEK GUPTA', role: 'Panel Judge', isActive: true },
 ];
+
+const CORE_JUDGE_IDS = new Set(['j_brijesh', 'j_somya', 'j_naveen', 'j_ananya', 'j_vivek']);
 
 export interface SavedScoringRecord {
   contestantId: number;
@@ -417,6 +419,18 @@ export default function ComputerJiControlPanel() {
     setShowAddJudgeModal(false);
   };
 
+  // Delete Additional Judge
+  const handleDeleteJudge = (judgeId: string) => {
+    if (CORE_JUDGE_IDS.has(judgeId)) return;
+    const updated = judges.filter((j) => j.id !== judgeId);
+    setJudges(updated);
+    setJudgeScores((prev) => {
+      const copy = { ...prev };
+      delete copy[judgeId];
+      return copy;
+    });
+  };
+
   // Export CSV/Excel
   const handleExportExcel = () => {
     const list = Object.values(savedRecords);
@@ -593,6 +607,17 @@ export default function ComputerJiControlPanel() {
                     />
                   ) : (
                     <span className="text-[10px] text-slate-500 italic px-2">OFF</span>
+                  )}
+
+                  {!CORE_JUDGE_IDS.has(judge.id) && (
+                    <button
+                      type="button"
+                      title="Delete Additional Judge"
+                      onClick={() => handleDeleteJudge(judge.id)}
+                      className="p-1 rounded bg-red-950/60 hover:bg-red-800 border border-red-500/40 text-red-400 hover:text-white transition-colors cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   )}
                 </div>
               </div>

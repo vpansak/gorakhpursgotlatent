@@ -94,7 +94,7 @@ export async function POST(req: Request) {
       amount: totalAmount,
       amountPaise: Math.round(totalAmount * 100),
       currency: 'INR',
-      keyId: process.env.RAZORPAY_KEY_ID || '',
+      keyId: process.env.RAZORPAY_KEY_ID || 'rzp_live_Tfu7PlxOWV6ohp',
       eventName: event.title,
       categoryName: category.name,
       quantity,

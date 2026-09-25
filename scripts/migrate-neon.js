@@ -370,8 +370,8 @@ async function init() {
       "Experience raw talent, hilarious judge roasts, and unscripted performances live in Gorakhpur.",
       '2026-09-26',
       '13:00',
-      'Gorakhpur Club Ground',
-      'Civil Lines, Near Golghar, Gorakhpur, UP 273001',
+      'New Uday Marriage Lawn',
+      'Near BRD Medical College, Gorakhpur, UP',
       'Gorakhpur',
       1000,
       'PUBLISHED'

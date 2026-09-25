@@ -9,7 +9,7 @@ interface CountdownTimerProps {
   city?: string;
 }
 
-export default function CountdownTimer({ targetDate = "2026-09-26T13:00:00", venue = "Gorakhpur Club Ground", city = "Gorakhpur" }: CountdownTimerProps) {
+export default function CountdownTimer({ targetDate = "2026-09-26T13:00:00", venue = "New Uday Marriage Lawn", city = "Gorakhpur" }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number } | null>(null);
 
   useEffect(() => {
@@ -55,10 +55,15 @@ export default function CountdownTimer({ targetDate = "2026-09-26T13:00:00", ven
               <Calendar className="w-4 h-4 text-amber-400" />
               Sep 26, 2026 • 1:00 PM
             </span>
-            <span className="flex items-center gap-1 text-slate-300">
-              <MapPin className="w-4 h-4 text-orange-400" />
-              {venue}, {city}
-            </span>
+            <a 
+              href="https://maps.google.com/?q=26.828049,83.414894" 
+              target="_blank" 
+              rel="noreferrer"
+              className="flex items-center gap-1 text-slate-200 hover:text-amber-400 transition-colors group cursor-pointer"
+            >
+              <MapPin className="w-4 h-4 text-orange-400 group-hover:animate-bounce" />
+              <span>{venue} (Near BRD Medical College), {city} ↗</span>
+            </a>
           </div>
         </div>
 

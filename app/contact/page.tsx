@@ -47,7 +47,15 @@ export default function ContactPage() {
               </div>
               <div>
                 <strong className="block text-white font-bold">Show Venue Address:</strong>
-                <p className="text-xs text-slate-300">Gorakhpur Club Ground, Civil Lines, Near Town Hall, Gorakhpur, Uttar Pradesh 273001</p>
+                <p className="text-xs text-slate-300">New Uday Marriage Lawn, Near BRD Medical College, Gorakhpur, Uttar Pradesh</p>
+                <a 
+                  href="https://maps.google.com/?q=26.828049,83.414894" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="inline-flex items-center gap-1 text-xs text-amber-400 font-bold mt-1 hover:underline"
+                >
+                  View Location on Google Maps ↗
+                </a>
               </div>
             </div>
 

@@ -13,12 +13,28 @@ import {
   ExternalLink,
   Award,
   Zap,
-  CheckCircle2
+  CheckCircle2,
+  Ticket,
+  Tv,
+  Layers,
+  Database,
+  QrCode,
+  Lock,
+  Workflow,
+  Share2,
+  Smartphone,
+  Radio,
+  Flame,
+  Check,
+  TrendingUp,
+  Server,
+  Star,
+  Users
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Developer Profile | Alok Singh - Gorakhpur's Got Latent",
-  description: "Creator & Lead Developer of Gorakhpur's Got Latent official website & core tech infrastructure.",
+  title: "Alok Singh | Sole Developer & Tech Architect - Gorakhpur's Got Latent",
+  description: "Comprehensive engineering breakdown and profile of Alok Singh - Creator of Gorakhpur's Got Latent digital ecosystem.",
   robots: {
     index: false,
     follow: false,
@@ -50,135 +66,271 @@ function FacebookIcon({ className = "w-5 h-5" }: { className?: string }) {
 }
 
 export default function DeveloperPage() {
+  const achievements = [
+    { label: "Custom Endpoints", value: "50+", icon: Server, color: "text-amber-400" },
+    { label: "Core Systems Built", value: "10+", icon: Layers, color: "text-red-400" },
+    { label: "Live Stage Latency", value: "<100ms", icon: Zap, color: "text-yellow-400" },
+    { label: "Security & Uptime", value: "99.9%", icon: ShieldCheck, color: "text-emerald-400" },
+  ];
+
+  const systemsBuilt = [
+    {
+      title: "🎟️ Automated Ticketing & Payment Gateway Engine",
+      badge: "CORE PAYMENT ARCHITECTURE",
+      description: "Designed and engineered an end-to-end ticketing platform. Integrated PhonePe payment gateway with real-time webhooks, auto-expiry locks, automatic QR code generation, instant email receipts, and WhatsApp ticket delivery.",
+      tech: ["Next.js API", "PhonePe Gateway API", "QR Matrix Engine", "Turso/MySQL DB", "Webhooks"]
+    },
+    {
+      title: "⚡ 'Computerji' Live Stage & Judge Scoring System",
+      badge: "REAL-TIME STAGE HARDWARE SYNC",
+      description: "Created the proprietary 'Computerji' engine used live during show tapings. Allows real-time score input by live judges, instant state synchronization on stage LED screens, stage operator control dashboard, and live audience voting.",
+      tech: ["Realtime State Sync", "Judge Dashboard", "Stage Operator Portal", "LED Screen Display", "Audience Poll API"]
+    },
+    {
+      title: "🛡️ 'Malik' Master Admin Command Center",
+      badge: "SECURITY & DATA OPERATIONS",
+      description: "Built a locked administrative portal with OTP authentication for the show management team. Includes ticket sales analytics, application review pipelines, automated refund processing, and one-click Google Sheets export sync.",
+      tech: ["OTP Auth System", "Refund Engine", "Application Pipeline", "Google Sheets Sync", "Data Analytics"]
+    },
+    {
+      title: "🎭 Performer, Guest & Sponsor Onboarding Portals",
+      badge: "TALENT RECRUITMENT PIPELINE",
+      description: "Developed multi-tiered application portals for auditioning performers, guest VIP requests, and brand sponsorship packages. Features OTP identity verification, demo video submission parsing, and auto-sorting.",
+      tech: ["Form Parsing", "OTP Verification", "Media Storage Engine", "Automated Auto-responder"]
+    },
+    {
+      title: "📱 Instagram Handle & Brand Growth Strategy",
+      badge: "COMMUNITY & DIGITAL LEAD",
+      description: "Directly leads the official Gorakhpur's Got Latent Instagram page and brand communications. Manages contestant announcements, promotional teasers, audience engagement campaigns, and digital press releases.",
+      tech: ["Brand Strategy", "Content Direction", "Audience Growth", "Press Strategy"]
+    },
+    {
+      title: "🎨 Sleek Glassmorphic UI/UX Design System",
+      badge: "FRONTEND DESIGN SYSTEM",
+      description: "Crafted a high-contrast dark aesthetic tailored specifically for Purvanchal's premier entertainment brand. Includes custom typography, micro-interactions, responsive mobile optimizations, and zero-lag hydration.",
+      tech: ["Tailwind CSS", "Vanilla CSS Tokens", "Google Fonts", "Lucide Icons", "Optimized Next.js"]
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-[#07080e] text-slate-100 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden selection:bg-amber-500 selection:text-black">
+      
       {/* Background Decorative Glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-[350px] h-[350px] bg-red-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-gradient-to-b from-amber-500/15 via-red-600/10 to-transparent rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/2 -left-40 w-[450px] h-[450px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-20 -right-40 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="max-w-4xl mx-auto relative z-10 space-y-10">
+      <div className="max-w-5xl mx-auto relative z-10 space-y-16">
         
-        {/* Header Badge */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs sm:text-sm font-semibold tracking-wider uppercase backdrop-blur-md shadow-lg shadow-amber-500/5">
-            <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
+        {/* TOP HERO HEADER */}
+        <div className="text-center space-y-6 pt-4">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-amber-500/20 to-red-500/20 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-bold tracking-widest uppercase shadow-xl backdrop-blur-md">
+            <Sparkles className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '6s' }} />
             <span>Sole Creator & Tech Lead</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight font-heading text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 uppercase">
-            Developer Profile
+
+          <h1 className="text-4xl sm:text-7xl font-extrabold tracking-tight font-heading text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 uppercase">
+            Alok Singh
           </h1>
-          <p className="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
-            The mind and engineering behind <span className="text-amber-400 font-semibold">Gorakhpur's Got Latent</span> official platform.
+
+          <p className="text-slate-300 text-base sm:text-xl max-w-3xl mx-auto font-light leading-relaxed">
+            The Engineer & Architect who designed, built, and operates the complete digital ecosystem for <span className="text-amber-400 font-semibold border-b border-amber-500/40">Gorakhpur&apos;s Got Latent</span> from scratch.
           </p>
         </div>
 
-        {/* Main Profile Card */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-xl relative overflow-hidden group hover:border-amber-500/40 transition-all duration-300">
+        {/* PROFILE CARD & BIOGRAPHY */}
+        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-12 shadow-2xl backdrop-blur-2xl relative overflow-hidden group hover:border-amber-500/30 transition-all duration-300">
           
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-10">
             
-            {/* Developer Avatar */}
+            {/* AVATAR WITH GLOW RING */}
             <div className="relative shrink-0">
-              <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-2xl overflow-hidden border-2 border-amber-500/40 shadow-2xl shadow-amber-500/20 group-hover:border-amber-400 transition-all">
+              <div className="relative w-48 h-48 sm:w-60 sm:h-60 rounded-3xl overflow-hidden border-2 border-amber-500/50 shadow-2xl shadow-amber-500/30 group-hover:border-amber-400 transition-all duration-300">
                 <Image
                   src="/alok-singh.jpg"
-                  alt="Alok Singh - Developer of Gorakhpur's Got Latent"
+                  alt="Alok Singh - Creator of Gorakhpur's Got Latent"
                   fill
-                  className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                   priority
                 />
               </div>
-              <div className="absolute -bottom-3 -right-3 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-xs px-3 py-1 rounded-lg shadow-lg flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                VERIFIED DEV
+              
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-xs px-4 py-1.5 rounded-full shadow-xl flex items-center gap-1.5 whitespace-nowrap">
+                <Award className="w-4 h-4" />
+                SOLE DEVELOPER & CORE LEAD
               </div>
             </div>
 
-            {/* Profile Info */}
-            <div className="flex-1 text-center md:text-left space-y-4">
+            {/* BIO DETAILS */}
+            <div className="flex-1 space-y-6 text-center lg:text-left">
               <div>
-                <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-wide">
-                  Alok Singh
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-wide font-heading">
+                  About Alok Singh
                 </h2>
-                <p className="text-amber-400 text-sm sm:text-base font-medium flex items-center justify-center md:justify-start gap-2 mt-1">
-                  <Code2 className="w-4 h-4" /> Full-Stack Website Creator & Core Tech Lead
+                <p className="text-amber-400 text-sm sm:text-base font-semibold flex items-center justify-center lg:justify-start gap-2 mt-1">
+                  <Terminal className="w-4 h-4" /> Full-Stack Systems Engineer & Digital Operations Director
                 </p>
               </div>
 
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed bg-slate-950/50 p-4 rounded-xl border border-slate-800/80">
-                &ldquo;Maine <strong className="text-amber-300">Gorakhpur&apos;s Got Latent</strong> ki poori website design aur develop ki hai. Platform ki backend system, ticketing infrastructure, live scoring system aur Insta handle core main sambhalta hoon.&rdquo;
-              </p>
+              <div className="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed bg-slate-950/70 p-5 sm:p-6 rounded-2xl border border-slate-800/90 shadow-inner">
+                <p>
+                  Mera naam <strong className="text-amber-300 font-semibold">Alok Singh</strong> hai. Maine <strong className="text-white">Gorakhpur&apos;s Got Latent</strong> ki poori website, payment engines, admin portals, live scoring systems, aur digital infrastructure ko akhele (sole developer) zero se design aur develop kiya hai.
+                </p>
+                <p>
+                  Sath hi main show ka official Instagram page, audience communication, core tech operations, aur live stage software execution handle karta hoon.
+                </p>
+              </div>
 
-              {/* Grid Details */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              {/* PERSONAL INFO GRID */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
-                {/* DOB */}
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-800/60">
-                  <div className="p-2.5 rounded-lg bg-amber-500/10 text-amber-400 shrink-0">
-                    <Calendar className="w-4 h-4" />
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-800/40 border border-slate-800/80">
+                  <div className="p-3 rounded-lg bg-amber-500/10 text-amber-400 shrink-0">
+                    <Calendar className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-xs text-slate-400 uppercase font-semibold">Date of Birth</div>
-                    <div className="text-sm font-medium text-slate-200">13 April 2008 (13/04/2008)</div>
+                    <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">Date of Birth</div>
+                    <div className="text-sm font-semibold text-slate-100">13 April 2008 (13/04/2008)</div>
                   </div>
                 </div>
 
-                {/* Location */}
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-800/60">
-                  <div className="p-2.5 rounded-lg bg-red-500/10 text-red-400 shrink-0">
-                    <MapPin className="w-4 h-4" />
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-800/40 border border-slate-800/80">
+                  <div className="p-3 rounded-lg bg-red-500/10 text-red-400 shrink-0">
+                    <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-xs text-slate-400 uppercase font-semibold">Hometown</div>
-                    <div className="text-sm font-medium text-slate-200">Gola Road, Kauriram, Gorakhpur, UP</div>
+                    <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">Hometown</div>
+                    <div className="text-sm font-semibold text-slate-100">Gola Road, Kauriram, Gorakhpur, UP</div>
                   </div>
                 </div>
 
               </div>
 
-            </div>
-
-          </div>
-
-          {/* Core Roles & Achievements Section */}
-          <div className="mt-8 pt-8 border-t border-slate-800/80 grid grid-cols-1 md:grid-cols-3 gap-4">
-            
-            <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/60 space-y-1">
-              <div className="flex items-center gap-2 text-amber-400 text-sm font-bold">
-                <Terminal className="w-4 h-4" /> Full Website Architecture
-              </div>
-              <p className="text-xs text-slate-400">
-                Built the entire website from scratch using modern serverless tech, custom styling, and optimized databases.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/60 space-y-1">
-              <div className="flex items-center gap-2 text-amber-400 text-sm font-bold">
-                <Cpu className="w-4 h-4" /> Core System & Insta Management
-              </div>
-              <p className="text-xs text-slate-400">
-                Handles official GGL Instagram management, live event operations, and core technical backend systems.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/60 space-y-1">
-              <div className="flex items-center gap-2 text-amber-400 text-sm font-bold">
-                <ShieldCheck className="w-4 h-4" /> Ticketing & Applications
-              </div>
-              <p className="text-xs text-slate-400">
-                Designed secure performer application forms, sponsor onboarding portals, and live ticket checkout flows.
-              </p>
             </div>
 
           </div>
 
         </div>
 
-        {/* Social Connect Links */}
-        <div className="space-y-4">
-          <h3 className="text-xl font-bold text-center text-slate-200 flex items-center justify-center gap-2">
-            <Zap className="w-5 h-5 text-amber-400" /> Connect With Alok
-          </h3>
+        {/* ACHIEVEMENTS STATS COUNTER GRID */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {achievements.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <div key={i} className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 text-center space-y-2 backdrop-blur-xl hover:border-amber-500/40 transition-all group">
+                <div className="inline-flex p-3 rounded-xl bg-slate-800/60 group-hover:scale-110 transition-transform">
+                  <Icon className={`w-6 h-6 ${item.color}`} />
+                </div>
+                <div className="text-3xl sm:text-4xl font-black text-white tracking-tight font-heading">
+                  {item.value}
+                </div>
+                <div className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                  {item.label}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* COMPREHENSIVE ENGINEERING WORK BREAKDOWN */}
+        <div className="space-y-8">
+          
+          <div className="text-center space-y-2">
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight font-heading text-white uppercase">
+              What I Built For Gorakhpur&apos;s Got Latent
+            </h2>
+            <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
+              Every system on this website was custom-coded to deliver an ultra-fast, secure, and world-class live show experience.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {systemsBuilt.map((system, idx) => (
+              <div 
+                key={idx}
+                className="bg-slate-900/70 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-4 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl flex flex-col justify-between group"
+              >
+                <div className="space-y-3">
+                  <div className="inline-block px-3 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                    {system.badge}
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-amber-300 transition-colors">
+                    {system.title}
+                  </h3>
+                  <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                    {system.description}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-slate-800/80 flex flex-wrap gap-1.5">
+                  {system.tech.map((t, tid) => (
+                    <span key={tid} className="px-2.5 py-1 rounded-md bg-slate-950 text-slate-400 text-[11px] font-mono border border-slate-800">
+                      #{t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+
+        {/* TECHNICAL STACK & ARCHITECTURE MATRIX */}
+        <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-6 backdrop-blur-xl">
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-xl bg-amber-500/10 text-amber-400">
+              <Cpu className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-white">Full-Stack Tech Stack</h3>
+              <p className="text-slate-400 text-xs sm:text-sm">Technologies engineered to run Purvanchal&apos;s premier talent hunt website.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
+              <div className="text-amber-400 text-xs font-bold uppercase">Framework</div>
+              <div className="text-sm font-semibold text-white">Next.js 16 (Turbopack)</div>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
+              <div className="text-amber-400 text-xs font-bold uppercase">Language</div>
+              <div className="text-sm font-semibold text-white">TypeScript (Strict)</div>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
+              <div className="text-amber-400 text-xs font-bold uppercase">Styling</div>
+              <div className="text-sm font-semibold text-white">Tailwind CSS & Vanilla Tokens</div>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
+              <div className="text-amber-400 text-xs font-bold uppercase">Database</div>
+              <div className="text-sm font-semibold text-white">Turso Serverless SQL DB</div>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
+              <div className="text-amber-400 text-xs font-bold uppercase">Payments</div>
+              <div className="text-sm font-semibold text-white">PhonePe API & Webhooks</div>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
+              <div className="text-amber-400 text-xs font-bold uppercase">Auth & Security</div>
+              <div className="text-sm font-semibold text-white">OTP Verification Engine</div>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
+              <div className="text-amber-400 text-xs font-bold uppercase">Integrations</div>
+              <div className="text-sm font-semibold text-white">Google Sheets & WhatsApp</div>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
+              <div className="text-amber-400 text-xs font-bold uppercase">Live Hardware</div>
+              <div className="text-sm font-semibold text-white">Computerji Stage Engine</div>
+            </div>
+          </div>
+        </div>
+
+        {/* SOCIAL CONNECT LINKS */}
+        <div className="space-y-6 pt-4">
+          <div className="text-center space-y-2">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center justify-center gap-2">
+              <Zap className="w-6 h-6 text-amber-400" /> Official Developer Handles
+            </h3>
+            <p className="text-slate-400 text-sm">Directly connect with Alok Singh on social platforms.</p>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             
@@ -187,18 +339,18 @@ export default function DeveloperPage() {
               href="https://www.instagram.com/aloksingh_._/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-pink-900/30 to-purple-900/30 border border-pink-500/30 hover:border-pink-500/70 hover:scale-[1.02] transition-all duration-200 group shadow-lg"
+              className="flex items-center justify-between p-5 rounded-2xl bg-gradient-to-r from-pink-950/40 via-purple-950/30 to-slate-900 border border-pink-500/30 hover:border-pink-500/80 hover:scale-[1.02] transition-all duration-300 group shadow-xl"
             >
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 text-white shadow-md">
-                  <InstagramIcon className="w-5 h-5" />
+              <div className="flex items-center gap-4">
+                <div className="p-3.5 rounded-2xl bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 text-white shadow-lg">
+                  <InstagramIcon className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400 font-semibold uppercase">Instagram</div>
-                  <div className="text-sm font-bold text-white group-hover:text-pink-300">@aloksingh_._</div>
+                  <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Instagram</div>
+                  <div className="text-base font-extrabold text-white group-hover:text-pink-300">@aloksingh_._</div>
                 </div>
               </div>
-              <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-pink-400" />
+              <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-pink-400 transition-colors" />
             </a>
 
             {/* X / Twitter */}
@@ -206,18 +358,18 @@ export default function DeveloperPage() {
               href="https://x.com/rajpratapsinghh"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between p-4 rounded-2xl bg-slate-900/80 border border-slate-700 hover:border-slate-500 hover:scale-[1.02] transition-all duration-200 group shadow-lg"
+              className="flex items-center justify-between p-5 rounded-2xl bg-slate-900/90 border border-slate-700 hover:border-amber-400 hover:scale-[1.02] transition-all duration-300 group shadow-xl"
             >
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-slate-800 text-white shadow-md border border-slate-700">
-                  <XIcon className="w-5 h-5" />
+              <div className="flex items-center gap-4">
+                <div className="p-3.5 rounded-2xl bg-slate-800 text-white shadow-lg border border-slate-700">
+                  <XIcon className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400 font-semibold uppercase">X (Twitter)</div>
-                  <div className="text-sm font-bold text-white group-hover:text-amber-300">@rajpratapsinghh</div>
+                  <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">X (Twitter)</div>
+                  <div className="text-base font-extrabold text-white group-hover:text-amber-300">@rajpratapsinghh</div>
                 </div>
               </div>
-              <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-amber-400" />
+              <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition-colors" />
             </a>
 
             {/* Facebook */}
@@ -225,26 +377,30 @@ export default function DeveloperPage() {
               href="https://www.facebook.com/meadorush"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-950/40 to-slate-900 border border-blue-600/30 hover:border-blue-500/70 hover:scale-[1.02] transition-all duration-200 group shadow-lg"
+              className="flex items-center justify-between p-5 rounded-2xl bg-gradient-to-r from-blue-950/40 via-slate-900 to-slate-900 border border-blue-600/30 hover:border-blue-500/80 hover:scale-[1.02] transition-all duration-300 group shadow-xl"
             >
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-blue-600 text-white shadow-md">
-                  <FacebookIcon className="w-5 h-5" />
+              <div className="flex items-center gap-4">
+                <div className="p-3.5 rounded-2xl bg-blue-600 text-white shadow-lg">
+                  <FacebookIcon className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400 font-semibold uppercase">Facebook</div>
-                  <div className="text-sm font-bold text-white group-hover:text-blue-300">@meadorush</div>
+                  <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Facebook</div>
+                  <div className="text-base font-extrabold text-white group-hover:text-blue-300">@meadorush</div>
                 </div>
               </div>
-              <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-blue-400" />
+              <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition-colors" />
             </a>
 
           </div>
         </div>
 
-        {/* Unlinked Notice Footer */}
-        <div className="text-center pt-6 border-t border-slate-900 text-xs text-slate-500">
-          🔒 Private Developer Route &bull; Accessible via direct URL only (<span className="text-slate-400">/developer</span>)
+        {/* UNLINKED PRIVATE FOOTER NOTE */}
+        <div className="text-center pt-8 border-t border-slate-900 text-xs text-slate-500 space-y-1">
+          <div className="flex items-center justify-center gap-1.5 text-slate-400 font-mono">
+            <Lock className="w-3.5 h-3.5 text-amber-500" />
+            <span>Private Hidden Profile &bull; URL: <strong className="text-amber-400">/developer</strong></span>
+          </div>
+          <p className="text-[11px] text-slate-600">Unlinked from main navigation. Accessible via direct link search only.</p>
         </div>
 
       </div>

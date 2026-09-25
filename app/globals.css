@@ -8,12 +8,25 @@
     --foreground: 255 255 255;
   }
   
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
   body {
     background-color: #07080e;
     color: #f8fafc;
     font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  a, button, input, select, textarea {
+    touch-action: manipulation;
   }
 
   a {

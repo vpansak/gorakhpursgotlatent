@@ -232,14 +232,15 @@ export default function ComputerJiControlPanel() {
     const cleanId = loginId.trim();
     const cleanPass = loginPassword.trim();
 
-    if (cleanId === '8528085859' && cleanPass === 'GGL@GKP') {
+    // Accept operator ID 8528085859 with password being the same mobile number (8528085859) or GGL@GKP
+    if (cleanId === '8528085859' && (cleanPass === cleanId || cleanPass === '8528085859' || cleanPass === 'GGL@GKP')) {
       try {
         sessionStorage.setItem('ggl_computerji_auth_v1', 'verified');
       } catch (err) {}
       setIsAuthenticated(true);
       setIsSubmittingAuth(false);
     } else {
-      setAuthError('गलत ID या Password! कृपया सही ID (8528085859) और Password (GGL@GKP) डालें।');
+      setAuthError('गलत Operator ID या Security Password! कृपया सही विवरण डालें।');
       setIsSubmittingAuth(false);
     }
   };
@@ -825,7 +826,7 @@ export default function ComputerJiControlPanel() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
-                  placeholder="GGL@GKP"
+                  placeholder="••••••••"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-black/60 border border-white/10 focus:border-amber-400 text-sm text-white font-mono placeholder:text-slate-600 focus:outline-none transition-all"

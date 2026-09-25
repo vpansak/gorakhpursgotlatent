@@ -6,22 +6,23 @@ export async function POST(req: Request) {
   try {
     const { id, password } = await req.json();
 
-    const expectedId = '8528085859';
-    const expectedPassword = 'GGL@GKP';
+    const cleanId = String(id || '').trim();
+    const cleanPass = String(password || '').trim();
 
-    if (String(id || '').trim() === expectedId && String(password || '').trim() === expectedPassword) {
+    // Accept operator ID 8528085859 with password being the same mobile number (8528085859) or GGL@GKP
+    if (cleanId === '8528085859' && (cleanPass === cleanId || cleanPass === '8528085859' || cleanPass === 'GGL@GKP')) {
       return NextResponse.json({
         success: true,
         message: 'Authentication successful',
         operator: {
-          id: expectedId,
+          id: '8528085859',
           role: 'COMPUTERJI_OPERATOR',
         },
       });
     }
 
     return NextResponse.json(
-      { success: false, error: 'Invalid ID or Password. Kripya sahi ID aur Password dalein.' },
+      { success: false, error: 'गलत Operator ID या Security Password!' },
       { status: 401 }
     );
   } catch (err: any) {

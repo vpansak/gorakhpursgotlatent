@@ -57,7 +57,7 @@ export default async function HomePage() {
   return (
     <div className="relative overflow-hidden">
       {/* 1. HERO SECTION */}
-      <section className="relative min-h-[75vh] flex items-center justify-center pt-2 sm:pt-6 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 bg-stage-radial">
+      <section className="relative min-h-[70vh] flex items-center justify-center pt-0 sm:pt-2 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-8 bg-stage-radial">
         {/* Stage Lighting Rays */}
         <div className="spotlight-left" />
         <div className="spotlight-right" />
@@ -65,15 +65,9 @@ export default async function HomePage() {
         {/* Animated Particles backdrop grid */}
         <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
 
-        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-5 sm:space-y-6">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-barlow text-xs sm:text-sm font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(255,215,0,0.2)] animate-pulse-glow">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            PURVANCHAL'S #1 LIVE TALENT & ENTERTAINMENT SHOW
-          </div>
-
+        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 sm:space-y-5">
           {/* Official Logo Banner */}
-          <div className="relative w-72 sm:w-[420px] md:w-[500px] h-36 sm:h-48 md:h-60 mx-auto animate-float -mt-1 sm:-mt-2">
+          <div className="relative w-72 sm:w-[420px] md:w-[500px] h-36 sm:h-48 md:h-60 mx-auto animate-float">
             <Image
               src="/logo.png"
               alt="Gorakhpur's Got Latent Official Title Logo"

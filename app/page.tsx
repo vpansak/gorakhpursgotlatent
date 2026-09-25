@@ -8,6 +8,14 @@ import {
   ChevronRight, Mic2, Music, Video, MapPin, Calendar, Clock, HelpCircle
 } from 'lucide-react';
 
+function YouTubeIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+    </svg>
+  );
+}
+
 async function getHomepageData() {
   try {
     const activeEvent = await db.queryOne<any>("SELECT * FROM events WHERE status = 'PUBLISHED' ORDER BY event_date ASC LIMIT 1");
@@ -113,6 +121,42 @@ export default async function HomePage() {
               <UserCheck className="w-6 h-6 text-orange-400" />
               APPLY FOR EPISODE 2
             </Link>
+          </div>
+
+          {/* Official YouTube Channel Banner */}
+          <div className="pt-3 max-w-2xl mx-auto">
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/70 via-slate-900 to-amber-950/70 border border-red-500/40 text-center space-y-3 shadow-[0_0_25px_rgba(239,68,68,0.2)] relative overflow-hidden group">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                <div className="flex items-center gap-3.5">
+                  <div className="p-3 rounded-2xl bg-red-600/20 text-red-500 border border-red-500/40 shrink-0">
+                    <YouTubeIcon className="w-7 h-7 text-red-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 justify-center sm:justify-start">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-red-400 font-barlow">
+                        OFFICIAL YOUTUBE CHANNEL
+                      </span>
+                    </div>
+                    <h3 className="text-sm sm:text-base font-black text-white leading-snug">
+                      Gorakhpur's Got Latent Official YouTube Channel
+                    </h3>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      All official show episodes, audition clips, and live roast videos will be uploaded exclusively on this channel.
+                    </p>
+                  </div>
+                </div>
+
+                <a
+                  href="https://www.youtube.com/@GkpGotLatent"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold font-barlow text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-red-600/30 hover:scale-105 transition-all shrink-0 self-stretch sm:self-auto justify-center cursor-pointer"
+                >
+                  <YouTubeIcon className="w-4 h-4 text-white" />
+                  <span>SUBSCRIBE NOW ↗</span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>

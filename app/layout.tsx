@@ -3,7 +3,6 @@ import { Bebas_Neue, Barlow_Condensed, Anton, Outfit, Inter } from 'next/font/go
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import AppSplashScreen from '@/components/AppSplashScreen';
 
 const bebas = Bebas_Neue({
   weight: '400',
@@ -107,7 +106,6 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-[#07080e] text-slate-100 antialiased selection:bg-amber-500 selection:text-black min-h-screen flex flex-col justify-between">
-        <AppSplashScreen />
         <div>
           <Navbar />
           <main className="relative">{children}</main>

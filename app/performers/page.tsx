@@ -66,11 +66,11 @@ export default async function PerformersPage() {
       </div>
 
       <div className="p-8 rounded-3xl bg-slate-900/80 border border-amber-500/30 text-center space-y-4 max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 border border-red-500/40 text-red-300 text-xs font-bold uppercase tracking-wider">
-          Episode 1 Slots Full • Next Registration Date Coming Soon
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold uppercase tracking-wider">
+          Episode 2 Auditions • Next Registration Date Coming Soon
         </div>
         <h3 className="text-2xl font-black text-white">Think You Have What It Takes?</h3>
-        <p className="text-xs sm:text-sm text-slate-300">Episode 1 slots are full. Fill form for Episode 2 auditions now to reserve your slot.</p>
+        <p className="text-xs sm:text-sm text-slate-300">Fill form for Episode 2 auditions now to reserve your slot.</p>
         <Link href="/apply/performer" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-black font-extrabold text-sm shadow-lg hover:scale-105 transition-all">
           FILL FORM FOR EPISODE 2 NOW
         </Link>

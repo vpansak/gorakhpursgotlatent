@@ -328,39 +328,33 @@ export default function PerformerApplyPage() {
           Performer Registration — <span className="gold-gradient-text">Episode 2</span>
         </h1>
         <p className="text-base sm:text-lg text-amber-200/90 font-medium">
-          Episode 1 performer slots are full! Fill form below to apply for Episode 2 auditions.
+          Fill the registration form below to apply for Episode 2 auditions.
         </p>
       </div>
 
-      {/* EPISODE 1 FULL & EPISODE 2 REGISTRATION NOTICE BANNER */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-red-950/70 via-slate-900 to-amber-950/70 border-2 border-amber-500/50 p-6 sm:p-8 shadow-[0_0_50px_rgba(245,158,11,0.2)] space-y-4">
+      {/* EPISODE 2 REGISTRATION NOTICE BANNER */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-950/70 via-slate-900 to-amber-950/70 border-2 border-amber-500/50 p-6 sm:p-8 shadow-[0_0_50px_rgba(245,158,11,0.2)] space-y-4">
         <div className="flex flex-wrap items-center gap-2.5">
-          <span className="px-3 py-1 rounded-full bg-red-500 text-white text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md animate-pulse">
-            <span className="w-2 h-2 rounded-full bg-white animate-ping" />
-            EPISODE 1 PERFORMER SLOTS FULL
-          </span>
-          <span className="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/50 text-amber-300 text-xs font-black uppercase tracking-wider">
-            FILL FORM FOR EPISODE 2
+          <span className="px-3 py-1 rounded-full bg-amber-500 text-black text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md">
+            <Sparkles className="w-3.5 h-3.5" />
+            AUDITIONS OPEN FOR EPISODE 2
           </span>
           <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-xs font-extrabold uppercase tracking-wider flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" /> NEXT REGISTRATION DATE: COMING SOON
+            <Clock className="w-3.5 h-3.5" /> NEXT AUDITION DATE: COMING SOON
           </span>
         </div>
 
         <div className="space-y-2">
           <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-            <AlertTriangle className="w-6 h-6 text-amber-400 shrink-0" />
-            Episode 1 Performer Slots Full — Fill Form for Episode 2
+            <Sparkles className="w-6 h-6 text-amber-400 shrink-0" />
+            Fill Registration Form for Episode 2 Auditions
           </h2>
           <div className="text-xs sm:text-sm text-slate-200 leading-relaxed space-y-1.5 bg-black/40 p-4 rounded-2xl border border-white/10">
             <p className="font-semibold text-amber-200">
               📢 <strong>महत्वपूर्ण सूचना (Important Announcement):</strong>
             </p>
             <p>
-              Gorakhpur’s Got Latent <strong>Episode 1 ke sabhi performer slots FULL ho chuke hain!</strong>
-            </p>
-            <p>
-              Next (agla) registration date <strong className="text-amber-400">COMING SOON</strong> hai. Agar aap stage par apna talent perform karna chahte hain toh <strong className="text-emerald-300 underline">abhi se Episode 2 ke liye form fill karein</strong> (Fill form for Episode 2) taaki aapka slot priority review mein shamil ho sake.
+              Agar aap stage par apna talent perform karna chahte hain toh <strong className="text-emerald-300 underline">abhi se Episode 2 ke liye form fill karein</strong> (Fill form for Episode 2) taaki aapka slot priority review mein shamil ho sake. Next audition dates jald hi announce hongi.
             </p>
           </div>
         </div>

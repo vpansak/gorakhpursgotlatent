@@ -34,8 +34,8 @@ export default function NotFound() {
 
       {/* 2. PRIMARY CTA: APPLY FOR PERFORMANCE IN EPISODE 2 */}
       <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-orange-950/40 border-2 border-amber-500/40 shadow-[0_0_30px_rgba(255,215,0,0.15)] text-center space-y-4 relative overflow-hidden">
-        <div className="absolute top-0 right-0 px-4 py-1 rounded-bl-2xl bg-red-500 text-white font-extrabold text-[10px] uppercase tracking-wider">
-          Episode 1 Full
+        <div className="absolute top-0 right-0 px-4 py-1 rounded-bl-2xl bg-amber-500 text-black font-extrabold text-[10px] uppercase tracking-wider">
+          Auditions Open
         </div>
 
         <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center mx-auto text-amber-400">
@@ -47,7 +47,7 @@ export default function NotFound() {
             Apply for Performance in Episode 2
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
-            Episode 1 performer slots are full! Fill the registration form now to reserve your audition slot for Episode 2.
+            Fill the registration form now to reserve your audition slot for Episode 2.
           </p>
         </div>
 

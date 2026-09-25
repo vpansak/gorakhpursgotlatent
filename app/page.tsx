@@ -95,9 +95,9 @@ export default async function HomePage() {
           </div>
 
           {/* Episode 2 Auditions Status Banner */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold font-barlow uppercase tracking-wider">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-            Episode 1 Slots Full • Auditions Open for Episode 2
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold font-barlow uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+            Auditions Open for Episode 2
           </div>
 
           {/* Action CTAs */}
@@ -117,7 +117,7 @@ export default async function HomePage() {
               className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border-2 border-amber-500/40 text-amber-300 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-amber-400 transition-all duration-300 cursor-pointer"
             >
               <UserCheck className="w-6 h-6 text-orange-400" />
-              APPLY FOR PERFORMANCE
+              APPLY FOR EPISODE 2
             </Link>
           </div>
         </div>

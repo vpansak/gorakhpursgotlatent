@@ -182,50 +182,51 @@ export default async function HomePage() {
       </section>
 
       {/* 4. SHOWCASE TICKET PASSES TIERS */}
-      {categories.length > 0 && (
-        <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-barlow text-xs font-bold uppercase tracking-wider">
-              <Ticket className="w-4 h-4 text-amber-400" /> EXCLUSIVE SHOW PASSES
-            </div>
-            <h2 className="font-bebas text-4xl sm:text-6xl text-white uppercase tracking-tight">
-              SELECT YOUR <span className="gold-gradient-text">SHOW EXPERIENCE</span>
-            </h2>
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-8">
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-barlow text-xs font-bold uppercase tracking-wider">
+            <Ticket className="w-4 h-4 text-amber-400" /> EXCLUSIVE SHOW PASS
           </div>
+          <h2 className="font-bebas text-4xl sm:text-6xl text-white uppercase tracking-tight">
+            BOOK YOUR <span className="gold-gradient-text">SHOW ENTRY PASS</span>
+          </h2>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {categories.map((cat: any) => (
-              <div key={cat.id} className="glass-card p-6 sm:p-8 rounded-3xl border border-amber-500/30 flex flex-col justify-between space-y-6 hover:border-amber-400 transition-all group">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="font-barlow text-xs font-bold text-amber-400 uppercase tracking-widest">{cat.name} PASS</span>
-                    <span className="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold font-barlow uppercase">SELLING FAST</span>
-                  </div>
-                  <div className="font-bebas text-4xl sm:text-5xl text-white">{formatINR(cat.price)}</div>
-                  <p className="text-xs text-slate-300 leading-relaxed">{cat.description}</p>
-                </div>
-
-                <div className="space-y-4 pt-4 border-t border-slate-800">
-                  <div className="flex items-center justify-between text-xs text-slate-300 font-barlow uppercase font-medium">
-                    <span>Status:</span>
-                    <span className="font-bold text-amber-400">BookMyShow Verified</span>
-                  </div>
-
-                  <a
-                    href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-barlow font-bold uppercase tracking-wider text-sm flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,215,0,0.3)] transition-all"
-                  >
-                    <Ticket className="w-4 h-4" />
-                    BOOK ON BOOKMYSHOW ↗
-                  </a>
-                </div>
+        <div className="max-w-md mx-auto">
+          <div className="glass-card p-6 sm:p-8 rounded-3xl border-2 border-amber-500/40 flex flex-col justify-between space-y-6 hover:border-amber-400 transition-all shadow-[0_0_30px_rgba(255,215,0,0.2)] relative overflow-hidden">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="font-barlow text-xs font-bold text-amber-400 uppercase tracking-widest">OFFICIAL ENTRY PASS</span>
+                <span className="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold font-barlow uppercase animate-pulse">SELLING FAST</span>
               </div>
-            ))}
+              <div className="font-bebas text-5xl sm:text-6xl text-white flex items-baseline gap-2">
+                <span className="gold-gradient-text font-black">₹99</span>
+                <span className="text-xs text-slate-400 font-barlow font-normal uppercase">/ Entry Pass</span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Access to live audience arena, front stage seating, live performance roasts & voting experience.
+              </p>
+            </div>
+
+            <div className="space-y-4 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-between text-xs text-slate-300 font-barlow uppercase font-medium">
+                <span>Status:</span>
+                <span className="font-bold text-amber-400">BookMyShow Verified</span>
+              </div>
+
+              <a
+                href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-barlow font-bold uppercase tracking-wider text-base flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,215,0,0.4)] hover:shadow-[0_0_30px_rgba(255,160,0,0.7)] hover:scale-[1.02] transition-all"
+              >
+                <Ticket className="w-5 h-5 text-black" />
+                BOOK ON BOOKMYSHOW ↗
+              </a>
+            </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* 5. FEATURED APPROVED PERFORMERS */}
       {performers.length > 0 && (

@@ -5,7 +5,8 @@ import { db } from '@/lib/db';
 import { formatINR } from '@/lib/helpers';
 import {
   Ticket, Sparkles, UserCheck, Star, Award, ShieldCheck,
-  ChevronRight, Mic2, Music, Video, MapPin, Calendar, Clock, HelpCircle
+  ChevronRight, Mic2, Music, Video, MapPin, Calendar, Clock, HelpCircle,
+  Zap, Flame, Disc, Radio
 } from 'lucide-react';
 
 function YouTubeIcon({ className = "w-5 h-5" }: { className?: string }) {
@@ -72,6 +73,43 @@ export default async function HomePage() {
         
         {/* Animated Particles backdrop grid */}
         <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
+
+        {/* Floating Cartoon Mics, Musical Notes & Stage Sparks in Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          {/* Top Left Floating Mic & Musical Notes */}
+          <div className="absolute top-4 left-1 sm:left-8 w-14 h-14 sm:w-20 sm:h-20 opacity-25 text-amber-400 animate-pulse flex items-center justify-center p-2 rounded-full bg-amber-500/10 border border-amber-500/20 shadow-[0_0_20px_rgba(255,215,0,0.2)]">
+            <Mic2 className="w-8 h-8 sm:w-12 sm:h-12 -rotate-12 text-amber-400" />
+          </div>
+          <div className="absolute top-24 left-6 sm:left-24 opacity-30 text-amber-300 animate-bounce">
+            <Music className="w-5 h-5 sm:w-7 sm:h-7" />
+          </div>
+
+          {/* Top Right Floating Mic & Stage Lightning */}
+          <div className="absolute top-4 right-1 sm:right-8 w-14 h-14 sm:w-20 sm:h-20 opacity-25 text-orange-400 animate-pulse flex items-center justify-center p-2 rounded-full bg-orange-500/10 border border-orange-500/20 shadow-[0_0_20px_rgba(255,140,0,0.2)]">
+            <Mic2 className="w-8 h-8 sm:w-12 sm:h-12 rotate-12 text-orange-400" />
+          </div>
+          <div className="absolute top-28 right-6 sm:right-24 opacity-30 text-amber-400 animate-bounce delay-300">
+            <Zap className="w-5 h-5 sm:w-7 sm:h-7" />
+          </div>
+
+          {/* Mid Left Sparkles */}
+          <div className="absolute top-1/2 -translate-y-1/2 left-2 sm:left-12 opacity-25 text-yellow-400 animate-float">
+            <Sparkles className="w-7 h-7 sm:w-9 sm:h-9" />
+          </div>
+
+          {/* Mid Right Music Note */}
+          <div className="absolute top-1/2 -translate-y-1/2 right-2 sm:right-12 opacity-25 text-amber-300 animate-float delay-500">
+            <Music className="w-7 h-7 sm:w-9 sm:h-9" />
+          </div>
+
+          {/* Lower Stage Flame & Disc */}
+          <div className="absolute bottom-6 left-4 sm:left-16 opacity-25 text-orange-400 animate-pulse">
+            <Flame className="w-6 h-6 sm:w-8 sm:h-8" />
+          </div>
+          <div className="absolute bottom-8 right-4 sm:right-16 opacity-25 text-amber-400 animate-pulse delay-700">
+            <Disc className="w-6 h-6 sm:w-8 sm:h-8" />
+          </div>
+        </div>
 
         <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 sm:space-y-5">
           {/* Official Logo Banner */}

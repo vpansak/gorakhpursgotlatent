@@ -32,8 +32,8 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo Brand */}
-            <Link href="/" className="flex items-center group -ml-2 sm:-ml-4 lg:-ml-6">
-              <div className="relative w-56 sm:w-64 lg:w-72 h-14 sm:h-16 transition-transform duration-300 group-hover:scale-105">
+            <Link href="/" className="flex items-center group -ml-1 sm:-ml-4 lg:-ml-6">
+              <div className="relative w-44 sm:w-64 lg:w-72 h-12 sm:h-16 transition-transform duration-300 group-hover:scale-105">
                 <Image
                   src="/logo.png"
                   alt="Gorakhpur's Got Latent Golden Title Logo"
@@ -77,7 +77,7 @@ export default function Navbar() {
               })}
             </nav>
 
-            {/* Header Right Action Buttons */}
+            {/* Header Right Action Buttons (Desktop) */}
             <div className="hidden sm:flex items-center gap-3">
               <Link
                 href="/app"
@@ -100,20 +100,13 @@ export default function Navbar() {
               </a>
             </div>
 
-            {/* Mobile Hamburger Toggle */}
+            {/* Mobile Hamburger Toggle & Primary Action */}
             <div className="flex items-center lg:hidden gap-2">
-              <Link
-                href="/app"
-                className="px-2.5 py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-xs flex items-center gap-1"
-              >
-                <Smartphone className="w-3.5 h-3.5" />
-                APP
-              </Link>
               <a
                 href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
                 target="_blank"
                 rel="noreferrer"
-                className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-black font-extrabold text-xs flex items-center gap-1"
+                className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-black font-extrabold text-xs flex items-center gap-1 shadow-md"
               >
                 <Ticket className="w-3.5 h-3.5" />
                 BOOK TICKET
@@ -169,9 +162,9 @@ export default function Navbar() {
           <Sparkles className="w-5 h-5 text-amber-400" />
           <span>Home</span>
         </Link>
-        <Link href="/app" className="flex flex-col items-center gap-0.5 text-xs text-amber-300 hover:text-amber-400">
+        <Link href="/app" className="flex flex-col items-center gap-0.5 text-xs text-slate-300 hover:text-amber-400">
           <Smartphone className="w-5 h-5 text-amber-400" />
-          <span>App 📱</span>
+          <span>App</span>
         </Link>
         <a
           href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"

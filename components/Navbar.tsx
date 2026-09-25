@@ -33,20 +33,17 @@ export default function Navbar() {
         <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#07080e]/85 border-b border-amber-500/20 transition-all duration-300">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-20">
-              {/* Logo Brand with New GGL Character Logo */}
-              <Link href="/" className="flex items-center gap-2.5 group">
-                <div className="relative w-12 h-12 sm:w-14 sm:h-14 transition-transform duration-300 group-hover:scale-105 shrink-0">
+              {/* Logo Brand with Standalone GGL Character Logo */}
+              <Link href="/" className="flex items-center group">
+                <div className="relative w-20 sm:w-24 h-12 sm:h-14 transition-transform duration-300 group-hover:scale-105 shrink-0">
                   <Image
                     src="/ggl-logo.png"
                     alt="GGL Golden Character Logo"
                     fill
                     priority
-                    className="object-contain filter drop-shadow-[0_0_15px_rgba(255,215,0,0.7)]"
+                    className="object-contain object-left filter drop-shadow-[0_0_15px_rgba(255,215,0,0.7)]"
                   />
                 </div>
-                <span className="font-bebas text-xl sm:text-2xl text-amber-300 tracking-wide font-bold gold-gradient-text leading-none">
-                  GGL
-                </span>
               </Link>
 
               {/* Desktop Navigation Links */}

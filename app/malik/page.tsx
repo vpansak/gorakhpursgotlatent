@@ -47,17 +47,14 @@ export default async function AdminDashboardPage() {
         <div>
           <div className="flex items-center gap-3">
             <span className="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-black uppercase tracking-wider">
-              {session.role} CONSOLE
+              ADMIN CONSOLE
             </span>
             <span className="text-xs text-slate-400">
-              Signed in as <strong className="text-white">{session.full_name}</strong>
+              Signed in as <strong className="text-white">Admin</strong>
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white mt-1.5 tracking-tight flex items-center gap-2">
             <span>Admin Portal</span>
-            <span className="text-amber-400 font-mono text-sm px-2.5 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/20 font-bold">
-              मलिक पैनल
-            </span>
           </h1>
           <p className="text-xs text-slate-400 mt-1">
             Performers, Sponsors, Team Members & Judges applications management with instant Excel (.xlsx) download.

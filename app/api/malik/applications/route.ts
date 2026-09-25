@@ -2,12 +2,30 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 
+/**
+ * Auto-cleanup entries that were marked as read (is_read = 1) 
+ * and read_at is older than 60 days (2 months).
+ */
+async function autoCleanupReadApplications() {
+  try {
+    await db.execute("DELETE FROM performer_applications WHERE COALESCE(is_read, 0) = 1 AND read_at IS NOT NULL AND read_at < (CURRENT_TIMESTAMP - INTERVAL '60 days')");
+    await db.execute("DELETE FROM sponsor_applications WHERE COALESCE(is_read, 0) = 1 AND read_at IS NOT NULL AND read_at < (CURRENT_TIMESTAMP - INTERVAL '60 days')");
+    await db.execute("DELETE FROM team_applications WHERE COALESCE(is_read, 0) = 1 AND read_at IS NOT NULL AND read_at < (CURRENT_TIMESTAMP - INTERVAL '60 days')");
+    await db.execute("DELETE FROM guest_applications WHERE COALESCE(is_read, 0) = 1 AND read_at IS NOT NULL AND read_at < (CURRENT_TIMESTAMP - INTERVAL '60 days')");
+  } catch (err) {
+    console.error('Auto cleanup error:', err);
+  }
+}
+
 export async function GET(req: Request) {
   try {
     const session = await getSession();
     if (!session || !['SUPER_ADMIN', 'ADMIN', 'STAFF'].includes(session.role)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
+
+    // Run auto-cleanup for items marked as read more than 60 days ago
+    await autoCleanupReadApplications();
 
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type') || 'performer'; // performer, guest, sponsor, team, all
@@ -66,7 +84,7 @@ export async function GET(req: Request) {
         const term = `%${search}%`;
         params.push(term, term, term, term, term, term, term, term);
       }
-      q += ' ORDER BY created_at DESC';
+      q += ' ORDER BY COALESCE(is_read, 0) ASC, created_at DESC';
       items = await db.query(q, params);
     } else if (type === 'sponsor') {
       let q = 'SELECT * FROM sponsor_applications WHERE 1=1';
@@ -80,7 +98,7 @@ export async function GET(req: Request) {
         const term = `%${search}%`;
         params.push(term, term, term, term, term, term, term);
       }
-      q += ' ORDER BY created_at DESC';
+      q += ' ORDER BY COALESCE(is_read, 0) ASC, created_at DESC';
       items = await db.query(q, params);
     } else if (type === 'team') {
       let q = 'SELECT * FROM team_applications WHERE 1=1';
@@ -94,7 +112,7 @@ export async function GET(req: Request) {
         const term = `%${search}%`;
         params.push(term, term, term, term, term);
       }
-      q += ' ORDER BY created_at DESC';
+      q += ' ORDER BY COALESCE(is_read, 0) ASC, created_at DESC';
       items = await db.query(q, params);
     }
 
@@ -125,15 +143,15 @@ export async function PATCH(req: Request) {
 
     if (!tableName) return NextResponse.json({ error: 'Invalid application type' }, { status: 400 });
 
-    const currentRecord = await db.queryOne(`SELECT status FROM ${tableName} WHERE app_id = ?`, [appId]);
+    const currentRecord = await db.queryOne(`SELECT status FROM ${tableName} WHERE app_id = ? OR id = ?`, [appId, appId]);
     if (!currentRecord) return NextResponse.json({ error: 'Application not found' }, { status: 404 });
 
     // Update status if changed
     if (status && status !== currentRecord.status) {
       if (tableName === 'performer_applications') {
-        await db.execute(`UPDATE ${tableName} SET status = ?, application_status = ?, updated_at = CURRENT_TIMESTAMP WHERE app_id = ?`, [status, status, appId]);
+        await db.execute(`UPDATE ${tableName} SET status = ?, application_status = ?, updated_at = CURRENT_TIMESTAMP WHERE app_id = ? OR id = ?`, [status, status, appId, appId]);
       } else {
-        await db.execute(`UPDATE ${tableName} SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE app_id = ?`, [status, appId]);
+        await db.execute(`UPDATE ${tableName} SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE app_id = ? OR id = ?`, [status, appId, appId]);
       }
 
       await db.execute(`
@@ -144,12 +162,12 @@ export async function PATCH(req: Request) {
 
     // Update tags if provided
     if (tags !== undefined) {
-      await db.execute(`UPDATE ${tableName} SET tags = ?, updated_at = CURRENT_TIMESTAMP WHERE app_id = ?`, [tags, appId]);
+      await db.execute(`UPDATE ${tableName} SET tags = ?, updated_at = CURRENT_TIMESTAMP WHERE app_id = ? OR id = ?`, [tags, appId, appId]);
     }
 
     // Update featured state if provided
     if (isFeatured !== undefined && ['performer_applications', 'guest_applications', 'sponsor_applications'].includes(tableName)) {
-      await db.execute(`UPDATE ${tableName} SET is_featured = ? WHERE app_id = ?`, [isFeatured ? 1 : 0, appId]);
+      await db.execute(`UPDATE ${tableName} SET is_featured = ? WHERE app_id = ? OR id = ?`, [isFeatured ? 1 : 0, appId, appId]);
     }
 
     // Add internal note if provided
@@ -166,3 +184,35 @@ export async function PATCH(req: Request) {
   }
 }
 
+export async function DELETE(req: Request) {
+  try {
+    const session = await getSession();
+    if (!session || !['SUPER_ADMIN', 'ADMIN', 'STAFF'].includes(session.role)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const type = searchParams.get('type');
+    const appId = searchParams.get('appId');
+
+    if (!type || !appId) {
+      return NextResponse.json({ error: 'Type and appId required' }, { status: 400 });
+    }
+
+    let tableName = '';
+    if (type === 'performer') tableName = 'performer_applications';
+    else if (type === 'guest') tableName = 'guest_applications';
+    else if (type === 'sponsor') tableName = 'sponsor_applications';
+    else if (type === 'team') tableName = 'team_applications';
+
+    if (!tableName) {
+      return NextResponse.json({ error: 'Invalid application type' }, { status: 400 });
+    }
+
+    await db.execute(`DELETE FROM ${tableName} WHERE app_id = ? OR id = ?`, [appId, appId]);
+
+    return NextResponse.json({ success: true, message: 'Application deleted permanently' });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Delete failed' }, { status: 500 });
+  }
+}

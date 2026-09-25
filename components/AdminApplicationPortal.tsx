@@ -5,7 +5,7 @@ import {
   FileSpreadsheet, Download, RefreshCw, Search, Phone, MessageSquare,
   Eye, CheckCircle2, ShieldCheck, UserCheck, Users, Briefcase, Award,
   ExternalLink, Filter, Sparkles, Check, ChevronRight, X, Clock, HelpCircle,
-  FileText, Sliders, Calculator, Copy, Mail, RotateCcw, CreditCard, CheckCheck
+  FileText, Sliders, Calculator, Copy, Mail, RotateCcw, CreditCard, CheckCheck, Trash2
 } from 'lucide-react';
 import { downloadCategoryExcel, downloadMasterExcel } from '@/lib/excel-export';
 
@@ -129,6 +129,35 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
       });
     } catch (err) {
       console.error('Failed to update read status:', err);
+    }
+  };
+
+  // Permanently Delete Application (Performer, Sponsor, Team, Guest)
+  const handleDeleteApplication = async (item: any) => {
+    const appId = item.app_id || item.id;
+    const name = item.full_name || item.company_name || item.stage_name || appId;
+    if (!confirm(`Kya aap ${name} (${appId}) ki application permanently DELETE karna chahte hain?`)) return;
+
+    try {
+      const res = await fetch(`/api/malik/applications?type=${activeTab}&appId=${encodeURIComponent(appId)}`, {
+        method: 'DELETE',
+      });
+      const json = await res.json();
+      if (json.success) {
+        setData((prev) => {
+          const listKey = activeTab === 'performer' ? 'performers' : activeTab === 'sponsor' ? 'sponsors' : activeTab === 'team' ? 'team' : 'guests';
+          const updated = ((prev as any)[listKey] || []).filter((it: any) => (it.app_id || it.id) !== appId);
+          return { ...prev, [listKey]: updated };
+        });
+        if (selectedItem && (selectedItem.app_id || selectedItem.id) === appId) {
+          setSelectedItem(null);
+        }
+      } else {
+        alert(json.error || 'Failed to delete application');
+      }
+    } catch (err: any) {
+      console.error('Delete error:', err);
+      alert(`Error deleting application: ${err.message}`);
     }
   };
 
@@ -965,15 +994,24 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                         </span>
                       </td>
 
-                      {/* Action: View Modal */}
+                      {/* Action: View Modal & Delete */}
                       <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                        <button
-                          onClick={() => handleOpenItem(item)}
-                          className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs inline-flex items-center gap-1.5 transition-all cursor-pointer"
-                        >
-                          <Eye className="w-3.5 h-3.5 stroke-[2.5]" />
-                          <span>View Details</span>
-                        </button>
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={() => handleOpenItem(item)}
+                            className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs inline-flex items-center gap-1.5 transition-all cursor-pointer"
+                          >
+                            <Eye className="w-3.5 h-3.5 stroke-[2.5]" />
+                            <span>View Details</span>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteApplication(item)}
+                            className="p-1.5 rounded-xl bg-red-950/60 hover:bg-red-800 border border-red-500/40 text-red-300 hover:text-white transition-all cursor-pointer"
+                            title="Permanently delete application"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -1030,6 +1068,16 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                 >
                   <CheckCheck className="w-3.5 h-3.5" />
                   <span>{!selectedItem.is_read ? 'Mark as Read' : 'Mark as Unread'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleDeleteApplication(selectedItem)}
+                  className="px-3 py-1.5 rounded-xl bg-red-950/80 hover:bg-red-800 border border-red-500/50 text-red-300 hover:text-white text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                  title="Permanently Delete Application"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Delete</span>
                 </button>
 
                 <button

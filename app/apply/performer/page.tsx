@@ -332,58 +332,6 @@ export default function PerformerApplyPage() {
         </p>
       </div>
 
-      {/* EPISODE 2 REGISTRATION NOTICE BANNER */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-950/70 via-slate-900 to-amber-950/70 border-2 border-amber-500/50 p-6 sm:p-8 shadow-[0_0_50px_rgba(245,158,11,0.2)] space-y-4">
-        <div className="flex flex-wrap items-center gap-2.5">
-          <span className="px-3 py-1 rounded-full bg-amber-500 text-black text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md">
-            <Sparkles className="w-3.5 h-3.5" />
-            AUDITIONS OPEN FOR EPISODE 2
-          </span>
-          <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-xs font-extrabold uppercase tracking-wider flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" /> NEXT AUDITION DATE: COMING SOON
-          </span>
-        </div>
-
-        <div className="space-y-2">
-          <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-amber-400 shrink-0" />
-            Fill Registration Form for Episode 2 Auditions
-          </h2>
-          <div className="text-xs sm:text-sm text-slate-200 leading-relaxed space-y-1.5 bg-black/40 p-4 rounded-2xl border border-white/10">
-            <p className="font-semibold text-amber-200">
-              📢 <strong>महत्वपूर्ण सूचना (Important Announcement):</strong>
-            </p>
-            <p>
-              Agar aap stage par apna talent perform karna chahte hain toh <strong className="text-emerald-300 underline">abhi se Episode 2 ke liye form fill karein</strong> (Fill form for Episode 2) taaki aapka slot priority review mein shamil ho sake. Next audition dates jald hi announce hongi.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-          <div className="p-3 rounded-xl bg-slate-900/90 border border-red-500/30 text-center">
-            <span className="text-[10px] text-slate-400 font-bold uppercase block">Episode 1 Status</span>
-            <span className="text-sm font-black text-red-400">SLOTS 100% FULL</span>
-          </div>
-          <div className="p-3 rounded-xl bg-slate-900/90 border border-amber-500/30 text-center">
-            <span className="text-[10px] text-slate-400 font-bold uppercase block">Current Form Applying For</span>
-            <span className="text-sm font-black text-amber-300">EPISODE 2 AUDITIONS</span>
-          </div>
-          <div className="p-3 rounded-xl bg-slate-900/90 border border-emerald-500/30 text-center">
-            <span className="text-[10px] text-slate-400 font-bold uppercase block">Next Registration Date</span>
-            <span className="text-sm font-black text-emerald-400 animate-pulse">COMING SOON</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Pre-Payment Review Note */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200 leading-relaxed flex items-start gap-3">
-        <Info className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-        <div>
-          <strong className="text-amber-400 font-bold block mb-0.5">Audition & Refund Selection Notice:</strong>
-          Application fees are subject to the event’s selection and review process. If your application is rejected by the event team, you may claim a refund according to the event refund policy. The team will review and process eligible refunds.
-        </div>
-      </div>
-
       {/* Payment Failure / Error Alert Banner */}
       {error && (
         <div className="p-5 rounded-2xl bg-red-500/20 border border-red-500/40 text-red-300 text-xs sm:text-sm font-semibold space-y-3">

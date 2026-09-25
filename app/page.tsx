@@ -97,7 +97,7 @@ export default async function HomePage() {
           {/* Episode 2 Auditions Status Banner */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold font-barlow uppercase tracking-wider">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-            Auditions Open for Episode 2
+            Auditions Open for Episode 2 • Registration Open for Episode 2
           </div>
 
           {/* Action CTAs */}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Star, CheckCircle2, AlertCircle, ArrowRight, Loader2 } from 'lucide-react';
+import { Star, CheckCircle2, AlertCircle, ArrowRight, Loader2, MessageSquare, Mail } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 
 export default function GuestApplyPage() {
@@ -192,11 +192,53 @@ export default function GuestApplyPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-4 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-base flex items-center justify-center gap-2 shadow-lg transition-all"
+          className="w-full py-4 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-base flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer"
         >
           {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>SUBMIT GUEST EXPRESSION OF INTEREST <ArrowRight className="w-5 h-5" /></>}
         </button>
       </form>
+
+      {/* WHATSAPP DRAFT INQUIRY & EMAIL CONTACT CARDS */}
+      <div className="p-6 rounded-3xl bg-slate-900/90 border border-purple-500/30 space-y-4 text-center">
+        <div className="space-y-1">
+          <h3 className="text-lg font-black text-white">Guest & Creator Panel Direct Inquiry</h3>
+          <p className="text-xs text-slate-300">Have questions regarding guest appearance or panel curation? Chat directly on WhatsApp.</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-2">
+          <a
+            href={`https://wa.me/918423858424?text=${encodeURIComponent("Hi Gorakhpur's Got Latent Team,\n\nI want to inquire about Guest / Judge / Creator appearance on the show.")}`}
+            target="_blank"
+            rel="noreferrer"
+            className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 hover:border-emerald-400 transition-all flex items-center justify-center gap-3 text-emerald-300 group shadow-md"
+          >
+            <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0">
+              <MessageSquare className="w-5 h-5" />
+            </div>
+            <div className="text-left">
+              <span className="text-[10px] text-slate-400 block uppercase font-bold">WhatsApp Direct Inquiry</span>
+              <strong className="text-sm text-white group-hover:text-emerald-300 transition-colors flex items-center gap-1">
+                Chat on WhatsApp (+91 84238 58424) <ArrowRight className="w-3.5 h-3.5" />
+              </strong>
+            </div>
+          </a>
+
+          <a
+            href={`mailto:help@gkpgotlatent.in?subject=${encodeURIComponent("Guest & Creator Panel Inquiry - Gorakhpur's Got Latent")}`}
+            className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/30 hover:border-purple-400 transition-all flex items-center justify-center gap-3 text-purple-300 group shadow-md"
+          >
+            <div className="p-2.5 rounded-xl bg-purple-500/20 text-purple-400 shrink-0">
+              <Mail className="w-5 h-5" />
+            </div>
+            <div className="text-left">
+              <span className="text-[10px] text-slate-400 block uppercase font-bold">Official Guest Curation Email</span>
+              <strong className="text-sm text-white group-hover:text-purple-300 transition-colors flex items-center gap-1">
+                help@gkpgotlatent.in <ArrowRight className="w-3.5 h-3.5" />
+              </strong>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

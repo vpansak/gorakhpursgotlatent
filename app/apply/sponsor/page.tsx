@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Building2, CheckCircle2, ArrowRight, Loader2, Sparkles, MessageSquare } from 'lucide-react';
+import { Building2, CheckCircle2, ArrowRight, Loader2, Sparkles, MessageSquare, Phone, Mail } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 
 export default function SponsorApplyPage() {
@@ -63,6 +63,12 @@ export default function SponsorApplyPage() {
     }
   };
 
+  // Pre-drafted WhatsApp inquiry message
+  const whatsappDraftText = encodeURIComponent(
+    `Hi Gorakhpur's Got Latent Team,\n\nI want to inquire about Brand Sponsorship opportunities for our company.\n\nCompany Name:\nContact Person:\nPhone/Mobile:`
+  );
+  const whatsappUrl = `https://wa.me/918423858424?text=${whatsappDraftText}`;
+
   if (submittedAppId) {
     return (
       <div className="py-16 px-4 max-w-2xl mx-auto text-center space-y-6">
@@ -95,19 +101,10 @@ export default function SponsorApplyPage() {
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold uppercase tracking-wider">
           <Building2 className="w-4 h-4" /> BRAND SPONSORSHIP PORTAL
         </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-white">Become a Sponsor</h1>
+        <h1 className="text-3xl sm:text-5xl font-black text-white">Apply Brands for Sponsor</h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
-          Partner your brand with North India’s biggest live entertainment show. Please share your details below — our management team will reach out directly with customized sponsorship proposals and budget options.
+          Partner your brand with Purvanchal’s biggest live entertainment show. Share your brand details below to receive custom sponsorship proposals.
         </p>
-      </div>
-
-      {/* Info Banner */}
-      <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-start gap-3 text-xs sm:text-sm text-blue-200">
-        <Sparkles className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
-        <div>
-          <strong className="text-white block font-bold">Custom Budget & Sponsorship Options:</strong>
-          Sponsors will receive customized package quotes directly from our team based on brand placement requirements.
-        </div>
       </div>
 
       {error && <div className="p-4 rounded-xl bg-red-500/20 text-red-300 text-sm">{error}</div>}
@@ -239,11 +236,55 @@ export default function SponsorApplyPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-base flex items-center justify-center gap-2 shadow-lg transition-all"
+          className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-base flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer"
         >
           {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>SUBMIT BRAND DETAILS <ArrowRight className="w-5 h-5" /></>}
         </button>
       </form>
+
+      {/* WHATSAPP DRAFT INQUIRY & EMAIL CONTACT CARDS */}
+      <div className="p-6 rounded-3xl bg-slate-900/90 border border-blue-500/30 space-y-4 text-center">
+        <div className="space-y-1">
+          <h3 className="text-lg font-black text-white">Prefer Direct Inquiry on WhatsApp or Email?</h3>
+          <p className="text-xs text-slate-300">Click below to send a pre-drafted sponsorship inquiry directly to our brand relations manager.</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-2">
+          {/* WhatsApp Direct Draft Link */}
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 hover:border-emerald-400 transition-all flex items-center justify-center gap-3 text-emerald-300 group shadow-md"
+          >
+            <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0">
+              <MessageSquare className="w-5 h-5" />
+            </div>
+            <div className="text-left">
+              <span className="text-[10px] text-slate-400 block uppercase font-bold">WhatsApp Direct Inquiry</span>
+              <strong className="text-sm text-white group-hover:text-emerald-300 transition-colors flex items-center gap-1">
+                Chat on WhatsApp (+91 84238 58424) <ArrowRight className="w-3.5 h-3.5" />
+              </strong>
+            </div>
+          </a>
+
+          {/* Email Support Link */}
+          <a
+            href="mailto:help@gkpgotlatent.in?subject=Brand%20Sponsorship%20Inquiry%20-%20Gorakhpur%27s%20Got%20Latent"
+            className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30 hover:border-blue-400 transition-all flex items-center justify-center gap-3 text-blue-300 group shadow-md"
+          >
+            <div className="p-2.5 rounded-xl bg-blue-500/20 text-blue-400 shrink-0">
+              <Mail className="w-5 h-5" />
+            </div>
+            <div className="text-left">
+              <span className="text-[10px] text-slate-400 block uppercase font-bold">Official Business Email</span>
+              <strong className="text-sm text-white group-hover:text-blue-300 transition-colors flex items-center gap-1">
+                help@gkpgotlatent.in <ArrowRight className="w-3.5 h-3.5" />
+              </strong>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

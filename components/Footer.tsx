@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { ShieldCheck, Mail, Phone, MapPin, Award } from 'lucide-react';
+import { ShieldCheck, Mail, Phone, MapPin, Award, MessageSquare, ArrowRight } from 'lucide-react';
 
 function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -33,18 +33,96 @@ function BookMyShowIcon({ className = "w-5 h-5" }: { className?: string }) {
 
 export default function Footer() {
   const pathname = usePathname();
-  const isLiveRoute = pathname.startsWith('/display') || pathname.startsWith('/live') || pathname.startsWith('/operator') || pathname.startsWith('/judge') || pathname.startsWith('/vote') || pathname.startsWith('/malik/live') || pathname.startsWith('/computerji');
+  const isLiveRoute =
+    pathname.startsWith('/display') ||
+    pathname.startsWith('/live') ||
+    pathname.startsWith('/operator') ||
+    pathname.startsWith('/judge') ||
+    pathname.startsWith('/vote') ||
+    pathname.startsWith('/malik/live') ||
+    pathname.startsWith('/computerji');
+
   if (isLiveRoute) return null;
 
+  // Compute Page-Specific Pre-Drafted WhatsApp Message & Reason
+  let whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI have a general inquiry regarding the show.";
+  let emailSubject = "General Inquiry - Gorakhpur's Got Latent";
+  let contextLabel = "Quick Support & Help";
+
+  if (pathname.includes('/performer')) {
+    whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI have a query regarding Performer Application / Episode 2 Audition slots.";
+    emailSubject = "Performer Audition Query - Gorakhpur's Got Latent";
+    contextLabel = "Performer & Audition Support";
+  } else if (pathname.includes('/sponsor')) {
+    whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI want to inquire about Brand Sponsorship opportunities for our company.";
+    emailSubject = "Brand Sponsorship Inquiry - Gorakhpur's Got Latent";
+    contextLabel = "Brand Sponsorship Inquiry";
+  } else if (pathname.includes('/guest')) {
+    whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI want to inquire about Guest / Judge / Creator appearance on the show.";
+    emailSubject = "Guest & Creator Inquiry - Gorakhpur's Got Latent";
+    contextLabel = "Guest & Panel Support";
+  } else if (pathname.includes('/join-team')) {
+    whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI have a query regarding joining the show crew / volunteer team.";
+    emailSubject = "Join Team Inquiry - Gorakhpur's Got Latent";
+    contextLabel = "Crew & Team Support";
+  } else if (pathname.includes('/ticket')) {
+    whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI have a query regarding Ticket booking / Show entry confirmation.";
+    emailSubject = "Ticket Booking Support - Gorakhpur's Got Latent";
+    contextLabel = "Ticket & Booking Support";
+  }
+
+  const encodedWhatsappUrl = `https://wa.me/918423858424?text=${encodeURIComponent(whatsappDraftText)}`;
+  const encodedEmailUrl = `mailto:help@gkpgotlatent.in?subject=${encodeURIComponent(emailSubject)}`;
 
   return (
-    <footer className="bg-[#05060a] border-t border-amber-500/20 text-slate-300 pt-16 pb-24 lg:pb-12 relative overflow-hidden">
+    <footer className="bg-[#05060a] border-t border-amber-500/20 text-slate-300 pt-10 pb-24 lg:pb-12 relative overflow-hidden">
       {/* Ambient background light glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-amber-500/10 blur-[100px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10">
+        {/* GLOBAL COMPACT QUICK SUPPORT BAR WITH PAGE-SPECIFIC WHATSAPP REASON DRAFT */}
+        <div className="bg-gradient-to-r from-slate-900/90 via-slate-900 to-amber-950/40 border border-amber-500/30 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+          <div className="flex items-center gap-3 text-center md:text-left">
+            <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0">
+              <MessageSquare className="w-6 h-6" />
+            </div>
+            <div>
+              <span className="text-[10px] text-amber-400 font-extrabold uppercase tracking-widest block font-barlow">
+                {contextLabel}
+              </span>
+              <h4 className="text-sm sm:text-base font-black text-white">
+                Need Help or Have Questions? Chat Directly on WhatsApp
+              </h4>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
+            {/* WhatsApp Link with Pre-Drafted Page Context */}
+            <a
+              href={encodedWhatsappUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg hover:scale-105 transition-all cursor-pointer whitespace-nowrap"
+              title="Chat on WhatsApp with pre-filled page inquiry"
+            >
+              <MessageSquare className="w-4 h-4 fill-white" />
+              <span>WhatsApp Inquiry (+91 84238 58424)</span>
+            </a>
+
+            {/* Email Link with Pre-Drafted Subject */}
+            <a
+              href={encodedEmailUrl}
+              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-500 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap"
+              title="Send an official email inquiry"
+            >
+              <Mail className="w-4 h-4 text-blue-400" />
+              <span>help@gkpgotlatent.in</span>
+            </a>
+          </div>
+        </div>
+
+        {/* FOOTER MAIN GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800/80">
-          
           {/* Col 1: Brand & Logo */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-block group -ml-2 sm:-ml-3">
@@ -134,11 +212,11 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-amber-400 shrink-0" />
-                <a href="mailto:help@gkpgotlatent.in" className="hover:text-amber-400">help@gkpgotlatent.in</a>
+                <a href={encodedEmailUrl} className="hover:text-amber-400">help@gkpgotlatent.in</a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-amber-400 shrink-0" />
-                <a href="tel:+918423858424" className="hover:text-amber-400">+91 8423858424</a>
+                <a href={encodedWhatsappUrl} target="_blank" rel="noreferrer" className="hover:text-amber-400">+91 84238 58424</a>
               </li>
             </ul>
             <div className="pt-2 flex flex-col gap-1 text-xs text-slate-400">

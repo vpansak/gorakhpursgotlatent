@@ -57,7 +57,7 @@ export default async function HomePage() {
   return (
     <div className="relative overflow-hidden">
       {/* 1. HERO SECTION */}
-      <section className="relative min-h-[90vh] flex items-center justify-center pt-12 pb-20 px-4 sm:px-6 lg:px-8 bg-stage-radial">
+      <section className="relative min-h-[75vh] flex items-center justify-center pt-2 sm:pt-6 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 bg-stage-radial">
         {/* Stage Lighting Rays */}
         <div className="spotlight-left" />
         <div className="spotlight-right" />
@@ -65,7 +65,7 @@ export default async function HomePage() {
         {/* Animated Particles backdrop grid */}
         <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
 
-        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
+        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-5 sm:space-y-6">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-barlow text-xs sm:text-sm font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(255,215,0,0.2)] animate-pulse-glow">
             <Sparkles className="w-4 h-4 text-amber-400" />
@@ -73,20 +73,20 @@ export default async function HomePage() {
           </div>
 
           {/* Official Logo Banner */}
-          <div className="relative w-80 sm:w-[460px] md:w-[580px] h-40 sm:h-56 md:h-72 mx-auto animate-float">
+          <div className="relative w-72 sm:w-[420px] md:w-[500px] h-36 sm:h-48 md:h-60 mx-auto animate-float -mt-1 sm:-mt-2">
             <Image
               src="/logo.png"
               alt="Gorakhpur's Got Latent Official Title Logo"
               fill
               priority
-              className="object-contain filter drop-shadow-[0_0_35px_rgba(255,215,0,0.6)]"
+              className="object-contain filter drop-shadow-[0_0_35px_rgba(255,215,0,0.65)]"
             />
           </div>
 
           {/* Tagline & Description */}
-          <div className="space-y-3 max-w-3xl mx-auto -mt-2">
+          <div className="space-y-2.5 max-w-3xl mx-auto -mt-3 sm:-mt-4">
             <h1 className="sr-only">Gorakhpur's Got Latent</h1>
-            <p className="font-bebas text-3xl sm:text-5xl md:text-6xl text-amber-300 tracking-wide uppercase drop-shadow-[0_0_12px_rgba(255,215,0,0.3)]">
+            <p className="font-bebas text-3xl sm:text-5xl md:text-6xl text-amber-300 tracking-wide uppercase drop-shadow-[0_0_12px_rgba(255,215,0,0.35)]">
               "Where Talent Meets the Stage"
             </p>
             <p className="text-xs sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
@@ -94,24 +94,30 @@ export default async function HomePage() {
             </p>
           </div>
 
+          {/* Episode 2 Auditions Status Banner */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold font-barlow uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+            Episode 1 Slots Full • Auditions Open for Episode 2
+          </div>
+
           {/* Action CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-1">
             <a
               href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
               target="_blank"
               rel="noreferrer"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,215,0,0.5)] hover:shadow-[0_0_45px_rgba(255,160,0,0.8)] hover:scale-105 transition-all duration-300"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,215,0,0.5)] hover:shadow-[0_0_45px_rgba(255,160,0,0.8)] hover:scale-105 transition-all duration-300 cursor-pointer"
             >
               <Ticket className="w-6 h-6 text-black" />
               BOOK YOUR TICKET
             </a>
 
             <Link
-              href="/apply"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border-2 border-amber-500/40 text-amber-300 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-amber-400 transition-all duration-300"
+              href="/apply/performer"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border-2 border-amber-500/40 text-amber-300 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-amber-400 transition-all duration-300 cursor-pointer"
             >
               <UserCheck className="w-6 h-6 text-orange-400" />
-              APPLY NOW
+              APPLY FOR PERFORMANCE
             </Link>
           </div>
         </div>

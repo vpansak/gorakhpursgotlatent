@@ -16,10 +16,10 @@ export async function GET(req: Request) {
 
     // If master export requested, fetch all 4 categories at once
     if (type === 'all') {
-      const performers = await db.query('SELECT * FROM performer_applications ORDER BY created_at DESC');
-      const sponsors = await db.query('SELECT * FROM sponsor_applications ORDER BY created_at DESC');
-      const team = await db.query('SELECT * FROM team_applications ORDER BY created_at DESC');
-      const guests = await db.query('SELECT * FROM guest_applications ORDER BY created_at DESC');
+      const performers = await db.query("SELECT * FROM performer_applications WHERE payment_status IN ('PAID', 'PAYMENT_VERIFIED') ORDER BY COALESCE(is_read, 0) ASC, created_at DESC");
+      const sponsors = await db.query('SELECT * FROM sponsor_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC');
+      const team = await db.query('SELECT * FROM team_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC');
+      const guests = await db.query('SELECT * FROM guest_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC');
 
       return NextResponse.json({
         success: true,
@@ -41,18 +41,18 @@ export async function GET(req: Request) {
     let items: any[] = [];
 
     if (type === 'performer') {
-      let q = 'SELECT * FROM performer_applications WHERE 1=1';
+      let q = "SELECT * FROM performer_applications WHERE payment_status IN ('PAID', 'PAYMENT_VERIFIED')";
       const params: any[] = [];
       if (status) {
-        q += ' AND (status = ? OR application_status = ? OR payment_status = ?)';
-        params.push(status, status, status);
+        q += ' AND (status = ? OR application_status = ?)';
+        params.push(status, status);
       }
       if (search) {
-        q += ' AND (full_name ILIKE ? OR email ILIKE ? OR app_id ILIKE ? OR city ILIKE ? OR mobile_number ILIKE ? OR whatsapp_number ILIKE ? OR performance_category ILIKE ?)';
+        q += ' AND (full_name ILIKE ? OR email ILIKE ? OR app_id ILIKE ? OR city ILIKE ? OR mobile_number ILIKE ? OR whatsapp_number ILIKE ? OR performance_category ILIKE ? OR payment_id ILIKE ? OR order_id ILIKE ?)';
         const term = `%${search}%`;
-        params.push(term, term, term, term, term, term, term);
+        params.push(term, term, term, term, term, term, term, term, term);
       }
-      q += ' ORDER BY created_at DESC';
+      q += ' ORDER BY COALESCE(is_read, 0) ASC, created_at DESC';
       items = await db.query(q, params);
     } else if (type === 'guest') {
       let q = 'SELECT * FROM guest_applications WHERE 1=1';

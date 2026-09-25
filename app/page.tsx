@@ -38,7 +38,7 @@ export default async function HomePage() {
     },
     {
       q: "How can I apply as a performer?",
-      a: "Click on 'Apply Now' and select Performer Application. Fill in your talent category, social video links, and upload your performance clip. Shortlisted candidates receive audition slots."
+      a: "Episode 1 performer slots are currently full! The next registration date is coming soon. You can now fill the registration form for Episode 2 by clicking 'Apply Now' -> 'Performer Application'."
     },
     {
       q: "How do I receive my ticket after payment?",

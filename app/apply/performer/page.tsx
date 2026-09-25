@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import {
   Mic2, CheckCircle2, AlertCircle, ShieldCheck, ArrowRight, Loader2,
-  RefreshCw, Info, Sparkles, Check, Phone, Mail
+  RefreshCw, Info, Sparkles, Check, Phone, Mail, AlertTriangle, Calendar, Clock
 } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 
@@ -56,6 +56,7 @@ export default function PerformerApplyPage() {
     facebookUrl: '',
     city: '',
     age: '18',
+    targetEpisode: 'Episode 2',
     discoverySource: 'Instagram',
     additionalMessage: '',
     consent: false,
@@ -266,11 +267,11 @@ export default function PerformerApplyPage() {
 
         <div className="space-y-3">
           <span className="px-4 py-1.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-black uppercase tracking-widest border border-amber-500/40">
-            GORAKHPUR’S GOT LATENT
+            GORAKHPUR’S GOT LATENT • EPISODE 2
           </span>
-          <h1 className="text-3xl sm:text-5xl font-black text-white">Application Submitted Successfully!</h1>
-          <p className="text-slate-300 text-sm sm:text-base">
-            Your performer application has been successfully received. Our team will review your details and contact you using the registered contact information.
+          <h1 className="text-3xl sm:text-5xl font-black text-white">Form Submitted for Episode 2!</h1>
+          <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+            Your performer application has been received for <strong>Episode 2</strong>. Episode 1 performer slots are full. The next registration & audition dates are coming soon, and our team will contact you directly.
           </p>
         </div>
 
@@ -281,7 +282,7 @@ export default function PerformerApplyPage() {
               <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono tracking-wider">{successData.appId}</span>
             </div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
-              <Check className="w-4 h-4" /> Payment Verified
+              <Check className="w-4 h-4" /> Payment Verified • Episode 2
             </div>
           </div>
 
@@ -321,14 +322,63 @@ export default function PerformerApplyPage() {
       {/* Header Headline & Subtitle */}
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-400 text-xs font-black uppercase tracking-wider border border-amber-500/30">
-          <Mic2 className="w-4 h-4" /> GORAKHPUR’S GOT LATENT
+          <Mic2 className="w-4 h-4" /> GORAKHPUR’S GOT LATENT • AUDITIONS
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-          Want to Perform at Gorakhpur’s Got Latent?
+          Performer Registration — <span className="gold-gradient-text">Episode 2</span>
         </h1>
         <p className="text-base sm:text-lg text-amber-200/90 font-medium">
-          Register your talent and get a chance to showcase your performance.
+          Episode 1 performer slots are full! Fill form below to apply for Episode 2 auditions.
         </p>
+      </div>
+
+      {/* EPISODE 1 FULL & EPISODE 2 REGISTRATION NOTICE BANNER */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-red-950/70 via-slate-900 to-amber-950/70 border-2 border-amber-500/50 p-6 sm:p-8 shadow-[0_0_50px_rgba(245,158,11,0.2)] space-y-4">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <span className="px-3 py-1 rounded-full bg-red-500 text-white text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md animate-pulse">
+            <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+            EPISODE 1 PERFORMER SLOTS FULL
+          </span>
+          <span className="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/50 text-amber-300 text-xs font-black uppercase tracking-wider">
+            FILL FORM FOR EPISODE 2
+          </span>
+          <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-xs font-extrabold uppercase tracking-wider flex items-center gap-1">
+            <Clock className="w-3.5 h-3.5" /> NEXT REGISTRATION DATE: COMING SOON
+          </span>
+        </div>
+
+        <div className="space-y-2">
+          <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+            <AlertTriangle className="w-6 h-6 text-amber-400 shrink-0" />
+            Episode 1 Performer Slots Full — Fill Form for Episode 2
+          </h2>
+          <div className="text-xs sm:text-sm text-slate-200 leading-relaxed space-y-1.5 bg-black/40 p-4 rounded-2xl border border-white/10">
+            <p className="font-semibold text-amber-200">
+              📢 <strong>महत्वपूर्ण सूचना (Important Announcement):</strong>
+            </p>
+            <p>
+              Gorakhpur’s Got Latent <strong>Episode 1 ke sabhi performer slots FULL ho chuke hain!</strong>
+            </p>
+            <p>
+              Next (agla) registration date <strong className="text-amber-400">COMING SOON</strong> hai. Agar aap stage par apna talent perform karna chahte hain toh <strong className="text-emerald-300 underline">abhi se Episode 2 ke liye form fill karein</strong> (Fill form for Episode 2) taaki aapka slot priority review mein shamil ho sake.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          <div className="p-3 rounded-xl bg-slate-900/90 border border-red-500/30 text-center">
+            <span className="text-[10px] text-slate-400 font-bold uppercase block">Episode 1 Status</span>
+            <span className="text-sm font-black text-red-400">SLOTS 100% FULL</span>
+          </div>
+          <div className="p-3 rounded-xl bg-slate-900/90 border border-amber-500/30 text-center">
+            <span className="text-[10px] text-slate-400 font-bold uppercase block">Current Form Applying For</span>
+            <span className="text-sm font-black text-amber-300">EPISODE 2 AUDITIONS</span>
+          </div>
+          <div className="p-3 rounded-xl bg-slate-900/90 border border-emerald-500/30 text-center">
+            <span className="text-[10px] text-slate-400 font-bold uppercase block">Next Registration Date</span>
+            <span className="text-sm font-black text-emerald-400 animate-pulse">COMING SOON</span>
+          </div>
+        </div>
       </div>
 
       {/* Pre-Payment Review Note */}
@@ -362,6 +412,23 @@ export default function PerformerApplyPage() {
 
       {/* REGISTRATION FORM */}
       <form onSubmit={handleSubmit} className="space-y-8 glass-panel p-6 sm:p-10 rounded-3xl border border-amber-500/30 shadow-[0_0_50px_rgba(255,215,0,0.1)]">
+        {/* Episode Target Callout */}
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-black">
+              EP2
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-400 block font-bold uppercase tracking-wider">REGISTRATION TARGET</span>
+              <span className="text-base font-black text-white">
+                EPISODE 2 AUDITION FORM <span className="text-xs text-red-400 font-bold ml-1">(Ep 1 Full)</span>
+              </span>
+            </div>
+          </div>
+          <span className="px-3 py-1 rounded-full bg-slate-900 text-amber-300 text-xs font-bold border border-amber-500/30 self-start sm:self-auto">
+            Next Reg. Date: Coming Soon
+          </span>
+        </div>
         {/* 1. PERSONAL DETAILS */}
         <div className="space-y-4">
           <h3 className="text-lg font-black text-amber-400 uppercase tracking-wider border-b border-amber-500/20 pb-2">
@@ -686,21 +753,26 @@ export default function PerformerApplyPage() {
         </div>
 
         {/* SUBMIT & PAY BUTTON */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-black text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,215,0,0.4)] hover:scale-[1.01] transition-all disabled:opacity-50"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-6 h-6 animate-spin" /> PROCESSING REGISTRATION...
-            </>
-          ) : (
-            <>
-              <ShieldCheck className="w-6 h-6" /> PROCEED TO PAY AUDITION FEE & SUBMIT <ArrowRight className="w-5 h-5" />
-            </>
-          )}
-        </button>
+        <div className="space-y-2">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-black text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,215,0,0.4)] hover:scale-[1.01] transition-all disabled:opacity-50"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-6 h-6 animate-spin" /> PROCESSING EPISODE 2 REGISTRATION...
+              </>
+            ) : (
+              <>
+                <ShieldCheck className="w-6 h-6" /> FILL FORM FOR EPISODE 2 & PROCEED <ArrowRight className="w-5 h-5" />
+              </>
+            )}
+          </button>
+          <p className="text-[11px] text-center text-slate-400">
+            * Aapka application Episode 2 auditions ke liye submit kiya jayega (Ep 1 full ho chuka hai). Next registration / audition date coming soon!
+          </p>
+        </div>
       </form>
     </div>
   );

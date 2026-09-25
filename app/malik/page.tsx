@@ -14,10 +14,10 @@ async function getAdminData() {
 
   // Fetch all 4 application streams directly from Neon PostgreSQL
   const [performers, sponsors, team, guests] = await Promise.all([
-    db.query('SELECT * FROM performer_applications ORDER BY created_at DESC'),
-    db.query('SELECT * FROM sponsor_applications ORDER BY created_at DESC'),
-    db.query('SELECT * FROM team_applications ORDER BY created_at DESC'),
-    db.query('SELECT * FROM guest_applications ORDER BY created_at DESC'),
+    db.query("SELECT * FROM performer_applications WHERE payment_status IN ('PAID', 'PAYMENT_VERIFIED') ORDER BY COALESCE(is_read, 0) ASC, created_at DESC"),
+    db.query('SELECT * FROM sponsor_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC'),
+    db.query('SELECT * FROM team_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC'),
+    db.query('SELECT * FROM guest_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC'),
   ]);
 
   return {

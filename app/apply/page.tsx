@@ -10,10 +10,16 @@ export default function ApplyPage() {
       desc: 'Showcase your talent on the biggest live stage in Purvanchal. Compete in front of celebrity judges and thousands of live audience members.',
       href: '/apply/performer',
       icon: Mic2,
-      badge: 'POPULAR',
+      badge: 'EPISODE 1 FULL • FILL FOR EPISODE 2',
+      badgeClass: 'bg-red-500/20 text-red-300 border border-red-500/40 animate-pulse',
       color: 'from-amber-500/20 via-amber-500/10 to-transparent',
       borderColor: 'border-amber-500/40',
-      btnBg: 'bg-amber-500 text-black hover:bg-amber-400',
+      btnBg: 'bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black hover:opacity-95',
+      btnText: 'FILL FORM FOR EPISODE 2',
+      alertBox: {
+        tag: 'EPISODE 1 FULL',
+        text: 'Episode 1 performer slots are full! Next registration date coming soon. Fill form for Episode 2 now.',
+      },
     },
     {
       title: 'Guest / Celebrity / Influencer',
@@ -65,7 +71,35 @@ export default function ApplyPage() {
         </p>
       </div>
 
-      {/* Notice */}
+      {/* Performer Episode 1 Full & Episode 2 Alert Banner */}
+      <div className="max-w-4xl mx-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/70 via-slate-900 to-amber-950/70 border border-amber-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs sm:text-sm text-amber-200 shadow-[0_0_30px_rgba(245,158,11,0.15)]">
+        <div className="flex items-start gap-3">
+          <div className="p-2.5 rounded-xl bg-red-500/20 text-red-400 border border-red-500/30 shrink-0 mt-0.5 sm:mt-0">
+            <Mic2 className="w-5 h-5" />
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-2.5 py-0.5 rounded-full bg-red-500 text-white text-[10px] font-black uppercase tracking-wider">
+                EPISODE 1 FULL
+              </span>
+              <strong className="text-white font-bold text-sm">
+                Performer Registration Notice: Fill Form for Episode 2
+              </strong>
+            </div>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Episode 1 ke sabhi performer slots full ho chuke hain! Next registration date <span className="text-amber-400 font-bold">Coming Soon</span> hai. Agar aap perform karna chahte hain toh abhi <strong>Episode 2 ke liye form fill karein</strong>.
+            </p>
+          </div>
+        </div>
+        <Link
+          href="/apply/performer"
+          className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs whitespace-nowrap shadow-lg transition-all flex items-center gap-1.5 shrink-0 self-stretch sm:self-auto justify-center"
+        >
+          FILL FORM FOR EPISODE 2 <ChevronRight className="w-4 h-4" />
+        </Link>
+      </div>
+
+      {/* General Notice */}
       <div className="max-w-4xl mx-auto p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-xs sm:text-sm text-amber-200">
         <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
         <div>
@@ -84,11 +118,11 @@ export default function ApplyPage() {
               className={`relative rounded-3xl bg-slate-900/80 border ${stream.borderColor} p-8 flex flex-col justify-between space-y-6 bg-gradient-to-b ${stream.color} shadow-2xl hover:scale-[1.02] transition-all duration-300`}
             >
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-2">
                   <div className="p-3 rounded-2xl bg-slate-950 border border-white/10 text-amber-400 shadow-inner">
                     <Icon className="w-7 h-7" />
                   </div>
-                  <span className="px-3 py-1 rounded-full bg-white/10 text-amber-300 text-[10px] font-black uppercase tracking-widest">
+                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${stream.badgeClass || 'bg-white/10 text-amber-300'}`}>
                     {stream.badge}
                   </span>
                 </div>
@@ -98,6 +132,16 @@ export default function ApplyPage() {
                   <p className="text-xs font-semibold text-amber-400">{stream.subtitle}</p>
                 </div>
 
+                {stream.alertBox && (
+                  <div className="p-3 rounded-xl bg-red-950/40 border border-red-500/30 text-xs text-red-200 space-y-1">
+                    <div className="flex items-center gap-1.5 font-bold text-red-400 text-[11px] uppercase tracking-wider">
+                      <span className="w-2 h-2 rounded-full bg-red-400 animate-ping" />
+                      {stream.alertBox.tag}
+                    </div>
+                    <p className="text-[11px] text-slate-300 leading-snug">{stream.alertBox.text}</p>
+                  </div>
+                )}
+
                 <p className="text-xs text-slate-300 leading-relaxed">{stream.desc}</p>
               </div>
 
@@ -106,7 +150,7 @@ export default function ApplyPage() {
                   href={stream.href}
                   className={`w-full py-3.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all shadow-lg ${stream.btnBg}`}
                 >
-                  FILL {stream.title.toUpperCase()} <ChevronRight className="w-4 h-4" />
+                  {stream.btnText || `FILL ${stream.title.toUpperCase()}`} <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>

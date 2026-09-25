@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing appId' }, { status: 400 });
     }
 
-    const app = db.prepare('SELECT * FROM performer_applications WHERE app_id = ?').get(appId) as any;
+    const app = await db.queryOne<any>('SELECT * FROM performer_applications WHERE app_id = ?', [appId]);
     if (!app) {
       return NextResponse.json({ error: 'Application not found' }, { status: 404 });
     }
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     const now = new Date().toISOString();
 
     // Update database
-    db.prepare(`
+    await db.execute(`
       UPDATE performer_applications
       SET payment_status = 'REFUNDED',
           application_status = 'REFUNDED',
@@ -45,13 +45,13 @@ export async function POST(req: Request) {
           refund_reason = ?,
           updated_at = CURRENT_TIMESTAMP
       WHERE app_id = ?
-    `).run(refundId, refundAmount, now, refundReason || 'Admin Approved Refund', appId);
+    `, [refundId, refundAmount, now, refundReason || 'Admin Approved Refund', appId]);
 
     // Audit log
-    db.prepare(`
+    await db.execute(`
       INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
       VALUES (?, 'PERFORMER', ?, ?, 'REFUNDED', ?, ?)
-    `).run(`his-${Date.now()}`, appId, app.application_status || 'REJECTED', session.full_name, refundReason || 'Razorpay Refund Processed');
+    `, [`his-${Date.now()}`, appId, app.application_status || 'REJECTED', session.full_name, refundReason || 'Razorpay Refund Processed']);
 
     return NextResponse.json({
       success: true,

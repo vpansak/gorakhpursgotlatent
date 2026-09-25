@@ -117,10 +117,28 @@ function autofitColumns(worksheet: XLSX.WorkSheet, json: any[]) {
   worksheet['!cols'] = colWidths;
 }
 
+// Map Computer Ji live scoring records for Excel
+export function formatComputerJiRows(items: any[]) {
+  return items.map((c, idx) => ({
+    'S.No': idx + 1,
+    'Contestant ID': c.contestant_id,
+    'Contestant Name': c.contestant_name || '',
+    'Category': c.category || '',
+    'Phone': c.phone || '',
+    'Individual Judge Scores': typeof c.judge_scores === 'object' && c.judge_scores ? Object.entries(c.judge_scores).map(([k, v]) => `${k}: ${v}`).join(' | ') : String(c.judge_scores || ''),
+    'Average Judge Score': c.rounded_average ?? '',
+    'Contestant Prediction': c.contestant_score ?? '',
+    'Verdict / Result': c.result || 'PENDING',
+    'Saved At': c.saved_at || '',
+    'Days Remaining (10-Day TTL)': c.days_left ?? 10,
+    'Recorded On': formatDate(c.created_at),
+  }));
+}
+
 // Export single category to Excel (.xlsx)
 export function downloadCategoryExcel(
   items: any[],
-  category: 'performer' | 'sponsor' | 'team' | 'guest',
+  category: 'performer' | 'sponsor' | 'team' | 'guest' | 'computerji',
   customTitle?: string
 ) {
   let mappedData: any[] = [];
@@ -143,6 +161,10 @@ export function downloadCategoryExcel(
     mappedData = formatGuestRows(items);
     sheetName = 'Judges & VIPs';
     filePrefix = 'GGL_Judges_Applications';
+  } else if (category === 'computerji') {
+    mappedData = formatComputerJiRows(items);
+    sheetName = 'Computer Ji Scores';
+    filePrefix = 'GGL_ComputerJi_Scores';
   }
 
   const wb = XLSX.utils.book_new();

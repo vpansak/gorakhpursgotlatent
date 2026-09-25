@@ -29,6 +29,7 @@ export async function POST(req: Request) {
       age,
       discoverySource,
       additionalMessage,
+      targetEpisode,
       consent,
     } = body;
 
@@ -106,6 +107,7 @@ export async function POST(req: Request) {
             appId,
             applicantName: fullName,
             email,
+            episode: targetEpisode || 'Episode 2',
           },
         });
         razorpayOrderId = order.id;
@@ -115,6 +117,9 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: `Razorpay Error: ${errMsg}` }, { status: 400 });
       }
     }
+
+    const appliedEpisode = targetEpisode || 'Episode 2';
+    const recordedMessage = [additionalMessage, `[Registration Target: ${appliedEpisode} (Ep 1 Full)]`].filter(Boolean).join(' | ');
 
     // 3. Save to database with PAYMENT_PENDING
     await db.execute(`
@@ -137,7 +142,7 @@ export async function POST(req: Request) {
       id, appId, fullName, email, mobileNumber, whatsappNumber, effectiveCallNumber, alternateContact || '',
       performanceCategory, performanceTitle, performanceDescription, performanceType || 'Solo',
       Number(performerCount) || 1, performanceDuration || '2 Minutes', performanceLanguage || '', specialRequirements || '',
-      instagramUrl.trim(), (youtubeUrl && youtubeUrl.trim()) ? youtubeUrl.trim() : '', (facebookUrl && facebookUrl.trim()) ? facebookUrl.trim() : '', city, Number(age) || 18, discoverySource || '', additionalMessage || '',
+      instagramUrl.trim(), (youtubeUrl && youtubeUrl.trim()) ? youtubeUrl.trim() : '', (facebookUrl && facebookUrl.trim()) ? facebookUrl.trim() : '', city, Number(age) || 18, discoverySource || '', recordedMessage,
       razorpayOrderId, feeAmount,
       performanceCategory, performanceTitle
     ]);
@@ -145,8 +150,8 @@ export async function POST(req: Request) {
     // Audit status log
     await db.execute(`
       INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
-      VALUES (?, 'PERFORMER', ?, NULL, 'PAYMENT_PENDING', 'SYSTEM', 'Performer Application Created')
-    `, [`his-${Date.now()}`, appId]);
+      VALUES (?, 'PERFORMER', ?, NULL, 'PAYMENT_PENDING', 'SYSTEM', ?)
+    `, [`his-${Date.now()}`, appId, `Performer Application Created for ${appliedEpisode}`]);
 
     // Save individual applicant to Neon S3 folder: performers/all/
     saveIndividualEntryToS3('performers/all', appId, {
@@ -162,6 +167,7 @@ export async function POST(req: Request) {
       city,
       age: Number(age) || 18,
       instagram_url: instagramUrl,
+      target_episode: appliedEpisode,
       payment_status: 'PAYMENT_PENDING',
       payment_amount: feeAmount,
       created_at: new Date().toISOString()

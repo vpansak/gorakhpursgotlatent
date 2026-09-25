@@ -28,6 +28,12 @@ import {
   Database,
   Square,
   Volume2,
+  Lock,
+  Unlock,
+  KeyRound,
+  Eye,
+  EyeOff,
+  ShieldCheck,
 } from 'lucide-react';
 
 
@@ -96,6 +102,7 @@ export interface SavedScoringRecord {
   result: 'WIN' | 'LOSE' | null;
   status: 'COMPLETED';
   savedAt: string;
+  savedAtTimestamp?: number;
 }
 
 function roundToNearestHalf(val: number): number {
@@ -115,10 +122,46 @@ function isValidScore(val: string): boolean {
   return Math.abs(Math.round(doubled) - doubled) < 1e-7;
 }
 
+/**
+ * Strict validator for score inputs (Judge & Contestant prediction):
+ * - Allowed: strictly 1 to 10.
+ * - Typing 11, 12, 13, 20 etc. is strictly blocked (returns null so state does not change).
+ * - Cannot start with 0 (no 0, 00, 0.5).
+ * - Intermediate dot allowed (e.g. '7.') to enable typing '7.5'.
+ * - At most 1 decimal digit allowed.
+ */
+export function filterScoreInput(newVal: string): string | null {
+  if (newVal === '') return '';
+  const trimmed = newVal.trim();
+  if (!/^\d*\.?\d*$/.test(trimmed)) return null;
+  if (trimmed.startsWith('0')) return null;
+  if (trimmed.endsWith('.')) {
+    const num = parseFloat(trimmed.slice(0, -1));
+    if (isNaN(num) || num < 1 || num >= 10) return null;
+    return trimmed;
+  }
+  const num = parseFloat(trimmed);
+  if (isNaN(num)) return null;
+  if (num > 10 || num < 1) return null;
+  const parts = trimmed.split('.');
+  if (parts.length === 2 && parts[1].length > 1) return null;
+  return trimmed;
+}
+
 const STORAGE_KEY_SCORES = 'ggl_computerji_scores_v3';
 const STORAGE_KEY_JUDGES = 'ggl_computerji_judges_v3';
+const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
 
 export default function ComputerJiControlPanel() {
+  // Operator Authentication (ID: 8528085859 | Pass: GGL@GKP)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [authChecking, setAuthChecking] = useState<boolean>(true);
+  const [loginId, setLoginId] = useState<string>('');
+  const [loginPassword, setLoginPassword] = useState<string>('');
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isSubmittingAuth, setIsSubmittingAuth] = useState<boolean>(false);
+
   // Judges & Contestants state
   const [judges, setJudges] = useState<Judge[]>(DEFAULT_JUDGES);
   const [selectedContestantId, setSelectedContestantId] = useState<number>(1);
@@ -170,31 +213,125 @@ export default function ComputerJiControlPanel() {
     setActiveSoundId(null);
   };
 
-
-
-  // Load from localStorage on mount
+  // Check operator authentication session on mount
   useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem('ggl_computerji_auth_v1');
+      if (stored === 'verified') {
+        setIsAuthenticated(true);
+      }
+    } catch (e) {}
+    setAuthChecking(false);
+  }, []);
+
+  const handleAuthSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError(null);
+    setIsSubmittingAuth(true);
+
+    const cleanId = loginId.trim();
+    const cleanPass = loginPassword.trim();
+
+    if (cleanId === '8528085859' && cleanPass === 'GGL@GKP') {
+      try {
+        sessionStorage.setItem('ggl_computerji_auth_v1', 'verified');
+      } catch (err) {}
+      setIsAuthenticated(true);
+      setIsSubmittingAuth(false);
+    } else {
+      setAuthError('गलत ID या Password! कृपया सही ID (8528085859) और Password (GGL@GKP) डालें।');
+      setIsSubmittingAuth(false);
+    }
+  };
+
+  const handleLockConsole = () => {
+    try {
+      sessionStorage.removeItem('ggl_computerji_auth_v1');
+    } catch (err) {}
+    setIsAuthenticated(false);
+    setLoginPassword('');
+    setAuthError(null);
+  };
+
+  // Background sync to Neon DB / Admin Console
+  const syncRecordToBackend = async (rec: SavedScoringRecord) => {
+    try {
+      await fetch('/api/computerji/scores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(rec),
+      });
+    } catch (err) {
+      console.error('Failed to sync score to backend:', err);
+    }
+  };
+
+  // Load from localStorage & Server on mount with 10-day TTL auto-cleanup
+  useEffect(() => {
+    const now = Date.now();
     try {
       const storedJudges = localStorage.getItem(STORAGE_KEY_JUDGES);
       if (storedJudges) {
         const parsed = JSON.parse(storedJudges);
         if (Array.isArray(parsed) && parsed.length >= 5) setJudges(parsed);
       }
+
       const storedRecords = localStorage.getItem(STORAGE_KEY_SCORES);
       if (storedRecords) {
         const parsed = JSON.parse(storedRecords);
         if (parsed && typeof parsed === 'object') {
-          setSavedRecords(parsed);
-          const keys = Object.keys(parsed);
+          const validMap: Record<number, SavedScoringRecord> = {};
+          for (const [k, v] of Object.entries(parsed as Record<string, SavedScoringRecord>)) {
+            // 10-day auto delete
+            if (!v.savedAtTimestamp || now - v.savedAtTimestamp < TEN_DAYS_MS) {
+              validMap[Number(k)] = v;
+            }
+          }
+          setSavedRecords(validMap);
+          const keys = Object.keys(validMap);
           if (keys.length > 0) {
-            const last = parsed[Number(keys[keys.length - 1])];
+            const last = validMap[Number(keys[keys.length - 1])];
             if (last?.savedAt) setLastSavedTime(last.savedAt);
           }
+          localStorage.setItem(STORAGE_KEY_SCORES, JSON.stringify(validMap));
         }
       }
     } catch (e) {
       console.error(e);
     }
+
+    // Also fetch from server / database (which runs 10-day auto-purge on query)
+    fetch('/api/computerji/scores')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.data)) {
+          const backendMap: Record<number, SavedScoringRecord> = {};
+          json.data.forEach((row: any) => {
+            backendMap[row.contestant_id] = {
+              contestantId: row.contestant_id,
+              contestantName: row.contestant_name,
+              category: row.category,
+              phone: row.phone,
+              judgeScores: row.judge_scores || {},
+              rawAverage: row.raw_average,
+              roundedAverage: row.rounded_average,
+              contestantScore: row.contestant_score,
+              result: row.result,
+              status: 'COMPLETED',
+              savedAt: row.saved_at,
+              savedAtTimestamp: row.created_at ? new Date(row.created_at).getTime() : Date.now(),
+            };
+          });
+          setSavedRecords((prev) => {
+            const merged = { ...backendMap, ...prev };
+            try {
+              localStorage.setItem(STORAGE_KEY_SCORES, JSON.stringify(merged));
+            } catch (err) {}
+            return merged;
+          });
+        }
+      })
+      .catch((err) => console.error('Failed to sync scores from server:', err));
   }, []);
 
   // Save judges to storage
@@ -288,11 +425,40 @@ export default function ComputerJiControlPanel() {
 
   const handleJudgeScoreChange = (judgeId: string, val: string) => {
     setPanelError(null);
-    setJudgeScores((prev) => ({ ...prev, [judgeId]: val }));
+    const sanitized = filterScoreInput(val);
+    if (sanitized === null) {
+      // Strictly block values > 10 like 11, 12, 13, 20 etc.
+      return;
+    }
+    setJudgeScores((prev) => ({ ...prev, [judgeId]: sanitized }));
     if (computerJiAverage !== null || isRevealed) {
       setComputerJiAverage(null);
       setRawAverage(null);
       setIsRevealed(false);
+    }
+  };
+
+  const handleJudgeScoreBlur = (judgeId: string) => {
+    const cur = judgeScores[judgeId];
+    if (cur && cur.endsWith('.')) {
+      setJudgeScores((prev) => ({ ...prev, [judgeId]: cur.slice(0, -1) }));
+    }
+  };
+
+  const handleContestantScoreChange = (val: string) => {
+    setPanelError(null);
+    const sanitized = filterScoreInput(val);
+    if (sanitized === null) {
+      // Strictly block values > 10 like 11, 12, 13, 20 etc.
+      return;
+    }
+    setContestantScoreInput(sanitized);
+    setIsRevealed(false);
+  };
+
+  const handleContestantScoreBlur = () => {
+    if (contestantScoreInput.endsWith('.')) {
+      setContestantScoreInput(contestantScoreInput.slice(0, -1));
     }
   };
 
@@ -307,7 +473,7 @@ export default function ComputerJiControlPanel() {
     });
 
     if (missing.length > 0) {
-      setPanelError('Please enter scores for all active judges.');
+      setPanelError('Please enter scores (1-10) for all active judges.');
       return;
     }
 
@@ -330,20 +496,38 @@ export default function ComputerJiControlPanel() {
     setIsRevealed(false);
   };
 
-  // Reveal Report
+  // Reveal Report & AUTOMATICALLY SAVE! (No need to click save button)
   const handleReveal = () => {
     setPanelError(null);
-    if (computerJiAverage === null) {
-      handleCalculateAverage();
+
+    const missing = activeJudges.filter((j) => {
+      const val = judgeScores[j.id]?.trim();
+      return val === undefined || val === '' || isNaN(Number(val));
+    });
+
+    if (missing.length > 0) {
+      setPanelError('Please enter scores (1-10) for all active judges.');
+      return;
     }
+
     if (!contestantScoreInput || !isValidScore(contestantScoreInput)) {
       setPanelError('Please enter a valid contestant score (1-10 in 0.5 steps).');
       return;
     }
+
+    const parsed = activeJudges.map((j) => Number(judgeScores[j.id].trim()));
+    const sum = parsed.reduce((acc, curr) => acc + curr, 0);
+    const calculatedRaw = sum / parsed.length;
+    const calculatedRounded = roundToNearestHalf(calculatedRaw);
+
+    setRawAverage(calculatedRaw);
+    setComputerJiAverage(calculatedRounded);
     setIsRevealed(true);
 
     const contNum = Number(contestantScoreInput.trim());
-    if (computerJiAverage !== null && contNum === computerJiAverage) {
+    const result: 'WIN' | 'LOSE' = contNum === calculatedRounded ? 'WIN' : 'LOSE';
+
+    if (result === 'WIN') {
       try {
         confetti({
           particleCount: 70,
@@ -354,6 +538,43 @@ export default function ComputerJiControlPanel() {
         });
       } catch (err) {}
     }
+
+    // AUTOMATICALLY SAVE: User does not need to click Save button!
+    const nowTime = new Date().toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+
+    const newRecord: SavedScoringRecord = {
+      contestantId: currentContestant.id,
+      contestantName: currentContestant.name,
+      category: currentContestant.category,
+      phone: currentContestant.phone,
+      judgeScores: { ...judgeScores },
+      rawAverage: Number(calculatedRaw.toFixed(2)),
+      roundedAverage: calculatedRounded,
+      contestantScore: contestantScoreInput.trim(),
+      result,
+      status: 'COMPLETED',
+      savedAt: nowTime,
+      savedAtTimestamp: Date.now(),
+    };
+
+    const updated = {
+      ...savedRecords,
+      [currentContestant.id]: newRecord,
+    };
+
+    setSavedRecords(updated);
+    saveRecordsToStorage(updated);
+    setLastSavedTime(nowTime);
+    setSaveSuccessMsg(true);
+
+    // Sync to backend / Neon DB automatically (retained for 10 days)
+    syncRecordToBackend(newRecord);
+
+    setTimeout(() => setSaveSuccessMsg(false), 3000);
   };
 
   // Save Score & Proceed to Next Contestant
@@ -405,6 +626,7 @@ export default function ComputerJiControlPanel() {
       result,
       status: 'COMPLETED',
       savedAt: nowTime,
+      savedAtTimestamp: Date.now(),
     };
 
     const updated = {
@@ -417,6 +639,9 @@ export default function ComputerJiControlPanel() {
     setLastSavedTime(nowTime);
     setIsRevealed(true);
     setSaveSuccessMsg(true);
+
+    // Sync to backend / Neon DB
+    syncRecordToBackend(newRecord);
 
     setTimeout(() => setSaveSuccessMsg(false), 2500);
 
@@ -525,6 +750,118 @@ export default function ComputerJiControlPanel() {
     computerJiAverage !== null &&
     Number(contestantScoreInput.trim()) === computerJiAverage;
 
+  if (authChecking) {
+    return (
+      <div className="h-screen bg-[#07080e] flex items-center justify-center text-amber-400">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-amber-500/30 border-t-amber-400 rounded-full animate-spin" />
+          <span className="text-xs font-mono tracking-widest text-slate-400 uppercase">
+            Verifying Operator Credentials...
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#07080e] text-slate-100 flex items-center justify-center p-4 relative overflow-hidden selection:bg-amber-500 selection:text-black">
+        {/* Glow ambient background lights */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-[300px] h-[300px] bg-red-600/10 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="w-full max-w-md rounded-3xl bg-[#0b0e1b]/95 border border-amber-500/40 p-6 sm:p-8 shadow-[0_0_50px_rgba(245,158,11,0.15)] relative z-10 space-y-6">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-black flex items-center justify-center shadow-[0_0_25px_rgba(245,158,11,0.5)] mb-3">
+              <Lock className="w-8 h-8 stroke-[2.5]" />
+            </div>
+            <div className="inline-block px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[10px] font-black uppercase tracking-widest">
+              🔒 RESTRICTED OPERATOR CONSOLE
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight uppercase font-barlow">
+              COMPUTER JI LOGIN
+            </h1>
+            <p className="text-xs text-slate-400">
+              Gorakhpur's Got Latent · अधिकृत ऑपरेटर कंसोल
+            </p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleAuthSubmit} className="space-y-4">
+            {authError && (
+              <div className="p-3 rounded-xl bg-red-950/70 border border-red-500/50 text-red-300 text-xs flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                <span>{authError}</span>
+              </div>
+            )}
+
+            {/* Operator ID Input */}
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
+                Operator ID / फोन नंबर
+              </label>
+              <div className="relative">
+                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  required
+                  placeholder="8528085859"
+                  value={loginId}
+                  onChange={(e) => setLoginId(e.target.value)}
+                  className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-black/60 border border-white/10 focus:border-amber-400 text-sm text-white font-mono placeholder:text-slate-600 focus:outline-none transition-all"
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            {/* Password Input */}
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
+                Security Password / पासवर्ड
+              </label>
+              <div className="relative">
+                <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  placeholder="GGL@GKP"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-black/60 border border-white/10 focus:border-amber-400 text-sm text-white font-mono placeholder:text-slate-600 focus:outline-none transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmittingAuth || !loginId || !loginPassword}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:brightness-110 active:scale-98 text-black font-black text-sm uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <Unlock className="w-4 h-4 stroke-[2.5]" />
+              <span>UNLOCK COMPUTER JI · कंसोल खोलें</span>
+            </button>
+          </form>
+
+          {/* Quick info footer */}
+          <div className="pt-2 border-t border-white/10 text-center">
+            <span className="text-[10px] text-slate-500 font-mono">
+              Live scoring & auto-backup to Malik admin console active (10-day retention)
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen max-h-screen bg-[#07080e] text-slate-100 flex flex-col justify-between overflow-hidden p-2 sm:p-3 selection:bg-amber-500 selection:text-black">
       {/* ============================================================
@@ -575,7 +912,7 @@ export default function ComputerJiControlPanel() {
           })}
         </div>
 
-        {/* Right: Stop SFX, Status & Reset */}
+        {/* Right: Stop SFX, Status, Lock & Reset */}
         <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
@@ -592,6 +929,16 @@ export default function ComputerJiControlPanel() {
           <div className="text-[11px] font-mono text-slate-300 hidden xl:block">
             Saved: <strong className="text-emerald-400 font-bold">{completedCount}/{totalCount}</strong>
           </div>
+
+          <button
+            type="button"
+            onClick={handleLockConsole}
+            className="px-2 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-black uppercase flex items-center gap-1 transition-all cursor-pointer active:scale-95"
+            title="Lock Operator Console"
+          >
+            <Lock className="w-3 h-3 text-amber-400" />
+            <span className="hidden sm:inline">LOCK</span>
+          </button>
 
           <button
             type="button"
@@ -663,13 +1010,12 @@ export default function ComputerJiControlPanel() {
                 <div className="flex items-center gap-1.5 shrink-0">
                   {judge.isActive ? (
                     <input
-                      type="number"
-                      step="any"
-                      min="1"
-                      max="10"
+                      type="text"
+                      inputMode="decimal"
                       placeholder="1-10"
                       value={judgeScores[judge.id] || ''}
                       onChange={(e) => handleJudgeScoreChange(judge.id, e.target.value)}
+                      onBlur={() => handleJudgeScoreBlur(judge.id)}
                       className="w-16 px-2 py-1 rounded-lg bg-[#07080e] border border-amber-500/30 text-amber-300 font-mono text-center font-bold text-sm focus:outline-none focus:border-amber-400 transition-all placeholder:text-slate-600 placeholder:text-[10px]"
                     />
                   ) : (
@@ -865,16 +1211,12 @@ export default function ComputerJiControlPanel() {
             <div className="flex items-center gap-2">
               <input
                 id="cont-score-field"
-                type="number"
-                step="0.5"
-                min="1"
-                max="10"
-                placeholder="?"
+                type="text"
+                inputMode="decimal"
+                placeholder="1-10"
                 value={contestantScoreInput}
-                onChange={(e) => {
-                  setContestantScoreInput(e.target.value);
-                  setIsRevealed(false);
-                }}
+                onChange={(e) => handleContestantScoreChange(e.target.value)}
+                onBlur={handleContestantScoreBlur}
                 className="w-20 px-3 py-1.5 rounded-xl bg-[#07080e] border border-amber-500/40 text-amber-400 font-mono text-center font-black text-xl focus:outline-none focus:border-amber-400 transition-all placeholder:text-slate-600"
               />
 

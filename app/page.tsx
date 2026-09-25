@@ -87,7 +87,7 @@ export default async function HomePage() {
           <div className="space-y-2.5 max-w-3xl mx-auto -mt-3 sm:-mt-4">
             <h1 className="sr-only">Gorakhpur's Got Latent</h1>
             <p className="font-bebas text-3xl sm:text-5xl md:text-6xl text-amber-300 tracking-wide uppercase drop-shadow-[0_0_12px_rgba(255,215,0,0.35)]">
-              "Where Talent Meets the Stage"
+              "KUCH BHI HO SAKTA HAI"
             </p>
             <p className="text-xs sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
               Unfiltered performances, raw energy, music fusion, standup comedy roasts, and extraordinary talent judged live in front of thousands!

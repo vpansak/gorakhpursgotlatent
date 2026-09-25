@@ -39,12 +39,12 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://gkpgotlatent.in'),
-  title: "Gorakhpur’s Got Latent | Talent • Entertainment • Live Shows",
-  description: "Where Talent Meets the Stage! Official platform for Gorakhpur's Got Latent live talent hunt, comedy roast, music performances, ticket booking, and performer registration.",
+  title: "Gorakhpur’s Got Latent | Kuch Bhi Ho Sakta Hai",
+  description: "Kuch Bhi Ho Sakta Hai! Official platform for Gorakhpur's Got Latent live talent hunt, comedy roast, music performances, ticket booking, and performer registration.",
   keywords: ["Gorakhpur's Got Latent", "GGL Live", "Talent Show Gorakhpur", "Standup Comedy Gorakhpur", "Live Show Tickets", "Bhojpuri Fusion", "Purvanchal Talent"],
   openGraph: {
-    title: "Gorakhpur’s Got Latent | Talent • Entertainment • Live Shows",
-    description: "Where Talent Meets the Stage! Experience raw talent hunt, music fusion, comedy roasts & live audience voting.",
+    title: "Gorakhpur’s Got Latent | Kuch Bhi Ho Sakta Hai",
+    description: "Kuch Bhi Ho Sakta Hai! Experience raw talent hunt, music fusion, comedy roasts & live audience voting.",
     url: 'https://gkpgotlatent.in',
     siteName: "Gorakhpur's Got Latent",
     images: [
@@ -60,8 +60,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Gorakhpur’s Got Latent | Talent • Entertainment • Live Shows",
-    description: "Where Talent Meets the Stage! Book tickets and apply to perform live.",
+    title: "Gorakhpur’s Got Latent | Kuch Bhi Ho Sakta Hai",
+    description: "Kuch Bhi Ho Sakta Hai! Book tickets and apply to perform live.",
     images: ['/logo.png'],
   },
   icons: {

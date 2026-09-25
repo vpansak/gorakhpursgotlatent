@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Bebas_Neue, Barlow_Condensed, Anton, Outfit, Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
@@ -36,6 +36,15 @@ const inter = Inter({
   variable: '--font-inter',
   display: 'swap',
 });
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+  themeColor: '#f59e0b',
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://gkpgotlatent.in'),
@@ -78,6 +87,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${bebas.variable} ${barlow.variable} ${anton.variable} ${outfit.variable} ${inter.variable} scroll-smooth`}>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#f59e0b" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -85,6 +95,15 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="GGL App" />
         <link rel="apple-touch-icon" href="/app-logo.png" />
         <script src="https://checkout.razorpay.com/v1/checkout.js" async />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
+              document.addEventListener('gesturechange', function(e) { e.preventDefault(); });
+              document.addEventListener('gestureend', function(e) { e.preventDefault(); });
+            `,
+          }}
+        />
       </head>
       <body className="bg-[#07080e] text-slate-100 antialiased selection:bg-amber-500 selection:text-black min-h-screen flex flex-col justify-between">
         <div>

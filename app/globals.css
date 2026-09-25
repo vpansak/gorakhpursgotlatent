@@ -29,6 +29,12 @@
     touch-action: manipulation;
   }
 
+  @media (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+
   a {
     color: inherit;
     text-decoration: none;

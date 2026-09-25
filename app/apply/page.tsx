@@ -57,7 +57,7 @@ export default function ApplyPage() {
   ];
 
   return (
-    <div className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
+    <div className="pt-6 sm:pt-10 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <div className="relative w-44 h-16 mx-auto">

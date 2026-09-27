@@ -15,13 +15,13 @@ export async function POST(req: Request) {
     }
 
     // 1. Retrieve internal order with event & category details
-    const order = db.prepare(`
+    const order = await db.queryOne(`
       SELECT o.*, e.title as event_title, e.event_date, e.start_time, e.venue_name, c.name as category_name
       FROM ticket_orders o
       JOIN events e ON o.event_id = e.id
       JOIN ticket_categories c ON c.id = ?
       WHERE o.id = ?
-    `).get(categoryId, orderId) as any;
+    `, [categoryId, orderId]);
 
     if (!order) {
       return NextResponse.json({ error: 'Order record not found' }, { status: 404 });
@@ -40,80 +40,73 @@ export async function POST(req: Request) {
 
       const isValid = verifyRazorpaySignature(razorpayOrderId, razorpayPaymentId, razorpaySignature);
       if (!isValid) {
-        db.prepare(`
+        await db.execute(`
           INSERT INTO payments (id, order_id, razorpay_order_id, razorpay_payment_id, amount, status, error_description)
           VALUES (?, ?, ?, ?, ?, 'FAILED', 'Invalid signature verification')
-        `).run(`pay-${Date.now()}`, orderId, razorpayOrderId, razorpayPaymentId, order.total_amount);
+        `, [`pay-${Date.now()}`, orderId, razorpayOrderId, razorpayPaymentId, order.total_amount]);
 
-        db.prepare("UPDATE ticket_orders SET payment_status = 'FAILED' WHERE id = ?").run(orderId);
+        await db.execute("UPDATE ticket_orders SET payment_status = 'FAILED' WHERE id = ?", [orderId]);
 
         return NextResponse.json({ error: 'Payment signature verification failed. Ticket generation aborted.' }, { status: 400 });
       }
     }
 
-    // 3. Atomically update DB state inside SQLite Transaction
-    const transaction = db.transaction(() => {
-      // Mark order as PAID
-      db.prepare(`
-        UPDATE ticket_orders
-        SET payment_status = 'PAID', razorpay_payment_id = ?, razorpay_signature = ?, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-      `).run(razorpayPaymentId || `pay_sim_${Date.now()}`, razorpaySignature || 'simulated_sig', orderId);
+    // 3. Update DB state asynchronously
+    // Mark order as PAID
+    await db.execute(`
+      UPDATE ticket_orders
+      SET payment_status = 'PAID', razorpay_payment_id = ?, razorpay_signature = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `, [razorpayPaymentId || `pay_sim_${Date.now()}`, razorpaySignature || 'simulated_sig', orderId]);
 
-      // Decrement inventory
-      db.prepare(`
-        UPDATE ticket_categories
-        SET available_qty = MAX(0, available_qty - ?)
-        WHERE id = ?
-      `).run(quantity, categoryId);
+    // Decrement inventory
+    await db.execute(`
+      UPDATE ticket_categories
+      SET available_qty = GREATEST(0, available_qty - ?)
+      WHERE id = ?
+    `, [quantity, categoryId]);
 
-      // Generate digital tickets
-      const insertTicket = db.prepare(`
+    // Generate digital tickets
+    const issuedTickets = [];
+
+    for (let i = 0; i < Number(quantity); i++) {
+      const ticketNumber = generateTicketNumber();
+      const ticketId = `tkt-${Date.now()}-${i}-${Math.floor(Math.random() * 1000)}`;
+      const qrHash = generateQrHash(ticketNumber, orderId);
+
+      await db.execute(`
         INSERT INTO tickets (
           id, ticket_number, order_id, category_id, event_id, customer_name,
           customer_email, customer_phone, qr_code_hash, status
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'VALID')
-      `);
-
-      const issuedTickets = [];
-
-      for (let i = 0; i < Number(quantity); i++) {
-        const ticketNumber = generateTicketNumber();
-        const ticketId = `tkt-${Date.now()}-${i}-${Math.floor(Math.random() * 1000)}`;
-        const qrHash = generateQrHash(ticketNumber, orderId);
-
-        insertTicket.run(
-          ticketId,
-          ticketNumber,
-          orderId,
-          categoryId,
-          order.event_id,
-          order.customer_name,
-          order.customer_email,
-          order.customer_phone,
-          qrHash
-        );
-
-        issuedTickets.push({ ticketId, ticketNumber, qrHash });
-      }
-
-      // Log Payment Audit
-      db.prepare(`
-        INSERT INTO payments (id, order_id, razorpay_order_id, razorpay_payment_id, razorpay_signature, amount, status)
-        VALUES (?, ?, ?, ?, ?, ?, 'PAID')
-      `).run(
-        `pay-${Date.now()}`,
+      `, [
+        ticketId,
+        ticketNumber,
         orderId,
-        razorpayOrderId || order.razorpay_order_id || 'sim_order',
-        razorpayPaymentId || `pay_sim_${Date.now()}`,
-        razorpaySignature || 'sim_sig',
-        order.total_amount
-      );
+        categoryId,
+        order.event_id,
+        order.customer_name,
+        order.customer_email,
+        order.customer_phone,
+        qrHash
+      ]);
 
-      return issuedTickets;
-    });
+      issuedTickets.push({ ticketId, ticketNumber, qrHash });
+    }
 
-    const issuedTickets = transaction();
+    // Log Payment Audit
+    await db.execute(`
+      INSERT INTO payments (id, order_id, razorpay_order_id, razorpay_payment_id, razorpay_signature, amount, status)
+      VALUES (?, ?, ?, ?, ?, ?, 'PAID')
+    `, [
+      `pay-${Date.now()}`,
+      orderId,
+      razorpayOrderId || order.razorpay_order_id || 'sim_order',
+      razorpayPaymentId || `pay_sim_${Date.now()}`,
+      razorpaySignature || 'sim_sig',
+      order.total_amount
+    ]);
+
     const primaryTicketNumber = issuedTickets[0]?.ticketNumber || 'GGL-TKT-PASS';
 
     // 4. Trigger EmailJS Confirmation Email after successful payment & ticket issuance
@@ -140,7 +133,7 @@ export async function POST(req: Request) {
       console.warn(`⚠️ Email delivery failed, but ticket ${primaryTicketNumber} remains VALID in database.`);
     }
 
-    db.prepare("UPDATE ticket_orders SET confirmation_email_status = ? WHERE id = ?").run(emailStatus, orderId);
+    await db.execute("UPDATE ticket_orders SET confirmation_email_status = ? WHERE id = ?", [emailStatus, orderId]);
 
     // Save individual ticket order to Neon S3 folder: orders/
     saveIndividualEntryToS3('orders', order.order_number || orderId, {

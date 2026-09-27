@@ -19,14 +19,14 @@ export async function POST(req: Request) {
     const cleanQuery = ticketQuery.trim();
 
     // Query by ticket_number or qr_code_hash
-    const ticket = db.prepare(`
+    const ticket = await db.queryOne(`
       SELECT t.*, c.name as category_name, c.price as category_price, e.title as event_title, e.event_date, e.venue_name, o.order_number, o.payment_status
       FROM tickets t
       JOIN ticket_categories c ON t.category_id = c.id
       JOIN events e ON t.event_id = e.id
       JOIN ticket_orders o ON t.order_id = o.id
       WHERE t.ticket_number = ? OR t.qr_code_hash = ? OR t.id = ?
-    `).get(cleanQuery, cleanQuery, cleanQuery) as any;
+    `, [cleanQuery, cleanQuery, cleanQuery]);
 
     if (!ticket) {
       return NextResponse.json({
@@ -55,16 +55,16 @@ export async function POST(req: Request) {
 
     // If request action is to CHECK_IN / MARK AS USED
     if (action === 'CHECK_IN') {
-      db.prepare(`
+      await db.execute(`
         UPDATE tickets
         SET status = 'USED', checked_in_at = CURRENT_TIMESTAMP, checked_in_by = ?
         WHERE id = ?
-      `).run(session.full_name || staffName || 'Gate Staff', ticket.id);
+      `, [session.full_name || staffName || 'Gate Staff', ticket.id]);
 
-      db.prepare(`
+      await db.execute(`
         INSERT INTO audit_logs (id, user_id, action, target_type, target_id, details)
         VALUES (?, ?, 'TICKET_CHECKIN', 'TICKETS', ?, ?)
-      `).run(`log-${Date.now()}`, session.id, ticket.id, `Checked in ticket ${ticket.ticket_number} at gate`);
+      `, [`log-${Date.now()}`, session.id, ticket.id, `Checked in ticket ${ticket.ticket_number} at gate`]);
 
       const updatedTicket = { ...ticket, status: 'USED', checked_in_at: new Date().toISOString(), checked_in_by: session.full_name };
 

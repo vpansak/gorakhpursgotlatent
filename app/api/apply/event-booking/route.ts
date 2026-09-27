@@ -18,26 +18,29 @@ export async function POST(req: Request) {
     const appId = generateAppId('EVT');
     const id = `evt-app-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-    const insert = db.prepare(`
+    await db.execute(`
       INSERT INTO event_booking_applications (
         id, app_id, org_name, contact_person, email, whatsapp, phone, city, venue,
         event_date, expected_audience, event_type, event_desc, perf_duration,
         budget_range, travel_req, accommodation_req, tech_req, stage_req, add_info,
         doc_url, status
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'SUBMITTED')
-    `);
+    `, [
+      id, appId, (orgName || '').toString().trim(), (contactPerson || '').toString().trim(),
+      (email || '').toString().trim(), (whatsapp || '').toString().trim(), (phone || '').toString().trim(),
+      (city || '').toString().trim(), (venue || '').toString().trim(),
+      (eventDate || '').toString().trim(), (expectedAudience || '').toString().trim(),
+      (eventType || '').toString().trim(), (eventDesc || '').toString().trim(),
+      (perfDuration || '').toString().trim(), (budgetRange || '').toString().trim(),
+      (travelReq || '').toString().trim(), (accommodationReq || '').toString().trim(),
+      (techReq || '').toString().trim(), (stageReq || '').toString().trim(),
+      (addInfo || '').toString().trim(), (docUrl || '').toString().trim()
+    ]);
 
-    insert.run(
-      id, appId, orgName, contactPerson, email, whatsapp, phone || '', city, venue || '',
-      eventDate, expectedAudience || '', eventType || '', eventDesc || '', perfDuration || '',
-      budgetRange || '', travelReq || '', accommodationReq || '', techReq || '',
-      stageReq || '', addInfo || '', docUrl || ''
-    );
-
-    db.prepare(`
+    await db.execute(`
       INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
       VALUES (?, 'EVENT_BOOKING', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Event Booking Request')
-    `).run(`his-${Date.now()}`, appId);
+    `, [`his-${Date.now()}`, appId]);
 
     return NextResponse.json({
       success: true,

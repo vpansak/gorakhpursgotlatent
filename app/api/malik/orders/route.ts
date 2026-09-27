@@ -35,7 +35,7 @@ export async function GET(req: Request) {
 
     query += ' ORDER BY o.created_at DESC';
 
-    const orders = db.prepare(query).all(...params);
+    const orders = await db.query(query, params);
 
     return NextResponse.json({ success: true, orders });
   } catch (err: any) {
@@ -56,12 +56,12 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: 'Order ID and status required' }, { status: 400 });
     }
 
-    db.prepare('UPDATE ticket_orders SET payment_status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(newStatus, orderId);
+    await db.execute('UPDATE ticket_orders SET payment_status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [newStatus, orderId]);
 
-    db.prepare(`
+    await db.execute(`
       INSERT INTO audit_logs (id, user_id, action, target_type, target_id, details)
       VALUES (?, ?, 'PAYMENT_STATUS_UPDATE', 'ORDERS', ?, ?)
-    `).run(`log-${Date.now()}`, session.id, orderId, `Updated payment status to ${newStatus}. Notes: ${refundNotes || 'None'}`);
+    `, [`log-${Date.now()}`, session.id, orderId, `Updated payment status to ${newStatus}. Notes: ${refundNotes || 'None'}`]);
 
     return NextResponse.json({ success: true, message: `Order payment status updated to ${newStatus}` });
   } catch (err: any) {

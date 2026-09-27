@@ -24,14 +24,14 @@ export async function POST(req: Request) {
       const razorpayPaymentId = paymentEntity.id;
 
       // Find corresponding ticket order
-      const order = db.prepare('SELECT * FROM ticket_orders WHERE razorpay_order_id = ?').get(razorpayOrderId) as any;
+      const order = await db.queryOne('SELECT * FROM ticket_orders WHERE razorpay_order_id = ?', [razorpayOrderId]);
 
       if (order && order.payment_status !== 'PAID') {
-        db.prepare(`
+        await db.execute(`
           UPDATE ticket_orders
           SET payment_status = 'PAID', razorpay_payment_id = ?, updated_at = CURRENT_TIMESTAMP
           WHERE id = ?
-        `).run(razorpayPaymentId, order.id);
+        `, [razorpayPaymentId, order.id]);
 
         console.log(`✅ Webhook: Order ${order.order_number} marked as PAID via Razorpay webhook`);
       }

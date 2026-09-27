@@ -13,13 +13,13 @@ export async function POST(req: Request) {
     }
 
     // 1. Fetch event
-    const event = db.prepare("SELECT * FROM events WHERE id = ? AND status = 'PUBLISHED'").get(eventId) as any;
+    const event = await db.queryOne("SELECT * FROM events WHERE id = ? AND status = 'PUBLISHED'", [eventId]);
     if (!event) {
       return NextResponse.json({ error: 'Selected event is not active or available' }, { status: 404 });
     }
 
     // 2. Fetch ticket category
-    const category = db.prepare("SELECT * FROM ticket_categories WHERE id = ? AND event_id = ? AND status = 'ACTIVE'").get(categoryId, eventId) as any;
+    const category = await db.queryOne("SELECT * FROM ticket_categories WHERE id = ? AND event_id = ? AND status = 'ACTIVE'", [categoryId, eventId]);
     if (!category) {
       return NextResponse.json({ error: 'Ticket category not found or inactive' }, { status: 404 });
     }
@@ -67,14 +67,12 @@ export async function POST(req: Request) {
     }
 
     // 5. Insert order into DB
-    const insertOrder = db.prepare(`
+    await db.execute(`
       INSERT INTO ticket_orders (
         id, order_number, customer_name, customer_email, customer_phone,
         event_id, total_amount, currency, payment_status, razorpay_order_id
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?)
-    `);
-
-    insertOrder.run(
+    `, [
       orderId,
       orderNumber,
       customerName,
@@ -84,7 +82,7 @@ export async function POST(req: Request) {
       totalAmount,
       'INR',
       razorpayOrderId
-    );
+    ]);
 
     return NextResponse.json({
       success: true,

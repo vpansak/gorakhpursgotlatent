@@ -14,8 +14,8 @@ export async function GET(req: Request) {
     let result: any = null;
     let type = '';
 
-    // First check performer_applications table by app_id and email
-    result = db.prepare(`
+    // 1. Check performer_applications table by app_id and email
+    result = await db.queryOne(`
       SELECT app_id, full_name, email, mobile_number, whatsapp_number, city, age,
              performance_category, performance_title, performance_type, performer_count,
              performance_duration, performance_language, special_requirements,
@@ -23,25 +23,31 @@ export async function GET(req: Request) {
              payment_id, payment_verified_at, created_at, updated_at
       FROM performer_applications
       WHERE app_id = ? AND LOWER(email) = ?
-    `).get(appId, email);
+    `, [appId, email]);
 
     if (result) {
       type = 'Performer Application';
     } else {
-      // Check guest_applications
-      result = db.prepare('SELECT app_id, full_name, email, category, city, status, created_at, updated_at FROM guest_applications WHERE app_id = ? AND LOWER(email) = ?').get(appId, email);
+      // 2. Check team_applications
+      result = await db.queryOne('SELECT app_id, full_name, email, mobile_number, address, status, created_at, updated_at FROM team_applications WHERE app_id = ? AND LOWER(email) = ?', [appId, email]);
       if (result) {
-        type = 'Guest / Influencer Application';
+        type = 'Crew & Team Application';
       } else {
-        // Check sponsor_applications
-        result = db.prepare('SELECT app_id, company_name, biz_email AS email, contact_person, sponsorship_type, status, created_at, updated_at FROM sponsor_applications WHERE app_id = ? AND LOWER(biz_email) = ?').get(appId, email);
+        // 3. Check guest_applications
+        result = await db.queryOne('SELECT app_id, full_name, email, category, city, status, created_at, updated_at FROM guest_applications WHERE app_id = ? AND LOWER(email) = ?', [appId, email]);
         if (result) {
-          type = 'Brand Sponsor Application';
+          type = 'Guest / Influencer Application';
         } else {
-          // Check event_booking_applications
-          result = db.prepare('SELECT app_id, org_name, email, contact_person, city, event_date, status, created_at, updated_at FROM event_booking_applications WHERE app_id = ? AND LOWER(email) = ?').get(appId, email);
+          // 4. Check sponsor_applications (check both biz_email and email column fallback)
+          result = await db.queryOne('SELECT app_id, company_name, biz_email AS email, contact_person, sponsorship_type, status, created_at, updated_at FROM sponsor_applications WHERE app_id = ? AND (LOWER(biz_email) = ? OR LOWER(email) = ?)', [appId, email, email]);
           if (result) {
-            type = 'Show Booking Application';
+            type = 'Brand Sponsor Application';
+          } else {
+            // 5. Check event_booking_applications
+            result = await db.queryOne('SELECT app_id, org_name, email, contact_person, city, event_date, status, created_at, updated_at FROM event_booking_applications WHERE app_id = ? AND LOWER(email) = ?', [appId, email]);
+            if (result) {
+              type = 'Show Booking Application';
+            }
           }
         }
       }
@@ -52,7 +58,7 @@ export async function GET(req: Request) {
     }
 
     // Fetch status history timeline
-    const history = db.prepare('SELECT old_status, new_status, reason, created_at FROM application_status_history WHERE app_id = ? ORDER BY created_at ASC').all(result.app_id);
+    const history = await db.query('SELECT old_status, new_status, reason, created_at FROM application_status_history WHERE app_id = ? ORDER BY created_at ASC', [result.app_id]);
 
     return NextResponse.json({
       success: true,

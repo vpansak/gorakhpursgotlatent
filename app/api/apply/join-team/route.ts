@@ -6,11 +6,14 @@ import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, fullName, mobile, phone, whatsapp, email, dob, address, city, instagram, about } = body;
-    const effectiveName = (name || fullName || '').trim();
-    const effectiveMobile = (mobile || phone || whatsapp || '').trim();
-    const effectiveEmail = (email || '').trim();
-    const effectiveAddress = (address || city || '').trim();
+    const { name, fullName, mobile, phone, whatsapp, email, dob, address, city, instagram, instagramUrl, about, shortIntro } = body;
+    const effectiveName = (name || fullName || '').toString().trim();
+    const effectiveMobile = (mobile || phone || whatsapp || '').toString().trim();
+    const effectiveEmail = (email || '').toString().trim();
+    const effectiveAddress = (address || city || '').toString().trim();
+    const effectiveDob = (dob || '').toString().trim();
+    const effectiveInstagram = (instagramUrl || instagram || '').toString().trim();
+    const effectiveAbout = (about || shortIntro || '').toString().trim();
 
     if (!effectiveName || !effectiveMobile || !effectiveEmail) {
       return NextResponse.json({ error: 'Please fill in all required fields (Name, Mobile, Email)' }, { status: 400 });
@@ -26,13 +29,13 @@ export async function POST(req: Request) {
     `, [
       id,
       appId,
-      name.trim(),
-      mobile.trim(),
-      email.trim(),
-      dob || '',
-      address.trim(),
-      instagram?.trim() || '',
-      about?.trim() || ''
+      effectiveName,
+      effectiveMobile,
+      effectiveEmail,
+      effectiveDob,
+      effectiveAddress,
+      effectiveInstagram,
+      effectiveAbout
     ]);
 
     // Record status history
@@ -49,13 +52,13 @@ export async function POST(req: Request) {
     saveIndividualEntryToS3('team', appId, {
       id,
       app_id: appId,
-      full_name: name.trim(),
-      mobile_number: mobile.trim(),
-      email: email.trim(),
-      dob: dob || '',
-      address: address.trim(),
-      instagram_url: instagram?.trim() || '',
-      about: about?.trim() || '',
+      full_name: effectiveName,
+      mobile_number: effectiveMobile,
+      email: effectiveEmail,
+      dob: effectiveDob,
+      address: effectiveAddress,
+      instagram_url: effectiveInstagram,
+      about: effectiveAbout,
       status: 'SUBMITTED',
       created_at: new Date().toISOString()
     }).catch(err => console.error('S3 individual team save error:', err));

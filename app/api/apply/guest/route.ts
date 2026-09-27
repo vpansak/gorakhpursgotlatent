@@ -13,7 +13,14 @@ export async function POST(req: Request) {
       specialReq, importantInfo, profilePhotoUrl, pressKitUrl, docUrl
     } = body;
 
-    if (!fullName || !email || !whatsapp || !city || !profession || !category) {
+    const effectiveFullName = (fullName || '').toString().trim();
+    const effectiveEmail = (email || '').toString().trim();
+    const effectiveWhatsapp = (whatsapp || phone || '').toString().trim();
+    const effectiveCity = (city || location || '').toString().trim();
+    const effectiveProfession = (profession || 'Influencer / Guest').toString().trim();
+    const effectiveCategory = (category || 'Special Guest').toString().trim();
+
+    if (!effectiveFullName || !effectiveEmail || !effectiveWhatsapp || !effectiveCity) {
       return NextResponse.json({ error: 'Please complete all required fields' }, { status: 400 });
     }
 
@@ -29,12 +36,16 @@ export async function POST(req: Request) {
         important_info, profile_photo_url, press_kit_url, doc_url, status
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'SUBMITTED')
     `, [
-      id, appId, fullName, stageName || '', dob || '', email, whatsapp, phone || '',
-      instagramUrl || '', youtubeUrl || '', socialUrl || '', city, location || '',
-      profession, category, shortIntro || '', whyGgl || '', previousShows || '',
-      socialInfo || '', managementName || '', managerContact || '', availability || '',
-      preferredDate || '', travelReq || '', accommodationReq || '', specialReq || '',
-      importantInfo || '', profilePhotoUrl || '', pressKitUrl || '', docUrl || ''
+      id, appId, effectiveFullName, (stageName || '').toString().trim(), (dob || '').toString().trim(),
+      effectiveEmail, effectiveWhatsapp, (phone || '').toString().trim(),
+      (instagramUrl || '').toString().trim(), (youtubeUrl || '').toString().trim(), (socialUrl || '').toString().trim(),
+      effectiveCity, (location || '').toString().trim(),
+      effectiveProfession, effectiveCategory, (shortIntro || '').toString().trim(),
+      (whyGgl || '').toString().trim(), (previousShows || '').toString().trim(),
+      (socialInfo || '').toString().trim(), (managementName || '').toString().trim(), (managerContact || '').toString().trim(),
+      (availability || '').toString().trim(), (preferredDate || '').toString().trim(),
+      (travelReq || '').toString().trim(), (accommodationReq || '').toString().trim(), (specialReq || '').toString().trim(),
+      (importantInfo || '').toString().trim(), (profilePhotoUrl || '').toString().trim(), (pressKitUrl || '').toString().trim(), (docUrl || '').toString().trim()
     ]);
 
     await db.execute(`
@@ -46,15 +57,15 @@ export async function POST(req: Request) {
     saveIndividualEntryToS3('panel', appId, {
       id,
       app_id: appId,
-      full_name: fullName,
-      stage_name: stageName || '',
-      email,
-      whatsapp,
-      phone: phone || '',
-      city,
-      profession,
-      category,
-      short_intro: shortIntro || '',
+      full_name: effectiveFullName,
+      stage_name: (stageName || '').toString().trim(),
+      email: effectiveEmail,
+      whatsapp: effectiveWhatsapp,
+      phone: (phone || '').toString().trim(),
+      city: effectiveCity,
+      profession: effectiveProfession,
+      category: effectiveCategory,
+      short_intro: (shortIntro || '').toString().trim(),
       status: 'SUBMITTED',
       created_at: new Date().toISOString()
     }).catch(err => console.error('S3 individual panel save error:', err));

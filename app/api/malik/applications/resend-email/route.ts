@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing appId' }, { status: 400 });
     }
 
-    const app = db.prepare('SELECT * FROM performer_applications WHERE app_id = ?').get(appId) as any;
+    const app = await db.queryOne('SELECT * FROM performer_applications WHERE app_id = ?', [appId]);
     if (!app) {
       return NextResponse.json({ error: 'Performer application not found' }, { status: 404 });
     }
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     });
 
     if (result.success) {
-      db.prepare("UPDATE performer_applications SET email_status = 'SENT', admin_email_status = 'SENT' WHERE app_id = ?").run(appId);
+      await db.execute("UPDATE performer_applications SET email_status = 'SENT', admin_email_status = 'SENT' WHERE app_id = ?", [appId]);
       return NextResponse.json({ success: true, message: 'Application email notification resent successfully!' });
     } else {
       return NextResponse.json({ error: `EmailJS dispatch failed: ${result.message}` }, { status: 500 });

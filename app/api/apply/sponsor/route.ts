@@ -13,10 +13,13 @@ export async function POST(req: Request) {
       message, requirements, logoUrl, brandDeckUrl, docUrl
     } = body;
 
-    const effectiveEmail = (bizEmail || email || '').trim();
-    const effectiveWhatsapp = (whatsapp || phone || mobile || '').trim();
+    const effectiveCompanyName = (companyName || '').toString().trim();
+    const effectiveContactPerson = (contactPerson || '').toString().trim();
+    const effectiveEmail = (bizEmail || email || '').toString().trim();
+    const effectiveWhatsapp = (whatsapp || phone || mobile || '').toString().trim();
+    const effectivePhone = (phone || mobile || '').toString().trim();
 
-    if (!companyName || !contactPerson || !effectiveEmail || !effectiveWhatsapp) {
+    if (!effectiveCompanyName || !effectiveContactPerson || !effectiveEmail || !effectiveWhatsapp) {
       return NextResponse.json({ error: 'Please complete all required brand sponsorship details' }, { status: 400 });
     }
 
@@ -31,12 +34,31 @@ export async function POST(req: Request) {
         event_preference, message, requirements, logo_url, brand_deck_url, doc_url, status
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'SUBMITTED')
     `, [
-      id, appId, companyName, contactPerson, designation || '', bizEmail, whatsapp,
-      phone || '', website || '', instagramUrl || '', socialUrl || '', industry || '',
-      location || '', description || '', sponsorshipType || 'General Brand Sponsorship',
-      budgetEst || 'Custom Quote by Management', preferredPackage || 'Custom Package',
-      campaignObj || '', expectedAudience || '', eventPreference || '', message || '',
-      requirements || '', logoUrl || '', brandDeckUrl || '', docUrl || ''
+      id,
+      appId,
+      effectiveCompanyName,
+      effectiveContactPerson,
+      (designation || '').toString().trim(),
+      effectiveEmail,
+      effectiveWhatsapp,
+      effectivePhone,
+      (website || '').toString().trim(),
+      (instagramUrl || '').toString().trim(),
+      (socialUrl || '').toString().trim(),
+      (industry || '').toString().trim(),
+      (location || '').toString().trim(),
+      (description || '').toString().trim(),
+      (sponsorshipType || 'General Brand Sponsorship').toString().trim(),
+      (budgetEst || 'Custom Quote by Management').toString().trim(),
+      (preferredPackage || 'Custom Package').toString().trim(),
+      (campaignObj || '').toString().trim(),
+      (expectedAudience || '').toString().trim(),
+      (eventPreference || '').toString().trim(),
+      (message || '').toString().trim(),
+      (requirements || '').toString().trim(),
+      (logoUrl || '').toString().trim(),
+      (brandDeckUrl || '').toString().trim(),
+      (docUrl || '').toString().trim()
     ]);
 
     await db.execute(`
@@ -48,17 +70,17 @@ export async function POST(req: Request) {
     saveIndividualEntryToS3('sponsors', appId, {
       id,
       app_id: appId,
-      company_name: companyName,
-      contact_person: contactPerson,
-      designation: designation || '',
-      biz_email: bizEmail,
-      whatsapp,
-      phone: phone || '',
-      website: website || '',
-      sponsorship_type: sponsorshipType || 'General Brand Sponsorship',
-      budget_est: budgetEst || 'Custom Quote',
-      industry: industry || '',
-      location: location || '',
+      company_name: effectiveCompanyName,
+      contact_person: effectiveContactPerson,
+      designation: (designation || '').toString().trim(),
+      biz_email: effectiveEmail,
+      whatsapp: effectiveWhatsapp,
+      phone: effectivePhone,
+      website: (website || '').toString().trim(),
+      sponsorship_type: (sponsorshipType || 'General Brand Sponsorship').toString().trim(),
+      budget_est: (budgetEst || 'Custom Quote').toString().trim(),
+      industry: (industry || '').toString().trim(),
+      location: (location || '').toString().trim(),
       status: 'SUBMITTED',
       created_at: new Date().toISOString()
     }).catch(err => console.error('S3 individual sponsor save error:', err));

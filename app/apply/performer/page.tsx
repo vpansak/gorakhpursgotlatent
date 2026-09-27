@@ -34,7 +34,7 @@ export default function PerformerApplyPage() {
         </h1>
 
         <p className="text-base sm:text-lg text-amber-200/90 font-medium max-w-2xl mx-auto leading-relaxed">
-          Episode 1 performer slots are completely full. Registration for <strong className="text-amber-400 underline decoration-amber-400/50">Episode 2 auditions will open soon</strong>!
+          Registration for <strong className="text-amber-400 underline decoration-amber-400/50">Episode 2 auditions will open soon</strong>!
         </p>
       </div>
 

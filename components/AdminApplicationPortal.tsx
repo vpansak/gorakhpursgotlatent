@@ -172,7 +172,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
   // Process Razorpay Refund
   const handleProcessRefund = async (appId: string, applicantName: string) => {
     const reason = prompt(
-      `Razorpay Refund initiate karein ${applicantName} (${appId}) ke liye?\nReason enter karein (e.g. Episode 1 full / audition slot not available):`,
+      `Razorpay Refund initiate karein ${applicantName} (${appId}) ke liye?\nReason enter karein (e.g. Slot not available / user requested refund):`,
       'Performer slots full refund'
     );
     if (!reason) return;

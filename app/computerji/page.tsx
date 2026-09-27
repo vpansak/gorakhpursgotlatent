@@ -220,7 +220,7 @@ export default function ComputerJiControlPanel() {
       if (stored === 'verified') {
         setIsAuthenticated(true);
       }
-    } catch (e) {}
+    } catch (e) { }
     setAuthChecking(false);
   }, []);
 
@@ -236,7 +236,7 @@ export default function ComputerJiControlPanel() {
     if (cleanId === '8528085859' && (cleanPass === cleanId || cleanPass === '8528085859' || cleanPass === 'GGL@GKP')) {
       try {
         sessionStorage.setItem('ggl_computerji_auth_v1', 'verified');
-      } catch (err) {}
+      } catch (err) { }
       setIsAuthenticated(true);
       setIsSubmittingAuth(false);
     } else {
@@ -248,7 +248,7 @@ export default function ComputerJiControlPanel() {
   const handleLockConsole = () => {
     try {
       sessionStorage.removeItem('ggl_computerji_auth_v1');
-    } catch (err) {}
+    } catch (err) { }
     setIsAuthenticated(false);
     setLoginPassword('');
     setAuthError(null);
@@ -327,7 +327,7 @@ export default function ComputerJiControlPanel() {
             const merged = { ...backendMap, ...prev };
             try {
               localStorage.setItem(STORAGE_KEY_SCORES, JSON.stringify(merged));
-            } catch (err) {}
+            } catch (err) { }
             return merged;
           });
         }
@@ -537,7 +537,7 @@ export default function ComputerJiControlPanel() {
           colors: ['#FFD700', '#FFC107', '#FFA000', '#FFFFFF', '#EF4444'],
           disableForReducedMotion: true,
         });
-      } catch (err) {}
+      } catch (err) { }
     }
 
     // AUTOMATICALLY SAVE: User does not need to click Save button!
@@ -893,11 +893,10 @@ export default function ComputerJiControlPanel() {
                 key={s.id}
                 type="button"
                 onClick={() => handlePlaySound(s)}
-                className={`px-2.5 py-1.5 rounded-xl font-black text-[11px] sm:text-xs transition-all flex items-center gap-1.5 border whitespace-nowrap cursor-pointer active:scale-95 shadow-sm ${
-                  isPlaying
+                className={`px-2.5 py-1.5 rounded-xl font-black text-[11px] sm:text-xs transition-all flex items-center gap-1.5 border whitespace-nowrap cursor-pointer active:scale-95 shadow-sm ${isPlaying
                     ? `${s.color} ring-2 ring-white scale-105 animate-pulse shadow-lg`
                     : 'bg-white/5 hover:bg-white/15 text-slate-200 border-white/10 hover:border-amber-400/40'
-                }`}
+                  }`}
                 title={`Play ${s.label} (${s.desc})`}
               >
                 <span>{s.label}</span>
@@ -993,11 +992,10 @@ export default function ComputerJiControlPanel() {
             {judges.map((judge, idx) => (
               <div
                 key={judge.id}
-                className={`flex items-center justify-between px-2.5 py-1 rounded-xl border transition-all ${
-                  judge.isActive
+                className={`flex items-center justify-between px-2.5 py-1 rounded-xl border transition-all ${judge.isActive
                     ? 'bg-black/50 border-white/10 focus-within:border-amber-400'
                     : 'bg-black/20 border-white/5 opacity-40'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-2 truncate">
                   <span className="w-5 h-5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center text-[10px] font-black font-mono shrink-0">
@@ -1086,11 +1084,10 @@ export default function ComputerJiControlPanel() {
               SELECT CONTESTANT ({currentContestant.id}/{totalCount})
             </h2>
             <span
-              className={`text-[10px] font-black px-2 py-0.5 rounded border uppercase ${
-                isCurrentCompleted
+              className={`text-[10px] font-black px-2 py-0.5 rounded border uppercase ${isCurrentCompleted
                   ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/40'
                   : 'bg-amber-500/10 text-amber-300 border-amber-500/40'
-              }`}
+                }`}
             >
               {isCurrentCompleted ? '✓ COMPLETED' : '○ PENDING'}
             </span>
@@ -1115,9 +1112,8 @@ export default function ComputerJiControlPanel() {
                 </span>
               </div>
               <ChevronDown
-                className={`w-4 h-4 text-amber-400 shrink-0 transition-transform ${
-                  isDropdownOpen ? 'rotate-180' : ''
-                }`}
+                className={`w-4 h-4 text-amber-400 shrink-0 transition-transform ${isDropdownOpen ? 'rotate-180' : ''
+                  }`}
               />
             </button>
 
@@ -1149,9 +1145,8 @@ export default function ComputerJiControlPanel() {
                           setSelectedContestantId(c.id);
                           setIsDropdownOpen(false);
                         }}
-                        className={`w-full flex items-center justify-between p-2 text-left text-xs transition-colors cursor-pointer ${
-                          isSel ? 'bg-amber-500/15 text-amber-300' : 'hover:bg-white/5 text-slate-200'
-                        }`}
+                        className={`w-full flex items-center justify-between p-2 text-left text-xs transition-colors cursor-pointer ${isSel ? 'bg-amber-500/15 text-amber-300' : 'hover:bg-white/5 text-slate-200'
+                          }`}
                       >
                         <div className="flex items-center gap-2 truncate">
                           <span className="w-4 h-4 flex items-center justify-center shrink-0">
@@ -1285,9 +1280,8 @@ export default function ComputerJiControlPanel() {
                     <tr
                       key={rec.contestantId}
                       onClick={() => setSelectedContestantId(rec.contestantId)}
-                      className={`hover:bg-amber-500/10 cursor-pointer transition-colors ${
-                        rec.contestantId === selectedContestantId ? 'bg-amber-500/15' : ''
-                      }`}
+                      className={`hover:bg-amber-500/10 cursor-pointer transition-colors ${rec.contestantId === selectedContestantId ? 'bg-amber-500/15' : ''
+                        }`}
                     >
                       <td className="p-1.5 font-bold text-amber-400">{rec.contestantId}</td>
                       <td className="p-1.5 font-sans font-bold text-white truncate max-w-[100px]">
@@ -1345,13 +1339,12 @@ export default function ComputerJiControlPanel() {
           {/* Clock Display */}
           <div className="my-auto py-2">
             <div
-              className={`inline-block px-4 py-1.5 rounded-2xl bg-black/60 border ${
-                timerSeconds === 0
+              className={`inline-block px-4 py-1.5 rounded-2xl bg-black/60 border ${timerSeconds === 0
                   ? 'border-red-500 text-red-500 animate-pulse'
                   : timerSeconds <= 30
-                  ? 'border-amber-500 text-amber-400'
-                  : 'border-white/20 text-white'
-              }`}
+                    ? 'border-amber-500 text-amber-400'
+                    : 'border-white/20 text-white'
+                }`}
             >
               <span className="text-4xl font-mono font-black tracking-tight">
                 {formatTimer(timerSeconds)}
@@ -1418,9 +1411,8 @@ export default function ComputerJiControlPanel() {
             </h2>
             {isRevealed && (
               <span
-                className={`text-[9px] font-black px-1.5 py-0.5 rounded ${
-                  isWin ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
-                }`}
+                className={`text-[9px] font-black px-1.5 py-0.5 rounded ${isWin ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+                  }`}
               >
                 {isWin ? 'MATCH' : 'MISMATCH'}
               </span>
@@ -1431,11 +1423,10 @@ export default function ComputerJiControlPanel() {
           <div className="my-auto py-1">
             {isRevealed && computerJiAverage !== null ? (
               <div
-                className={`p-2.5 rounded-xl border text-center space-y-1 ${
-                  isWin
+                className={`p-2.5 rounded-xl border text-center space-y-1 ${isWin
                     ? 'bg-emerald-950/40 border-emerald-500/60 shadow-[0_0_20px_rgba(16,185,129,0.3)]'
                     : 'bg-red-950/40 border-red-500/60 shadow-[0_0_20px_rgba(239,68,68,0.3)]'
-                }`}
+                  }`}
               >
                 <div className="text-xl sm:text-2xl font-bebas tracking-widest text-white">
                   {isWin ? (

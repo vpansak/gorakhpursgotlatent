@@ -58,8 +58,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Please enter a valid 10-digit WhatsApp number' }, { status: 400 });
     }
 
-    // Social Media Rules:
-    // Instagram is REQUIRED
+    // Social Media Rules: Instagram is REQUIRED
     if (!instagramUrl || !instagramUrl.trim()) {
       return NextResponse.json({ error: 'Instagram Profile URL is required' }, { status: 400 });
     }
@@ -70,7 +69,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Please enter a valid Instagram Profile URL (e.g. https://instagram.com/yourhandle)' }, { status: 400 });
     }
 
-    // YouTube is OPTIONAL (validate if provided)
+    // Optional YouTube URL validation
     if (youtubeUrl && youtubeUrl.trim()) {
       try {
         const parsedYt = new URL(youtubeUrl.trim());
@@ -80,7 +79,7 @@ export async function POST(req: Request) {
       }
     }
 
-    // Facebook is OPTIONAL (validate if provided)
+    // Optional Facebook URL validation
     if (facebookUrl && facebookUrl.trim()) {
       try {
         const parsedFb = new URL(facebookUrl.trim());
@@ -95,7 +94,7 @@ export async function POST(req: Request) {
     const feeAmount = 199; // Rs. 199 audition registration fee
     const effectiveCallNumber = (callNumber || alternateContact || mobileNumber).trim();
 
-    // 2. Create Razorpay Order
+    // 2. Create Razorpay Order if SDK keys configured
     let razorpayOrderId = `ord_demo_${Date.now()}`;
     if (razorpay) {
       try {
@@ -119,7 +118,7 @@ export async function POST(req: Request) {
     }
 
     const appliedEpisode = targetEpisode || 'Episode 2';
-    const recordedMessage = [additionalMessage, `[Registration Target: ${appliedEpisode} (Ep 1 Full)]`].filter(Boolean).join(' | ');
+    const recordedMessage = [additionalMessage, `[Registration Target: ${appliedEpisode}]`].filter(Boolean).join(' | ');
 
     // 3. Save to database with PAYMENT_PENDING
     await db.execute(`

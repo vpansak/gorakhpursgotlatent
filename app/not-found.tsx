@@ -28,35 +28,35 @@ export default function NotFound() {
         </h1>
         
         <p className="text-sm sm:text-base text-slate-300 max-w-lg mx-auto leading-relaxed">
-          The link or URL you typed does not exist or has been moved. You can apply for performance in Episode 2 below or get help instantly!
+          The link or URL you typed does not exist or has been moved. Check performer registration status below or return to homepage!
         </p>
       </div>
 
-      {/* 2. PRIMARY CTA: APPLY FOR PERFORMANCE IN EPISODE 2 */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-orange-950/40 border-2 border-amber-500/40 shadow-[0_0_30px_rgba(255,215,0,0.15)] text-center space-y-4 relative overflow-hidden">
-        <div className="absolute top-0 right-0 px-4 py-1 rounded-bl-2xl bg-amber-500 text-black font-extrabold text-[10px] uppercase tracking-wider">
-          Auditions Open
+      {/* 2. PERFORMER REGISTRATION STATUS */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-red-950/40 via-slate-900 to-amber-950/40 border-2 border-red-500/40 shadow-[0_0_30px_rgba(239,68,68,0.15)] text-center space-y-4 relative overflow-hidden">
+        <div className="absolute top-0 right-0 px-4 py-1 rounded-bl-2xl bg-red-500 text-white font-extrabold text-[10px] uppercase tracking-wider">
+          Closed • Opening Soon
         </div>
 
-        <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center mx-auto text-amber-400">
+        <div className="w-14 h-14 rounded-2xl bg-red-500/20 border border-red-500/40 flex items-center justify-center mx-auto text-red-400">
           <Mic2 className="w-7 h-7" />
         </div>
 
         <div className="space-y-1">
           <h2 className="text-2xl sm:text-3xl font-black text-white">
-            Apply for Performance in Episode 2
+            Performer Registration is Currently Closed
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
-            Fill the registration form now to reserve your audition slot for Episode 2.
+            All current audition slots are full. Registration for upcoming audition slots will open soon!
           </p>
         </div>
 
         <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center items-center">
           <Link
             href="/apply/performer"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-extrabold text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,215,0,0.4)] hover:scale-105 transition-all"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-red-600 via-amber-600 to-orange-600 text-white font-extrabold text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:scale-105 transition-all"
           >
-            <span>FILL EPISODE 2 REGISTRATION FORM</span>
+            <span>CHECK REGISTRATION STATUS</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
 

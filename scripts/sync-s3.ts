@@ -2,7 +2,7 @@ import { syncSheetsToS3, saveIndividualEntryToS3 } from '../lib/storage';
 import { Pool } from 'pg';
 
 const pool = new Pool({
-  connectionString: 'postgresql://neondb_owner:npg_N3PsaDziloM4@ep-cold-paper-b5liftd3-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+  connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 

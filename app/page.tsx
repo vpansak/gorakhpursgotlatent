@@ -47,7 +47,7 @@ export default async function HomePage() {
     },
     {
       q: "How can I apply as a performer?",
-      a: "Episode 1 performer slots are currently full! The next registration date is coming soon. You can now fill the registration form for Episode 2 by clicking 'Apply Now' -> 'Performer Application'."
+      a: "Performer registration is currently closed as all current audition slots are full. New registration slots for upcoming episodes will open soon! Keep checking our website and social channels for updates."
     },
     {
       q: "How do I receive my ticket after payment?",
@@ -131,10 +131,10 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Episode 2 Auditions Status Banner */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold font-barlow uppercase tracking-wider">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-            Registration Open for Episode 2
+          {/* Performer Registration Status Banner */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold font-barlow uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+            Performer Registration Closed • Opening Soon
           </div>
 
           {/* Action CTAs */}
@@ -151,10 +151,10 @@ export default async function HomePage() {
 
             <Link
               href="/apply/performer"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border-2 border-amber-500/40 text-amber-300 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-amber-400 transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border-2 border-red-500/40 text-red-300 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-red-400 transition-all duration-300 cursor-pointer"
             >
-              <UserCheck className="w-6 h-6 text-orange-400" />
-              APPLY FOR EPISODE 2
+              <UserCheck className="w-6 h-6 text-red-400" />
+              REGISTRATION OPENING SOON
             </Link>
           </div>
 

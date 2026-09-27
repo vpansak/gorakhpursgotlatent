@@ -1,6 +1,9 @@
 import { Pool } from 'pg';
 
-const databaseUrl = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_N3PsaDziloM4@ep-cold-paper-b5liftd3-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+const databaseUrl = process.env.DATABASE_URL || '';
+if (!databaseUrl) {
+  console.warn('⚠️ DATABASE_URL environment variable is not defined.');
+}
 
 // Neon PostgreSQL Connection Pool
 export const pool: Pool = new Pool({

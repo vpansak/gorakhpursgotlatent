@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import {
   Mic2, CheckCircle2, AlertCircle, ShieldCheck, ArrowRight, Loader2,
-  RefreshCw, Info, Sparkles, Check, Phone, Mail, AlertTriangle, Calendar, Clock
+  RefreshCw, Check, Phone, Mail, MessageSquare, ExternalLink, Sparkles
 } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 
@@ -19,12 +19,15 @@ export default function PerformerApplyPage() {
   const [error, setError] = useState('');
   const [paymentFailed, setPaymentFailed] = useState(false);
 
-  // Success State
+  // Success State & WhatsApp Data
   const [successData, setSuccessData] = useState<{
     appId: string;
+    paymentId: string;
+    orderId: string;
     email: string;
     whatsapp: string;
     mobile: string;
+    waUrl: string;
   } | null>(null);
 
   // Saved Order Details for Payment Retry
@@ -72,6 +75,43 @@ export default function PerformerApplyPage() {
     }
   };
 
+  // Helper to construct WhatsApp Message URL with pre-filled details & Razorpay Transaction ID
+  const buildWhatsAppUrl = (appId: string, paymentId: string, orderId: string) => {
+    const msg = `Hello Gorakhpur's Got Latent Team! 👋
+
+I have completed my performer audition registration payment. Here are my payment and application details:
+
+🆔 Application ID: ${appId}
+💳 Razorpay Payment / Transaction ID: ${paymentId}
+📦 Razorpay Order ID: ${orderId}
+💰 Amount Paid: ₹199 (Verified)
+
+👤 Applicant Details:
+- Name: ${formData.fullName}
+- Email: ${formData.email}
+- Mobile: ${formData.mobileNumber}
+- WhatsApp: ${formData.whatsappNumber}
+- Call/Alt Contact: ${formData.alternateContact || formData.mobileNumber}
+- City: ${formData.city}
+- Age: ${formData.age}
+
+🎭 Performance Details:
+- Category: ${formData.performanceCategory}
+- Act Title: ${formData.performanceTitle}
+- Act Type: ${formData.performanceType} (${formData.performerCount} Person/s)
+- Duration: ${formData.performanceDuration}
+- Language: ${formData.performanceLanguage}
+- Description: ${formData.performanceDescription}
+- Special Requirements: ${formData.specialRequirements || 'None'}
+
+📲 Social Links:
+- Instagram: ${formData.instagramUrl}
+${formData.youtubeUrl ? `- YouTube: ${formData.youtubeUrl}\n` : ''}${formData.facebookUrl ? `- Facebook: ${formData.facebookUrl}\n` : ''}${formData.additionalMessage ? `- Additional Message: ${formData.additionalMessage}\n` : ''}
+Please confirm my audition slot registration. Thank you!`;
+
+    return `https://wa.me/918423858424?text=${encodeURIComponent(msg)}`;
+  };
+
   // Helper to load Razorpay Checkout Script dynamically
   const loadRazorpayScript = (): Promise<boolean> => {
     return new Promise((resolve) => {
@@ -108,25 +148,36 @@ export default function PerformerApplyPage() {
       // In local demo or fallback mode without Razorpay API keys configured
       console.warn('⚠️ Razorpay Key ID not configured in environment. Triggering server-side payment verification fallback.');
       try {
+        const demoPaymentId = `pay_demo_${Date.now()}`;
         const verifyRes = await fetch('/api/apply/performer/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             appId: orderData.appId,
             razorpay_order_id: orderData.razorpayOrderId,
-            razorpay_payment_id: `pay_demo_${Date.now()}`,
+            razorpay_payment_id: demoPaymentId,
             razorpay_signature: `sig_demo_${Date.now()}`,
           }),
         });
 
-        const verifyData = await parseResponse(verifyRes);
+        await parseResponse(verifyRes);
 
+        const waUrl = buildWhatsAppUrl(orderData.appId, demoPaymentId, orderData.razorpayOrderId);
+        
         setSuccessData({
           appId: orderData.appId,
+          paymentId: demoPaymentId,
+          orderId: orderData.razorpayOrderId,
           email: formData.email,
           whatsapp: formData.whatsappNumber,
           mobile: formData.mobileNumber,
+          waUrl,
         });
+
+        // Automatically redirect to WhatsApp after payment completion
+        setTimeout(() => {
+          window.location.href = waUrl;
+        }, 1200);
       } catch (err: any) {
         setError(err.message || 'Payment verification failed');
         setPaymentFailed(true);
@@ -156,7 +207,7 @@ export default function PerformerApplyPage() {
       handler: async function (response: any) {
         setLoading(true);
         try {
-          // CRITICAL: Send signature to server for verification!
+          // Send signature & payment details to server for verification
           const verifyRes = await fetch('/api/apply/performer/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -171,12 +222,26 @@ export default function PerformerApplyPage() {
           const verifyData = await verifyRes.json();
           if (!verifyRes.ok) throw new Error(verifyData.error || 'Server-side payment verification failed');
 
+          const waUrl = buildWhatsAppUrl(
+            orderData.appId,
+            response.razorpay_payment_id,
+            response.razorpay_order_id
+          );
+
           setSuccessData({
             appId: orderData.appId,
+            paymentId: response.razorpay_payment_id,
+            orderId: response.razorpay_order_id,
             email: formData.email,
             whatsapp: formData.whatsappNumber,
             mobile: formData.mobileNumber,
+            waUrl,
           });
+
+          // Automatically redirect to WhatsApp after successful payment
+          setTimeout(() => {
+            window.location.href = waUrl;
+          }, 1000);
         } catch (err: any) {
           setError(err.message || 'Payment verification failed on server');
           setPaymentFailed(true);
@@ -257,24 +322,42 @@ export default function PerformerApplyPage() {
     }
   };
 
-  // 1. USER SUCCESS PAGE
+  // 1. USER SUCCESS PAGE (WITH WHATSAPP AUTO-REDIRECT & DIRECT BUTTON)
   if (successData) {
     return (
       <div className="py-16 px-4 max-w-2xl mx-auto space-y-8 text-center animate-in fade-in duration-300">
         <div className="w-24 h-24 rounded-full bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 flex items-center justify-center mx-auto shadow-[0_0_40px_rgba(16,185,129,0.4)]">
-          <CheckCircle2 className="w-12 h-12" />
+          <CheckCircle2 className="w-12 h-12 animate-bounce" />
         </div>
 
         <div className="space-y-3">
-          <span className="px-4 py-1.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-black uppercase tracking-widest border border-amber-500/40">
-            GORAKHPUR’S GOT LATENT • EPISODE 2
+          <span className="px-4 py-1.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-black uppercase tracking-widest border border-emerald-500/40">
+            PAYMENT SUCCESSFUL • SAVED TO DATABASE
           </span>
-          <h1 className="text-3xl sm:text-5xl font-black text-white">Form Submitted for Episode 2!</h1>
+          <h1 className="text-3xl sm:text-5xl font-black text-white">Registration Completed!</h1>
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Your performer application has been received for <strong>Episode 2</strong>. Episode 1 performer slots are full. The next registration & audition dates are coming soon, and our team will contact you directly.
+            Your payment is verified and details are saved in our database. Redirecting to WhatsApp (<strong className="text-amber-400">+91 84238 58424</strong>) with pre-filled payment details...
           </p>
         </div>
 
+        {/* PRIMARY WHATSAPP REDIRECT CTA BUTTON */}
+        <div className="p-4 rounded-2xl bg-emerald-500/10 border-2 border-emerald-500/40 space-y-3">
+          <a
+            href={successData.waUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 text-black font-black text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-[1.02] transition-all"
+          >
+            <MessageSquare className="w-6 h-6 text-black fill-black" />
+            <span>OPEN WHATSAPP WITH PAYMENT DETAILS</span>
+            <ExternalLink className="w-5 h-5" />
+          </a>
+          <p className="text-[11px] text-emerald-300">
+            If WhatsApp does not open automatically, click the button above to send your pre-filled transaction details.
+          </p>
+        </div>
+
+        {/* SUMMARY BREAKDOWN CARD */}
         <div className="p-6 sm:p-8 rounded-3xl glass-card border border-amber-500/30 space-y-4 text-left">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-800">
             <div>
@@ -282,11 +365,19 @@ export default function PerformerApplyPage() {
               <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono tracking-wider">{successData.appId}</span>
             </div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
-              <Check className="w-4 h-4" /> Payment Verified • Episode 2
+              <Check className="w-4 h-4" /> Payment Verified
             </div>
           </div>
 
-          <div className="space-y-2 text-xs text-slate-300 pt-2">
+          <div className="space-y-2.5 text-xs text-slate-300 pt-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between py-1 border-b border-slate-800/60 gap-1">
+              <span className="text-slate-400">Razorpay Transaction ID:</span>
+              <strong className="text-amber-300 font-mono font-bold text-sm">{successData.paymentId}</strong>
+            </div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between py-1 border-b border-slate-800/60 gap-1">
+              <span className="text-slate-400">Razorpay Order ID:</span>
+              <strong className="text-white font-mono">{successData.orderId}</strong>
+            </div>
             <div className="flex items-center justify-between py-1 border-b border-slate-800/60">
               <span className="text-slate-400 flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-amber-400" /> Registered Email:</span>
               <strong className="text-white">{successData.email}</strong>
@@ -296,7 +387,7 @@ export default function PerformerApplyPage() {
               <strong className="text-white">{successData.whatsapp}</strong>
             </div>
             <div className="flex items-center justify-between py-1">
-              <span className="text-slate-400 flex items-center gap-1.5"><Phone className="w-3.5 h-3.5 text-amber-400" /> Call Contact Number:</span>
+              <span className="text-slate-400 flex items-center gap-1.5"><Phone className="w-3.5 h-3.5 text-amber-400" /> Mobile Number:</span>
               <strong className="text-white">{successData.mobile}</strong>
             </div>
           </div>
@@ -328,7 +419,7 @@ export default function PerformerApplyPage() {
           Performer Registration — <span className="gold-gradient-text">Episode 2</span>
         </h1>
         <p className="text-base sm:text-lg text-amber-200/90 font-medium">
-          Fill the registration form below to apply for Episode 2 auditions.
+          Fill the form below & complete payment to register. After payment, you will be redirected to WhatsApp (<strong className="text-amber-400">8423858424</strong>) with pre-filled details!
         </p>
       </div>
 
@@ -363,14 +454,15 @@ export default function PerformerApplyPage() {
             <div>
               <span className="text-[10px] text-slate-400 block font-bold uppercase tracking-wider">REGISTRATION TARGET</span>
               <span className="text-base font-black text-white">
-                EPISODE 2 AUDITION FORM <span className="text-xs text-red-400 font-bold ml-1">(Ep 1 Full)</span>
+                EPISODE 2 AUDITION FORM <span className="text-xs text-emerald-400 font-bold ml-1">(Fee: ₹199)</span>
               </span>
             </div>
           </div>
-          <span className="px-3 py-1 rounded-full bg-slate-900 text-amber-300 text-xs font-bold border border-amber-500/30 self-start sm:self-auto">
-            Next Reg. Date: Coming Soon
+          <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/40 self-start sm:self-auto flex items-center gap-1">
+            <MessageSquare className="w-3.5 h-3.5" /> WhatsApp Direct Redirect Enabled
           </span>
         </div>
+
         {/* 1. PERSONAL DETAILS */}
         <div className="space-y-4">
           <h3 className="text-lg font-black text-amber-400 uppercase tracking-wider border-b border-amber-500/20 pb-2">
@@ -707,12 +799,12 @@ export default function PerformerApplyPage() {
               </>
             ) : (
               <>
-                <ShieldCheck className="w-6 h-6" /> FILL FORM FOR EPISODE 2 & PROCEED <ArrowRight className="w-5 h-5" />
+                <ShieldCheck className="w-6 h-6" /> PAY ₹199 VIA RAZORPAY & SUBMIT <ArrowRight className="w-5 h-5" />
               </>
             )}
           </button>
           <p className="text-[11px] text-center text-slate-400">
-            * Aapka application Episode 2 auditions ke liye submit kiya jayega (Ep 1 full ho chuka hai). Next registration / audition date coming soon!
+            * Payment completion will automatically save your data to DB and redirect you to WhatsApp (<strong className="text-emerald-400">8423858424</strong>) with pre-filled transaction & form details!
           </p>
         </div>
       </form>

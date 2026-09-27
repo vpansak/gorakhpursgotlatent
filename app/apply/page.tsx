@@ -1,24 +1,24 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mic2, Star, Building2, Users, ChevronRight, ShieldAlert } from 'lucide-react';
+import { Mic2, Star, Building2, Users, ChevronRight, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export default function ApplyPage() {
   const streams = [
     {
       title: 'Performer Application',
       subtitle: 'Singers, Dancers, Comedians, Beatboxers & Unique Acts',
-      desc: 'Showcase your talent on the biggest live stage in Purvanchal. Compete in front of celebrity judges and thousands of live audience members.',
+      desc: 'Showcase your talent on the biggest live stage in Purvanchal. Complete registration & payment to auto-submit your audition details directly to WhatsApp.',
       href: '/apply/performer',
       icon: Mic2,
-      badge: 'EPISODE 1 FULL • FILL FOR EPISODE 2',
-      badgeClass: 'bg-red-500/20 text-red-300 border border-red-500/40 animate-pulse',
+      badge: 'EPISODE 2 AUDITIONS • FEE ₹199',
+      badgeClass: 'bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse',
       color: 'from-amber-500/20 via-amber-500/10 to-transparent',
       borderColor: 'border-amber-500/40',
       btnBg: 'bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black hover:opacity-95',
-      btnText: 'FILL FORM FOR EPISODE 2',
+      btnText: 'FILL FORM & PAY ₹199',
       alertBox: {
-        tag: 'EPISODE 1 FULL',
-        text: 'Episode 1 performer slots are full! Next registration date coming soon. Fill form for Episode 2 now.',
+        tag: 'EPISODE 2 OPEN',
+        text: 'Performer registration for Episode 2 is open! Fill details, complete payment & get auto-redirected to WhatsApp (8423858424).',
       },
     },
     {
@@ -71,23 +71,23 @@ export default function ApplyPage() {
         </p>
       </div>
 
-      {/* Performer Episode 1 Full & Episode 2 Alert Banner */}
-      <div className="max-w-4xl mx-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/70 via-slate-900 to-amber-950/70 border border-amber-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs sm:text-sm text-amber-200 shadow-[0_0_30px_rgba(245,158,11,0.15)]">
+      {/* Performer Registration Callout */}
+      <div className="max-w-4xl mx-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-emerald-950/70 border border-amber-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs sm:text-sm text-amber-200 shadow-[0_0_30px_rgba(245,158,11,0.15)]">
         <div className="flex items-start gap-3">
-          <div className="p-2.5 rounded-xl bg-red-500/20 text-red-400 border border-red-500/30 shrink-0 mt-0.5 sm:mt-0">
+          <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0 mt-0.5 sm:mt-0">
             <Mic2 className="w-5 h-5" />
           </div>
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="px-2.5 py-0.5 rounded-full bg-red-500 text-white text-[10px] font-black uppercase tracking-wider">
-                EPISODE 1 FULL
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500 text-black text-[10px] font-black uppercase tracking-wider">
+                WHATSAPP REDIRECT ACTIVE
               </span>
               <strong className="text-white font-bold text-sm">
-                Performer Registration Notice: Fill Form for Episode 2
+                Performer Registration: Fill Details & Pay ₹199
               </strong>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Episode 1 ke sabhi performer slots full ho chuke hain! Next registration date <span className="text-amber-400 font-bold">Coming Soon</span> hai. Agar aap perform karna chahte hain toh abhi <strong>Episode 2 ke liye form fill karein</strong>.
+              Complete payment via Razorpay. Your application is saved in DB and automatically redirects to WhatsApp (<strong className="text-amber-400">8423858424</strong>) with pre-filled transaction & performer details!
             </p>
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function ApplyPage() {
           href="/apply/performer"
           className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs whitespace-nowrap shadow-lg transition-all flex items-center gap-1.5 shrink-0 self-stretch sm:self-auto justify-center"
         >
-          FILL FORM FOR EPISODE 2 <ChevronRight className="w-4 h-4" />
+          FILL FORM & PAY ₹199 <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
 
@@ -133,9 +133,9 @@ export default function ApplyPage() {
                 </div>
 
                 {stream.alertBox && (
-                  <div className="p-3 rounded-xl bg-red-950/40 border border-red-500/30 text-xs text-red-200 space-y-1">
-                    <div className="flex items-center gap-1.5 font-bold text-red-400 text-[11px] uppercase tracking-wider">
-                      <span className="w-2 h-2 rounded-full bg-red-400 animate-ping" />
+                  <div className="p-3 rounded-xl bg-amber-950/40 border border-amber-500/30 text-xs text-amber-200 space-y-1">
+                    <div className="flex items-center gap-1.5 font-bold text-amber-400 text-[11px] uppercase tracking-wider">
+                      <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
                       {stream.alertBox.tag}
                     </div>
                     <p className="text-[11px] text-slate-300 leading-snug">{stream.alertBox.text}</p>

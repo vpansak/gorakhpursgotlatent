@@ -23,14 +23,15 @@ interface ContestantData {
   roundedAverage: number;
   contestantGuess: number;
   result: 'WIN' | 'LOSE';
+  instagramUrl?: string;
 }
 
 const EPISODE_1_DATA: ContestantData[] = [
-  { sNo: 10, name: 'Misthi Mishra', category: 'Dance', brijesh: 10, somya: 10, naveen: 10, ananya: 10, vivek: 10, rawAverage: 10.00, roundedAverage: 10, contestantGuess: 10, result: 'WIN' },
-  { sNo: 22, name: 'Neha', category: 'Couple Dance', brijesh: 9, somya: 9.5, naveen: 10, ananya: 9, vivek: 8, rawAverage: 9.10, roundedAverage: 9, contestantGuess: 9, result: 'WIN' },
-  { sNo: 11, name: 'Kirti Gupta', category: 'Singing', brijesh: 7, somya: 9.5, naveen: 10, ananya: 6, vivek: 7, rawAverage: 7.90, roundedAverage: 8, contestantGuess: 8, result: 'WIN' },
+  { sNo: 10, name: 'Misthi Mishra', category: 'Dance', brijesh: 10, somya: 10, naveen: 10, ananya: 10, vivek: 10, rawAverage: 10.00, roundedAverage: 10, contestantGuess: 10, result: 'WIN', instagramUrl: 'https://www.instagram.com/misthi_mishra_23/' },
+  { sNo: 22, name: 'Neha', category: 'Couple Dance', brijesh: 9, somya: 9.5, naveen: 10, ananya: 9, vivek: 8, rawAverage: 9.10, roundedAverage: 9, contestantGuess: 9, result: 'WIN', instagramUrl: 'https://www.instagram.com/neha237913yadav/' },
+  { sNo: 11, name: 'Kirti Gupta', category: 'Singing', brijesh: 7, somya: 9.5, naveen: 10, ananya: 6, vivek: 7, rawAverage: 7.90, roundedAverage: 8, contestantGuess: 8, result: 'WIN', instagramUrl: 'https://www.instagram.com/risingstar_kg/' },
   { sNo: 20, name: 'Khushee Madhyeshiya', category: 'Singing', brijesh: 8, somya: 7, naveen: 8, ananya: 8, vivek: 8, rawAverage: 7.80, roundedAverage: 8, contestantGuess: 8, result: 'WIN' },
-  { sNo: 4, name: 'Kuldeep Kumar', category: 'Singing', brijesh: 6, somya: 7, naveen: 6, ananya: 5, vivek: 6, rawAverage: 6.00, roundedAverage: 6, contestantGuess: 6, result: 'WIN' },
+  { sNo: 4, name: 'Kuldeep Kumar', category: 'Singing', brijesh: 6, somya: 7, naveen: 6, ananya: 5, vivek: 6, rawAverage: 6.00, roundedAverage: 6, contestantGuess: 6, result: 'WIN', instagramUrl: 'https://www.instagram.com/kd_star_singer' },
   { sNo: 1, name: 'Abhay Mishra', category: 'Stand Up Comedy', brijesh: 7, somya: 6.5, naveen: 10, ananya: 5, vivek: 7, rawAverage: 7.10, roundedAverage: 7, contestantGuess: 8, result: 'LOSE' },
   { sNo: 2, name: 'Love Maurya', category: 'Poetry', brijesh: 8, somya: 7, naveen: 8, ananya: 7, vivek: 7, rawAverage: 7.40, roundedAverage: 7.5, contestantGuess: 8, result: 'LOSE' },
   { sNo: 3, name: 'Vedant Tripathi', category: 'Dance', brijesh: 9, somya: 10, naveen: 10, ananya: 9, vivek: 8, rawAverage: 9.20, roundedAverage: 9, contestantGuess: 10, result: 'LOSE' },
@@ -179,12 +180,24 @@ export default function Episode1WinnersPage() {
               </div>
 
               {/* Winner Details */}
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <h3 className="text-2xl font-black text-white">{winner.name}</h3>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between gap-2">
                   <span className="px-2.5 py-0.5 rounded-lg bg-white/10 text-amber-300 text-xs font-bold uppercase">
                     {winner.category}
                   </span>
+                  {winner.instagramUrl ? (
+                    <a
+                      href={winner.instagramUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-black text-[11px] flex items-center gap-1 shadow-md hover:scale-105 transition-all"
+                    >
+                      Instagram ↗
+                    </a>
+                  ) : (
+                    <span className="text-[10px] text-slate-500 italic">Instagram Not Provided</span>
+                  )}
                 </div>
               </div>
 
@@ -193,7 +206,6 @@ export default function Episode1WinnersPage() {
                 <div>
                   <span className="text-[11px] font-bold text-slate-400 uppercase block">Judges Average</span>
                   <span className="text-2xl font-black text-amber-400 font-mono">{winner.roundedAverage.toFixed(1)}</span>
-                  <span className="text-[10px] text-amber-300/80 block font-semibold">(0.5 Round Off)</span>
                 </div>
                 <div>
                   <span className="text-[11px] font-bold text-slate-400 uppercase block">Contestant Guess</span>

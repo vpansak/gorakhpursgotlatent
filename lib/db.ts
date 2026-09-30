@@ -67,13 +67,14 @@ export interface AppDatabase {
 }
 
 /**
- * Lightweight database schema initialization (non-blocking)
+ * Ensures all required PostgreSQL tables exist in Neon DB (individual query calls)
  */
 export async function ensureDatabaseSchema() {
   if (global._schemaInitPromise) return global._schemaInitPromise;
 
   global._schemaInitPromise = (async () => {
     try {
+      // 1. team_applications
       await sqlClient.query(`
         CREATE TABLE IF NOT EXISTS team_applications (
           id TEXT PRIMARY KEY,
@@ -91,7 +92,10 @@ export async function ensureDatabaseSchema() {
           created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
+      `);
 
+      // 2. performer_applications
+      await sqlClient.query(`
         CREATE TABLE IF NOT EXISTS performer_applications (
           id TEXT PRIMARY KEY,
           app_id TEXT UNIQUE NOT NULL,
@@ -122,7 +126,10 @@ export async function ensureDatabaseSchema() {
           created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
+      `);
 
+      // 3. guest_applications
+      await sqlClient.query(`
         CREATE TABLE IF NOT EXISTS guest_applications (
           id TEXT PRIMARY KEY,
           app_id TEXT UNIQUE NOT NULL,
@@ -150,7 +157,10 @@ export async function ensureDatabaseSchema() {
           created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
+      `);
 
+      // 4. sponsor_applications
+      await sqlClient.query(`
         CREATE TABLE IF NOT EXISTS sponsor_applications (
           id TEXT PRIMARY KEY,
           app_id TEXT UNIQUE NOT NULL,
@@ -180,6 +190,57 @@ export async function ensureDatabaseSchema() {
           updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
       `);
+
+      // 5. ticket_orders
+      await sqlClient.query(`
+        CREATE TABLE IF NOT EXISTS ticket_orders (
+          id TEXT PRIMARY KEY,
+          order_number TEXT UNIQUE NOT NULL,
+          user_id TEXT,
+          customer_name TEXT NOT NULL,
+          customer_email TEXT NOT NULL,
+          customer_phone TEXT NOT NULL,
+          event_id TEXT NOT NULL,
+          total_amount NUMERIC(10,2) NOT NULL,
+          currency TEXT DEFAULT 'INR',
+          payment_status TEXT DEFAULT 'PENDING',
+          confirmation_email_status TEXT DEFAULT 'PENDING',
+          razorpay_order_id TEXT,
+          razorpay_payment_id TEXT,
+          razorpay_signature TEXT,
+          is_read INTEGER DEFAULT 0,
+          read_at TIMESTAMP WITH TIME ZONE,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      // 6. application_status_history
+      await sqlClient.query(`
+        CREATE TABLE IF NOT EXISTS application_status_history (
+          id TEXT PRIMARY KEY,
+          app_type TEXT NOT NULL,
+          app_id TEXT NOT NULL,
+          old_status TEXT,
+          new_status TEXT NOT NULL,
+          changed_by TEXT NOT NULL,
+          reason TEXT,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      // 7. application_notes
+      await sqlClient.query(`
+        CREATE TABLE IF NOT EXISTS application_notes (
+          id TEXT PRIMARY KEY,
+          app_type TEXT NOT NULL,
+          app_id TEXT NOT NULL,
+          author_id TEXT NOT NULL,
+          author_name TEXT NOT NULL,
+          note TEXT NOT NULL,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
     } catch (err) {
       console.warn('Schema init notice:', err);
     }
@@ -190,6 +251,7 @@ export async function ensureDatabaseSchema() {
 
 export async function query<T = any>(sql: string, params: any[] = []): Promise<T[]> {
   try {
+    await ensureDatabaseSchema();
     return await executeWithRetry<T>(sql, params);
   } catch (err) {
     console.warn('db.query notice:', err);
@@ -204,6 +266,7 @@ export async function queryOne<T = any>(sql: string, params: any[] = []): Promis
 
 export async function execute(sql: string, params: any[] = []): Promise<{ rowCount: number }> {
   try {
+    await ensureDatabaseSchema();
     const rows = await executeWithRetry(sql, params);
     return { rowCount: Array.isArray(rows) ? rows.length : 0 };
   } catch (err) {

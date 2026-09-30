@@ -2,6 +2,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Mic2, Star, Building2, Users, ChevronRight, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default function ApplyPage() {
   const streams = [
     {

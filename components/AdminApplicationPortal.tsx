@@ -428,7 +428,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
           </div>
           <div className="text-xl sm:text-2xl font-black text-white">{data.performers?.length || 0}</div>
           <p className="text-[10px] text-emerald-400 font-semibold mt-1 flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3" /> 100% Paid Auditions (₹199)
+            <CheckCircle2 className="w-3 h-3" /> Direct Saved Auditions (Free)
           </p>
         </button>
 
@@ -515,7 +515,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             {[
-              { id: 'performer', label: '🎤 Performers (कलाकार - Paid)', count: data.performers?.length || 0 },
+              { id: 'performer', label: '🎤 Performers (कलाकार - Free Audition)', count: data.performers?.length || 0 },
               { id: 'sponsor', label: '🤝 Sponsors (स्पॉन्सर)', count: data.sponsors?.length || 0 },
               { id: 'team', label: '👥 Join Team (टीम सदस्य)', count: data.team?.length || 0 },
               { id: 'guest', label: '⚖️ Judges & VIPs (जज / पैनल)', count: data.guests?.length || 0 },
@@ -673,7 +673,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                   <>
                     <th className="py-3.5 px-4">Category & Talent</th>
                     <th className="py-3.5 px-4">City</th>
-                    <th className="py-3.5 px-4">Razorpay Payment & ID</th>
+                    <th className="py-3.5 px-4">Audition Fee / Status</th>
                   </>
                 )}
                 {activeTab === 'sponsor' && (
@@ -724,7 +724,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                     <div className="flex flex-col items-center gap-2">
                       <FileText className="w-8 h-8 text-slate-600" />
                       <span className="text-sm font-bold text-slate-300">No applications found</span>
-                      <span className="text-xs text-slate-500">Only verified paid applications are displayed in this portal</span>
+                      <span className="text-xs text-slate-500">All saved applications are displayed in this portal</span>
                     </div>
                   </td>
                 </tr>
@@ -906,24 +906,35 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                           <td className="py-3.5 px-4 text-slate-300">{item.city || 'Gorakhpur'}</td>
                           <td className="py-3.5 px-4 font-mono text-[11px]">
                             <div className="space-y-1">
-                              <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 inline-flex items-center gap-1">
-                                <CheckCircle2 className="w-3 h-3 text-emerald-400" /> ₹{item.payment_amount || 199} PAID
-                              </span>
-                              {item.payment_id ? (
-                                <div className="flex items-center gap-1">
-                                  <span className="text-[10px] font-mono text-amber-300 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800 truncate max-w-[130px]" title={item.payment_id}>
-                                    {item.payment_id}
+                              {Number(item.payment_amount || 0) === 0 || item.payment_status === 'FREE_AUDITION_SUBMITTED' ? (
+                                <>
+                                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-blue-500/20 text-blue-300 border border-blue-500/30 inline-flex items-center gap-1">
+                                    <CheckCircle2 className="w-3 h-3 text-blue-400" /> FREE AUDITION
                                   </span>
-                                  <button
-                                    onClick={() => copyToClipboard(item.payment_id)}
-                                    className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
-                                    title="Copy Razorpay Payment ID for refund"
-                                  >
-                                    {copiedId === item.payment_id ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                                  </button>
-                                </div>
+                                  <span className="text-[9px] text-slate-400 font-mono block">Direct Entry (No Payment)</span>
+                                </>
                               ) : (
-                                <span className="text-[9px] text-slate-500 font-mono block">Order: {item.order_id || 'N/A'}</span>
+                                <>
+                                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 inline-flex items-center gap-1">
+                                    <CheckCircle2 className="w-3 h-3 text-emerald-400" /> ₹{item.payment_amount} PAID
+                                  </span>
+                                  {item.payment_id ? (
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-[10px] font-mono text-amber-300 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800 truncate max-w-[130px]" title={item.payment_id}>
+                                        {item.payment_id}
+                                      </span>
+                                      <button
+                                        onClick={() => copyToClipboard(item.payment_id)}
+                                        className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                                        title="Copy Payment ID"
+                                      >
+                                        {copiedId === item.payment_id ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <span className="text-[9px] text-slate-500 font-mono block">Order: {item.order_id || 'N/A'}</span>
+                                  )}
+                                </>
                               )}
                             </div>
                           </td>
@@ -1255,75 +1266,98 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
               </div>
             )}
 
-            {/* Razorpay Payment & Refund Card (For Performers) */}
+            {/* Payment & Fee Status Details (For Performers) */}
             {activeTab === 'performer' && (
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900 to-amber-950/30 border border-emerald-500/40 text-xs space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-1.5 text-xs">
-                    <CreditCard className="w-4 h-4" /> Razorpay Payment & Refund Details
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black uppercase">
-                    {selectedItem.payment_status || 'PAID'}
-                  </span>
+              Number(selectedItem.payment_amount || 0) === 0 || selectedItem.payment_status === 'FREE_AUDITION_SUBMITTED' ? (
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-950/40 via-slate-900 to-slate-900 border border-blue-500/40 text-xs space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-blue-400 font-bold uppercase tracking-wider flex items-center gap-1.5 text-xs">
+                      <CheckCircle2 className="w-4 h-4" /> Direct Free Audition Application
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-black uppercase">
+                      FREE AUDITION
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-300 bg-black/40 p-3 rounded-xl border border-white/5 font-mono text-[11px]">
+                    <div>
+                      <span className="text-slate-500 block text-[10px]">APPLICATION TYPE:</span>
+                      <strong className="text-blue-300 text-xs block mt-0.5">Free Direct Entry (No Upfront Payment Required)</strong>
+                    </div>
+                    <div>
+                      <span className="text-slate-500 block text-[10px]">FEE AMOUNT:</span>
+                      <strong className="text-emerald-400 text-xs block mt-0.5">₹0.00 FREE</strong>
+                    </div>
+                  </div>
                 </div>
+              ) : (
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900 to-amber-950/30 border border-emerald-500/40 text-xs space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-1.5 text-xs">
+                      <CreditCard className="w-4 h-4" /> Payment Details
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black uppercase">
+                      {selectedItem.payment_status || 'PAID'}
+                    </span>
+                  </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-300 bg-black/40 p-3 rounded-xl border border-white/5 font-mono text-[11px]">
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">RAZORPAY PAYMENT ID (FOR REFUND):</span>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <strong className="text-amber-300 text-xs break-all">{selectedItem.payment_id || selectedItem.razorpay_payment_id || 'N/A'}</strong>
-                      {selectedItem.payment_id && (
-                        <button
-                          onClick={() => copyToClipboard(selectedItem.payment_id)}
-                          className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white shrink-0 cursor-pointer"
-                          title="Copy Payment ID"
-                        >
-                          {copiedId === selectedItem.payment_id ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                        </button>
-                      )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-300 bg-black/40 p-3 rounded-xl border border-white/5 font-mono text-[11px]">
+                    <div>
+                      <span className="text-slate-500 block text-[10px]">PAYMENT ID:</span>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <strong className="text-amber-300 text-xs break-all">{selectedItem.payment_id || selectedItem.razorpay_payment_id || 'N/A'}</strong>
+                        {selectedItem.payment_id && (
+                          <button
+                            onClick={() => copyToClipboard(selectedItem.payment_id)}
+                            className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white shrink-0 cursor-pointer"
+                            title="Copy Payment ID"
+                          >
+                            {copiedId === selectedItem.payment_id ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-500 block text-[10px]">ORDER ID:</span>
+                      <strong className="text-white text-xs block mt-0.5 break-all">{selectedItem.order_id || 'N/A'}</strong>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-500 block text-[10px]">FEE AMOUNT PAID:</span>
+                      <strong className="text-emerald-400 text-xs block mt-0.5">₹{selectedItem.payment_amount} INR</strong>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-500 block text-[10px]">VERIFIED AT:</span>
+                      <span className="text-slate-300 text-xs block mt-0.5">
+                        {selectedItem.payment_verified_at ? new Date(selectedItem.payment_verified_at).toLocaleString('en-IN') : 'Verified'}
+                      </span>
                     </div>
                   </div>
 
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">RAZORPAY ORDER ID:</span>
-                    <strong className="text-white text-xs block mt-0.5 break-all">{selectedItem.order_id || 'N/A'}</strong>
-                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                    <p className="text-[11px] text-amber-200/90 leading-tight">
+                      💡 Slot full hone par ya performer shortlist na hone par refund initiate karein.
+                    </p>
 
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">FEE AMOUNT PAID:</span>
-                    <strong className="text-emerald-400 text-xs block mt-0.5">₹{selectedItem.payment_amount || 199} INR</strong>
-                  </div>
-
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">VERIFIED AT:</span>
-                    <span className="text-slate-300 text-xs block mt-0.5">
-                      {selectedItem.payment_verified_at ? new Date(selectedItem.payment_verified_at).toLocaleString('en-IN') : 'Verified'}
-                    </span>
+                    {selectedItem.payment_status === 'REFUNDED' || selectedItem.status === 'REFUNDED' ? (
+                      <span className="px-3 py-1.5 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold text-xs shrink-0 flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> REFUNDED ({selectedItem.refund_id || 'PROCESSED'})
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => handleProcessRefund(selectedItem.app_id, selectedItem.full_name)}
+                        disabled={refunding || !selectedItem.payment_id}
+                        className="px-4 py-2 rounded-xl bg-red-950/80 hover:bg-red-900 border border-red-500/50 text-red-200 font-extrabold text-xs flex items-center gap-1.5 shrink-0 transition-all cursor-pointer disabled:opacity-50"
+                        title="Refund customer fee"
+                      >
+                        <RotateCcw className={`w-3.5 h-3.5 ${refunding ? 'animate-spin' : ''}`} />
+                        <span>{refunding ? 'Processing Refund...' : 'Initiate Refund'}</span>
+                      </button>
+                    )}
                   </div>
                 </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-                  <p className="text-[11px] text-amber-200/90 leading-tight">
-                    💡 Slot full hone par ya performer shortlist na hone par is Payment ID se Razorpay Dashboard me refund initiate karein.
-                  </p>
-
-                  {selectedItem.payment_status === 'REFUNDED' || selectedItem.status === 'REFUNDED' ? (
-                    <span className="px-3 py-1.5 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold text-xs shrink-0 flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> REFUNDED ({selectedItem.refund_id || 'PROCESSED'})
-                    </span>
-                  ) : (
-                    <button
-                      onClick={() => handleProcessRefund(selectedItem.app_id, selectedItem.full_name)}
-                      disabled={refunding || !selectedItem.payment_id}
-                      className="px-4 py-2 rounded-xl bg-red-950/80 hover:bg-red-900 border border-red-500/50 text-red-200 font-extrabold text-xs flex items-center gap-1.5 shrink-0 transition-all cursor-pointer disabled:opacity-50"
-                      title="Refund customer fee via Razorpay"
-                    >
-                      <RotateCcw className={`w-3.5 h-3.5 ${refunding ? 'animate-spin' : ''}`} />
-                      <span>{refunding ? 'Processing Refund...' : 'Initiate Razorpay Refund'}</span>
-                    </button>
-                  )}
-                </div>
-              </div>
+              )
             )}
 
             {/* STATUS UPDATE & INTERNAL NOTE (NO DELETION) */}

@@ -84,11 +84,11 @@ const DEFAULT_JUDGES: Judge[] = [
   { id: 'j_brijesh', name: 'BRIJESH BIRJU', role: 'Panel Judge', isActive: true },
   { id: 'j_somya', name: 'SOMYA', role: 'Panel Judge', isActive: true },
   { id: 'j_naveen', name: 'NAVEEN VARMA', role: 'Panel Judge', isActive: true },
-  { id: 'j_ananya', name: 'ANANYA GUPTA', role: 'Panel Judge', isActive: true },
+  { id: 'j_jahanvi', name: 'JAHANVI GUPTA', role: 'Panel Judge', isActive: true },
   { id: 'j_vivek', name: 'VIVEK GUPTA', role: 'Panel Judge', isActive: true },
 ];
 
-const CORE_JUDGE_IDS = new Set(['j_brijesh', 'j_somya', 'j_naveen', 'j_ananya', 'j_vivek']);
+const CORE_JUDGE_IDS = new Set(['j_brijesh', 'j_somya', 'j_naveen', 'j_jahanvi', 'j_vivek']);
 
 export interface SavedScoringRecord {
   contestantId: number;

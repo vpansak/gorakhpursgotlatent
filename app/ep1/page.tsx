@@ -17,7 +17,7 @@ interface ContestantData {
   brijesh: number;
   somya: number;
   naveen: number;
-  ananya: number;
+  jahanvi: number;
   vivek: number;
   rawAverage: number;
   roundedAverage: number;
@@ -27,27 +27,27 @@ interface ContestantData {
 }
 
 const EPISODE_1_DATA: ContestantData[] = [
-  { sNo: 10, name: 'Misthi Mishra', category: 'Dance', brijesh: 10, somya: 10, naveen: 10, ananya: 10, vivek: 10, rawAverage: 10.00, roundedAverage: 10, contestantGuess: 10, result: 'WIN', instagramUrl: 'https://www.instagram.com/misthi_mishra_23/' },
-  { sNo: 22, name: 'Neha', category: 'Couple Dance', brijesh: 9, somya: 9.5, naveen: 10, ananya: 9, vivek: 8, rawAverage: 9.10, roundedAverage: 9, contestantGuess: 9, result: 'WIN', instagramUrl: 'https://www.instagram.com/neha237913yadav/' },
-  { sNo: 11, name: 'Kirti Gupta', category: 'Singing', brijesh: 7, somya: 9.5, naveen: 10, ananya: 6, vivek: 7, rawAverage: 7.90, roundedAverage: 8, contestantGuess: 8, result: 'WIN', instagramUrl: 'https://www.instagram.com/risingstar_kg/' },
-  { sNo: 20, name: 'Khushee Madhyeshiya', category: 'Singing', brijesh: 8, somya: 7, naveen: 8, ananya: 8, vivek: 8, rawAverage: 7.80, roundedAverage: 8, contestantGuess: 8, result: 'WIN' },
-  { sNo: 4, name: 'Kuldeep Kumar', category: 'Singing', brijesh: 6, somya: 7, naveen: 6, ananya: 5, vivek: 6, rawAverage: 6.00, roundedAverage: 6, contestantGuess: 6, result: 'WIN', instagramUrl: 'https://www.instagram.com/kd_star_singer' },
-  { sNo: 1, name: 'Abhay Mishra', category: 'Stand Up Comedy', brijesh: 7, somya: 6.5, naveen: 10, ananya: 5, vivek: 7, rawAverage: 7.10, roundedAverage: 7, contestantGuess: 8, result: 'LOSE' },
-  { sNo: 2, name: 'Love Maurya', category: 'Poetry', brijesh: 8, somya: 7, naveen: 8, ananya: 7, vivek: 7, rawAverage: 7.40, roundedAverage: 7.5, contestantGuess: 8, result: 'LOSE' },
-  { sNo: 3, name: 'Vedant Tripathi', category: 'Dance', brijesh: 9, somya: 10, naveen: 10, ananya: 9, vivek: 8, rawAverage: 9.20, roundedAverage: 9, contestantGuess: 10, result: 'LOSE' },
-  { sNo: 5, name: 'Ayush Jaiswal', category: 'Singing', brijesh: 6, somya: 7, naveen: 6.5, ananya: 9, vivek: 7, rawAverage: 7.10, roundedAverage: 7, contestantGuess: 9, result: 'LOSE' },
-  { sNo: 6, name: 'Aryan Kushwaha', category: 'Shayari', brijesh: 8, somya: 7, naveen: 10, ananya: 8, vivek: 8, rawAverage: 8.20, roundedAverage: 8, contestantGuess: 8.5, result: 'LOSE' },
-  { sNo: 9, name: 'Aftab', category: 'Singing', brijesh: 8, somya: 9.5, naveen: 10, ananya: 10, vivek: 9, rawAverage: 9.30, roundedAverage: 9.5, contestantGuess: 9, result: 'LOSE' },
-  { sNo: 12, name: 'Ashik Ansari', category: 'Poetry', brijesh: 9, somya: 9, naveen: 9, ananya: 10, vivek: 10, rawAverage: 9.40, roundedAverage: 9.5, contestantGuess: 8, result: 'LOSE' },
-  { sNo: 13, name: 'Aradhya', category: 'Singing', brijesh: 6, somya: 8, naveen: 9, ananya: 6, vivek: 6, rawAverage: 7.00, roundedAverage: 7, contestantGuess: 8, result: 'LOSE' },
-  { sNo: 14, name: 'Shraddha Pandey', category: 'Singing', brijesh: 9, somya: 10, naveen: 10, ananya: 10, vivek: 9, rawAverage: 9.60, roundedAverage: 9.5, contestantGuess: 9, result: 'LOSE' },
-  { sNo: 15, name: 'Nandani Kumari', category: 'Dance', brijesh: 9, somya: 10, naveen: 10, ananya: 9.5, vivek: 9, rawAverage: 9.50, roundedAverage: 9.5, contestantGuess: 9, result: 'LOSE' },
-  { sNo: 16, name: 'Himanshu Bhatt', category: 'Poetry', brijesh: 8, somya: 9.5, naveen: 9.5, ananya: 9, vivek: 10, rawAverage: 9.20, roundedAverage: 9, contestantGuess: 8, result: 'LOSE' },
-  { sNo: 17, name: 'MD Arman', category: 'Mimicry', brijesh: 9, somya: 10, naveen: 9, ananya: 10, vivek: 10, rawAverage: 9.60, roundedAverage: 9.5, contestantGuess: 10, result: 'LOSE' },
-  { sNo: 18, name: 'Rustam', category: 'Dance', brijesh: 9, somya: 10, naveen: 9, ananya: 10, vivek: 9, rawAverage: 9.40, roundedAverage: 9.5, contestantGuess: 9, result: 'LOSE' },
-  { sNo: 19, name: 'Kritika Singh', category: 'Singing', brijesh: 8, somya: 9, naveen: 9, ananya: 8, vivek: 8, rawAverage: 8.40, roundedAverage: 8.5, contestantGuess: 8, result: 'LOSE' },
-  { sNo: 21, name: 'Kamya Verma', category: 'Dance', brijesh: 9, somya: 7, naveen: 9, ananya: 9, vivek: 9, rawAverage: 8.60, roundedAverage: 8.5, contestantGuess: 8, result: 'LOSE' },
-  { sNo: 23, name: 'Atul Sharma', category: 'Dance', brijesh: 10, somya: 10, naveen: 10, ananya: 9, vivek: 9, rawAverage: 9.60, roundedAverage: 9.5, contestantGuess: 10, result: 'LOSE' },
+  { sNo: 10, name: 'Misthi Mishra', category: 'Dance', brijesh: 10, somya: 10, naveen: 10, jahanvi: 10, vivek: 10, rawAverage: 10.00, roundedAverage: 10, contestantGuess: 10, result: 'WIN', instagramUrl: 'https://www.instagram.com/misthi_mishra_23/' },
+  { sNo: 22, name: 'Neha', category: 'Couple Dance', brijesh: 9, somya: 9.5, naveen: 10, jahanvi: 9, vivek: 8, rawAverage: 9.10, roundedAverage: 9, contestantGuess: 9, result: 'WIN', instagramUrl: 'https://www.instagram.com/neha237913yadav/' },
+  { sNo: 11, name: 'Kirti Gupta', category: 'Singing', brijesh: 7, somya: 9.5, naveen: 10, jahanvi: 6, vivek: 7, rawAverage: 7.90, roundedAverage: 8, contestantGuess: 8, result: 'WIN', instagramUrl: 'https://www.instagram.com/risingstar_kg/' },
+  { sNo: 20, name: 'Khushee Madhyeshiya', category: 'Singing', brijesh: 8, somya: 7, naveen: 8, jahanvi: 8, vivek: 8, rawAverage: 7.80, roundedAverage: 8, contestantGuess: 8, result: 'WIN' },
+  { sNo: 4, name: 'Kuldeep Kumar', category: 'Singing', brijesh: 6, somya: 7, naveen: 6, jahanvi: 5, vivek: 6, rawAverage: 6.00, roundedAverage: 6, contestantGuess: 6, result: 'WIN', instagramUrl: 'https://www.instagram.com/kd_star_singer' },
+  { sNo: 1, name: 'Abhay Mishra', category: 'Stand Up Comedy', brijesh: 7, somya: 6.5, naveen: 10, jahanvi: 5, vivek: 7, rawAverage: 7.10, roundedAverage: 7, contestantGuess: 8, result: 'LOSE' },
+  { sNo: 2, name: 'Love Maurya', category: 'Poetry', brijesh: 8, somya: 7, naveen: 8, jahanvi: 7, vivek: 7, rawAverage: 7.40, roundedAverage: 7.5, contestantGuess: 8, result: 'LOSE' },
+  { sNo: 3, name: 'Vedant Tripathi', category: 'Dance', brijesh: 9, somya: 10, naveen: 10, jahanvi: 9, vivek: 8, rawAverage: 9.20, roundedAverage: 9, contestantGuess: 10, result: 'LOSE' },
+  { sNo: 5, name: 'Ayush Jaiswal', category: 'Singing', brijesh: 6, somya: 7, naveen: 6.5, jahanvi: 9, vivek: 7, rawAverage: 7.10, roundedAverage: 7, contestantGuess: 9, result: 'LOSE' },
+  { sNo: 6, name: 'Aryan Kushwaha', category: 'Shayari', brijesh: 8, somya: 7, naveen: 10, jahanvi: 8, vivek: 8, rawAverage: 8.20, roundedAverage: 8, contestantGuess: 8.5, result: 'LOSE' },
+  { sNo: 9, name: 'Aftab', category: 'Singing', brijesh: 8, somya: 9.5, naveen: 10, jahanvi: 10, vivek: 9, rawAverage: 9.30, roundedAverage: 9.5, contestantGuess: 9, result: 'LOSE' },
+  { sNo: 12, name: 'Ashik Ansari', category: 'Poetry', brijesh: 9, somya: 9, naveen: 9, jahanvi: 10, vivek: 10, rawAverage: 9.40, roundedAverage: 9.5, contestantGuess: 8, result: 'LOSE' },
+  { sNo: 13, name: 'Aradhya', category: 'Singing', brijesh: 6, somya: 8, naveen: 9, jahanvi: 6, vivek: 6, rawAverage: 7.00, roundedAverage: 7, contestantGuess: 8, result: 'LOSE' },
+  { sNo: 14, name: 'Shraddha Pandey', category: 'Singing', brijesh: 9, somya: 10, naveen: 10, jahanvi: 10, vivek: 9, rawAverage: 9.60, roundedAverage: 9.5, contestantGuess: 9, result: 'LOSE' },
+  { sNo: 15, name: 'Nandani Kumari', category: 'Dance', brijesh: 9, somya: 10, naveen: 10, jahanvi: 9.5, vivek: 9, rawAverage: 9.50, roundedAverage: 9.5, contestantGuess: 9, result: 'LOSE' },
+  { sNo: 16, name: 'Himanshu Bhatt', category: 'Poetry', brijesh: 8, somya: 9.5, naveen: 9.5, jahanvi: 9, vivek: 10, rawAverage: 9.20, roundedAverage: 9, contestantGuess: 8, result: 'LOSE' },
+  { sNo: 17, name: 'MD Arman', category: 'Mimicry', brijesh: 9, somya: 10, naveen: 9, jahanvi: 10, vivek: 10, rawAverage: 9.60, roundedAverage: 9.5, contestantGuess: 10, result: 'LOSE' },
+  { sNo: 18, name: 'Rustam', category: 'Dance', brijesh: 9, somya: 10, naveen: 9, jahanvi: 10, vivek: 9, rawAverage: 9.40, roundedAverage: 9.5, contestantGuess: 9, result: 'LOSE' },
+  { sNo: 19, name: 'Kritika Singh', category: 'Singing', brijesh: 8, somya: 9, naveen: 9, jahanvi: 8, vivek: 8, rawAverage: 8.40, roundedAverage: 8.5, contestantGuess: 8, result: 'LOSE' },
+  { sNo: 21, name: 'Kamya Verma', category: 'Dance', brijesh: 9, somya: 7, naveen: 9, jahanvi: 9, vivek: 9, rawAverage: 8.60, roundedAverage: 8.5, contestantGuess: 8, result: 'LOSE' },
+  { sNo: 23, name: 'Atul Sharma', category: 'Dance', brijesh: 10, somya: 10, naveen: 10, jahanvi: 9, vivek: 9, rawAverage: 9.60, roundedAverage: 9.5, contestantGuess: 10, result: 'LOSE' },
 ];
 
 const WINNERS = EPISODE_1_DATA.filter(d => d.result === 'WIN');
@@ -206,8 +206,8 @@ export default function Episode1WinnersPage() {
                     <strong className="text-white text-xs">{winner.naveen}</strong>
                   </div>
                   <div className="bg-white/5 p-2 rounded-xl">
-                    <span className="text-[9px] text-slate-400 block">ANANYA</span>
-                    <strong className="text-white text-xs">{winner.ananya}</strong>
+                    <span className="text-[9px] text-slate-400 block">JAHANVI</span>
+                    <strong className="text-white text-xs">{winner.jahanvi}</strong>
                   </div>
                   <div className="bg-white/5 p-2 rounded-xl">
                     <span className="text-[9px] text-slate-400 block">VIVEK</span>

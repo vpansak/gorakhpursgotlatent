@@ -27,8 +27,11 @@ export async function GET() {
       settings[row.key] = row.value;
     });
 
+    const dbInfo = await db.queryOne('SELECT current_database(), current_user, version()');
+
     return NextResponse.json({
       success: true,
+      dbInfo,
       performers,
       guests,
       sponsors,

@@ -4,7 +4,7 @@ import CountdownTimer from '@/components/CountdownTimer';
 import { db } from '@/lib/db';
 import { formatINR } from '@/lib/helpers';
 import {
-  Ticket, Sparkles, UserCheck, Star, Award, ShieldCheck,
+  Ticket, Sparkles, UserCheck, Star, Award, ShieldCheck, CheckCircle2,
   ChevronRight, Mic2, Music, Video, MapPin, Calendar, Clock, HelpCircle,
   Zap, Flame, Disc, Radio
 } from 'lucide-react';
@@ -278,9 +278,11 @@ export default async function HomePage() {
                 <span className="font-barlow text-xs font-bold text-amber-400 uppercase tracking-widest">OFFICIAL ENTRY PASS</span>
                 <span className="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold font-barlow uppercase animate-pulse">SELLING FAST</span>
               </div>
-              <div className="font-bebas text-5xl sm:text-6xl text-white flex items-baseline gap-2">
-                <span className="gold-gradient-text font-black">₹99</span>
-                <span className="text-xs text-slate-400 font-barlow font-normal uppercase">/ Entry Pass</span>
+              <div className="space-y-1">
+                <span className="font-bebas text-3xl sm:text-4xl text-amber-300 tracking-wide uppercase block">BOOKMYSHOW OFFICIAL TICKETING</span>
+                <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider font-barlow flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Direct Booking Active
+                </p>
               </div>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                 Access to live audience arena, front stage seating, live performance roasts & voting experience.

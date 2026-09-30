@@ -5,6 +5,9 @@ import Link from 'next/link';
 import QRCode from 'qrcode';
 import { CheckCircle2, Ticket, Calendar, MapPin, Download, Printer, ArrowRight } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getOrderConfirmation(orderId: string) {
   try {
     const order = await db.queryOne<any>(`

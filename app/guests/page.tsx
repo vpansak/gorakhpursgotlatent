@@ -2,6 +2,9 @@ import { db } from '@/lib/db';
 import Link from 'next/link';
 import { Star, MapPin } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function GuestsPage() {
   const guests = await db.query("SELECT * FROM guest_applications WHERE status = 'APPROVED' ORDER BY created_at DESC");
 

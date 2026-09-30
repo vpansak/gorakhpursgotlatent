@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Search, Clock, CheckCircle2, AlertCircle, Calendar, MapPin, Tag, Loader2, ArrowLeft } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 function TrackContent() {
   const searchParams = useSearchParams();
   const initialAppId = searchParams.get('appId') || '';

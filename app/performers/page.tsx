@@ -3,6 +3,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Mic2, Music, UserCheck, Star, MapPin } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function PerformersPage() {
   const performers = await db.query("SELECT * FROM performer_applications WHERE status = 'APPROVED' ORDER BY created_at DESC");
 

@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { formatINR } from '@/lib/helpers';
 import { Ticket, ShieldCheck, Lock, Loader2, ArrowLeft, AlertCircle } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 function CheckoutContent({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const searchParams = useSearchParams();

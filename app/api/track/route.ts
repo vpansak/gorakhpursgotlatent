@@ -25,7 +25,7 @@ export async function GET(req: Request) {
              payment_status, application_status, status, payment_amount, order_id,
              payment_id, payment_verified_at, created_at, updated_at
       FROM performer_applications
-      WHERE (UPPER(app_id) = ? OR UPPER(id) = ?) AND LOWER(email) = ?
+      WHERE (UPPER(TRIM(app_id)) = ? OR UPPER(TRIM(id)) = ?) AND LOWER(TRIM(email)) = ?
     `, [appIdUpper, appIdUpper, emailLower]);
 
     if (result) {
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
       result = await db.queryOne(`
         SELECT app_id, full_name, email, mobile_number, address, status, created_at, updated_at
         FROM team_applications
-        WHERE (UPPER(app_id) = ? OR UPPER(id) = ?) AND LOWER(email) = ?
+        WHERE (UPPER(TRIM(app_id)) = ? OR UPPER(TRIM(id)) = ?) AND LOWER(TRIM(email)) = ?
       `, [appIdUpper, appIdUpper, emailLower]);
 
       if (result) {
@@ -45,7 +45,7 @@ export async function GET(req: Request) {
         result = await db.queryOne(`
           SELECT app_id, full_name, email, category, city, status, created_at, updated_at
           FROM guest_applications
-          WHERE (UPPER(app_id) = ? OR UPPER(id) = ?) AND LOWER(email) = ?
+          WHERE (UPPER(TRIM(app_id)) = ? OR UPPER(TRIM(id)) = ?) AND LOWER(TRIM(email)) = ?
         `, [appIdUpper, appIdUpper, emailLower]);
 
         if (result) {
@@ -55,7 +55,7 @@ export async function GET(req: Request) {
           result = await db.queryOne(`
             SELECT app_id, company_name, biz_email AS email, contact_person, sponsorship_type, status, created_at, updated_at
             FROM sponsor_applications
-            WHERE (UPPER(app_id) = ? OR UPPER(id) = ?) AND LOWER(biz_email) = ?
+            WHERE (UPPER(TRIM(app_id)) = ? OR UPPER(TRIM(id)) = ?) AND LOWER(TRIM(biz_email)) = ?
           `, [appIdUpper, appIdUpper, emailLower]);
 
           if (result) {
@@ -65,7 +65,7 @@ export async function GET(req: Request) {
             result = await db.queryOne(`
               SELECT app_id, org_name, email, contact_person, city, event_date, status, created_at, updated_at
               FROM event_booking_applications
-              WHERE (UPPER(app_id) = ? OR UPPER(id) = ?) AND LOWER(email) = ?
+              WHERE (UPPER(TRIM(app_id)) = ? OR UPPER(TRIM(id)) = ?) AND LOWER(TRIM(email)) = ?
             `, [appIdUpper, appIdUpper, emailLower]);
 
             if (result) {
@@ -77,7 +77,7 @@ export async function GET(req: Request) {
                        customer_phone AS mobile_number, total_amount, payment_status AS status,
                        created_at, updated_at
                 FROM ticket_orders
-                WHERE (UPPER(order_number) = ? OR UPPER(id) = ?) AND LOWER(customer_email) = ?
+                WHERE (UPPER(TRIM(order_number)) = ? OR UPPER(TRIM(id)) = ?) AND LOWER(TRIM(customer_email)) = ?
               `, [appIdUpper, appIdUpper, emailLower]);
 
               if (result) {

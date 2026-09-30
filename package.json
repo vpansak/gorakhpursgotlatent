@@ -17,7 +17,6 @@
     "@neondatabase/serverless": "^1.1.0",
     "@types/pg": "^8.23.1",
     "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^13.0.3",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "jose": "^6.2.12",
@@ -33,7 +32,6 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
-    "@types/better-sqlite3": "^9.6.0",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^26.6.2",
     "@types/qrcode": "^1.5.6",

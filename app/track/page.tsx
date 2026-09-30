@@ -88,14 +88,14 @@ function TrackContent() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Application ID (e.g. GGL-PER-99881)</label>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Application ID (e.g. GGL-2026-299093)</label>
             <div className="relative">
               <Search className="w-4 h-4 text-amber-400 absolute left-3.5 top-3.5" />
               <input
                 type="text"
                 value={appIdInput}
                 onChange={(e) => setAppIdInput(e.target.value)}
-                placeholder="e.g. GGL-PER-99881"
+                placeholder="e.g. GGL-2026-299093"
                 className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900 border border-slate-700 text-white font-mono uppercase text-xs sm:text-sm focus:border-amber-400 focus:outline-none"
                 onKeyDown={(e) => e.key === 'Enter' && handleTrack()}
               />

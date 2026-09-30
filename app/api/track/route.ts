@@ -13,111 +13,132 @@ export async function GET(req: Request) {
 
     if (!effectiveId && !effectiveEmail) {
       return NextResponse.json(
-        { error: 'Please enter your Application ID (e.g. GGL-PER-99881) or Registered Email address to track your application.' },
+        { error: 'Please enter your Application ID (e.g. GGL-2026-299093) or Registered Email address to track your application.' },
         { status: 400 }
       );
     }
 
-    const appIdUpper = effectiveId.toUpperCase();
-    const emailLower = effectiveEmail.toLowerCase();
+    // Normalize Unicode dashes (en-dash, em-dash) to standard ASCII '-'
+    const cleanId = effectiveId.replace(/[\u2010-\u2015\u2212]/g, '-').trim().toUpperCase();
+    const strippedId = cleanId.replace(/[^A-Z0-9]/gi, '');
+    const emailLower = effectiveEmail.toLowerCase().trim();
 
     let result: any = null;
     let type = '';
 
-    // Helper to generate SQL WHERE clause
+    // Helper to generate flexible SQL WHERE clause
     const getWhereClause = (emailCol: string = 'email') => {
-      if (effectiveId && effectiveEmail) {
-        return {
-          clause: `(UPPER(TRIM(app_id)) = ? OR UPPER(TRIM(id)) = ?) AND LOWER(TRIM(${emailCol})) = ?`,
-          params: [appIdUpper, appIdUpper, emailLower]
-        };
-      } else if (effectiveId) {
-        return {
-          clause: `(UPPER(TRIM(app_id)) = ? OR UPPER(TRIM(id)) = ?)`,
-          params: [appIdUpper, appIdUpper]
-        };
-      } else {
-        return {
-          clause: `LOWER(TRIM(${emailCol})) = ?`,
-          params: [emailLower]
-        };
+      const conditions: string[] = [];
+      const params: any[] = [];
+
+      if (cleanId) {
+        conditions.push(`UPPER(TRIM(app_id)) = ?`);
+        params.push(cleanId);
+        conditions.push(`UPPER(TRIM(id)) = ?`);
+        params.push(cleanId);
+        if (strippedId) {
+          conditions.push(`REPLACE(UPPER(app_id), '-', '') = ?`);
+          params.push(strippedId);
+        }
       }
+
+      if (emailLower) {
+        conditions.push(`LOWER(TRIM(${emailCol})) = ?`);
+        params.push(emailLower);
+      }
+
+      return {
+        clause: conditions.join(' OR '),
+        params
+      };
     };
 
     // 1. Check performer_applications table
     const perWhere = getWhereClause('email');
-    result = await db.queryOne(`
-      SELECT app_id, full_name, email, mobile_number, whatsapp_number, city, age,
-             performance_category, performance_title, performance_type, performer_count,
-             performance_duration, performance_language, special_requirements,
-             payment_status, application_status, status, payment_amount, order_id,
-             payment_id, payment_verified_at, created_at, updated_at
-      FROM performer_applications
-      WHERE ${perWhere.clause}
-      ORDER BY created_at DESC LIMIT 1
-    `, perWhere.params);
+    if (perWhere.clause) {
+      result = await db.queryOne(`
+        SELECT app_id, full_name, email, mobile_number, whatsapp_number, city, age,
+               performance_category, performance_title, performance_type, performer_count,
+               performance_duration, performance_language, special_requirements,
+               payment_status, application_status, status, payment_amount, order_id,
+               payment_id, payment_verified_at, created_at, updated_at
+        FROM performer_applications
+        WHERE ${perWhere.clause}
+        ORDER BY created_at DESC LIMIT 1
+      `, perWhere.params);
+    }
 
     if (result) {
       type = 'Performer Application';
     } else {
       // 2. Check team_applications
       const teamWhere = getWhereClause('email');
-      result = await db.queryOne(`
-        SELECT app_id, full_name, email, mobile_number, address, status, created_at, updated_at
-        FROM team_applications
-        WHERE ${teamWhere.clause}
-        ORDER BY created_at DESC LIMIT 1
-      `, teamWhere.params);
+      if (teamWhere.clause) {
+        result = await db.queryOne(`
+          SELECT app_id, full_name, email, mobile_number, address, status, created_at, updated_at
+          FROM team_applications
+          WHERE ${teamWhere.clause}
+          ORDER BY created_at DESC LIMIT 1
+        `, teamWhere.params);
+      }
 
       if (result) {
         type = 'Crew & Team Application';
       } else {
         // 3. Check guest_applications
         const guestWhere = getWhereClause('email');
-        result = await db.queryOne(`
-          SELECT app_id, full_name, email, category, city, status, created_at, updated_at
-          FROM guest_applications
-          WHERE ${guestWhere.clause}
-          ORDER BY created_at DESC LIMIT 1
-        `, guestWhere.params);
+        if (guestWhere.clause) {
+          result = await db.queryOne(`
+            SELECT app_id, full_name, email, category, city, status, created_at, updated_at
+            FROM guest_applications
+            WHERE ${guestWhere.clause}
+            ORDER BY created_at DESC LIMIT 1
+          `, guestWhere.params);
+        }
 
         if (result) {
           type = 'Guest / Influencer Application';
         } else {
           // 4. Check sponsor_applications
           const sponsorWhere = getWhereClause('biz_email');
-          result = await db.queryOne(`
-            SELECT app_id, company_name, biz_email AS email, contact_person, sponsorship_type, status, created_at, updated_at
-            FROM sponsor_applications
-            WHERE ${sponsorWhere.clause}
-            ORDER BY created_at DESC LIMIT 1
-          `, sponsorWhere.params);
+          if (sponsorWhere.clause) {
+            result = await db.queryOne(`
+              SELECT app_id, company_name, biz_email AS email, contact_person, sponsorship_type, status, created_at, updated_at
+              FROM sponsor_applications
+              WHERE ${sponsorWhere.clause}
+              ORDER BY created_at DESC LIMIT 1
+            `, sponsorWhere.params);
+          }
 
           if (result) {
             type = 'Brand Sponsor Application';
           } else {
             // 5. Check event_booking_applications
             const eventWhere = getWhereClause('email');
-            result = await db.queryOne(`
-              SELECT app_id, org_name, email, contact_person, city, event_date, status, created_at, updated_at
-              FROM event_booking_applications
-              WHERE ${eventWhere.clause}
-              ORDER BY created_at DESC LIMIT 1
-            `, eventWhere.params);
+            if (eventWhere.clause) {
+              result = await db.queryOne(`
+                SELECT app_id, org_name, email, contact_person, city, event_date, status, created_at, updated_at
+                FROM event_booking_applications
+                WHERE ${eventWhere.clause}
+                ORDER BY created_at DESC LIMIT 1
+              `, eventWhere.params);
+            }
 
             if (result) {
               type = 'Show Booking Application';
             } else {
               // 6. Check ticket_orders fallback
               const ticketWhere = getWhereClause('customer_email');
-              result = await db.queryOne(`
-                SELECT order_number AS app_id, customer_name AS full_name, customer_email AS email,
-                       customer_phone AS mobile_number, total_amount, payment_status AS status,
-                       created_at, updated_at
-                FROM ticket_orders
-                WHERE ${ticketWhere.clause}
-                ORDER BY created_at DESC LIMIT 1
-              `, ticketWhere.params);
+              if (ticketWhere.clause) {
+                result = await db.queryOne(`
+                  SELECT order_number AS app_id, customer_name AS full_name, customer_email AS email,
+                         customer_phone AS mobile_number, total_amount, payment_status AS status,
+                         created_at, updated_at
+                  FROM ticket_orders
+                  WHERE ${ticketWhere.clause}
+                  ORDER BY created_at DESC LIMIT 1
+                `, ticketWhere.params);
+              }
 
               if (result) {
                 type = 'Audience Ticket Order';
@@ -135,7 +156,7 @@ export async function GET(req: Request) {
       );
     }
 
-    const matchedAppId = (result.app_id || result.id || appIdUpper).toUpperCase();
+    const matchedAppId = (result.app_id || result.id || cleanId).toUpperCase();
 
     // Fetch status history timeline
     const history = await db.query(

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Mic2, Star, Building2, Users, ChevronRight, ShieldAlert, CheckCircle2 } from 'lucide-react';
-import Episode2CountdownTimer from '@/components/Episode2CountdownTimer';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -11,18 +10,18 @@ export default function ApplyPage() {
     {
       title: 'Performer Application',
       subtitle: 'Singers, Dancers, Comedians, Beatboxers & Unique Acts',
-      desc: 'Showcase your talent on the biggest live stage in Purvanchal. Performer registrations for Episode 2 go live on 02 October 2026 at 10:00 AM IST.',
+      desc: 'Showcase your talent on the biggest live stage in Purvanchal. Performer registrations for Episode 2 auditions are now LIVE!',
       href: '/apply/performer',
       icon: Mic2,
-      badge: 'EPISODE 2 GOES LIVE 02 OCT @ 10:00 AM IST',
-      badgeClass: 'bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse',
+      badge: 'EPISODE 2 AUDITIONS • REGISTRATION LIVE',
+      badgeClass: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse',
       color: 'from-amber-500/20 via-amber-500/10 to-transparent',
       borderColor: 'border-amber-500/40',
       btnBg: 'bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black hover:opacity-95',
       btnText: 'APPLY FOR EPISODE 2 AUDITION (FREE)',
       alertBox: {
-        tag: 'EPISODE 2 AUDITIONS',
-        text: 'Performer registration for Episode 2 auditions goes live on 02 October 2026 at 10:00 AM IST! Auditions are free to submit.',
+        tag: 'EPISODE 2 AUDITIONS LIVE',
+        text: 'Performer registration for Episode 2 auditions is now LIVE! Auditions are free to submit.',
       },
     },
     {
@@ -75,9 +74,6 @@ export default function ApplyPage() {
         </p>
       </div>
 
-      {/* LIVE COUNTDOWN TIMER */}
-      <Episode2CountdownTimer title="EPISODE 2 AUDITIONS • GOES LIVE 02 OCT 2026 @ 10:00 AM IST" />
-
       {/* Performer Registration Callout */}
       <div className="max-w-4xl mx-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-emerald-950/70 border border-amber-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs sm:text-sm text-amber-200 shadow-[0_0_30px_rgba(245,158,11,0.15)]">
         <div className="flex items-start gap-3">
@@ -87,10 +83,10 @@ export default function ApplyPage() {
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-500 text-black text-[10px] font-black uppercase tracking-wider">
-                GOES LIVE 02 OCT @ 10 AM IST
+                🎉 REGISTRATION LIVE NOW
               </span>
               <strong className="text-white font-bold text-sm">
-                Performer Registration: Episode 2 Auditions
+                Performer Registration: Episode 2 Auditions Are Live!
               </strong>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">

@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { Mic2, CheckCircle2, ArrowRight, Loader2, Sparkles, MessageSquare, Mail, AlertCircle, CheckSquare } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 
-import Episode2CountdownTimer from '@/components/Episode2CountdownTimer';
-
 function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
     <svg className={className} fill="currentColor" viewBox="0 0 24 24">
@@ -188,16 +186,14 @@ export default function PerformerApplyClient() {
   }
 
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto space-y-6">
-      <Episode2CountdownTimer title="EPISODE 2 AUDITIONS • GOES LIVE 02 OCT 2026 @ 10:00 AM IST" />
-
+    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto space-y-8">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 text-amber-400 text-xs font-black uppercase tracking-wider">
-          <Mic2 className="w-4 h-4 text-amber-400" /> EPISODE 2 PERFORMER AUDITION REGISTRATION
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-black uppercase tracking-wider">
+          <Mic2 className="w-4 h-4 text-emerald-400" /> 🎉 EPISODE 2 PERFORMER REGISTRATION IS LIVE
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-white">Performer Application Form</h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-          Performer registrations for Episode 2 auditions go live on <strong className="text-amber-400 font-bold">02 October 2026 at 10:00 AM IST</strong>! Fill in your details below to register. Audition form submit kerna FREE hai. Select hone ke baad fee details communicate kiya jayega.
+          Performer registrations for Episode 2 auditions are now <strong className="text-emerald-400 font-bold">LIVE</strong>! Fill in your details below to register. Audition form submit kerna FREE hai. Select hone ke baad fee details communicate kiya jayega.
         </p>
       </div>
 

@@ -29,12 +29,12 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Episode 2 Announcement Bar */}
-      <div className="bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 text-black py-1.5 px-4 text-center font-black text-[11px] sm:text-xs tracking-wider shadow-md flex items-center justify-center gap-2 flex-wrap">
-        <span className="w-2 h-2 rounded-full bg-black animate-ping shrink-0" />
-        <span>🚀 EPISODE 2 AUDITION REGISTRATIONS GO LIVE ON 02 OCTOBER 2026 @ 10:00 AM IST!</span>
-        <Link href="/apply/performer" className="bg-black text-amber-300 px-2.5 py-0.5 rounded-full font-black text-[10px] hover:bg-slate-900 transition-colors ml-1 uppercase">
-          REGISTER FOR EPISODE 2 ↗
+      {/* Episode 2 Live Bar */}
+      <div className="bg-gradient-to-r from-emerald-500 via-amber-400 to-emerald-500 text-black py-1.5 px-4 text-center font-black text-[11px] sm:text-xs tracking-wider shadow-md flex items-center justify-center gap-2 flex-wrap">
+        <span className="w-2.5 h-2.5 rounded-full bg-black animate-ping shrink-0" />
+        <span>🎉 EPISODE 2 AUDITION REGISTRATIONS ARE NOW LIVE!</span>
+        <Link href="/apply/performer" className="bg-black text-amber-300 px-3 py-0.5 rounded-full font-black text-[10px] hover:bg-slate-900 transition-colors ml-1 uppercase">
+          REGISTER NOW ↗
         </Link>
       </div>
 

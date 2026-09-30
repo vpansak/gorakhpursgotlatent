@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import CountdownTimer from '@/components/CountdownTimer';
-import Episode2CountdownTimer from '@/components/Episode2CountdownTimer';
 import { db } from '@/lib/db';
 import { formatINR } from '@/lib/helpers';
 import {
@@ -133,9 +132,9 @@ export default async function HomePage() {
           </div>
 
           {/* Performer Registration Status Banner */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold font-barlow uppercase tracking-wider">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-            Episode 2 Auditions Go Live: 02 October 2026 @ 10:00 AM IST
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold font-barlow uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            🎉 Episode 2 Auditions Are Now LIVE • Apply Below
           </div>
 
           {/* Action CTAs */}
@@ -152,16 +151,11 @@ export default async function HomePage() {
 
             <Link
               href="/apply/performer"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border-2 border-amber-500/40 text-amber-300 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-amber-400 transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border-2 border-emerald-500/40 text-emerald-300 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-emerald-400 transition-all duration-300 cursor-pointer"
             >
-              <UserCheck className="w-6 h-6 text-amber-400" />
-              APPLY FOR EPISODE 2 (02 OCT @ 10 AM)
+              <UserCheck className="w-6 h-6 text-emerald-400" />
+              APPLY FOR EPISODE 2 (LIVE NOW)
             </Link>
-          </div>
-
-          {/* LIVE COUNTDOWN TIMER ON HOME PAGE */}
-          <div className="pt-4 max-w-3xl mx-auto">
-            <Episode2CountdownTimer title="EPISODE 2 AUDITIONS • GOES LIVE 02 OCT 2026 @ 10:00 AM IST" />
           </div>
 
           {/* Official YouTube Channel Banner */}

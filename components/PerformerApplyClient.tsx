@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Mic2, CheckCircle2, ArrowRight, Loader2, Sparkles, MessageSquare, Mail } from 'lucide-react';
+import { Mic2, CheckCircle2, ArrowRight, Loader2, Sparkles, MessageSquare, Mail, AlertCircle, CheckSquare } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 
 function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {
@@ -16,6 +16,13 @@ function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {
 const WHATSAPP_NUMBER = '918423858424';
 const DISPLAY_PHONE = '+91 8423858424';
 
+// Strictly 18+ options only (no ages below 18)
+const AGE_OPTIONS = [
+  '18 Years', '19 Years', '20 Years', '21 Years', '22 Years', '23 Years',
+  '24 Years', '25 Years', '26 Years', '27 Years', '28 Years', '29 Years',
+  '30 Years', '31 Years', '32 Years', '33 Years', '34 Years', '35 Years', '36+ Years'
+];
+
 export default function PerformerApplyClient() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -25,19 +32,25 @@ export default function PerformerApplyClient() {
 
   const [formData, setFormData] = useState({
     fullName: '',
-    email: '',
     mobile: '',
-    city: '',
-    age: '',
+    email: '',
+    age: '18 Years',
+    instagramUrl: '',
     performanceCategory: 'Singing',
     performanceTitle: '',
+    city: '',
     performanceDescription: '',
-    instagramUrl: '',
+    sendClipConfirmed: false,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData(prev => ({ ...prev, [name]: checked }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const constructWhatsAppMessage = (data: typeof formData, appId: string) => {
@@ -45,18 +58,19 @@ export default function PerformerApplyClient() {
 `🎤 *GORAKHPUR'S GOT LATENT - PERFORMER AUDITION APPLICATION* 🎤
 
 🆔 *Application ID:* ${appId}
-👤 *Full Name:* ${data.fullName.trim()}
-📱 *Mobile / WhatsApp Number:* ${data.mobile.trim()}
-📧 *Email Address:* ${data.email.trim()}
-📍 *City:* ${data.city.trim() || 'Gorakhpur'}
-🎂 *Age:* ${data.age || 'N/A'}
+👤 *Name:* ${data.fullName.trim()}
+📱 *Mobile Number:* ${data.mobile.trim()}
+📧 *Email:* ${data.email.trim()}
+🎂 *Age:* ${data.age}
+📸 *Instagram URL:* ${data.instagramUrl.trim() || 'N/A'}
 🎭 *Performance Category:* ${data.performanceCategory}
-🎵 *Performance / Act Title:* ${data.performanceTitle.trim() || 'Audition Act'}
-📝 *Act Details:* ${data.performanceDescription.trim() || 'Performer Audition Entry'}
-📸 *Instagram Profile:* ${data.instagramUrl.trim() || 'N/A'}
+🎵 *Act Title:* ${data.performanceTitle.trim() || 'Audition Act'}
+📍 *Address / City:* ${data.city.trim() || 'Gorakhpur'}
+📝 *About Performance:* ${data.performanceDescription.trim() || 'N/A'}
+✅ *WhatsApp Clip Confirmation:* Confirmed to send performance clip on WhatsApp!
 
 ------------------------------------
-✨ _Saved in Admin Portal | Official Website: gkpgotlatent.in_`
+✨ _Saved in Admin Portal | Team contact you soon..._`
     );
   };
 
@@ -68,12 +82,16 @@ export default function PerformerApplyClient() {
       setError('Please enter your Full Name.');
       return;
     }
+    if (!formData.mobile.trim()) {
+      setError('Please enter your Mobile Number.');
+      return;
+    }
     if (!formData.email.trim() || !formData.email.includes('@')) {
       setError('Please enter a valid Email address.');
       return;
     }
-    if (!formData.mobile.trim()) {
-      setError('Please enter your Mobile / WhatsApp Number.');
+    if (!formData.sendClipConfirmed) {
+      setError('Please check the box confirming you will send your performance video clip on WhatsApp.');
       return;
     }
 
@@ -93,7 +111,7 @@ export default function PerformerApplyClient() {
         setSubmittedAppId(data.appId);
       }
     } catch (err: any) {
-      console.warn('DB save warning (proceeding to WhatsApp):', err);
+      console.warn('DB save notice:', err);
       assignedAppId = `GGL-PER-${Date.now().toString().slice(-6)}`;
       setSubmittedAppId(assignedAppId);
     } finally {
@@ -109,7 +127,7 @@ export default function PerformerApplyClient() {
     // Auto-redirect to WhatsApp
     setTimeout(() => {
       window.location.href = waUrl;
-    }, 1200);
+    }, 1500);
   };
 
   if (submitted) {
@@ -124,20 +142,22 @@ export default function PerformerApplyClient() {
           </div>
         </div>
 
-        <div className="space-y-3">
-          <span className="px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-black uppercase tracking-wider inline-flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4" /> Audition Details Saved in Admin Portal
+        <div className="space-y-4">
+          <span className="px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-black uppercase tracking-wider inline-flex items-center gap-1.5">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" /> AUDITION SAVED IN ADMIN PORTAL
           </span>
+
           <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-            Redirecting to <span className="text-emerald-400">WhatsApp</span>...
+            Team contact you soon...
           </h1>
-          <p className="text-slate-300 text-sm max-w-lg mx-auto">
-            Your performer audition details have been saved in the Admin Portal. Opening WhatsApp to connect with our audition team at <strong className="text-emerald-300">{DISPLAY_PHONE}</strong>.
+
+          <p className="text-slate-300 text-sm max-w-lg mx-auto leading-relaxed">
+            Your audition application details have been saved in the Admin Portal. Opening WhatsApp so you can send your performance clip to <strong className="text-emerald-300">{DISPLAY_PHONE}</strong>.
           </p>
 
-          <div className="p-4 rounded-2xl bg-slate-900 border border-amber-500/30 max-w-md mx-auto">
+          <div className="p-4 rounded-2xl bg-slate-900 border border-amber-500/30 max-w-md mx-auto space-y-1">
             <span className="text-xs text-amber-400 font-bold uppercase tracking-widest block">PERFORMER APPLICATION ID</span>
-            <div className="text-2xl sm:text-3xl font-black text-amber-300 font-mono tracking-wider mt-1">{submittedAppId}</div>
+            <div className="text-2xl sm:text-3xl font-black text-amber-300 font-mono tracking-wider">{submittedAppId}</div>
           </div>
         </div>
 
@@ -149,7 +169,7 @@ export default function PerformerApplyClient() {
             className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 hover:from-emerald-400 hover:to-green-400 text-black font-extrabold text-base flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all transform hover:scale-[1.02]"
           >
             <WhatsAppIcon className="w-6 h-6 fill-current" />
-            CLICK HERE IF NOT REDIRECTED TO WHATSAPP
+            CLICK HERE TO SEND PERFORMANCE CLIP ON WHATSAPP
           </a>
         </div>
 
@@ -166,39 +186,44 @@ export default function PerformerApplyClient() {
   }
 
   return (
-    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto space-y-8">
+    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto space-y-8">
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 text-amber-400 text-xs font-black uppercase tracking-wider">
-          <Mic2 className="w-4 h-4 text-amber-400" /> EPISODE 2 AUDITIONS • FEE ₹199
+          <Mic2 className="w-4 h-4 text-amber-400" /> PERFORMER AUDITION REGISTRATION
         </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-white">Performer Application</h1>
-        <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
-          Singers, Dancers, Comedians, Beatboxers, Magicians & Unique Acts! Fill details below to save in Admin Portal and auto-submit your audition details directly to WhatsApp ({DISPLAY_PHONE}).
+        <h1 className="text-3xl sm:text-4xl font-black text-white">Performer Application Form</h1>
+        <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
+          Fill in your details below. Your application will be saved in the Admin Portal and you will be redirected to send your performance clip on WhatsApp ({DISPLAY_PHONE}).
         </p>
       </div>
 
-      {error && <div className="p-4 rounded-xl bg-red-500/20 text-red-300 text-sm font-semibold">⚠️ {error}</div>}
+      {error && (
+        <div className="p-4 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 text-sm font-semibold flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
-      <form onSubmit={handleSubmit} className="space-y-6 glass-panel p-6 sm:p-10 rounded-3xl border border-amber-500/20 shadow-2xl">
+      <form onSubmit={handleSubmit} className="space-y-5 glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/20 shadow-2xl">
         <div className="space-y-4">
-          <h3 className="text-lg font-bold text-amber-400 border-b border-amber-500/20 pb-2">Performer & Act Details</h3>
-          
+          {/* 1. Full Name */}
+          <div>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Full Name (अपना नाम) *</label>
+            <input
+              type="text"
+              name="fullName"
+              required
+              value={formData.fullName}
+              onChange={handleChange}
+              placeholder="e.g. Rahul Kumar"
+              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
+            />
+          </div>
+
+          {/* 2. Mobile & Email */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Full Name (नाम) *</label>
-              <input
-                type="text"
-                name="fullName"
-                required
-                value={formData.fullName}
-                onChange={handleChange}
-                placeholder="e.g. Rahul Kumar"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Mobile / WhatsApp Number *</label>
+              <label className="block text-xs font-bold text-slate-300 mb-1">Mobile Number (मोबाइल नंबर) *</label>
               <input
                 type="tel"
                 name="mobile"
@@ -206,12 +231,12 @@ export default function PerformerApplyClient() {
                 value={formData.mobile}
                 onChange={handleChange}
                 placeholder="+91 98765 43210"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm font-mono"
+                className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Email Address *</label>
+              <label className="block text-xs font-bold text-slate-300 mb-1">Email Address (ईमेल) *</label>
               <input
                 type="email"
                 name="email"
@@ -219,98 +244,119 @@ export default function PerformerApplyClient() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="rahul@example.com"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
+                className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
               />
             </div>
+          </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">City / Base Location *</label>
-              <input
-                type="text"
-                name="city"
-                required
-                value={formData.city}
-                onChange={handleChange}
-                placeholder="e.g. Gorakhpur / Deoria"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
-              />
-            </div>
+          {/* 3. Age Dropdown (Strictly 18+) */}
+          <div>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Age / उम्र Dropdown (Strictly 18+ Only) *</label>
+            <select
+              name="age"
+              value={formData.age}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold focus:border-amber-400 outline-none text-xs sm:text-sm cursor-pointer"
+            >
+              {AGE_OPTIONS.map((ageOpt) => (
+                <option key={ageOpt} value={ageOpt}>
+                  {ageOpt}
+                </option>
+              ))}
+            </select>
+          </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Age (उम्र)</label>
-              <input
-                type="number"
-                name="age"
-                value={formData.age}
-                onChange={handleChange}
-                placeholder="e.g. 21"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
-              />
-            </div>
+          {/* 4. Instagram Profile URL */}
+          <div>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Profile URL (लिंक)</label>
+            <input
+              type="url"
+              name="instagramUrl"
+              value={formData.instagramUrl}
+              onChange={handleChange}
+              placeholder="https://www.instagram.com/your_handle"
+              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
+            />
+          </div>
 
+          {/* 5. What will you perform dropdown */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Performance Category *</label>
+              <label className="block text-xs font-bold text-slate-300 mb-1">What Will You Perform? (क्या परफॉर्म करेंगे?) *</label>
               <select
                 name="performanceCategory"
                 value={formData.performanceCategory}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm cursor-pointer"
+                className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold focus:border-amber-400 outline-none text-xs sm:text-sm cursor-pointer"
               >
                 <option value="Singing">Singing (गायन)</option>
                 <option value="Dancing">Dancing (नृत्य)</option>
                 <option value="Standup Comedy">Standup Comedy (हास्य)</option>
-                <option value="Beatboxing">Beatboxing & Rap</option>
-                <option value="Magic & Illusion">Magic & Illusion (जादू)</option>
                 <option value="Poetry & Shayari">Poetry & Shayari (कविता)</option>
-                <option value="Unique Talent / Other">Unique Talent / Other</option>
+                <option value="Mimicry">Mimicry / Acting</option>
+                <option value="Beatboxing & Rap">Beatboxing & Rap</option>
+                <option value="Magic & Illusion">Magic & Illusion (जादू)</option>
+                <option value="Other Talent">Other Unique Talent</option>
               </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-300 mb-1">Act Title / Song Name</label>
+              <input
+                type="text"
+                name="performanceTitle"
+                value={formData.performanceTitle}
+                onChange={handleChange}
+                placeholder="e.g. Classical Fusion / Comedy Set"
+                className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
+              />
             </div>
           </div>
 
+          {/* 6. Address / Base Location */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Performance / Act Title</label>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Address / City (पता / शहर)</label>
             <input
               type="text"
-              name="performanceTitle"
-              value={formData.performanceTitle}
+              name="city"
+              value={formData.city}
               onChange={handleChange}
-              placeholder="e.g. Classical Fusion Solo / Standup Set"
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs"
+              placeholder="e.g. Civil Lines, Gorakhpur / Deoria"
+              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
             />
           </div>
 
+          {/* 7. About yourself / performance details */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Profile Link / Handle</label>
-            <input
-              type="text"
-              name="instagramUrl"
-              value={formData.instagramUrl}
-              onChange={handleChange}
-              placeholder="e.g. https://instagram.com/your_handle or @your_handle"
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Act Description / Special Requirements</label>
+            <label className="block text-xs font-bold text-slate-300 mb-1">About Your Performance / Yourself (थोड़ा सा अपने बारे में)</label>
             <textarea
               name="performanceDescription"
               rows={3}
               value={formData.performanceDescription}
               onChange={handleChange}
-              placeholder="Briefly describe your act or any prop/mic requirements..."
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs leading-relaxed"
+              placeholder="Describe your act or experience briefly..."
+              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs leading-relaxed"
             />
           </div>
         </div>
 
-        {/* WhatsApp Notice Bar */}
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-xs text-emerald-200">
-          <WhatsAppIcon className="w-6 h-6 text-emerald-400 shrink-0" />
-          <div>
-            <strong className="text-white block font-bold">Automatic Admin Save & WhatsApp Connect:</strong>
-            Submitting this form will automatically save your audition details in the Admin Portal with an Application ID and redirect to WhatsApp ({DISPLAY_PHONE}).
-          </div>
+        {/* MANDATORY WHATSAPP CLIP CONFIRMATION CHECKBOX */}
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2">
+          <label className="flex items-start gap-3 cursor-pointer text-xs text-amber-200">
+            <input
+              type="checkbox"
+              name="sendClipConfirmed"
+              checked={formData.sendClipConfirmed}
+              onChange={handleChange}
+              className="mt-0.5 w-4 h-4 rounded text-amber-500 focus:ring-amber-400 bg-slate-900 border-slate-700 cursor-pointer shrink-0"
+            />
+            <span className="font-bold">
+              Send your performance clip on WhatsApp ({DISPLAY_PHONE}) *
+            </span>
+          </label>
+          <p className="text-[11px] text-slate-400 pl-7">
+            Submitting this form will save your audition details in the Admin Portal and redirect to WhatsApp so you can send your performance video clip.
+          </p>
         </div>
 
         <button
@@ -323,7 +369,7 @@ export default function PerformerApplyClient() {
           ) : (
             <>
               <WhatsAppIcon className="w-6 h-6 fill-current" />
-              SUBMIT AUDITION DETAILS & CONNECT ON WHATSAPP
+              SUBMIT & SEND PERFORMANCE CLIP ON WHATSAPP
               <ArrowRight className="w-5 h-5" />
             </>
           )}

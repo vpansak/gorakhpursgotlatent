@@ -55,8 +55,8 @@ export async function GET(req: Request) {
           result = await db.queryOne(`
             SELECT app_id, company_name, biz_email AS email, contact_person, sponsorship_type, status, created_at, updated_at
             FROM sponsor_applications
-            WHERE (UPPER(app_id) = ? OR UPPER(id) = ?) AND (LOWER(biz_email) = ? OR LOWER(email) = ?)
-          `, [appIdUpper, appIdUpper, emailLower, emailLower]);
+            WHERE (UPPER(app_id) = ? OR UPPER(id) = ?) AND LOWER(biz_email) = ?
+          `, [appIdUpper, appIdUpper, emailLower]);
 
           if (result) {
             type = 'Brand Sponsor Application';

@@ -243,7 +243,7 @@ export default function Episode1WinnersPage() {
               <Flame className="w-5 h-5 text-orange-400" /> Episode 1 Full Contestants Leaderboard (21 Acts)
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Complete raw averages, rounded scores, contestant guesses, and judge scorecards from Episode 1.
+              Complete rounded average scores, contestant guesses, and judge scorecards from Episode 1.
             </p>
           </div>
 
@@ -290,8 +290,7 @@ export default function Episode1WinnersPage() {
                 <th className="py-3.5 px-4 w-12 text-center">#</th>
                 <th className="py-3.5 px-4">Contestant Name</th>
                 <th className="py-3.5 px-4">Category</th>
-                <th className="py-3.5 px-4 text-center">Raw Avg (/10)</th>
-                <th className="py-3.5 px-4 text-center">Rounded Avg</th>
+                <th className="py-3.5 px-4 text-center">Judges Average</th>
                 <th className="py-3.5 px-4 text-center">Contestant Guess</th>
                 <th className="py-3.5 px-4 text-center">Result</th>
               </tr>
@@ -310,9 +309,8 @@ export default function Episode1WinnersPage() {
                     <span>{c.name}</span>
                   </td>
                   <td className="py-3 px-4 text-slate-300 font-sans">{c.category}</td>
-                  <td className="py-3 px-4 text-center font-bold text-amber-300">{c.rawAverage.toFixed(2)}</td>
-                  <td className="py-3 px-4 text-center text-slate-300">{c.roundedAverage}</td>
-                  <td className="py-3 px-4 text-center font-bold text-white">{c.contestantGuess}</td>
+                  <td className="py-3 px-4 text-center font-bold text-amber-300">{c.roundedAverage.toFixed(1)}</td>
+                  <td className="py-3 px-4 text-center font-bold text-white">{c.contestantGuess.toFixed(1)}</td>
                   <td className="py-3 px-4 text-center">
                     <span
                       className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${

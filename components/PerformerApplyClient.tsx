@@ -152,7 +152,7 @@ export default function PerformerApplyClient() {
           </h1>
 
           <p className="text-slate-300 text-sm max-w-lg mx-auto leading-relaxed">
-            Your audition application details have been saved in the Admin Portal. Opening WhatsApp so you can send your performance clip to <strong className="text-emerald-300">{DISPLAY_PHONE}</strong>.
+            Your audition application details have been saved successfully. Opening WhatsApp so you can send your performance clip to <strong className="text-emerald-300">{DISPLAY_PHONE}</strong>.
           </p>
 
           <div className="p-4 rounded-2xl bg-slate-900 border border-amber-500/30 max-w-md mx-auto space-y-1">
@@ -193,7 +193,7 @@ export default function PerformerApplyClient() {
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-white">Performer Application Form</h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
-          Fill in your details below. Your application will be saved in the Admin Portal and you will be redirected to send your performance clip on WhatsApp ({DISPLAY_PHONE}).
+          Fill in your details below. Your application will be saved and you will be redirected to send your performance clip on WhatsApp ({DISPLAY_PHONE}).
         </p>
       </div>
 
@@ -355,7 +355,7 @@ export default function PerformerApplyClient() {
             </span>
           </label>
           <p className="text-[11px] text-slate-400 pl-7">
-            Submitting this form will save your audition details in the Admin Portal and redirect to WhatsApp so you can send your performance video clip.
+            Submitting this form will save your audition details and automatically redirect to WhatsApp so you can send your performance video clip.
           </p>
         </div>
 

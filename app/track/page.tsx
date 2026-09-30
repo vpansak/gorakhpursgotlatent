@@ -18,11 +18,11 @@ function TrackContent() {
   const [trackData, setTrackData] = useState<any>(null);
 
   const handleTrack = async (idToTrack?: string, emailToTrack?: string) => {
-    const queryId = (idToTrack || appIdInput).trim();
-    const queryEmail = (emailToTrack || emailInput).trim();
+    const queryId = (idToTrack !== undefined ? idToTrack : appIdInput).trim();
+    const queryEmail = (emailToTrack !== undefined ? emailToTrack : emailInput).trim();
 
-    if (!queryId || !queryEmail) {
-      setError('Please enter both your Application ID and your Registered Email Address.');
+    if (!queryId && !queryEmail) {
+      setError('Please enter your Application ID (e.g. GGL-PER-99881) or Registered Email Address.');
       return;
     }
 
@@ -31,7 +31,11 @@ function TrackContent() {
     setTrackData(null);
 
     try {
-      const res = await fetch(`/api/track?appId=${encodeURIComponent(queryId)}&email=${encodeURIComponent(queryEmail)}`);
+      const queryParams = new URLSearchParams();
+      if (queryId) queryParams.set('appId', queryId);
+      if (queryEmail) queryParams.set('email', queryEmail);
+
+      const res = await fetch(`/api/track?${queryParams.toString()}`);
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.error || 'Failed to fetch application status');
@@ -43,6 +47,12 @@ function TrackContent() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (initialAppId) {
+      handleTrack(initialAppId, '');
+    }
+  }, [initialAppId]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -72,27 +82,28 @@ function TrackContent() {
       {/* Search Input Box */}
       <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/30 space-y-5">
         <div className="space-y-1">
-          <h3 className="text-lg font-bold text-amber-400 uppercase tracking-wide">PERFORMER SECURITY VERIFICATION</h3>
-          <p className="text-xs text-slate-300">Enter your unique Application ID and the email address you registered with.</p>
+          <h3 className="text-lg font-bold text-amber-400 uppercase tracking-wide">PERFORMER APPLICATION TRACKING</h3>
+          <p className="text-xs text-slate-300">Enter your Application ID or registered Email address below.</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Application ID *</label>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Application ID (e.g. GGL-PER-99881)</label>
             <div className="relative">
               <Search className="w-4 h-4 text-amber-400 absolute left-3.5 top-3.5" />
               <input
                 type="text"
                 value={appIdInput}
                 onChange={(e) => setAppIdInput(e.target.value)}
-                placeholder="e.g. GGL-2026-483921"
+                placeholder="e.g. GGL-PER-99881"
                 className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900 border border-slate-700 text-white font-mono uppercase text-xs sm:text-sm focus:border-amber-400 focus:outline-none"
+                onKeyDown={(e) => e.key === 'Enter' && handleTrack()}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Registered Email Address *</label>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Registered Email Address (Optional)</label>
             <input
               type="email"
               value={emailInput}
@@ -107,9 +118,9 @@ function TrackContent() {
         <button
           onClick={() => handleTrack()}
           disabled={loading}
-          className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 hover:scale-[1.01] transition-all"
+          className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 hover:scale-[1.01] transition-all cursor-pointer"
         >
-          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'VERIFY CREDENTIALS & TRACK STATUS'}
+          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'TRACK APPLICATION STATUS'}
         </button>
       </div>
 

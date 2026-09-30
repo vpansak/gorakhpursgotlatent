@@ -19,10 +19,10 @@ const FOLDERS: SheetFolder[] = [
   {
     id: 'performersPaid',
     type: 'performer',
-    name: 'Paid Performers (₹199 Paid)',
-    s3Path: 'performers/paid/',
-    s3Url: 'https://br-shy-meadow-b5n9zrpd.storage.c-7.us-east-2.aws.neon.tech/gorakhpur-got-latent/sheets/performers/paid_performers.csv',
-    badge: '₹199 PAID AUDITIONS'
+    name: 'Performer Applications & Auditions',
+    s3Path: 'performers/all/',
+    s3Url: 'https://br-shy-meadow-b5n9zrpd.storage.c-7.us-east-2.aws.neon.tech/gorakhpur-got-latent/sheets/performers/all_performers.csv',
+    badge: 'PERFORMER APPLICANTS'
   },
   {
     id: 'sponsors',
@@ -78,12 +78,7 @@ export default function MalikExcelSheets() {
         const res = await fetch(`/api/malik/applications?type=${folder.type}`);
         const data = await res.json();
         if (data.success) {
-          let list = data.items || [];
-          if (folder.id === 'performersPaid') {
-            // Filter only paid performers
-            list = list.filter((p: any) => p.payment_status === 'PAID' || p.payment_status === 'PAYMENT_VERIFIED');
-          }
-          setItems(list);
+          setItems(data.items || []);
         }
       }
     } catch (err) {

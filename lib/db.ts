@@ -1,8 +1,8 @@
 import { Pool } from 'pg';
 
-const databaseUrl = process.env.DATABASE_URL || '';
-if (!databaseUrl) {
-  console.warn('⚠️ DATABASE_URL environment variable is not defined.');
+const databaseUrl = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_pay1mTgz2qSi@ep-fancy-voice-b52wvbws-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+if (!process.env.DATABASE_URL) {
+  console.warn('⚠️ DATABASE_URL environment variable is not explicitly set; using default Neon pooler connection.');
 }
 
 declare global {

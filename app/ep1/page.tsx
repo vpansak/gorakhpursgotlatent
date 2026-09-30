@@ -121,33 +121,6 @@ export default function Episode1WinnersPage() {
         </div>
       </div>
 
-      {/* PRIZE POOL DISTRIBUTION BOX */}
-      <div className="glass-panel p-6 sm:p-8 rounded-3xl border-2 border-amber-500/50 bg-gradient-to-r from-amber-950/70 via-slate-900 to-black shadow-[0_0_35px_rgba(255,215,0,0.25)] max-w-4xl mx-auto space-y-4 text-center">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-black uppercase tracking-wider border border-emerald-500/40 shadow-sm">
-          <Sparkles className="w-4 h-4 text-emerald-400" /> OFFICIAL PRIZE POOL BREAKDOWN
-        </div>
-
-        <h2 className="text-2xl sm:text-4xl font-black text-white">
-          Total Collection: <span className="text-amber-400 font-mono">₹7,000 (7K)</span>
-        </h2>
-
-        <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          As per official GGL rules, the total contestant entry collection of <strong className="text-amber-300 font-bold">₹7,000</strong> was divided equally among all 5 accurate score guess winners:
-        </p>
-
-        <div className="p-4 rounded-2xl bg-black/80 border border-amber-500/30 inline-flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm sm:text-base font-black text-white">
-          <div className="flex items-center gap-2 font-mono text-amber-300">
-            <span>₹7,000 Collection</span>
-            <span className="text-slate-400">÷</span>
-            <span>5 Winners</span>
-          </div>
-          <span className="text-amber-400 hidden sm:inline">=</span>
-          <div className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-black text-base sm:text-lg font-black tracking-wide shadow-lg">
-            ₹1,400 PRIZE PER WINNER 🏆
-          </div>
-        </div>
-      </div>
-
       {/* 5 WINNERS SHOWCASE CARDS */}
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-amber-500/20 pb-4">
@@ -244,6 +217,33 @@ export default function Episode1WinnersPage() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* PRIZE POOL DISTRIBUTION BOX - PLACED UNDER WINNERS */}
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border-2 border-amber-500/50 bg-gradient-to-r from-amber-950/70 via-slate-900 to-black shadow-[0_0_35px_rgba(255,215,0,0.25)] max-w-4xl mx-auto space-y-4 text-center">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-black uppercase tracking-wider border border-emerald-500/40 shadow-sm">
+          <Sparkles className="w-4 h-4 text-emerald-400" /> OFFICIAL PRIZE POOL BREAKDOWN
+        </div>
+
+        <h2 className="text-2xl sm:text-4xl font-black text-white">
+          Total Collection: <span className="text-amber-400 font-mono">₹7,000 (7K)</span>
+        </h2>
+
+        <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          As per official GGL rules, the total contestant entry collection of <strong className="text-amber-300 font-bold">₹7,000</strong> was divided equally among all 5 accurate score guess winners:
+        </p>
+
+        <div className="p-4 rounded-2xl bg-black/80 border border-amber-500/30 inline-flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm sm:text-base font-black text-white">
+          <div className="flex items-center gap-2 font-mono text-amber-300">
+            <span>₹7,000 Collection</span>
+            <span className="text-slate-400">÷</span>
+            <span>5 Winners</span>
+          </div>
+          <span className="text-amber-400 hidden sm:inline">=</span>
+          <div className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-black text-base sm:text-lg font-black tracking-wide shadow-lg">
+            ₹1,400 PRIZE PER WINNER 🏆
+          </div>
         </div>
       </div>
 

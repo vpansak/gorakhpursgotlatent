@@ -1,8 +1,86 @@
 import { NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
+import { generateAppId } from '@/lib/helpers';
 
 export async function POST(req: Request) {
-  return NextResponse.json(
-    { error: 'Registration for Episode 2 will start soon! Stay tuned.' },
-    { status: 400 }
-  );
+  try {
+    const body = await req.json();
+    const {
+      fullName, name, email, mobile, phone, whatsapp, city, age,
+      performanceCategory, category, performanceTitle, performanceDescription,
+      performanceType, performerCount, duration, language, instagramUrl, instagram
+    } = body;
+
+    const effectiveFullName = (fullName || name || '').toString().trim();
+    const effectiveEmail = (email || '').toString().trim();
+    const effectiveMobile = (mobile || whatsapp || phone || '').toString().trim();
+    const effectiveCategory = (performanceCategory || category || 'Performer Act').toString().trim();
+    const effectiveCity = (city || '').toString().trim();
+    const effectiveInstagram = (instagramUrl || instagram || '').toString().trim();
+
+    if (!effectiveFullName || !effectiveEmail || !effectiveMobile) {
+      return NextResponse.json({ error: 'Please complete all required fields (Name, Mobile, Email)' }, { status: 400 });
+    }
+
+    const appId = generateAppId('PER');
+    const id = `per-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+    await db.execute(`
+      INSERT INTO performer_applications (
+        id, app_id, full_name, email, mobile_number, whatsapp_number, call_number,
+        performance_category, performance_title, performance_description, performance_type,
+        performer_count, performance_duration, performance_language, instagram_url,
+        city, age, payment_status, payment_amount, application_status, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING_WHATSAPP', '199.00', 'SUBMITTED', 'SUBMITTED')
+    `, [
+      id,
+      appId,
+      effectiveFullName,
+      effectiveEmail,
+      effectiveMobile,
+      effectiveMobile,
+      effectiveMobile,
+      effectiveCategory,
+      (performanceTitle || 'Audition Act').toString().trim(),
+      (performanceDescription || '').toString().trim(),
+      (performanceType || 'Solo').toString().trim(),
+      Number(performerCount) || 1,
+      (duration || '2 Minutes').toString().trim(),
+      (language || 'Hindi').toString().trim(),
+      effectiveInstagram,
+      effectiveCity,
+      Number(age) || 20
+    ]);
+
+    try {
+      await db.execute(`
+        INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
+        VALUES (?, 'PERFORMER', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Performer Audition Form Submission')
+      `, [`his-${Date.now()}`, appId]);
+    } catch (e) {}
+
+    saveIndividualEntryToS3('performers/all', appId, {
+      id,
+      app_id: appId,
+      full_name: effectiveFullName,
+      email: effectiveEmail,
+      mobile_number: effectiveMobile,
+      performance_category: effectiveCategory,
+      status: 'SUBMITTED',
+      created_at: new Date().toISOString()
+    }).catch(err => console.error('S3 individual performer save error:', err));
+
+    syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
+
+    return NextResponse.json({
+      success: true,
+      message: 'Performer Audition Application submitted successfully!',
+      appId,
+      status: 'SUBMITTED',
+    });
+  } catch (err: any) {
+    console.error('Error submitting performer application:', err);
+    return NextResponse.json({ error: err.message || 'Submission failed' }, { status: 500 });
+  }
 }

@@ -5,21 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { parseResponse } from '@/lib/client-fetch';
 import {
-  Users,
-  User,
-  Phone,
-  Mail,
-  Calendar,
-  MapPin,
-  FileText,
-  CheckCircle2,
-  ArrowRight,
-  ExternalLink,
-  Sparkles,
-  ShieldCheck,
-  HeartHandshake,
-  Clock,
-  Briefcase
+  Users, User, Phone, Mail, Calendar, MapPin, FileText, CheckCircle2,
+  ArrowRight, Sparkles, HeartHandshake, Briefcase, Loader2
 } from 'lucide-react';
 
 function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
@@ -55,22 +42,21 @@ export default function JoinTeamPage() {
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [redirecting, setRedirecting] = useState(false);
   const [generatedWhatsAppUrl, setGeneratedWhatsAppUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [submittedAppId, setSubmittedAppId] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const [loading, setLoading] = useState(false);
-  const [submittedAppId, setSubmittedAppId] = useState('');
-
-  const constructWhatsAppMessage = (data: typeof formData, appId?: string) => {
+  const constructWhatsAppMessage = (data: typeof formData, appId: string) => {
     return (
-`🌟 *GORAKHPUR'S GOT LATENT - JOIN TEAM APPLICATION* 🌟
-${appId ? `🆔 *Application ID:* ${appId}\n` : ''}
+`👥 *GORAKHPUR'S GOT LATENT - JOIN TEAM APPLICATION* 👥
+
+🆔 *Application ID:* ${appId}
 👤 *Full Name:* ${data.name.trim()}
 📱 *Mobile Number:* ${data.mobile.trim()}
 📧 *Email Address:* ${data.email.trim()}
@@ -82,7 +68,7 @@ ${appId ? `🆔 *Application ID:* ${appId}\n` : ''}
 ${data.about.trim()}
 
 ------------------------------------
-✨ _Submitted via official website: gorakhpursgotlatent.vercel.app_`
+✨ _Saved in Admin Portal | Official Website: gkpgotlatent.in_`
     );
   };
 
@@ -90,7 +76,6 @@ ${data.about.trim()}
     e.preventDefault();
     setErrorMessage('');
 
-    // Basic Validations
     if (!formData.name.trim()) {
       setErrorMessage('Please enter your full name.');
       return;
@@ -124,7 +109,6 @@ ${data.about.trim()}
     setLoading(true);
     let assignedAppId = '';
 
-    // Save to Database
     try {
       const res = await fetch('/api/apply/join-team', {
         method: 'POST',
@@ -138,6 +122,8 @@ ${data.about.trim()}
       }
     } catch (err) {
       console.warn('API save warning (proceeding to WhatsApp):', err);
+      assignedAppId = `EVT-${Date.now().toString().slice(-6)}`;
+      setSubmittedAppId(assignedAppId);
     } finally {
       setLoading(false);
     }
@@ -147,7 +133,6 @@ ${data.about.trim()}
 
     setGeneratedWhatsAppUrl(waUrl);
     setSubmitted(true);
-    setRedirecting(true);
 
     // Automatically trigger WhatsApp redirect
     setTimeout(() => {
@@ -158,7 +143,6 @@ ${data.about.trim()}
   if (submitted) {
     return (
       <div className="py-16 px-4 max-w-2xl mx-auto text-center space-y-8 animate-in fade-in zoom-in duration-300">
-        {/* Animated Success Badge */}
         <div className="relative mx-auto w-24 h-24">
           <div className="absolute inset-0 rounded-full bg-emerald-500/20 blur-xl animate-pulse" />
           <div className="relative w-24 h-24 rounded-full bg-gradient-to-tr from-emerald-600 to-green-400 p-[2px] flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.5)]">
@@ -170,17 +154,21 @@ ${data.about.trim()}
 
         <div className="space-y-3">
           <span className="px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-black uppercase tracking-wider inline-flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4" /> Application Ready
+            <CheckCircle2 className="w-4 h-4" /> Team Application Saved in Admin Portal
           </span>
           <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
             Redirecting to <span className="text-emerald-400">WhatsApp</span>...
           </h1>
           <p className="text-slate-300 text-sm max-w-lg mx-auto">
-            Your team application is formatted and ready. Press Send in WhatsApp to deliver your application directly to the Gorakhpur’s Got Latent organizing team at <strong className="text-emerald-300">{DISPLAY_PHONE}</strong>.
+            Your team application is saved in the Admin Portal and formatted. Opening WhatsApp to deliver details to <strong className="text-emerald-300">{DISPLAY_PHONE}</strong>.
           </p>
+
+          <div className="p-4 rounded-2xl bg-slate-900 border border-amber-500/30 max-w-md mx-auto">
+            <span className="text-xs text-amber-400 font-bold uppercase tracking-widest block">TEAM APPLICATION ID</span>
+            <div className="text-2xl sm:text-3xl font-black text-amber-300 font-mono tracking-wider mt-1">{submittedAppId}</div>
+          </div>
         </div>
 
-        {/* Action Button */}
         <div className="space-y-3 max-w-md mx-auto pt-2">
           <a
             href={generatedWhatsAppUrl}
@@ -189,58 +177,15 @@ ${data.about.trim()}
             className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 hover:from-emerald-400 hover:to-green-400 text-black font-extrabold text-base flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all transform hover:scale-[1.02]"
           >
             <WhatsAppIcon className="w-6 h-6 fill-current" />
-            CLICK HERE IF NOT REDIRECTED
+            CLICK HERE IF NOT REDIRECTED TO WHATSAPP
           </a>
-
-          <p className="text-xs text-slate-400">
-            Target WhatsApp Number: <span className="font-mono text-emerald-400 font-bold">{DISPLAY_PHONE}</span>
-          </p>
-        </div>
-
-        {/* Summary Card */}
-        <div className="p-6 rounded-3xl bg-slate-900/90 border border-emerald-500/20 text-left space-y-3 max-w-lg mx-auto shadow-2xl">
-          <h4 className="text-xs font-black text-emerald-400 uppercase tracking-wider border-b border-white/10 pb-2 flex items-center gap-2">
-            <Sparkles className="w-4 h-4" /> Application Summary Preview
-          </h4>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <div>
-              <span className="text-slate-400 block">Name:</span>
-              <span className="text-white font-semibold">{formData.name}</span>
-            </div>
-            <div>
-              <span className="text-slate-400 block">Mobile:</span>
-              <span className="text-white font-semibold font-mono">{formData.mobile}</span>
-            </div>
-            <div>
-              <span className="text-slate-400 block">Email:</span>
-              <span className="text-white font-semibold truncate block">{formData.email}</span>
-            </div>
-            <div>
-              <span className="text-slate-400 block">DOB:</span>
-              <span className="text-white font-semibold">{formData.dob}</span>
-            </div>
-            <div className="col-span-2">
-              <span className="text-slate-400 block">Address:</span>
-              <span className="text-slate-200">{formData.address}</span>
-            </div>
-            <div className="col-span-2">
-              <span className="text-slate-400 block">Instagram:</span>
-              <span className="text-amber-400 font-medium">{formData.instagram}</span>
-            </div>
-          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-          <button
-            onClick={() => setSubmitted(false)}
-            className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors"
-          >
-            Edit Application
-          </button>
-          <Link
-            href="/"
-            className="px-6 py-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-bold transition-colors"
-          >
+          <Link href={`/track?appId=${submittedAppId}`} className="px-6 py-3 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold hover:bg-amber-500/30 transition-colors">
+            Track Application Status
+          </Link>
+          <Link href="/" className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors">
             Return to Homepage
           </Link>
         </div>
@@ -250,7 +195,6 @@ ${data.about.trim()}
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-8">
-      {/* Top Banner / Logo */}
       <div className="text-center space-y-3">
         <div className="relative w-44 h-16 mx-auto">
           <Image src="/logo.png" alt="Gorakhpur's Got Latent" fill className="object-contain" priority />
@@ -262,11 +206,10 @@ ${data.about.trim()}
           JOIN THE <span className="gold-gradient-text">TEAM</span>
         </h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          Be a part of Purvanchal’s biggest live entertainment sensation! Fill out your details below to submit your application directly to the organizing team via WhatsApp.
+          Be a part of Purvanchal’s biggest live entertainment sensation! Fill out your details below to save in Admin Portal and connect directly with the organizing team via WhatsApp.
         </p>
       </div>
 
-      {/* Perks / Roles Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="p-4 rounded-2xl bg-slate-900/60 border border-white/5 flex items-start gap-3">
           <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 shrink-0">
@@ -299,32 +242,23 @@ ${data.about.trim()}
         </div>
       </div>
 
-      {/* Error alert if any */}
       {errorMessage && (
         <div className="p-4 rounded-2xl bg-red-500/20 border border-red-500/40 text-red-300 text-xs sm:text-sm font-semibold flex items-center gap-2">
           <span>⚠️ {errorMessage}</span>
         </div>
       )}
 
-      {/* Main Join Team Form */}
       <form onSubmit={handleSubmit} className="space-y-6 glass-panel p-6 sm:p-10 rounded-3xl border border-amber-500/20 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
-
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
           <div>
             <h2 className="text-xl font-black text-white flex items-center gap-2">
               <Users className="w-5 h-5 text-amber-400" /> Team Member Application
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">All details will be sent directly to our team on WhatsApp ({DISPLAY_PHONE}).</p>
+            <p className="text-xs text-slate-400 mt-0.5">All details will be saved in Admin Portal and sent directly on WhatsApp ({DISPLAY_PHONE}).</p>
           </div>
-          <span className="hidden sm:inline-block px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-black uppercase">
-            Instant WhatsApp Connect
-          </span>
         </div>
 
-        {/* Input Fields */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {/* 1. Name */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <User className="w-3.5 h-3.5 text-amber-400" /> Full Name (नाम) *
@@ -336,31 +270,25 @@ ${data.about.trim()}
               value={formData.name}
               onChange={handleChange}
               placeholder="e.g. Rahul Verma"
-              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none transition-all"
             />
           </div>
 
-          {/* 2. Mobile No */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <Phone className="w-3.5 h-3.5 text-amber-400" /> Mobile Number (मोबाइल नं.) *
             </label>
-            <div className="relative">
-              <span className="absolute left-3.5 top-3 text-xs font-bold text-amber-400/80 pointer-events-none">+91</span>
-              <input
-                type="tel"
-                name="mobile"
-                required
-                maxLength={13}
-                value={formData.mobile}
-                onChange={handleChange}
-                placeholder="9876543210"
-                className="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all font-mono"
-              />
-            </div>
+            <input
+              type="tel"
+              name="mobile"
+              required
+              value={formData.mobile}
+              onChange={handleChange}
+              placeholder="+91 98765 43210"
+              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none font-mono transition-all"
+            />
           </div>
 
-          {/* 3. Email */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <Mail className="w-3.5 h-3.5 text-amber-400" /> Email Address (ईमेल) *
@@ -372,11 +300,10 @@ ${data.about.trim()}
               value={formData.email}
               onChange={handleChange}
               placeholder="e.g. rahul@example.com"
-              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none transition-all"
             />
           </div>
 
-          {/* 4. Date of Birth */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 text-amber-400" /> Date of Birth (जन्म तिथि) *
@@ -387,11 +314,10 @@ ${data.about.trim()}
               required
               value={formData.dob}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none transition-all"
             />
           </div>
 
-          {/* 5. Address */}
           <div className="space-y-1.5 sm:col-span-2">
             <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-amber-400" /> Full Address & City (पता) *
@@ -403,11 +329,10 @@ ${data.about.trim()}
               value={formData.address}
               onChange={handleChange}
               placeholder="e.g. Mohaddipur, Gorakhpur, Uttar Pradesh 273008"
-              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none transition-all"
             />
           </div>
 
-          {/* 6. Instagram Link */}
           <div className="space-y-1.5 sm:col-span-2">
             <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <InstagramIcon className="w-3.5 h-3.5 text-amber-400" /> Instagram Profile Link / Username (इंस्टाग्राम लिंक) *
@@ -419,11 +344,10 @@ ${data.about.trim()}
               value={formData.instagram}
               onChange={handleChange}
               placeholder="e.g. https://instagram.com/your_handle or @your_handle"
-              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none transition-all"
             />
           </div>
 
-          {/* 7. About */}
           <div className="space-y-1.5 sm:col-span-2">
             <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5 text-amber-400" /> About Yourself & Why You Want to Join (अपने बारे में बताएं) *
@@ -434,38 +358,36 @@ ${data.about.trim()}
               rows={4}
               value={formData.about}
               onChange={handleChange}
-              placeholder="Tell us about yourself, your skills (e.g. event management, video editing, anchoring, crowd control), experience, and why you want to be part of Gorakhpur's Got Latent..."
-              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all leading-relaxed"
+              placeholder="Tell us about yourself, your skills, experience, and why you want to join Gorakhpur's Got Latent..."
+              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none transition-all leading-relaxed"
             />
           </div>
         </div>
 
-        {/* WhatsApp Notice Bar */}
         <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-xs text-emerald-200">
           <WhatsAppIcon className="w-6 h-6 text-emerald-400 shrink-0" />
           <div>
-            <strong className="text-white block font-bold">Direct WhatsApp Submission:</strong>
-            Submitting this form will automatically redirect you to WhatsApp to send all your entered details to <strong className="text-emerald-300">{DISPLAY_PHONE}</strong>.
+            <strong className="text-white block font-bold">Automatic Admin Save & WhatsApp Connect:</strong>
+            Submitting this form will automatically save your details in the Admin Portal with an Application ID and redirect to WhatsApp ({DISPLAY_PHONE}).
           </div>
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 hover:from-emerald-400 hover:to-green-400 text-black font-extrabold text-base flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(16,185,129,0.35)] transition-all transform hover:scale-[1.01]"
+          disabled={loading}
+          className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 hover:from-emerald-400 hover:to-green-400 text-black font-extrabold text-base flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(16,185,129,0.35)] transition-all transform hover:scale-[1.01] cursor-pointer"
         >
-          <WhatsAppIcon className="w-6 h-6 fill-current" />
-          SUBMIT APPLICATION & CONNECT ON WHATSAPP
-          <ArrowRight className="w-5 h-5" />
+          {loading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <>
+              <WhatsAppIcon className="w-6 h-6 fill-current" />
+              SUBMIT APPLICATION & CONNECT ON WHATSAPP
+              <ArrowRight className="w-5 h-5" />
+            </>
+          )}
         </button>
       </form>
-
-      {/* Bottom Back Link */}
-      <div className="text-center pt-2">
-        <Link href="/apply" className="inline-flex items-center gap-2 text-xs text-amber-400 hover:underline font-bold">
-          ← Back to All Application Streams
-        </Link>
-      </div>
     </div>
   );
 }

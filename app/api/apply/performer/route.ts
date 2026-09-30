@@ -26,13 +26,16 @@ export async function POST(req: Request) {
     const appId = generateAppId('PER');
     const id = `per-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
+    const parsedAge = parseInt((age || '').toString().replace(/\D/g, ''), 10) || 18;
+    const parsedCount = parseInt((performerCount || '1').toString().replace(/\D/g, ''), 10) || 1;
+
     await db.execute(`
       INSERT INTO performer_applications (
         id, app_id, full_name, email, mobile_number, whatsapp_number, call_number,
         performance_category, performance_title, performance_description, performance_type,
         performer_count, performance_duration, performance_language, instagram_url,
         city, age, payment_status, payment_amount, application_status, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING_WHATSAPP', '199.00', 'SUBMITTED', 'SUBMITTED')
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'FREE_AUDITION_SUBMITTED', '0.00', 'SUBMITTED', 'SUBMITTED')
     `, [
       id,
       appId,
@@ -45,12 +48,12 @@ export async function POST(req: Request) {
       (performanceTitle || 'Audition Act').toString().trim(),
       (performanceDescription || '').toString().trim(),
       (performanceType || 'Solo').toString().trim(),
-      Number(performerCount) || 1,
+      parsedCount,
       (duration || '2 Minutes').toString().trim(),
       (language || 'Hindi').toString().trim(),
       effectiveInstagram,
       effectiveCity,
-      Number(age) || 20
+      parsedAge
     ]);
 
     try {

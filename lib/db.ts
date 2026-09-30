@@ -1,25 +1,15 @@
-import { Pool } from 'pg';
+import { neon } from '@neondatabase/serverless';
 
-const databaseUrl = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_pay1mTgz2qSi@ep-fancy-voice-b52wvbws-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+const databaseUrl = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_pay1mTgz2qSi@ep-fancy-voice-b52wvbws-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require';
 if (!process.env.DATABASE_URL) {
   console.warn('⚠️ DATABASE_URL environment variable is not explicitly set; using default Neon pooler connection.');
 }
 
+// Stateless Neon HTTP client: zero TCP connection drops, fast HTTPS requests
+const sqlClient = neon(databaseUrl);
+
 declare global {
-  var _neonPool: Pool | undefined;
   var _schemaInitPromise: Promise<void> | undefined;
-}
-
-// Singleton connection pool for Next.js hot-reloading
-export const pool: Pool = global._neonPool || new Pool({
-  connectionString: databaseUrl,
-  ssl: { rejectUnauthorized: false },
-  max: 10,
-  idleTimeoutMillis: 30000,
-});
-
-if (process.env.NODE_ENV !== 'production') {
-  global._neonPool = pool;
 }
 
 /**
@@ -31,16 +21,49 @@ export function normalizeSql(sql: string): string {
   return sql.replace(/\?/g, () => `$${index++}`);
 }
 
+/**
+ * Executes queries using stateless HTTP client with automatic retry logic for transient errors
+ */
+async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], retries = 3): Promise<T[]> {
+  const normalized = normalizeSql(sqlText);
+  let lastErr: any;
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const rows = await sqlClient.query(normalized, params);
+      return rows as T[];
+    } catch (err: any) {
+      lastErr = err;
+      if (attempt < retries) {
+        console.warn(`⚠️ DB query attempt ${attempt} failed (${err?.message || err}). Retrying in ${150 * attempt}ms...`);
+        await new Promise((r) => setTimeout(r, 150 * attempt));
+      }
+    }
+  }
+  console.error('Database query error after retries:', lastErr, '| SQL:', sqlText);
+  throw lastErr;
+}
+
+/**
+ * Compatible Pool wrapper providing pg-like interface backed by stateless HTTP client
+ */
+export const pool = {
+  query: async (sqlText: string, params: any[] = []) => {
+    const rows = await executeWithRetry(sqlText, params);
+    return { rows, rowCount: Array.isArray(rows) ? rows.length : 0 };
+  },
+  end: async () => {},
+};
+
 export interface AppDatabase {
   query: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
   queryOne: <T = any>(sql: string, params?: any[]) => Promise<T | null>;
   execute: (sql: string, params?: any[]) => Promise<{ rowCount: number }>;
-  pool: Pool;
+  pool: typeof pool;
   [key: string]: any;
 }
 
 /**
- * Automatically ensures missing columns and tables exist in Neon DB
+ * Automatically ensures missing columns and tables exist in Database
  */
 export async function ensureDatabaseSchema() {
   if (global._schemaInitPromise) return global._schemaInitPromise;
@@ -48,7 +71,7 @@ export async function ensureDatabaseSchema() {
   global._schemaInitPromise = (async () => {
     try {
       // 1. Ensure team_applications table
-      await pool.query(`
+      await executeWithRetry(`
         CREATE TABLE IF NOT EXISTS team_applications (
           id TEXT PRIMARY KEY,
           app_id TEXT UNIQUE NOT NULL,
@@ -77,14 +100,12 @@ export async function ensureDatabaseSchema() {
       ];
 
       for (const table of tablesWithReadStatus) {
-        await pool.query(`
-          ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS is_read INTEGER DEFAULT 0;
-          ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS read_at TIMESTAMP WITH TIME ZONE;
-        `);
+        await executeWithRetry(`ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS is_read INTEGER DEFAULT 0`);
+        await executeWithRetry(`ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS read_at TIMESTAMP WITH TIME ZONE`);
       }
 
       // 3. Ensure computerji_scores table
-      await pool.query(`
+      await executeWithRetry(`
         CREATE TABLE IF NOT EXISTS computerji_scores (
           contestant_id INT PRIMARY KEY,
           contestant_name VARCHAR(255) NOT NULL,
@@ -111,14 +132,7 @@ export async function ensureDatabaseSchema() {
 
 export async function query<T = any>(sql: string, params: any[] = []): Promise<T[]> {
   await ensureDatabaseSchema();
-  try {
-    const normalized = normalizeSql(sql);
-    const result = await pool.query(normalized, params);
-    return result.rows as T[];
-  } catch (err) {
-    console.error('Database query error:', err, '| SQL:', sql);
-    throw err;
-  }
+  return executeWithRetry<T>(sql, params);
 }
 
 export async function queryOne<T = any>(sql: string, params: any[] = []): Promise<T | null> {
@@ -128,14 +142,8 @@ export async function queryOne<T = any>(sql: string, params: any[] = []): Promis
 
 export async function execute(sql: string, params: any[] = []): Promise<{ rowCount: number }> {
   await ensureDatabaseSchema();
-  try {
-    const normalized = normalizeSql(sql);
-    const result = await pool.query(normalized, params);
-    return { rowCount: result.rowCount || 0 };
-  } catch (err) {
-    console.error('Database execute error:', err, '| SQL:', sql);
-    throw err;
-  }
+  const rows = await executeWithRetry(sql, params);
+  return { rowCount: Array.isArray(rows) ? rows.length : 0 };
 }
 
 export const db: AppDatabase = {
@@ -150,4 +158,5 @@ export function initDatabase() {
 }
 
 export default db;
+
 

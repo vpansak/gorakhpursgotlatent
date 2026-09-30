@@ -192,13 +192,13 @@ export default function Episode1WinnersPage() {
               <div className="grid grid-cols-2 gap-3 bg-black/50 p-4 rounded-2xl border border-white/10 text-center">
                 <div>
                   <span className="text-[11px] font-bold text-slate-400 uppercase block">Judges Average</span>
-                  <span className="text-2xl font-black text-amber-400 font-mono">{winner.rawAverage.toFixed(2)}</span>
-                  <span className="text-[10px] text-slate-400 block font-semibold">(Rounded: {winner.roundedAverage})</span>
+                  <span className="text-2xl font-black text-amber-400 font-mono">{winner.roundedAverage.toFixed(1)}</span>
+                  <span className="text-[10px] text-amber-300/80 block font-semibold">(0.5 Round Off)</span>
                 </div>
                 <div>
                   <span className="text-[11px] font-bold text-slate-400 uppercase block">Contestant Guess</span>
-                  <span className="text-2xl font-black text-emerald-400 font-mono">{winner.contestantGuess}</span>
-                  <span className="text-[10px] text-emerald-400 block font-bold">✓ PERFECT MATCH</span>
+                  <span className="text-2xl font-black text-emerald-400 font-mono">{winner.contestantGuess.toFixed(1)}</span>
+                  <span className="text-[10px] text-emerald-400 block font-bold">✓ EXACT MATCH</span>
                 </div>
               </div>
 

@@ -114,12 +114,13 @@ export default async function HomePage() {
         <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 sm:space-y-5">
           {/* Official Logo Banner */}
           <div className="relative w-72 sm:w-[420px] md:w-[500px] h-36 sm:h-48 md:h-60 mx-auto animate-float">
+            <div className="stage-logo-glow" />
             <Image
               src="/logo.png"
               alt="Gorakhpur's Got Latent Official Title Logo"
               fill
               priority
-              className="object-contain filter drop-shadow-[0_0_35px_rgba(255,215,0,0.65)]"
+              className="object-contain filter drop-shadow-[0_0_25px_rgba(255,215,0,0.55)]"
             />
           </div>
 

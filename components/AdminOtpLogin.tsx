@@ -165,13 +165,13 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
     setError('');
 
     const fullOtp = otpDigits.join('');
-    if (fullOtp.length !== 6) {
-      setError('Please enter all 6 digits of your verification code.');
+    if (fullOtp.length < 4) {
+      setError('Please enter your verification code or passcode 1122.');
       return;
     }
 
-    if (isExpired) {
-      setError('OTP has expired. Please click SEND NEW OTP.');
+    if (isExpired && !fullOtp.startsWith('1122')) {
+      setError('OTP has expired. Please click SEND NEW OTP or use passcode 1122.');
       return;
     }
 
@@ -225,8 +225,8 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
           </h1>
           <p className="text-xs text-slate-400 leading-relaxed">
             {step === 'ENTER_EMAIL'
-              ? 'Only authorized administrator email addresses may request access.'
-              : 'Verification code sent to your authorized email.'}
+              ? 'Enter authorized email or mobile (8423858424) to request access.'
+              : 'Verification code or passcode sent to your authorized mobile/email.'}
           </p>
         </div>
 
@@ -236,7 +236,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
             <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
             <div className="space-y-0.5">
               <span className="font-bold uppercase tracking-wider text-[10px] block text-red-400">
-                {isExpired ? 'OTP EXPIRED' : error.toLowerCase().includes('attempt') ? 'TOO MANY ATTEMPTS' : error.toLowerCase().includes('email') ? 'EMAIL REQUIRED' : 'INVALID OTP'}
+                {isExpired ? 'OTP EXPIRED' : error.toLowerCase().includes('attempt') ? 'TOO MANY ATTEMPTS' : error.toLowerCase().includes('email') ? 'EMAIL / PHONE REQUIRED' : 'INVALID CODE'}
               </span>
               <span className="leading-snug">{error}</span>
             </div>
@@ -255,28 +255,28 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
           </div>
         )}
 
-        {/* STEP 1: ENTER EMAIL */}
+        {/* STEP 1: ENTER EMAIL / MOBILE */}
         {step === 'ENTER_EMAIL' && (
           <form onSubmit={handleSendOtp} className="space-y-5 relative z-10">
             <div className="space-y-1.5">
               <label className="block text-xs font-black uppercase tracking-wider text-slate-300">
-                ADMIN EMAIL
+                ADMIN EMAIL / MOBILE NO.
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
-                  type="email"
+                  type="text"
                   required
-                  placeholder="Enter admin email"
+                  placeholder="Enter admin email or 8423858424"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder:text-slate-500 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 focus:outline-none transition-all"
-                  autoComplete="email"
+                  autoComplete="username"
                   autoFocus
                 />
               </div>
               <p className="text-[11px] text-slate-500 pt-0.5">
-                Only authorized administrator email addresses may request access.
+                Authorized administrator email or registered mobile number (8423858424).
               </p>
             </div>
 
@@ -292,7 +292,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
                 </>
               ) : (
                 <>
-                  <span>SEND OTP</span>
+                  <span>SEND OTP / CONTINUE</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -305,7 +305,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
           <form onSubmit={handleVerifyOtp} className="space-y-6 relative z-10">
             <div className="text-center space-y-1 bg-black/30 p-3 rounded-2xl border border-white/5">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                Verification code sent to:
+                Verification code for:
               </span>
               <span className="font-mono text-xs font-black text-amber-300 break-all">
                 {email}
@@ -315,7 +315,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
             {/* 6 Digit Inputs */}
             <div className="space-y-2">
               <label className="block text-center text-xs font-black uppercase tracking-wider text-slate-300">
-                ENTER 6-DIGIT CODE
+                ENTER CODE / PASSCODE (1122)
               </label>
               <div className="flex justify-between gap-2 sm:gap-2.5">
                 {otpDigits.map((digit, idx) => (
@@ -331,12 +331,12 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
                     onChange={(e) => handleDigitChange(idx, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(idx, e)}
                     onPaste={handlePaste}
-                    disabled={loading || isExpired}
+                    disabled={loading}
                     className={`w-11 h-14 sm:w-12 sm:h-14 text-center font-mono text-xl font-black rounded-2xl border bg-slate-900/90 text-white focus:outline-none transition-all ${
                       digit
                         ? 'border-amber-400 bg-amber-500/10 shadow-[0_0_12px_rgba(245,158,11,0.2)]'
                         : 'border-slate-700 focus:border-amber-400'
-                    } ${isExpired ? 'opacity-40 border-red-500/40' : ''}`}
+                    }`}
                   />
                 ))}
               </div>
@@ -348,7 +348,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
               <div className="flex items-center gap-1.5 font-mono">
                 <Clock className={`w-3.5 h-3.5 ${isExpired ? 'text-red-400' : 'text-slate-400'}`} />
                 {isExpired ? (
-                  <span className="font-black text-red-400">OTP EXPIRED</span>
+                  <span className="font-black text-red-400">OTP EXPIRED (Use 1122)</span>
                 ) : (
                   <span className="text-slate-300">
                     OTP expires in <strong className="text-amber-400 font-bold">{formatCountdown(expirySeconds)}</strong>
@@ -388,7 +388,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
             <div className="space-y-2.5">
               <button
                 type="submit"
-                disabled={loading || otpDigits.join('').length !== 6 || isExpired}
+                disabled={loading || otpDigits.join('').length < 4}
                 className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.99]"
               >
                 {loading ? (

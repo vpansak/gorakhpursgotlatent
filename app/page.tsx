@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import CountdownTimer from '@/components/CountdownTimer';
+import Episode2CountdownTimer from '@/components/Episode2CountdownTimer';
 import { db } from '@/lib/db';
 import { formatINR } from '@/lib/helpers';
 import {
@@ -46,8 +47,8 @@ export default async function HomePage() {
       a: "Gorakhpur's Got Latent is Purvanchal's flagship live talent hunt show and entertainment phenomenon. It showcases musicians, beatboxers, stand-up comedians, dancers, magicians, and raw unique performers live on stage."
     },
     {
-      q: "How can I apply as a performer?",
-      a: "Performer registration is currently closed as all current audition slots are full. New registration slots for upcoming episodes will open soon! Keep checking our website and social channels for updates."
+      q: "How can I apply as a performer for Episode 2?",
+      a: "Episode 2 audition registrations will go live on 02 October 2026 at 10:00 AM IST! Auditions are FREE to submit. Fill your details and send your performance clip on WhatsApp."
     },
     {
       q: "How do I receive my ticket after payment?",
@@ -132,9 +133,9 @@ export default async function HomePage() {
           </div>
 
           {/* Performer Registration Status Banner */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold font-barlow uppercase tracking-wider">
-            <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-            Performer Registration Closed • Opening Soon
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold font-barlow uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+            Episode 2 Auditions Go Live: 02 October 2026 @ 10:00 AM IST
           </div>
 
           {/* Action CTAs */}
@@ -151,11 +152,16 @@ export default async function HomePage() {
 
             <Link
               href="/apply/performer"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border-2 border-red-500/40 text-red-300 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-red-400 transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border-2 border-amber-500/40 text-amber-300 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-amber-400 transition-all duration-300 cursor-pointer"
             >
-              <UserCheck className="w-6 h-6 text-red-400" />
-              REGISTRATION OPENING SOON
+              <UserCheck className="w-6 h-6 text-amber-400" />
+              APPLY FOR EPISODE 2 (02 OCT @ 10 AM)
             </Link>
+          </div>
+
+          {/* LIVE COUNTDOWN TIMER ON HOME PAGE */}
+          <div className="pt-4 max-w-3xl mx-auto">
+            <Episode2CountdownTimer title="EPISODE 2 AUDITIONS • GOES LIVE 02 OCT 2026 @ 10:00 AM IST" />
           </div>
 
           {/* Official YouTube Channel Banner */}

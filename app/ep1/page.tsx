@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import confetti from 'canvas-confetti';
+import Episode2CountdownTimer from '@/components/Episode2CountdownTimer';
 import {
   Trophy, Star, Award, Sparkles, CheckCircle2, Mic2, Music, User,
   Flame, Search, ArrowRight, ShieldCheck, ChevronDown, ChevronUp
@@ -352,21 +353,29 @@ export default function Episode1WinnersPage() {
         )}
       </div>
 
-      {/* FOOTER CTA BANNER */}
+      {/* LIVE COUNTDOWN & FOOTER CTA BANNER */}
+      <Episode2CountdownTimer title="EPISODE 2 AUDITIONS ANNOUNCED • GOES LIVE 02 OCT 10:00 AM IST" />
+
       <div className="p-8 rounded-3xl bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-center text-white space-y-4 shadow-2xl">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/30 border border-white/20 text-white text-xs font-black uppercase tracking-wider">
-          <Sparkles className="w-4 h-4 text-yellow-300" /> EPISODE 2 ANNOUNCED SOON
+          <Sparkles className="w-4 h-4 text-yellow-300" /> EPISODE 2 GOES LIVE 02 OCT 2026 @ 10:00 AM IST
         </div>
         <h2 className="text-3xl sm:text-4xl font-black">Want To Perform On Gorakhpur’s Got Latent Stage?</h2>
-        <p className="text-xs sm:text-sm text-amber-100 max-w-2xl mx-auto">
-          Performer registrations for Episode 2 auditions will open soon! Keep your registration details ready.
+        <p className="text-xs sm:text-sm text-amber-100 max-w-2xl mx-auto leading-relaxed">
+          Performer registrations for Episode 2 auditions will go live on <strong className="text-white underline underline-offset-4 font-black">02 October 2026 at 10:00 AM IST</strong>! Keep your registration details ready. Audition form submit kerna FREE hai. Select hone ke baad aage ka process communicate kiya jayega.
         </p>
-        <div className="pt-2">
+        <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/apply/performer"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-black hover:bg-slate-900 text-amber-400 font-black text-sm shadow-xl transition-all"
+            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-black hover:bg-slate-900 text-amber-400 font-black text-sm shadow-xl transition-all"
           >
-            CHECK AUDITION STATUS <ArrowRight className="w-4 h-4" />
+            APPLY FOR EPISODE 2 AUDITION <ArrowRight className="w-4 h-4" />
+          </Link>
+          <Link
+            href="/track"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-sm backdrop-blur-md transition-all border border-white/30"
+          >
+            CHECK AUDITION STATUS
           </Link>
         </div>
       </div>

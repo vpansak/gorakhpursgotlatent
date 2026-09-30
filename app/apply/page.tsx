@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Mic2, Star, Building2, Users, ChevronRight, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import Episode2CountdownTimer from '@/components/Episode2CountdownTimer';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -10,18 +11,18 @@ export default function ApplyPage() {
     {
       title: 'Performer Application',
       subtitle: 'Singers, Dancers, Comedians, Beatboxers & Unique Acts',
-      desc: 'Showcase your talent on the biggest live stage in Purvanchal. Complete registration & payment to auto-submit your audition details directly to WhatsApp.',
+      desc: 'Showcase your talent on the biggest live stage in Purvanchal. Performer registrations for Episode 2 go live on 02 October 2026 at 10:00 AM IST.',
       href: '/apply/performer',
       icon: Mic2,
-      badge: 'EPISODE 2 AUDITIONS • FEE ₹199',
+      badge: 'EPISODE 2 GOES LIVE 02 OCT @ 10:00 AM IST',
       badgeClass: 'bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse',
       color: 'from-amber-500/20 via-amber-500/10 to-transparent',
       borderColor: 'border-amber-500/40',
       btnBg: 'bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black hover:opacity-95',
-      btnText: 'FILL FORM & PAY ₹199',
+      btnText: 'APPLY FOR EPISODE 2 AUDITION (FREE)',
       alertBox: {
-        tag: 'EPISODE 2 OPEN',
-        text: 'Performer registration for Episode 2 is open! Fill details, complete payment & get auto-redirected to WhatsApp (8423858424).',
+        tag: 'EPISODE 2 AUDITIONS',
+        text: 'Performer registration for Episode 2 auditions goes live on 02 October 2026 at 10:00 AM IST! Auditions are free to submit.',
       },
     },
     {
@@ -60,7 +61,7 @@ export default function ApplyPage() {
   ];
 
   return (
-    <div className="pt-6 sm:pt-10 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
+    <div className="pt-6 sm:pt-10 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <div className="relative w-44 h-16 mx-auto">
@@ -74,6 +75,9 @@ export default function ApplyPage() {
         </p>
       </div>
 
+      {/* LIVE COUNTDOWN TIMER */}
+      <Episode2CountdownTimer title="EPISODE 2 AUDITIONS • GOES LIVE 02 OCT 2026 @ 10:00 AM IST" />
+
       {/* Performer Registration Callout */}
       <div className="max-w-4xl mx-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-emerald-950/70 border border-amber-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs sm:text-sm text-amber-200 shadow-[0_0_30px_rgba(245,158,11,0.15)]">
         <div className="flex items-start gap-3">
@@ -83,14 +87,14 @@ export default function ApplyPage() {
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-500 text-black text-[10px] font-black uppercase tracking-wider">
-                WHATSAPP REDIRECT ACTIVE
+                GOES LIVE 02 OCT @ 10 AM IST
               </span>
               <strong className="text-white font-bold text-sm">
-                Performer Registration: Fill Details & Pay ₹199
+                Performer Registration: Episode 2 Auditions
               </strong>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Complete payment via Razorpay. Your application is saved in DB and automatically redirects to WhatsApp (<strong className="text-amber-400">8423858424</strong>) with pre-filled transaction & performer details!
+              Fill in your details and send your performance clip on WhatsApp (<strong className="text-amber-400">+91 8423858424</strong>). Audition submission is FREE!
             </p>
           </div>
         </div>
@@ -98,7 +102,7 @@ export default function ApplyPage() {
           href="/apply/performer"
           className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs whitespace-nowrap shadow-lg transition-all flex items-center gap-1.5 shrink-0 self-stretch sm:self-auto justify-center"
         >
-          FILL FORM & PAY ₹199 <ChevronRight className="w-4 h-4" />
+          APPLY FOR EPISODE 2 <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
 

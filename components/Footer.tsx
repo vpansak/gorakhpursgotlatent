@@ -203,32 +203,7 @@ export default function Footer() {
               <li><Link href="/terms" className="hover:text-amber-400 transition-colors">Terms & Conditions</Link></li>
               <li><Link href="/privacy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
               <li><Link href="/refund-policy" className="hover:text-amber-400 transition-colors">Refund & Cancellation Policy</Link></li>
-            </ul>
-          </div>
-
-          {/* Col 4: Quick Info (All remaining A-Z links) */}
-          <div className="space-y-3">
-            <h4 className="text-base font-extrabold text-white uppercase tracking-wider gold-gradient-text">
-              QUICK INFO
-            </h4>
-            <ul className="space-y-2 text-sm text-slate-300">
-              <li><Link href="/" className="hover:text-amber-400 transition-colors">Home</Link></li>
-              <li>
-                <a 
-                  href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio" 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="hover:text-amber-400 transition-colors font-bold text-amber-300 flex items-center gap-1"
-                >
-                  Book on BookMyShow ↗
-                </a>
-              </li>
-              <li><Link href="/ep1" className="hover:text-amber-400 transition-colors text-amber-400 font-semibold">Episode 1 Winners 🏆</Link></li>
-              <li><Link href="/performers" className="hover:text-amber-400 transition-colors">Approved Performers</Link></li>
-              <li><Link href="/guests" className="hover:text-amber-400 transition-colors">Celebrity & Guest Panel</Link></li>
-              <li><Link href="/sponsors" className="hover:text-amber-400 transition-colors">Brand Partners & Sponsors</Link></li>
-              <li><Link href="/contact" className="hover:text-amber-400 transition-colors">Contact Us</Link></li>
-              <li><Link href="/developer" className="hover:text-amber-400 transition-colors">Developer Specs</Link></li>
+              <li><Link href="/quick-info" className="hover:text-amber-400 transition-colors font-semibold text-amber-300">Quick Info</Link></li>
             </ul>
           </div>
 

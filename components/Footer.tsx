@@ -177,13 +177,20 @@ export default function Footer() {
             <h4 className="text-base font-extrabold text-white uppercase tracking-wider gold-gradient-text">
               QUICK LINKS
             </h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-amber-400 transition-colors">Homepage</Link></li>
-              <li><a href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors font-semibold text-amber-300 flex items-center gap-1">Book on BookMyShow ↗</a></li>
-              <li><Link href="/performers" className="hover:text-amber-400 transition-colors">Approved Performers</Link></li>
-              <li><Link href="/guests" className="hover:text-amber-400 transition-colors">Celebrity & Guest Panel</Link></li>
-              <li><Link href="/sponsors" className="hover:text-amber-400 transition-colors">Brand Partners & Sponsors</Link></li>
+            <ul className="space-y-2 text-sm font-medium">
+              <li>
+                <a 
+                  href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="hover:text-amber-400 transition-colors font-bold text-amber-300 flex items-center gap-1"
+                >
+                  Book on BookMyShow ↗
+                </a>
+              </li>
+              <li><Link href="/apply/performer" className="hover:text-amber-400 transition-colors">Apply for Episode 2</Link></li>
               <li><Link href="/track" className="hover:text-amber-400 transition-colors">Track Application Status</Link></li>
+              <li><Link href="/performers" className="hover:text-amber-400 transition-colors">Approved Performers</Link></li>
             </ul>
           </div>
 

@@ -178,6 +178,7 @@ export default function Footer() {
               QUICK LINKS
             </h4>
             <ul className="space-y-2 text-sm font-medium">
+              <li><Link href="/" className="hover:text-amber-400 transition-colors">Home</Link></li>
               <li>
                 <a 
                   href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio" 
@@ -191,6 +192,10 @@ export default function Footer() {
               <li><Link href="/apply/performer" className="hover:text-amber-400 transition-colors">Apply for Episode 2</Link></li>
               <li><Link href="/track" className="hover:text-amber-400 transition-colors">Track Application Status</Link></li>
               <li><Link href="/performers" className="hover:text-amber-400 transition-colors">Approved Performers</Link></li>
+              <li><Link href="/guests" className="hover:text-amber-400 transition-colors">Celebrity & Guest Panel</Link></li>
+              <li><Link href="/sponsors" className="hover:text-amber-400 transition-colors">Brand Partners & Sponsors</Link></li>
+              <li><Link href="/ep1" className="hover:text-amber-400 transition-colors text-amber-400 font-semibold">Episode 1 Winners 🏆</Link></li>
+              <li><Link href="/contact" className="hover:text-amber-400 transition-colors">Contact Us</Link></li>
             </ul>
           </div>
 

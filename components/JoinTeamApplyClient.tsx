@@ -181,10 +181,7 @@ ${data.about.trim()}
           </a>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-          <Link href={`/track?appId=${submittedAppId}`} className="px-6 py-3 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold hover:bg-amber-500/30 transition-colors">
-            Track Application Status
-          </Link>
+        <div className="flex justify-center pt-2">
           <Link href="/" className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors">
             Return to Homepage
           </Link>

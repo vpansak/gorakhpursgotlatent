@@ -92,17 +92,6 @@ export default function NotFound() {
           </a>
 
           <Link
-            href="/track"
-            className="glass-card p-4 rounded-2xl border border-amber-500/20 hover:border-amber-400 transition-all space-y-2 group"
-          >
-            <div className="flex items-center justify-between text-xs font-bold text-amber-300">
-              <span className="flex items-center gap-1.5"><Search className="w-4 h-4" /> Track Application</span>
-              <span className="group-hover:translate-x-1 transition-transform">→</span>
-            </div>
-            <p className="text-xs text-slate-300">Check status using your Application ID.</p>
-          </Link>
-
-          <Link
             href="/apply/sponsor"
             className="glass-card p-4 rounded-2xl border border-blue-500/20 hover:border-blue-400 transition-all space-y-2 group"
           >

@@ -368,12 +368,6 @@ export default function Episode1WinnersPage() {
           >
             APPLY FOR EPISODE 2 AUDITION (FREE) <ArrowRight className="w-4 h-4" />
           </Link>
-          <Link
-            href="/track"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-sm backdrop-blur-md transition-all border border-white/30"
-          >
-            CHECK AUDITION STATUS
-          </Link>
         </div>
       </div>
     </div>

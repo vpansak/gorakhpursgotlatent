@@ -106,9 +106,6 @@ export default function ContactPage() {
           </div>
 
           <div className="space-y-3">
-            <Link href="/track" className="w-full py-3.5 rounded-xl bg-amber-500 text-black font-extrabold text-sm flex items-center justify-center gap-2">
-              TRACK APPLICATION STATUS
-            </Link>
             <a
               href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
               target="_blank"

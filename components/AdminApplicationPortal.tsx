@@ -515,7 +515,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             {[
-              { id: 'performer', label: '🎤 Performers (कलाकार - Free Audition)', count: data.performers?.length || 0 },
+              { id: 'performer', label: '🎤 Performers (कलाकार Audition)', count: data.performers?.length || 0 },
               { id: 'sponsor', label: '🤝 Sponsors (स्पॉन्सर)', count: data.sponsors?.length || 0 },
               { id: 'team', label: '👥 Join Team (टीम सदस्य)', count: data.team?.length || 0 },
               { id: 'guest', label: '⚖️ Judges & VIPs (जज / पैनल)', count: data.guests?.length || 0 },

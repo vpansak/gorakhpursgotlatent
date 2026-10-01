@@ -18,7 +18,7 @@ export default function ApplyPage() {
       color: 'from-amber-500/20 via-amber-500/10 to-transparent',
       borderColor: 'border-amber-500/40',
       btnBg: 'bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black hover:opacity-95',
-      btnText: 'APPLY FOR EPISODE 2 AUDITION (FREE)',
+      btnText: 'APPLY FOR EPISODE 2 AUDITION',
       alertBox: {
         tag: 'EPISODE 2 AUDITIONS LIVE',
         text: 'Performer registration for Episode 2 auditions is now LIVE! Auditions are free to submit.',

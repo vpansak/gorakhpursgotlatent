@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   ShieldCheck, Mail, KeyRound, Loader2, ArrowRight,
-  RefreshCw, AlertCircle, CheckCircle2, Clock, ArrowLeft
+  RefreshCw, AlertCircle, CheckCircle2, Clock, ArrowLeft, Lock
 } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 
@@ -16,15 +16,19 @@ interface AdminOtpLoginProps {
 export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
   const router = useRouter();
 
-  // State: 'ENTER_EMAIL' | 'VERIFY_OTP'
+  // Mode: 'OTP' | 'PASSWORD'
+  const [authMode, setAuthMode] = useState<'OTP' | 'PASSWORD'>('OTP');
+
+  // OTP Flow State: 'ENTER_EMAIL' | 'VERIFY_OTP'
   const [step, setStep] = useState<'ENTER_EMAIL' | 'VERIFY_OTP'>('ENTER_EMAIL');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Timers
+  // Timers for OTP
   const [expirySeconds, setExpirySeconds] = useState(300); // 5 minutes
   const [cooldownSeconds, setCooldownSeconds] = useState(60); // 60s cooldown for resend
   const [isExpired, setIsExpired] = useState(false);
@@ -34,7 +38,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
   // Expiry Countdown (5 mins)
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (step === 'VERIFY_OTP' && expirySeconds > 0) {
+    if (authMode === 'OTP' && step === 'VERIFY_OTP' && expirySeconds > 0) {
       timer = setInterval(() => {
         setExpirySeconds((prev) => {
           if (prev <= 1) {
@@ -46,27 +50,27 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [step, expirySeconds]);
+  }, [authMode, step, expirySeconds]);
 
   // Resend Cooldown Countdown (60s)
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (step === 'VERIFY_OTP' && cooldownSeconds > 0) {
+    if (authMode === 'OTP' && step === 'VERIFY_OTP' && cooldownSeconds > 0) {
       timer = setInterval(() => {
         setCooldownSeconds((prev) => Math.max(0, prev - 1));
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [step, cooldownSeconds]);
+  }, [authMode, step, cooldownSeconds]);
 
   // Focus first OTP input when transitioning to VERIFY_OTP
   useEffect(() => {
-    if (step === 'VERIFY_OTP') {
+    if (authMode === 'OTP' && step === 'VERIFY_OTP') {
       setTimeout(() => {
         otpInputRefs.current[0]?.focus();
       }, 100);
     }
-  }, [step]);
+  }, [authMode, step]);
 
   const formatCountdown = (totalSeconds: number) => {
     const mins = Math.floor(totalSeconds / 60);
@@ -115,12 +119,10 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
 
   // 2. OTP Input Handler with auto-advance and backspace
   const handleDigitChange = (index: number, val: string) => {
-    // Only numeric
     const clean = val.replace(/[^0-9]/g, '');
     const newDigits = [...otpDigits];
 
     if (clean.length > 1) {
-      // Pasting full code
       const pasted = clean.slice(0, 6).split('');
       pasted.forEach((char, i) => {
         if (i < 6) newDigits[i] = char;
@@ -166,12 +168,12 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
 
     const fullOtp = otpDigits.join('');
     if (fullOtp.length < 4) {
-      setError('Please enter your verification code or passcode 1122.');
+      setError('Please enter your verification code or passcode.');
       return;
     }
 
     if (isExpired && !fullOtp.startsWith('1122')) {
-      setError('OTP has expired. Please click SEND NEW OTP or use passcode 1122.');
+      setError('OTP has expired. Please click SEND NEW OTP or use passcode.');
       return;
     }
 
@@ -191,7 +193,6 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
 
       setSuccessMsg('Authenticated! Opening GGL Admin Portal...');
 
-      // Notify parent or refresh router
       if (onSuccess) {
         onSuccess();
       } else {
@@ -205,10 +206,53 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
     }
   };
 
+  // 4. ID & Password Login Handler
+  const handlePasswordLogin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setError('');
+    setSuccessMsg('');
+
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPass = password.trim();
+
+    if (!cleanEmail || !cleanPass) {
+      setError('Email and Password are required.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch('/api/malik/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: cleanEmail, password: cleanPass }),
+      });
+
+      const data = await parseResponse(res);
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Invalid email or password.');
+      }
+
+      setSuccessMsg('Authenticated! Opening GGL Admin Portal...');
+
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push('/malik');
+        router.refresh();
+      }
+    } catch (err: any) {
+      setError(err.message || 'Authentication failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-[85vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md glass-panel p-8 sm:p-9 rounded-3xl border border-amber-500/30 space-y-7 shadow-[0_0_60px_rgba(245,158,11,0.12)] relative overflow-hidden">
-        {/* Subtle decorative glow */}
+      <div className="w-full max-w-md glass-panel p-8 sm:p-9 rounded-3xl border border-amber-500/30 space-y-6 shadow-[0_0_60px_rgba(245,158,11,0.12)] relative overflow-hidden">
+        {/* Decorative background ambient light */}
         <div className="absolute -top-24 -right-24 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -224,11 +268,52 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
             ADMIN PORTAL
           </h1>
           <p className="text-xs text-slate-400 leading-relaxed">
-            {step === 'ENTER_EMAIL'
-              ? 'Enter authorized email or mobile (8423858424) to request access.'
-              : 'Verification code or passcode sent to your authorized mobile/email.'}
+            {authMode === 'OTP'
+              ? step === 'ENTER_EMAIL'
+                ? 'Enter authorized email address to request access.'
+                : 'Verification code sent to your authorized email address.'
+              : 'Enter your administrator credentials to login directly.'}
           </p>
         </div>
+
+        {/* Login Method Toggle Tabs */}
+        {step === 'ENTER_EMAIL' && (
+          <div className="flex bg-slate-900/90 p-1 rounded-2xl border border-slate-700/70 relative z-10 font-bold text-xs">
+            <button
+              type="button"
+              onClick={() => {
+                setAuthMode('OTP');
+                setError('');
+                setSuccessMsg('');
+              }}
+              className={`flex-1 py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                authMode === 'OTP'
+                  ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-black font-black shadow-md'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Mail className="w-3.5 h-3.5" />
+              <span>OTP LOGIN</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setAuthMode('PASSWORD');
+                setError('');
+                setSuccessMsg('');
+              }}
+              className={`flex-1 py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                authMode === 'PASSWORD'
+                  ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-black font-black shadow-md'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Lock className="w-3.5 h-3.5" />
+              <span>ID & PASSWORD</span>
+            </button>
+          </div>
+        )}
 
         {/* Status Alerts */}
         {error && (
@@ -236,7 +321,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
             <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
             <div className="space-y-0.5">
               <span className="font-bold uppercase tracking-wider text-[10px] block text-red-400">
-                {isExpired ? 'OTP EXPIRED' : error.toLowerCase().includes('attempt') ? 'TOO MANY ATTEMPTS' : error.toLowerCase().includes('email') ? 'EMAIL / PHONE REQUIRED' : 'INVALID CODE'}
+                {isExpired ? 'OTP EXPIRED' : error.toLowerCase().includes('attempt') ? 'TOO MANY ATTEMPTS' : error.toLowerCase().includes('email') ? 'EMAIL REQUIRED' : 'AUTH ERROR'}
               </span>
               <span className="leading-snug">{error}</span>
             </div>
@@ -255,19 +340,19 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
           </div>
         )}
 
-        {/* STEP 1: ENTER EMAIL / MOBILE */}
-        {step === 'ENTER_EMAIL' && (
+        {/* MODE 1: OTP LOGIN - STEP 1 (ENTER EMAIL) */}
+        {authMode === 'OTP' && step === 'ENTER_EMAIL' && (
           <form onSubmit={handleSendOtp} className="space-y-5 relative z-10">
             <div className="space-y-1.5">
               <label className="block text-xs font-black uppercase tracking-wider text-slate-300">
-                ADMIN EMAIL / MOBILE NO.
+                ADMIN EMAIL ADDRESS
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
-                  type="text"
+                  type="email"
                   required
-                  placeholder="Enter admin email or 8423858424"
+                  placeholder="admin@gkpgotlatent.in"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder:text-slate-500 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 focus:outline-none transition-all"
@@ -276,14 +361,14 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
                 />
               </div>
               <p className="text-[11px] text-slate-500 pt-0.5">
-                Authorized administrator email or registered mobile number (8423858424).
+                Authorized administrator email address.
               </p>
             </div>
 
             <button
               type="submit"
               disabled={loading || !email.trim()}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.99]"
+              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.99] cursor-pointer"
             >
               {loading ? (
                 <>
@@ -300,8 +385,8 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
           </form>
         )}
 
-        {/* STEP 2: VERIFY OTP */}
-        {step === 'VERIFY_OTP' && (
+        {/* MODE 1: OTP LOGIN - STEP 2 (VERIFY OTP) */}
+        {authMode === 'OTP' && step === 'VERIFY_OTP' && (
           <form onSubmit={handleVerifyOtp} className="space-y-6 relative z-10">
             <div className="text-center space-y-1 bg-black/30 p-3 rounded-2xl border border-white/5">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
@@ -315,7 +400,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
             {/* 6 Digit Inputs */}
             <div className="space-y-2">
               <label className="block text-center text-xs font-black uppercase tracking-wider text-slate-300">
-                ENTER CODE / PASSCODE (1122)
+                ENTER 6-DIGIT CODE OR PASSCODE
               </label>
               <div className="flex justify-between gap-2 sm:gap-2.5">
                 {otpDigits.map((digit, idx) => (
@@ -344,11 +429,10 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
 
             {/* Expiry and Resend Controls */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs pt-1 border-t border-white/5">
-              {/* Expiry Countdown */}
               <div className="flex items-center gap-1.5 font-mono">
                 <Clock className={`w-3.5 h-3.5 ${isExpired ? 'text-red-400' : 'text-slate-400'}`} />
                 {isExpired ? (
-                  <span className="font-black text-red-400">OTP EXPIRED (Use 1122)</span>
+                  <span className="font-black text-red-400">OTP EXPIRED</span>
                 ) : (
                   <span className="text-slate-300">
                     OTP expires in <strong className="text-amber-400 font-bold">{formatCountdown(expirySeconds)}</strong>
@@ -356,14 +440,13 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
                 )}
               </div>
 
-              {/* Resend OTP */}
               <div>
                 {isExpired ? (
                   <button
                     type="button"
                     onClick={() => handleSendOtp()}
                     disabled={loading}
-                    className="text-amber-400 hover:text-amber-300 font-black flex items-center gap-1 transition-colors"
+                    className="text-amber-400 hover:text-amber-300 font-black flex items-center gap-1 transition-colors cursor-pointer"
                   >
                     <RefreshCw className="w-3.5 h-3.5" /> SEND NEW OTP
                   </button>
@@ -376,7 +459,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
                     type="button"
                     onClick={() => handleSendOtp()}
                     disabled={loading}
-                    className="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition-colors"
+                    className="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition-colors cursor-pointer"
                   >
                     <RefreshCw className="w-3.5 h-3.5" /> RESEND OTP
                   </button>
@@ -389,7 +472,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
               <button
                 type="submit"
                 disabled={loading || otpDigits.join('').length < 4}
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.99]"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.99] cursor-pointer"
               >
                 {loading ? (
                   <>
@@ -412,11 +495,71 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
                   setSuccessMsg('');
                 }}
                 disabled={loading}
-                className="w-full py-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                className="w-full py-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" /> Change Email
               </button>
             </div>
+          </form>
+        )}
+
+        {/* MODE 2: ID & PASSWORD LOGIN */}
+        {authMode === 'PASSWORD' && (
+          <form onSubmit={handlePasswordLogin} className="space-y-5 relative z-10">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-black uppercase tracking-wider text-slate-300">
+                ADMIN EMAIL ADDRESS
+              </label>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                <input
+                  type="email"
+                  required
+                  placeholder="admin@gkpgotlatent.in"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder:text-slate-500 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 focus:outline-none transition-all"
+                  autoComplete="username"
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-black uppercase tracking-wider text-slate-300">
+                PASSWORD
+              </label>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                <input
+                  type="password"
+                  required
+                  placeholder="••••••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder:text-slate-500 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 focus:outline-none transition-all"
+                  autoComplete="current-password"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading || !email.trim() || !password.trim()}
+              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.99] cursor-pointer"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>AUTHENTICATING...</span>
+                </>
+              ) : (
+                <>
+                  <span>LOGIN WITH ID & PASSWORD</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
           </form>
         )}
 

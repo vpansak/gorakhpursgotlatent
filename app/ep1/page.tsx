@@ -366,7 +366,7 @@ export default function Episode1WinnersPage() {
             href="/apply/performer"
             className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-black hover:bg-slate-900 text-amber-400 font-black text-sm shadow-xl transition-all"
           >
-            APPLY FOR EPISODE 2 AUDITION (FREE) <ArrowRight className="w-4 h-4" />
+            APPLY FOR EPISODE 2 AUDITION <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

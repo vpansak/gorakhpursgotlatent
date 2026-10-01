@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   ShieldCheck, Mail, KeyRound, Loader2, ArrowRight,
-  RefreshCw, AlertCircle, CheckCircle2, Clock, ArrowLeft, Lock
+  RefreshCw, AlertCircle, CheckCircle2, Clock, ArrowLeft, Lock, Phone
 } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 
@@ -22,6 +22,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
   // OTP Flow State: 'ENTER_EMAIL' | 'VERIFY_OTP'
   const [step, setStep] = useState<'ENTER_EMAIL' | 'VERIFY_OTP'>('ENTER_EMAIL');
   const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
@@ -206,17 +207,17 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
     }
   };
 
-  // 4. ID & Password Login Handler
+  // 4. Mobile & Password Login Handler
   const handlePasswordLogin = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setError('');
     setSuccessMsg('');
 
-    const cleanEmail = email.trim().toLowerCase();
+    const cleanMobile = (mobile || email).trim();
     const cleanPass = password.trim();
 
-    if (!cleanEmail || !cleanPass) {
-      setError('Email and Password are required.');
+    if (!cleanMobile || !cleanPass) {
+      setError('Mobile Number and Password are required.');
       return;
     }
 
@@ -225,13 +226,13 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
       const res = await fetch('/api/malik/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: cleanEmail, password: cleanPass }),
+        body: JSON.stringify({ email: cleanMobile, password: cleanPass }),
       });
 
       const data = await parseResponse(res);
 
       if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Invalid email or password.');
+        throw new Error(data.error || 'Invalid mobile number or password.');
       }
 
       setSuccessMsg('Authenticated! Opening GGL Admin Portal...');
@@ -270,9 +271,9 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
           <p className="text-xs text-slate-400 leading-relaxed">
             {authMode === 'OTP'
               ? step === 'ENTER_EMAIL'
-                ? 'Enter authorized email address to request access.'
+                ? 'Enter authorized email address to request access code.'
                 : 'Verification code sent to your authorized email address.'
-              : 'Enter your administrator credentials to login directly.'}
+              : 'Enter admin mobile number and password to login directly.'}
           </p>
         </div>
 
@@ -293,7 +294,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
               }`}
             >
               <Mail className="w-3.5 h-3.5" />
-              <span>OTP LOGIN</span>
+              <span>OTP LOGIN (EMAIL)</span>
             </button>
 
             <button
@@ -309,8 +310,8 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <Lock className="w-3.5 h-3.5" />
-              <span>ID & PASSWORD</span>
+              <Phone className="w-3.5 h-3.5" />
+              <span>MOBILE & PASSWORD</span>
             </button>
           </div>
         )}
@@ -503,23 +504,23 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
           </form>
         )}
 
-        {/* MODE 2: ID & PASSWORD LOGIN */}
+        {/* MODE 2: MOBILE & PASSWORD LOGIN */}
         {authMode === 'PASSWORD' && (
           <form onSubmit={handlePasswordLogin} className="space-y-5 relative z-10">
             <div className="space-y-1.5">
               <label className="block text-xs font-black uppercase tracking-wider text-slate-300">
-                ADMIN MOBILE NO. / EMAIL ID
+                ADMIN MOBILE NUMBER
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
-                  type="text"
+                  type="tel"
                   required
-                  placeholder="Enter Mobile Number or Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter Mobile Number"
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder:text-slate-500 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 focus:outline-none transition-all"
-                  autoComplete="username"
+                  autoComplete="tel"
                   autoFocus
                 />
               </div>
@@ -545,7 +546,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
 
             <button
               type="submit"
-              disabled={loading || !email.trim() || !password.trim()}
+              disabled={loading || !mobile.trim() || !password.trim()}
               className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.99] cursor-pointer"
             >
               {loading ? (
@@ -555,7 +556,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
                 </>
               ) : (
                 <>
-                  <span>LOGIN WITH ID & PASSWORD</span>
+                  <span>LOGIN WITH MOBILE & PASSWORD</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}

@@ -186,15 +186,26 @@ export default function Footer() {
           </div>
 
           {/* Col 3: Policy */}
-          <div className="space-y-3">
-            <h4 className="text-base font-extrabold text-white uppercase tracking-wider gold-gradient-text">
-              POLICY
-            </h4>
-            <ul className="space-y-2 text-sm text-slate-300">
-              <li><Link href="/terms" className="hover:text-amber-400 transition-colors">Terms & Conditions</Link></li>
-              <li><Link href="/privacy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/refund-policy" className="hover:text-amber-400 transition-colors">Refund & Cancellation Policy</Link></li>
-            </ul>
+          <div className="space-y-4">
+            <div className="space-y-3">
+              <h4 className="text-base font-extrabold text-white uppercase tracking-wider gold-gradient-text">
+                POLICY
+              </h4>
+              <ul className="space-y-2 text-sm text-slate-300">
+                <li><Link href="/terms" className="hover:text-amber-400 transition-colors">Terms & Conditions</Link></li>
+                <li><Link href="/privacy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/refund-policy" className="hover:text-amber-400 transition-colors">Refund & Cancellation Policy</Link></li>
+              </ul>
+            </div>
+
+            <div className="pt-2 border-t border-slate-800/80 space-y-2">
+              <h5 className="text-xs font-bold text-amber-400 uppercase tracking-wider">
+                QUICK INFO
+              </h5>
+              <ul className="space-y-1.5 text-xs text-slate-400">
+                {/* Ready for Quick Info items */}
+              </ul>
+            </div>
           </div>
 
           {/* Col 4: Contact & Help */}

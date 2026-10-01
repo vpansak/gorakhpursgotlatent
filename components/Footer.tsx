@@ -23,6 +23,14 @@ function FacebookIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
+function XIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
 function BookMyShowIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -160,14 +168,14 @@ export default function Footer() {
                 <FacebookIcon className="w-5 h-5" />
               </a>
               <a
-                href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+                href="https://x.com/gkpgotlatent"
                 target="_blank"
                 rel="noreferrer"
-                className="w-10 h-10 rounded-xl bg-slate-900 border border-red-500/40 flex items-center justify-center text-red-500 hover:text-white hover:bg-red-600 transition-all shadow-[0_0_12px_rgba(236,28,36,0.3)]"
-                aria-label="BookMyShow Tickets"
-                title="Book Tickets on BookMyShow"
+                className="w-10 h-10 rounded-xl bg-slate-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:text-black hover:bg-amber-400 transition-all shadow-[0_0_10px_rgba(255,215,0,0.2)]"
+                aria-label="X (Twitter)"
+                title="X (Twitter)"
               >
-                <BookMyShowIcon className="w-5 h-5" />
+                <XIcon className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -177,11 +185,12 @@ export default function Footer() {
             <h4 className="text-base font-extrabold text-white uppercase tracking-wider gold-gradient-text">
               APPLY NOW
             </h4>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2 text-sm text-slate-300">
               <li><Link href="/apply/performer" className="hover:text-amber-400 transition-colors">Performer Application</Link></li>
               <li><Link href="/apply/guest" className="hover:text-amber-400 transition-colors">Guest / Influencer Application</Link></li>
               <li><Link href="/apply/sponsor" className="hover:text-amber-400 transition-colors">Brand Sponsor Application</Link></li>
               <li><Link href="/apply/join-team" className="hover:text-amber-400 transition-colors">Join Team</Link></li>
+              <li><Link href="/apply/event-booking" className="hover:text-amber-400 transition-colors">Event Hosting Application</Link></li>
             </ul>
           </div>
 
@@ -194,11 +203,36 @@ export default function Footer() {
               <li><Link href="/terms" className="hover:text-amber-400 transition-colors">Terms & Conditions</Link></li>
               <li><Link href="/privacy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
               <li><Link href="/refund-policy" className="hover:text-amber-400 transition-colors">Refund & Cancellation Policy</Link></li>
-              <li><Link href="/contact" className="hover:text-amber-400 transition-colors">Quick Info</Link></li>
             </ul>
           </div>
 
-          {/* Col 4: Contact & Help */}
+          {/* Col 4: Quick Info (All remaining A-Z links) */}
+          <div className="space-y-3">
+            <h4 className="text-base font-extrabold text-white uppercase tracking-wider gold-gradient-text">
+              QUICK INFO
+            </h4>
+            <ul className="space-y-2 text-sm text-slate-300">
+              <li><Link href="/" className="hover:text-amber-400 transition-colors">Home</Link></li>
+              <li>
+                <a 
+                  href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="hover:text-amber-400 transition-colors font-bold text-amber-300 flex items-center gap-1"
+                >
+                  Book on BookMyShow ↗
+                </a>
+              </li>
+              <li><Link href="/ep1" className="hover:text-amber-400 transition-colors text-amber-400 font-semibold">Episode 1 Winners 🏆</Link></li>
+              <li><Link href="/performers" className="hover:text-amber-400 transition-colors">Approved Performers</Link></li>
+              <li><Link href="/guests" className="hover:text-amber-400 transition-colors">Celebrity & Guest Panel</Link></li>
+              <li><Link href="/sponsors" className="hover:text-amber-400 transition-colors">Brand Partners & Sponsors</Link></li>
+              <li><Link href="/contact" className="hover:text-amber-400 transition-colors">Contact Us</Link></li>
+              <li><Link href="/developer" className="hover:text-amber-400 transition-colors">Developer Specs</Link></li>
+            </ul>
+          </div>
+
+          {/* Col 5: Venue & Help */}
           <div className="space-y-3">
             <h4 className="text-base font-extrabold text-white uppercase tracking-wider gold-gradient-text">
               VENUE & HELP

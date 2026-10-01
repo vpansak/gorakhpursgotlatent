@@ -404,7 +404,7 @@ export default async function HomePage() {
           {[
             { step: '01', title: 'Choose Category', desc: 'Performer, Celebrity Guest, Brand Sponsor, or Event Host.' },
             { step: '02', title: 'Fill Details & Work', desc: 'Submit talent profile, video links, press kit or brand deck.' },
-            { step: '03', title: 'Get Unique App ID', desc: 'Receive tracking code like GGL-PER-109283 for live status.' },
+            { step: '03', title: 'WhatsApp Clip Send', desc: 'Send performance clip or portfolio on WhatsApp for team review.' },
             { step: '04', title: 'Audition & Stage', desc: 'Shortlisted candidates get audition call & main stage slot.' }
           ].map((item, idx) => (
             <div key={idx} className="relative p-6 rounded-2xl bg-slate-900/60 border border-amber-500/20 space-y-3">

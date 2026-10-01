@@ -101,7 +101,7 @@ export default function ContactPage() {
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-white">Need Immediate Help?</h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              For application status updates, please use your unique Application ID (`GGL-PER-*`, `GGL-GST-*`, `GGL-SPN-*`, `GGL-EVT-*`) on the live tracking tool.
+              For any inquiries regarding auditions, tickets, or sponsorships, reach out directly to our team via Email or WhatsApp.
             </p>
           </div>
 

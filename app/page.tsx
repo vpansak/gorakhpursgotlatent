@@ -262,7 +262,7 @@ export default async function HomePage() {
       </section>
 
       {/* 4. SHOWCASE TICKET PASSES TIERS */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-8">
+      <section className="py-12 px-3 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-8">
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-barlow text-xs font-bold uppercase tracking-wider">
             <Ticket className="w-4 h-4 text-amber-400" /> EXCLUSIVE SHOW PASS
@@ -272,39 +272,76 @@ export default async function HomePage() {
           </h2>
         </div>
 
-        <div className="max-w-md mx-auto">
-          <div className="glass-card p-6 sm:p-8 rounded-3xl border-2 border-amber-500/40 flex flex-col justify-between space-y-6 hover:border-amber-400 transition-all shadow-[0_0_30px_rgba(255,215,0,0.2)] relative overflow-hidden">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="font-barlow text-xs font-bold text-amber-400 uppercase tracking-widest">OFFICIAL ENTRY PASS</span>
-                <span className="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold font-barlow uppercase animate-pulse">SELLING FAST</span>
+        <div className="w-full">
+          <div className="glass-card p-6 sm:p-10 rounded-3xl border-2 border-amber-500/40 hover:border-amber-400 transition-all shadow-[0_0_40px_rgba(255,215,0,0.25)] relative overflow-hidden">
+            {/* Ambient Background Glow */}
+            <div className="absolute -top-32 -right-32 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-orange-600/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+              {/* Left Column: Details */}
+              <div className="lg:col-span-7 space-y-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <span className="font-barlow text-xs sm:text-sm font-bold text-amber-400 uppercase tracking-widest flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-amber-400" /> OFFICIAL ENTRY PASS
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-bold font-barlow uppercase animate-pulse">
+                    ⚡ SELLING FAST
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="font-bebas text-3xl sm:text-5xl text-amber-300 tracking-wide uppercase leading-tight">
+                    BOOKMYSHOW OFFICIAL TICKETING
+                  </h3>
+                  <p className="text-xs sm:text-sm text-emerald-400 font-bold uppercase tracking-wider font-barlow flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> Direct Booking Active & Instant QR Confirmation
+                  </p>
+                </div>
+
+                <p className="text-xs sm:text-base text-slate-300 leading-relaxed">
+                  Access to live audience arena, front stage seating, live performance roasts & interactive voting experience. Book directly via BookMyShow official link.
+                </p>
+
+                {/* Feature Tags */}
+                <div className="pt-2 flex flex-wrap gap-2 sm:gap-3 text-xs font-semibold text-slate-300 font-barlow">
+                  <span className="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Front Stage Seating
+                  </span>
+                  <span className="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center gap-1.5">
+                    <UserCheck className="w-3.5 h-3.5 text-amber-400" /> Audience Arena Access
+                  </span>
+                  <span className="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center gap-1.5">
+                    <Ticket className="w-3.5 h-3.5 text-amber-400" /> Live Voting Experience
+                  </span>
+                </div>
               </div>
-              <div className="space-y-1">
-                <span className="font-bebas text-3xl sm:text-4xl text-amber-300 tracking-wide uppercase block">BOOKMYSHOW OFFICIAL TICKETING</span>
-                <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider font-barlow flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Direct Booking Active
+
+              {/* Right Column: CTA Box */}
+              <div className="lg:col-span-5 bg-slate-900/90 p-6 sm:p-7 rounded-2xl border border-amber-500/30 space-y-5 text-center flex flex-col justify-center">
+                <div className="space-y-1">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest font-barlow block">
+                    STATUS
+                  </span>
+                  <span className="text-base font-black text-amber-400 uppercase tracking-wider font-barlow block">
+                    BOOKMYSHOW VERIFIED
+                  </span>
+                </div>
+
+                <a
+                  href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-black font-barlow font-black uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(255,215,0,0.5)] hover:shadow-[0_0_35px_rgba(255,160,0,0.8)] hover:scale-[1.02] active:scale-[0.99] transition-all"
+                >
+                  <Ticket className="w-6 h-6 text-black shrink-0" />
+                  <span>BOOK ON BOOKMYSHOW ↗</span>
+                </a>
+
+                <p className="text-[11px] text-slate-400 font-medium">
+                  🔒 Official Ticketing Partner • Direct Mobile E-Pass
                 </p>
               </div>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Access to live audience arena, front stage seating, live performance roasts & voting experience.
-              </p>
-            </div>
-
-            <div className="space-y-4 pt-4 border-t border-slate-800">
-              <div className="flex items-center justify-between text-xs text-slate-300 font-barlow uppercase font-medium">
-                <span>Status:</span>
-                <span className="font-bold text-amber-400">BookMyShow Verified</span>
-              </div>
-
-              <a
-                href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-                target="_blank"
-                rel="noreferrer"
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-barlow font-bold uppercase tracking-wider text-base flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,215,0,0.4)] hover:shadow-[0_0_30px_rgba(255,160,0,0.7)] hover:scale-[1.02] transition-all"
-              >
-                <Ticket className="w-5 h-5 text-black" />
-                BOOK ON BOOKMYSHOW ↗
-              </a>
             </div>
           </div>
         </div>

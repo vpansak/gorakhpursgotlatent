@@ -241,6 +241,35 @@ export async function ensureDatabaseSchema() {
           created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
       `);
+
+      // 8. users
+      await sqlClient.query(`
+        CREATE TABLE IF NOT EXISTS users (
+          id TEXT PRIMARY KEY,
+          email TEXT UNIQUE NOT NULL,
+          phone TEXT,
+          password_hash TEXT NOT NULL,
+          full_name TEXT NOT NULL,
+          role TEXT DEFAULT 'USER',
+          avatar_url TEXT,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      // 9. admin_otps
+      await sqlClient.query(`
+        CREATE TABLE IF NOT EXISTS admin_otps (
+          id TEXT PRIMARY KEY,
+          email TEXT NOT NULL,
+          otp_hash TEXT NOT NULL,
+          attempts INTEGER DEFAULT 0,
+          max_attempts INTEGER DEFAULT 5,
+          expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+          is_used INTEGER DEFAULT 0,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
     } catch (err) {
       console.warn('Schema init notice:', err);
     }

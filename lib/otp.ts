@@ -9,6 +9,9 @@ const OTP_SECRET_SALT = process.env.JWT_SECRET || 'ggl_otp_secure_salt_2026';
 const AUTHORIZED_ADMIN_EMAILS = [
   'alooksingh1@gmail.com',
   'gkpgotlatent@gmail.com',
+  'admin@gorakhpurgotlatent.com',
+  'admin@ggllive.in',
+  'admin@gkpgotlatent.in',
   '8423858424',
   '8423858424@gmail.com',
   ...(process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase()) : [])

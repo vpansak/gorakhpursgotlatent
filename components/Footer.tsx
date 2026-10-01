@@ -80,7 +80,7 @@ export default function Footer() {
   }
 
   const encodedWhatsappUrl = `https://wa.me/918423858424?text=${encodeURIComponent(whatsappDraftText)}`;
-  const encodedEmailUrl = `mailto:help@gkpgotlatent.in?subject=${encodeURIComponent(emailSubject)}`;
+  const encodedEmailUrl = `mailto:help.gglatemt@gmail.com?subject=${encodeURIComponent(emailSubject)}`;
 
   return (
     <footer className="bg-[#05060a] border-t border-amber-500/20 text-slate-300 pt-10 pb-24 lg:pb-12 relative overflow-hidden">
@@ -124,7 +124,7 @@ export default function Footer() {
               title="Send an official email inquiry"
             >
               <Mail className="w-4 h-4 text-blue-400" />
-              <span>help@gkpgotlatent.in</span>
+              <span>help.gglatemt@gmail.com</span>
             </a>
           </div>
         </div>
@@ -226,7 +226,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-amber-400 shrink-0" />
-                <a href={encodedEmailUrl} className="hover:text-amber-400">help@gkpgotlatent.in</a>
+                <a href={encodedEmailUrl} className="hover:text-amber-400">help.gglatemt@gmail.com</a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-amber-400 shrink-0" />

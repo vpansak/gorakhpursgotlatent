@@ -288,7 +288,7 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
           </a>
 
           <a
-            href={`mailto:help@gkpgotlatent.in?subject=${encodeURIComponent("Guest & Creator Panel Inquiry - Gorakhpur's Got Latent")}`}
+            href={`mailto:help.gglatemt@gmail.com?subject=${encodeURIComponent("Guest & Creator Panel Inquiry - Gorakhpur's Got Latent")}`}
             className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/30 hover:border-purple-400 transition-all flex items-center justify-center gap-3 text-purple-300 group shadow-md"
           >
             <div className="p-2.5 rounded-xl bg-purple-500/20 text-purple-400 shrink-0">
@@ -297,7 +297,7 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
             <div className="text-left">
               <span className="text-[10px] text-slate-400 block uppercase font-bold">Official Guest Curation Email</span>
               <strong className="text-sm text-white group-hover:text-purple-300 transition-colors flex items-center gap-1">
-                help@gkpgotlatent.in <ArrowRight className="w-3.5 h-3.5" />
+                help.gglatemt@gmail.com <ArrowRight className="w-3.5 h-3.5" />
               </strong>
             </div>
           </a>

@@ -8,6 +8,7 @@ const OTP_SECRET_SALT = process.env.JWT_SECRET || 'ggl_otp_secure_salt_2026';
 // List of authorized administrator emails
 const AUTHORIZED_ADMIN_EMAILS = [
   'alooksingh1@gmail.com',
+  'help.gglatemt@gmail.com',
   'gkpgotlatent@gmail.com',
   'admin@gorakhpurgotlatent.com',
   'admin@ggllive.in',

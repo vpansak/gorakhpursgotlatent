@@ -137,7 +137,7 @@ export default function QuickInfoPage() {
             </h3>
             <div className="space-y-1 text-xs text-slate-300">
               <p className="font-semibold text-white">Location: Announce Soon, Gorakhpur, UP</p>
-              <p>Email: <a href="mailto:help@gkpgotlatent.in" className="text-amber-400 underline">help@gkpgotlatent.in</a></p>
+              <p>Email: <a href="mailto:help.gglatemt@gmail.com" className="text-amber-400 underline">help.gglatemt@gmail.com</a></p>
               <p>WhatsApp: <a href="https://wa.me/918423858424" target="_blank" rel="noreferrer" className="text-emerald-400 underline">+91 84238 58424</a></p>
             </div>
           </div>

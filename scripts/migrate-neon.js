@@ -386,7 +386,7 @@ async function init() {
       "Experience raw talent, hilarious judge roasts, and unscripted performances live in Gorakhpur.",
       '2026-09-26',
       '13:00',
-      'New Uday Marriage Lawn',
+      'Announce Soon',
       'Near BRD Medical College, Gorakhpur, UP',
       'Gorakhpur',
       1000,

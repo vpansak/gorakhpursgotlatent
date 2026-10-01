@@ -214,7 +214,7 @@ export default function Footer() {
                   rel="noreferrer" 
                   className="hover:text-amber-400 transition-colors"
                 >
-                  New Uday Marriage Lawn, Near BRD Medical College, Gorakhpur, UP ↗
+                  Announce Soon, Gorakhpur, UP ↗
                 </a>
               </li>
               <li className="flex items-center gap-2">

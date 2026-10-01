@@ -47,7 +47,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <strong className="block text-white font-bold">Show Venue Address:</strong>
-                <p className="text-xs text-slate-300">New Uday Marriage Lawn, Near BRD Medical College, Gorakhpur, Uttar Pradesh</p>
+                <p className="text-xs text-slate-300">Announce Soon, Gorakhpur, Uttar Pradesh</p>
                 <a 
                   href="https://maps.google.com/?q=26.828049,83.414894" 
                   target="_blank" 

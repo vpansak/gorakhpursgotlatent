@@ -201,7 +201,7 @@ export default async function HomePage() {
       <section className="px-4 sm:px-6 lg:px-8">
         <CountdownTimer
           targetDate={activeEvent?.event_date ? `${activeEvent.event_date}T${activeEvent.start_time}` : "2026-09-26T13:00:00"}
-          venue={activeEvent?.venue_name || "New Uday Marriage Lawn"}
+          venue={activeEvent?.venue_name || "Announce Soon"}
           city={activeEvent?.city || "Gorakhpur"}
         />
       </section>

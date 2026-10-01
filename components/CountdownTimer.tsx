@@ -9,7 +9,7 @@ interface CountdownTimerProps {
 }
 
 export default function CountdownTimer({
-  venue = "Gorakhpur Club Ground",
+  venue = "Announce Soon",
   city = "Gorakhpur"
 }: CountdownTimerProps) {
   return (

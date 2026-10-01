@@ -185,15 +185,16 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 3: Quick Info */}
+          {/* Col 3: Policy */}
           <div className="space-y-3">
             <h4 className="text-base font-extrabold text-white uppercase tracking-wider gold-gradient-text">
-              QUICK INFO
+              POLICY
             </h4>
             <ul className="space-y-2 text-sm text-slate-300">
               <li><Link href="/terms" className="hover:text-amber-400 transition-colors">Terms & Conditions</Link></li>
               <li><Link href="/privacy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
               <li><Link href="/refund-policy" className="hover:text-amber-400 transition-colors">Refund & Cancellation Policy</Link></li>
+              <li><Link href="/contact" className="hover:text-amber-400 transition-colors">Quick Info</Link></li>
             </ul>
           </div>
 

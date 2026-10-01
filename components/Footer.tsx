@@ -185,7 +185,19 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 4: Contact & Legal */}
+          {/* Col 3: Policy */}
+          <div className="space-y-3">
+            <h4 className="text-base font-extrabold text-white uppercase tracking-wider gold-gradient-text">
+              POLICY
+            </h4>
+            <ul className="space-y-2 text-sm text-slate-300">
+              <li><Link href="/terms" className="hover:text-amber-400 transition-colors">Terms & Conditions</Link></li>
+              <li><Link href="/privacy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/refund-policy" className="hover:text-amber-400 transition-colors">Refund & Cancellation Policy</Link></li>
+            </ul>
+          </div>
+
+          {/* Col 4: Contact & Help */}
           <div className="space-y-3">
             <h4 className="text-base font-extrabold text-white uppercase tracking-wider gold-gradient-text">
               VENUE & HELP
@@ -211,11 +223,6 @@ export default function Footer() {
                 <a href={encodedWhatsappUrl} target="_blank" rel="noreferrer" className="hover:text-amber-400">+91 84238 58424</a>
               </li>
             </ul>
-            <div className="pt-2 flex flex-col gap-1 text-xs text-slate-400">
-              <Link href="/terms" className="hover:text-amber-400">Terms & Conditions</Link>
-              <Link href="/privacy" className="hover:text-amber-400">Privacy Policy</Link>
-              <Link href="/refund-policy" className="hover:text-amber-400">Ticket & Refund Policy</Link>
-            </div>
           </div>
         </div>
 

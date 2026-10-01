@@ -508,14 +508,14 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
           <form onSubmit={handlePasswordLogin} className="space-y-5 relative z-10">
             <div className="space-y-1.5">
               <label className="block text-xs font-black uppercase tracking-wider text-slate-300">
-                ADMIN EMAIL ADDRESS
+                ADMIN MOBILE NO. / EMAIL ID
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
-                  type="email"
+                  type="text"
                   required
-                  placeholder="admin@gkpgotlatent.in"
+                  placeholder="Enter Mobile Number or Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder:text-slate-500 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 focus:outline-none transition-all"

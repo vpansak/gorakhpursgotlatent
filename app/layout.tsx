@@ -51,6 +51,20 @@ export const metadata: Metadata = {
   title: "Gorakhpur’s Got Latent | Kuch Bhi Ho Sakta Hai",
   description: "Kuch Bhi Ho Sakta Hai! Official platform for Gorakhpur's Got Latent live talent hunt, comedy roast, music performances, ticket booking, and performer registration.",
   keywords: ["Gorakhpur's Got Latent", "GGL Live", "Talent Show Gorakhpur", "Standup Comedy Gorakhpur", "Live Show Tickets", "Bhojpuri Fusion", "Purvanchal Talent"],
+  authors: [{ name: "Alok Singh", url: "https://gkpgotlatent.in/developer" }],
+  creator: "Naveen Varma",
+  publisher: "Gorakhpur's Got Latent",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     title: "Gorakhpur’s Got Latent | Kuch Bhi Ho Sakta Hai",
     description: "Kuch Bhi Ho Sakta Hai! Experience raw talent hunt, music fusion, comedy roasts & live audience voting.",
@@ -77,6 +91,93 @@ export const metadata: Metadata = {
     icon: '/favicon.ico',
     apple: '/logo.png',
   },
+  verification: {
+    other: {
+      'msvalidate.01': 'bing-site-verification-token',
+    },
+  },
+};
+
+const jsonLdData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      '@id': 'https://gkpgotlatent.in/#webapplication',
+      'url': 'https://gkpgotlatent.in',
+      'name': "Gorakhpur's Got Latent",
+      'alternateName': 'GGL Digital Ecosystem',
+      'applicationCategory': 'EntertainmentApplication',
+      'operatingSystem': 'All',
+      'description': "Official live talent hunt platform, under-100ms live scoring matrix ('Computerji' engine), and ticket management ecosystem for Gorakhpur's Got Latent.",
+      'author': {
+        '@type': 'Person',
+        '@id': 'https://gkpgotlatent.in/developer#aloksingh',
+        'name': 'Alok Singh',
+        'jobTitle': 'Head of Developers & Tech Architect',
+        'url': 'https://gkpgotlatent.in/developer',
+        'sameAs': [
+          'https://www.instagram.com/aloksingh_._/',
+          'https://x.com/rajpratapsinghh'
+        ]
+      },
+      'creator': {
+        '@type': 'Person',
+        '@id': 'https://gkpgotlatent.in/#naveenvarma',
+        'name': 'Naveen Varma',
+        'jobTitle': 'Show Creator & Founder',
+        'url': 'https://gkpgotlatent.in'
+      },
+      'publisher': {
+        '@type': 'Organization',
+        '@id': 'https://gkpgotlatent.in/#organization',
+        'name': "Gorakhpur's Got Latent",
+        'url': 'https://gkpgotlatent.in',
+        'logo': 'https://gkpgotlatent.in/logo.png',
+        'sameAs': [
+          'https://www.instagram.com/gkp_got_latent/'
+        ],
+        'founder': {
+          '@type': 'Person',
+          'name': 'Naveen Varma',
+          'jobTitle': 'Show Creator & Founder'
+        },
+        'employee': {
+          '@type': 'Person',
+          'name': 'Alok Singh',
+          'jobTitle': 'Head of Developers & Tech Architect'
+        }
+      }
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://gkpgotlatent.in/#website',
+      'url': 'https://gkpgotlatent.in',
+      'name': "Gorakhpur's Got Latent",
+      'description': "Kuch Bhi Ho Sakta Hai! Official platform for Gorakhpur's Got Latent live talent hunt.",
+      'publisher': {
+        '@id': 'https://gkpgotlatent.in/#organization'
+      }
+    },
+    {
+      '@type': 'Organization',
+      '@id': 'https://gkpgotlatent.in/#organization',
+      'name': "Gorakhpur's Got Latent",
+      'url': 'https://gkpgotlatent.in',
+      'logo': 'https://gkpgotlatent.in/logo.png',
+      'founder': {
+        '@type': 'Person',
+        'name': 'Naveen Varma',
+        'jobTitle': 'Show Creator & Founder'
+      },
+      'member': {
+        '@type': 'Person',
+        'name': 'Alok Singh',
+        'jobTitle': 'Head of Developers & Tech Architect',
+        'url': 'https://gkpgotlatent.in/developer'
+      }
+    }
+  ]
 };
 
 export default function RootLayout({
@@ -94,6 +195,10 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="GGL App" />
         <link rel="apple-touch-icon" href="/app-logo.png" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+        />
         <script src="https://checkout.razorpay.com/v1/checkout.js" async />
         <script
           dangerouslySetInnerHTML={{

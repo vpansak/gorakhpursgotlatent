@@ -43,11 +43,43 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Alok Singh | Sole Developer & Tech Architect - Gorakhpur's Got Latent",
-  description: "Comprehensive engineering breakdown, full-stack architecture, and profile of Alok Singh - Creator of Gorakhpur's Got Latent digital ecosystem.",
+  title: "Alok Singh | Head of Developers & Tech Architect - Gorakhpur's Got Latent",
+  description: "Comprehensive engineering breakdown, full-stack architecture, and profile of Alok Singh - Head of Developers & Tech Architect of Gorakhpur's Got Latent digital ecosystem.",
+  authors: [{ name: "Alok Singh", url: "https://gkpgotlatent.in/developer" }],
+  creator: "Naveen Varma",
+  publisher: "Gorakhpur's Got Latent",
   robots: {
-    index: false,
-    follow: false,
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    title: "Alok Singh | Head of Developers & Tech Architect - Gorakhpur's Got Latent",
+    description: "Explore the full-stack system architecture, 'Computerji' live stage engine, and tech credits of Alok Singh for Gorakhpur's Got Latent.",
+    url: 'https://gkpgotlatent.in/developer',
+    siteName: "Gorakhpur's Got Latent",
+    images: [
+      {
+        url: '/alok-singh.jpg',
+        width: 800,
+        height: 800,
+        alt: 'Alok Singh - Head of Developers & Tech Architect',
+      },
+    ],
+    locale: 'en_IN',
+    type: 'profile',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Alok Singh | Tech Architect - Gorakhpur's Got Latent",
+    description: "Under-100ms real-time latency matrix & secure Malik panel engineering architecture.",
+    images: ['/alok-singh.jpg'],
   },
 };
 
@@ -223,8 +255,64 @@ export default function DeveloperPage() {
     { year: "Phase 5", title: "Instagram Lead & Show Launch", desc: "Launched official website, integrated YouTube channel banner, and took charge of official Instagram growth." }
   ];
 
+  const developerJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'ProfilePage',
+        '@id': 'https://gkpgotlatent.in/developer#webpage',
+        'url': 'https://gkpgotlatent.in/developer',
+        'name': "Alok Singh - Head of Developers & Tech Architect | Gorakhpur's Got Latent",
+        'description': "Comprehensive engineering breakdown, full-stack architecture, and profile of Alok Singh - Head of Developers & Tech Architect of Gorakhpur's Got Latent digital ecosystem.",
+        'mainEntity': {
+          '@type': 'Person',
+          '@id': 'https://gkpgotlatent.in/developer#aloksingh',
+          'name': 'Alok Singh',
+          'jobTitle': 'Head of Developers & Tech Architect',
+          'roleName': 'Tech Architect & Lead Full-Stack Engineer',
+          'description': "Head of Developers & Tech Architect who engineered the entire digital ecosystem for Gorakhpur's Got Latent, including the 'Computerji' live stage latency engine and 'Malik' admin portal.",
+          'url': 'https://gkpgotlatent.in/developer',
+          'image': 'https://gkpgotlatent.in/alok-singh.jpg',
+          'sameAs': [
+            'https://www.instagram.com/aloksingh_._/',
+            'https://x.com/rajpratapsinghh',
+            'https://www.facebook.com/meadorush'
+          ],
+          'worksFor': {
+            '@type': 'Organization',
+            '@id': 'https://gkpgotlatent.in/#organization',
+            'name': "Gorakhpur's Got Latent",
+            'url': 'https://gkpgotlatent.in',
+            'founder': {
+              '@type': 'Person',
+              '@id': 'https://gkpgotlatent.in/#naveenvarma',
+              'name': 'Naveen Varma',
+              'jobTitle': 'Show Creator & Founder'
+            }
+          }
+        }
+      },
+      {
+        '@type': 'TechArticle',
+        '@id': 'https://gkpgotlatent.in/developer#article',
+        'headline': "Engineering Gorakhpur's Got Latent: Under-100ms Live Stage Latency Matrix & Secure Malik Control System",
+        'description': "Full-stack architectural analysis of how Next.js, Turso DB SQLite, and real-time websockets were leveraged to build the Computerji scoring matrix.",
+        'author': {
+          '@id': 'https://gkpgotlatent.in/developer#aloksingh'
+        },
+        'publisher': {
+          '@id': 'https://gkpgotlatent.in/#organization'
+        }
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-[#07080e] text-slate-100 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden selection:bg-amber-500 selection:text-black">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(developerJsonLd) }}
+      />
       
       {/* Background Decorative Glows */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-b from-amber-500/20 via-red-600/10 to-transparent rounded-full blur-[180px] pointer-events-none" />

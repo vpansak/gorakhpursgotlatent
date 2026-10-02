@@ -4,10 +4,19 @@ import { checkInTicket, getTicketByTicketId } from '@/lib/ticketsStore';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { ticketId } = body;
+    const { ticketId, code } = body;
 
     if (!ticketId) {
       return NextResponse.json({ error: 'Ticket ID is required for check-in.' }, { status: 400 });
+    }
+
+    const cleanCode = String(code || '').trim();
+    if (cleanCode !== '11') {
+      return NextResponse.json({
+        success: false,
+        invalidCode: true,
+        message: '✕ INCORRECT CODE: Enter code "11" to confirm entry and expire this ticket.',
+      }, { status: 200 });
     }
 
     const result = await checkInTicket(ticketId);
@@ -18,7 +27,7 @@ export async function POST(req: Request) {
         isDuplicate: result.isDuplicate || false,
         message: result.message,
         ticket: result.ticket,
-      }, { status: 200 }); // Return 200 so UI can display warning banner nicely
+      }, { status: 200 });
     }
 
     return NextResponse.json({

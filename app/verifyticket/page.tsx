@@ -14,12 +14,10 @@ import {
   Ticket as TicketIcon, 
   RefreshCw, 
   User, 
-  Phone, 
-  Mail, 
-  AtSign, 
-  Calendar, 
   Lock,
-  ArrowRight
+  ArrowRight,
+  KeyRound,
+  Sparkles
 } from 'lucide-react';
 import TicketCard from '@/components/TicketCard';
 import { TicketRecord } from '@/lib/ticketsStore';
@@ -31,11 +29,15 @@ export default function VerifyTicketPage() {
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
 
-  // Verification State
+  // Verification & Expiration State
   const [ticketIdInput, setTicketIdInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [expireCode, setExpireCode] = useState('');
+  const [codeError, setCodeError] = useState('');
+  const [expiring, setExpiring] = useState(false);
+
   const [verificationResult, setVerificationResult] = useState<{
-    status: 'IDLE' | 'SUCCESS' | 'ALREADY_USED' | 'UNPAID' | 'INVALID';
+    status: 'IDLE' | 'LOOKUP_VALID' | 'SUCCESS_EXPIRED' | 'ALREADY_USED' | 'UNPAID' | 'INVALID';
     message: string;
     ticket?: TicketRecord;
     checkedInAt?: string;
@@ -83,11 +85,11 @@ export default function VerifyTicketPage() {
     setVerificationResult({ status: 'IDLE', message: '' });
   };
 
-  // Perform Ticket Check-In & Verification
-  const verifyAndCheckInTicket = async (rawId: string) => {
+  // Step 1: Lookup Ticket Details (Without Expiring Immediately)
+  const lookupTicketDetails = async (rawId: string) => {
     if (!rawId || !rawId.trim()) return;
 
-    // Extract ticket ID if raw input is a full verification URL (e.g. /ticket/verify/GGLT123456)
+    // Extract ticket ID if raw input is a full verification URL
     let extractedId = rawId.trim();
     const match = extractedId.match(/GGLT\d{6}/i);
     if (match) {
@@ -97,10 +99,12 @@ export default function VerifyTicketPage() {
     }
 
     setLoading(true);
+    setCodeError('');
+    setExpireCode('');
     setVerificationResult({ status: 'IDLE', message: '' });
 
     try {
-      const res = await fetch('/api/tickets/checkin', {
+      const res = await fetch('/api/tickets/lookup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ticketId: extractedId }),
@@ -108,24 +112,23 @@ export default function VerifyTicketPage() {
 
       const data = await res.json();
 
-      if (data.success && data.ticket) {
+      if (data.status === 'VALID' && data.ticket) {
         setVerificationResult({
-          status: 'SUCCESS',
-          message: `✓ TICKET VERIFIED / ENTERED: Welcome ${data.ticket.customer_name}! Entry confirmed.`,
+          status: 'LOOKUP_VALID',
+          message: data.message || '✓ Valid Ticket Found. Enter code 11 to confirm entry and expire ticket.',
           ticket: data.ticket,
-          checkedInAt: data.ticket.checked_in_at || new Date().toISOString(),
         });
-      } else if (data.isDuplicate && data.ticket) {
+      } else if (data.status === 'ALREADY_USED' && data.ticket) {
         setVerificationResult({
           status: 'ALREADY_USED',
-          message: `ALREADY USED — Ticket ${data.ticket.ticket_id} has already been used for entry.`,
+          message: data.message || `USED — Ticket ${data.ticket.ticket_id} has already been used.`,
           ticket: data.ticket,
           checkedInAt: data.ticket.checked_in_at || undefined,
         });
-      } else if (data.ticket && (data.ticket.payment_status !== 'PAID' || data.ticket.ticket_status !== 'VALID')) {
+      } else if (data.status === 'UNPAID' && data.ticket) {
         setVerificationResult({
           status: 'UNPAID',
-          message: `✕ UNPAID / INVALID TICKET: Payment is not completed for ticket ${extractedId}.`,
+          message: `✕ UNPAID TICKET: Payment is not completed for ticket ${extractedId}.`,
           ticket: data.ticket,
         });
       } else {
@@ -137,10 +140,55 @@ export default function VerifyTicketPage() {
     } catch (err) {
       setVerificationResult({
         status: 'INVALID',
-        message: 'Network error occurred during ticket verification. Please try again.',
+        message: 'Network error occurred during ticket lookup. Please try again.',
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Step 2: Confirm Entry & Expire Ticket by Entering Code 11
+  const handleConfirmExpireWithCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCodeError('');
+
+    if (!verificationResult.ticket) return;
+
+    const cleanCode = expireCode.trim();
+    if (cleanCode !== '11') {
+      setCodeError('✕ INCORRECT CODE! Enter "11" to expire ticket.');
+      return;
+    }
+
+    setExpiring(true);
+
+    try {
+      const res = await fetch('/api/tickets/checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ticketId: verificationResult.ticket.ticket_id,
+          code: cleanCode,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success && data.ticket) {
+        setVerificationResult({
+          status: 'SUCCESS_EXPIRED',
+          message: `✓ TICKET EXPIRED & ENTRY CONFIRMED: Welcome ${data.ticket.customer_name}!`,
+          ticket: data.ticket,
+          checkedInAt: data.ticket.checked_in_at || new Date().toISOString(),
+        });
+        setExpireCode('');
+      } else {
+        setCodeError(data.message || 'Failed to expire ticket. Please try again.');
+      }
+    } catch (err) {
+      setCodeError('Network error during expiration. Please try again.');
+    } finally {
+      setExpiring(false);
     }
   };
 
@@ -199,7 +247,7 @@ export default function VerifyTicketPage() {
           const scannedText = code.data.trim();
           if (scannedText !== lastScannedIdRef.current) {
             lastScannedIdRef.current = scannedText;
-            verifyAndCheckInTicket(scannedText);
+            lookupTicketDetails(scannedText);
             // Pause re-scans for 3 seconds
             setTimeout(() => {
               lastScannedIdRef.current = null;
@@ -225,7 +273,6 @@ export default function VerifyTicketPage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#07080e] text-slate-100 flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
-        {/* Background Stage Rays */}
         <div className="spotlight-left pointer-events-none" />
         <div className="spotlight-right pointer-events-none" />
         <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none" />
@@ -306,7 +353,6 @@ export default function VerifyTicketPage() {
   // -------------------------------------------------------------
   return (
     <div className="min-h-screen bg-[#07080e] text-slate-100 py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background Lighting */}
       <div className="spotlight-left pointer-events-none" />
       <div className="spotlight-right pointer-events-none" />
 
@@ -349,113 +395,136 @@ export default function VerifyTicketPage() {
           {/* LEFT COLUMN: CAMERA QR SCANNER (7 COLS) */}
           <div className="lg:col-span-7 glass-panel p-6 rounded-3xl border border-amber-500/30 bg-slate-900/90 space-y-5 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="font-bebas text-2xl text-white uppercase flex items-center gap-2">
-                <Camera className="w-5 h-5 text-amber-400" /> 1. QR SCANNER
-              </h3>
+              <div className="flex items-center gap-2">
+                <Camera className="w-5 h-5 text-amber-400" />
+                <h3 className="font-bebas text-xl text-white uppercase tracking-wide">
+                  1. LIVE QR CODE SCANNER
+                </h3>
+              </div>
+              
               {cameraActive && (
                 <button
-                  onClick={() => {
-                    stopCamera();
-                    setFacingMode(prev => prev === 'environment' ? 'user' : 'environment');
-                    setTimeout(startCamera, 300);
-                  }}
-                  className="text-xs text-amber-400 hover:underline flex items-center gap-1"
+                  onClick={() => setFacingMode(prev => prev === 'environment' ? 'user' : 'environment')}
+                  className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 font-mono text-[11px] uppercase border border-slate-700"
                 >
-                  <RefreshCw className="w-3.5 h-3.5" /> Flip Camera
+                  Flip Camera
                 </button>
               )}
             </div>
 
-            {/* Video Viewport Container */}
-            <div className="relative rounded-2xl overflow-hidden bg-black border-2 border-amber-500/40 min-h-[260px] flex items-center justify-center shadow-inner">
-              <video ref={videoRef} className="w-full h-64 object-cover" />
+            <div className="relative aspect-video rounded-2xl bg-black border-2 border-slate-800 overflow-hidden flex items-center justify-center group">
+              <video
+                ref={videoRef}
+                className={`w-full h-full object-cover ${cameraActive ? 'block' : 'hidden'}`}
+              />
               <canvas ref={canvasRef} className="hidden" />
 
-              {!cameraActive ? (
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center space-y-3 bg-slate-950/90">
-                  <Camera className="w-12 h-12 text-slate-600" />
-                  <p className="text-xs text-slate-400 max-w-xs">
-                    Point smartphone camera at the attendee's digital QR pass for instant verification.
-                  </p>
-                  <button
-                    onClick={startCamera}
-                    className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-barlow font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg transition-all cursor-pointer"
-                  >
-                    <Camera className="w-4 h-4" /> START CAMERA SCANNER
-                  </button>
-                </div>
-              ) : (
-                <div className="absolute inset-4 border-2 border-dashed border-amber-400/80 rounded-xl pointer-events-none flex flex-col items-center justify-between p-3">
-                  <div className="w-full flex justify-between text-[10px] text-amber-300 font-mono bg-black/60 px-2.5 py-1 rounded-full">
-                    <span>LIVE GATE SCANNER</span>
-                    <span className="text-emerald-400 animate-pulse">● SCANNING</span>
+              {/* Viewfinder Target Box Overlay */}
+              {cameraActive && (
+                <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                  <div className="w-48 h-48 sm:w-56 sm:h-56 border-2 border-amber-400/80 rounded-2xl relative shadow-[0_0_30px_rgba(255,215,0,0.3)]">
+                    <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-amber-400 -mt-1 -ml-1 rounded-tl" />
+                    <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-amber-400 -mt-1 -mr-1 rounded-tr" />
+                    <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-amber-400 -mb-1 -ml-1 rounded-bl" />
+                    <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-amber-400 -mb-1 -mr-1 rounded-br" />
+                    <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent absolute top-1/2 -translate-y-1/2 animate-pulse" />
                   </div>
-                  <div className="w-16 h-16 border-2 border-amber-400 rounded-lg animate-pulse" />
-                  <span className="text-[10px] font-bold text-white bg-amber-500/80 px-3 py-1 rounded-full uppercase">
-                    Align QR Code inside target frame
-                  </span>
+                </div>
+              )}
+
+              {/* Camera Off Placeholder */}
+              {!cameraActive && (
+                <div className="text-center space-y-3 p-6">
+                  <div className="w-16 h-16 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500 mx-auto">
+                    <Camera className="w-8 h-8 text-amber-500/60" />
+                  </div>
+                  <p className="text-xs text-slate-400 max-w-xs mx-auto">
+                    Click below to start mobile rear camera and auto-scan ticket QR code.
+                  </p>
                 </div>
               )}
             </div>
 
-            {cameraActive && (
-              <button
-                onClick={stopCamera}
-                className="w-full py-2.5 rounded-xl bg-red-950/80 hover:bg-red-900 border border-red-500/40 text-red-300 font-bold text-xs uppercase transition-all"
-              >
-                STOP CAMERA
-              </button>
-            )}
+            {/* Camera Control Buttons */}
+            <div className="flex gap-3">
+              {!cameraActive ? (
+                <button
+                  onClick={startCamera}
+                  className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black font-barlow font-black uppercase text-sm flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-all cursor-pointer"
+                >
+                  <Camera className="w-4 h-4 text-black" />
+                  <span>START CAMERA SCANNER</span>
+                </button>
+              ) : (
+                <button
+                  onClick={stopCamera}
+                  className="flex-1 py-3 px-4 rounded-xl bg-red-600/30 hover:bg-red-600/40 text-red-300 font-bold uppercase text-sm border border-red-500/50 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                >
+                  <span>STOP CAMERA</span>
+                </button>
+              )}
+            </div>
           </div>
 
-          {/* RIGHT COLUMN: MANUAL TICKET CODE INPUT (5 COLS) */}
+          {/* RIGHT COLUMN: MANUAL TICKET ID SEARCH (5 COLS) */}
           <div className="lg:col-span-5 glass-panel p-6 rounded-3xl border border-amber-500/30 bg-slate-900/90 space-y-5 shadow-2xl flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="border-b border-slate-800 pb-3">
-                <h3 className="font-bebas text-2xl text-white uppercase flex items-center gap-2">
-                  <Search className="w-5 h-5 text-amber-400" /> 2. MANUAL TICKET CODE
+            <div>
+              <div className="flex items-center gap-2 border-b border-slate-800 pb-3 mb-4">
+                <Search className="w-5 h-5 text-amber-400" />
+                <h3 className="font-bebas text-xl text-white uppercase tracking-wide">
+                  2. MANUAL TICKET CODE
                 </h3>
-                <p className="text-xs text-slate-400">
-                  Enter Ticket ID directly if QR scan is unavailable.
-                </p>
               </div>
 
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  verifyAndCheckInTicket(ticketIdInput);
+                  lookupTicketDetails(ticketIdInput);
                 }}
                 className="space-y-4"
               >
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-amber-400 uppercase tracking-wider block">
-                    Enter Ticket ID *
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+                    Enter Ticket ID
                   </label>
-                  <input
-                    type="text"
-                    required
-                    value={ticketIdInput}
-                    onChange={(e) => setTicketIdInput(e.target.value)}
-                    placeholder="e.g. GGLT123456"
-                    className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white font-mono text-sm font-bold uppercase focus:outline-none focus:border-amber-500 transition-all placeholder:text-slate-600"
-                  />
+                  <div className="relative">
+                    <TicketIcon className="w-5 h-5 text-amber-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      required
+                      value={ticketIdInput}
+                      onChange={(e) => setTicketIdInput(e.target.value)}
+                      placeholder="e.g. GGLT542495"
+                      className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-slate-950 border border-slate-800 text-amber-400 placeholder-slate-600 font-mono font-bold text-base focus:outline-none focus:border-amber-500 transition-all uppercase"
+                    />
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Type 6-digit Ticket ID printed on digital pass.
+                  </p>
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-black font-barlow font-black uppercase tracking-wider text-sm flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer"
+                  className="w-full py-3.5 px-6 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-barlow font-black uppercase tracking-wider text-sm flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-all cursor-pointer disabled:opacity-50"
                 >
                   {loading ? (
                     <RefreshCw className="w-5 h-5 text-black animate-spin" />
                   ) : (
                     <>
-                      <ShieldCheck className="w-5 h-5 text-black" />
-                      <span>VERIFY TICKET</span>
+                      <Search className="w-5 h-5 text-black" />
+                      <span>LOOKUP TICKET</span>
                     </>
                   )}
                 </button>
               </form>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-slate-400 text-xs space-y-1">
+              <span className="font-bold text-amber-400 block uppercase">Gate Rules:</span>
+              <p>• Scan QR or type Ticket ID first.</p>
+              <p>• If valid, enter code <span className="text-amber-300 font-mono font-bold">11</span> to expire ticket & allow entry.</p>
+              <p>• Expired tickets show <span className="text-red-400 font-bold">USED</span> without code input.</p>
             </div>
           </div>
 
@@ -465,20 +534,123 @@ export default function VerifyTicketPage() {
         {verificationResult.status !== 'IDLE' && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom duration-300">
             
-            {/* SUCCESS STATE */}
-            {verificationResult.status === 'SUCCESS' && verificationResult.ticket && (
-              <div className="glass-panel p-6 sm:p-8 rounded-3xl border-2 border-emerald-500/60 bg-emerald-950/40 space-y-6 shadow-[0_0_50px_rgba(16,185,129,0.25)]">
+            {/* LOOKUP VALID STATE — ASKS FOR CODE 11 TO EXPIRE */}
+            {verificationResult.status === 'LOOKUP_VALID' && verificationResult.ticket && (
+              <div className="glass-panel p-6 sm:p-8 rounded-3xl border-2 border-amber-500/60 bg-amber-950/30 space-y-6 shadow-[0_0_50px_rgba(245,158,11,0.25)]">
+                
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-amber-500/30 pb-4 text-center sm:text-left">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-400 shrink-0">
+                      <Sparkles className="w-8 h-8" />
+                    </div>
+                    <div>
+                      <span className="px-3 py-1 rounded-full bg-emerald-500/30 text-emerald-300 font-black text-xs uppercase tracking-widest font-barlow inline-block mb-1 border border-emerald-500/40">
+                        ✓ VALID TICKET FOUND
+                      </span>
+                      <h2 className="font-bebas text-3xl sm:text-4xl text-white uppercase tracking-wide">
+                        ENTER CODE 11 TO EXPIRE & CONFIRM ENTRY
+                      </h2>
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    <span className="text-[10px] text-slate-400 font-mono uppercase block">Ticket ID</span>
+                    <span className="text-xl font-mono font-black text-amber-400">
+                      {verificationResult.ticket.ticket_id}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Attendee Details Summary */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-950/80 border border-amber-500/30 text-xs">
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Attendee Name</span>
+                    <span className="font-bold text-white text-sm">{verificationResult.ticket.customer_name}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Contact Mobile</span>
+                    <span className="font-mono font-bold text-slate-200 text-sm">{verificationResult.ticket.mobile}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Instagram ID</span>
+                    <span className="font-bold text-pink-400 text-sm">{verificationResult.ticket.instagram_id}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Payment Status</span>
+                    <span className="font-black text-emerald-400 uppercase text-sm">PAID (₹{verificationResult.ticket.amount})</span>
+                  </div>
+                </div>
+
+                {/* PROMINENT CODE 11 EXPIRATION BOX */}
+                <form
+                  onSubmit={handleConfirmExpireWithCode}
+                  className="p-5 rounded-2xl bg-slate-950 border-2 border-amber-500/70 space-y-4 shadow-xl"
+                >
+                  <div className="flex items-center gap-2">
+                    <KeyRound className="w-6 h-6 text-amber-400" />
+                    <div>
+                      <h4 className="font-bebas text-xl text-amber-300 uppercase tracking-wide">
+                        GATE CONFIRMATION CODE REQUIRED
+                      </h4>
+                      <p className="text-xs text-slate-300">
+                        Type <span className="text-amber-300 font-mono font-bold">11</span> in box below to mark ticket as EXPIRED / USED.
+                      </p>
+                    </div>
+                  </div>
+
+                  {codeError && (
+                    <div className="p-3 rounded-xl bg-red-950/90 border border-red-500 text-red-300 text-xs font-bold text-center">
+                      {codeError}
+                    </div>
+                  )}
+
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                      type="text"
+                      required
+                      value={expireCode}
+                      onChange={(e) => setExpireCode(e.target.value)}
+                      placeholder="Type 11"
+                      className="flex-1 px-4 py-3.5 rounded-xl bg-slate-900 border-2 border-amber-500/60 text-amber-300 placeholder-slate-600 font-mono font-black text-center text-xl tracking-widest focus:outline-none focus:border-amber-400 transition-all"
+                    />
+
+                    <button
+                      type="submit"
+                      disabled={expiring}
+                      className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-barlow font-black text-base uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      {expiring ? (
+                        <RefreshCw className="w-5 h-5 text-black animate-spin" />
+                      ) : (
+                        <>
+                          <CheckCircle2 className="w-5 h-5 text-black" />
+                          <span>CONFIRM & EXPIRE TICKET</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+
+                {/* Graphic Ticket Card Preview */}
+                <TicketCard ticket={verificationResult.ticket} showActions={true} />
+              </div>
+            )}
+
+            {/* SUCCESS STATE — JUST EXPIRED WITH CODE 11 */}
+            {verificationResult.status === 'SUCCESS_EXPIRED' && verificationResult.ticket && (
+              <div className="glass-panel p-6 sm:p-8 rounded-3xl border-2 border-emerald-500/60 bg-emerald-950/40 space-y-6 shadow-[0_0_50px_rgba(16,185,129,0.25)] animate-in fade-in zoom-in-95 duration-300">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-emerald-500/30 pb-4 text-center sm:text-left">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-emerald-400 shrink-0">
                       <CheckCircle2 className="w-8 h-8" />
                     </div>
                     <div>
-                      <span className="px-3 py-1 rounded-full bg-emerald-500/30 text-emerald-300 font-black text-xs uppercase tracking-widest font-barlow inline-block mb-1">
-                        ✓ VERIFIED / ENTERED
+                      <span className="px-3 py-1 rounded-full bg-emerald-500/30 text-emerald-300 font-black text-xs uppercase tracking-widest font-barlow inline-block mb-1 border border-emerald-500/40">
+                        ✓ USED / EXPIRED
                       </span>
                       <h2 className="font-bebas text-3xl sm:text-4xl text-emerald-300 uppercase tracking-wide">
-                        ENTRY CONFIRMED & CONSUMED
+                        ENTRY CONFIRMED & TICKET EXPIRED
                       </h2>
                     </div>
                   </div>
@@ -491,32 +663,15 @@ export default function VerifyTicketPage() {
                   </div>
                 </div>
 
-                {/* Attendee Details Summary Table */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-950/80 border border-emerald-500/30 text-xs">
-                  <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Ticket ID</span>
-                    <span className="font-mono font-black text-amber-300 text-sm">{verificationResult.ticket.ticket_id}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Attendee Name</span>
-                    <span className="font-bold text-white text-sm">{verificationResult.ticket.customer_name}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Payment Status</span>
-                    <span className="font-black text-emerald-400 uppercase text-sm">PAID (₹{verificationResult.ticket.amount})</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Entry Status</span>
-                    <span className="font-black text-amber-300 uppercase text-sm">USED / ENTERED</span>
-                  </div>
+                <div className="p-4 rounded-2xl bg-black/60 border border-emerald-500/40 text-emerald-300 font-bold text-sm text-center">
+                  ✓ Ticket {verificationResult.ticket.ticket_id} is now EXPIRED and marked as USED.
                 </div>
 
-                {/* Graphic Ticket Card Preview */}
                 <TicketCard ticket={verificationResult.ticket} showActions={true} />
               </div>
             )}
 
-            {/* ALREADY USED / DUPLICATE STATE */}
+            {/* ALREADY USED / EXPIRED STATE — NO CODE 11 INPUT SHOWN! */}
             {verificationResult.status === 'ALREADY_USED' && verificationResult.ticket && (
               <div className="glass-panel p-6 sm:p-8 rounded-3xl border-2 border-red-500/70 bg-red-950/50 space-y-6 shadow-[0_0_50px_rgba(239,68,68,0.3)]">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-red-500/30 pb-4 text-center sm:text-left">
@@ -525,34 +680,39 @@ export default function VerifyTicketPage() {
                       <AlertTriangle className="w-8 h-8" />
                     </div>
                     <div>
-                      <span className="px-3 py-1 rounded-full bg-red-600/40 text-red-200 font-black text-xs uppercase tracking-widest font-barlow inline-block mb-1 animate-pulse">
-                        ⚠️ ALREADY USED
+                      <span className="px-3 py-1 rounded-full bg-red-600/40 text-red-200 font-black text-xs uppercase tracking-widest font-barlow inline-block mb-1 animate-pulse border border-red-500/50">
+                        ⚠️ USED / EXPIRED
                       </span>
                       <h2 className="font-bebas text-3xl sm:text-4xl text-red-300 uppercase tracking-wide">
-                        DUPLICATE ENTRY REJECTED
+                        TICKET IS ALREADY USED
                       </h2>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-black/60 border border-red-500/40 text-slate-200 text-xs sm:text-sm space-y-2">
-                  <p className="font-bold text-red-300">
-                    This ticket ({verificationResult.ticket.ticket_id}) has ALREADY been used for entry.
+                <div className="p-5 rounded-2xl bg-black/80 border border-red-500/50 text-slate-200 space-y-3">
+                  <div className="flex items-center gap-2 text-red-400 font-black text-base uppercase">
+                    <XCircle className="w-5 h-5 text-red-400" />
+                    <span>STATUS: USED</span>
+                  </div>
+                  <p className="text-xs text-slate-300">
+                    This ticket (<span className="font-mono font-bold text-amber-300">{verificationResult.ticket.ticket_id}</span>) has ALREADY been consumed for gate entry. No further check-ins are allowed.
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-slate-800 text-xs">
                     <div>
-                      <span className="text-slate-400 uppercase block text-[10px]">Attendee:</span>
-                      <span className="font-bold text-white">{verificationResult.ticket.customer_name}</span>
+                      <span className="text-slate-400 uppercase block text-[10px]">Attendee Name:</span>
+                      <span className="font-bold text-white text-sm">{verificationResult.ticket.customer_name}</span>
                     </div>
                     <div>
-                      <span className="text-slate-400 uppercase block text-[10px]">First Checked-In At:</span>
-                      <span className="font-mono font-bold text-amber-300">
+                      <span className="text-slate-400 uppercase block text-[10px]">Checked-In Timestamp:</span>
+                      <span className="font-mono font-bold text-amber-300 text-xs">
                         {verificationResult.ticket.checked_in_at ? new Date(verificationResult.ticket.checked_in_at).toLocaleString('en-IN') : 'Earlier Session'}
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-400 uppercase block text-[10px]">Status:</span>
-                      <span className="font-black text-red-400 uppercase">USED / ENTERED</span>
+                      <span className="text-slate-400 uppercase block text-[10px]">Entry Status:</span>
+                      <span className="font-black text-red-400 uppercase text-xs">USED</span>
                     </div>
                   </div>
                 </div>
@@ -565,9 +725,9 @@ export default function VerifyTicketPage() {
                 <div className="flex items-center gap-3">
                   <XCircle className="w-8 h-8 text-red-400" />
                   <div>
-                    <h3 className="font-bebas text-2xl text-red-400 uppercase">✕ UNPAID / PENDING PAYMENT</h3>
+                    <h3 className="font-bebas text-2xl text-red-400 uppercase">✕ UNPAID TICKET</h3>
                     <p className="text-xs text-slate-300">
-                      This ticket cannot be verified because payment is not completed.
+                      This ticket cannot be verified or expired because payment is incomplete.
                     </p>
                   </div>
                 </div>

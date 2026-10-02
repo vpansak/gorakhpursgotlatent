@@ -43,7 +43,7 @@ export async function ensureTicketsTable() {
         instagram_id TEXT NOT NULL,
         date_of_birth TEXT NOT NULL,
         quantity INTEGER DEFAULT 1,
-        amount NUMERIC(10,2) DEFAULT 149.00,
+        amount NUMERIC(10,2) DEFAULT 0,
         razorpay_order_id TEXT,
         razorpay_payment_id TEXT,
         payment_status TEXT DEFAULT 'PAID',
@@ -107,10 +107,46 @@ export function validateAgeIs18Plus(dobString: string): { is18Plus: boolean; age
 }
 
 /**
+ * Normalizes raw database row into clean TicketRecord
+ */
+function normalizeTicketRecord(r: any): TicketRecord {
+  const parseDate = (val: any): string => {
+    if (!val) return new Date().toISOString();
+    if (typeof val === 'string') return val;
+    if (val instanceof Date) return val.toISOString();
+    return String(val);
+  };
+
+  return {
+    id: String(r.id || ''),
+    ticket_id: String(r.ticket_id || ''),
+    booking_id: String(r.booking_id || ''),
+    customer_name: String(r.customer_name || ''),
+    mobile: String(r.mobile || ''),
+    email: String(r.email || ''),
+    instagram_id: String(r.instagram_id || ''),
+    date_of_birth: String(r.date_of_birth || ''),
+    quantity: Number(r.quantity || 1),
+    amount: Number(r.amount || 0),
+    razorpay_order_id: String(r.razorpay_order_id || ''),
+    razorpay_payment_id: String(r.razorpay_payment_id || ''),
+    payment_status: String(r.payment_status || 'PAID'),
+    ticket_status: (r.ticket_status === 'CANCELLED' ? 'CANCELLED' : 'VALID') as 'VALID' | 'CANCELLED',
+    qr_token: String(r.qr_token || ''),
+    checked_in: Number(r.checked_in) === 1 ? 1 : 0,
+    checked_in_at: r.checked_in_at ? parseDate(r.checked_in_at) : null,
+    created_at: parseDate(r.created_at),
+    updated_at: parseDate(r.updated_at),
+  };
+}
+
+/**
  * Save new ticket to database and memory
  */
 export async function saveTicketRecord(ticket: TicketRecord): Promise<TicketRecord> {
-  memoryTickets.set(ticket.ticket_id, ticket);
+  const norm = normalizeTicketRecord(ticket);
+  memoryTickets.set(norm.ticket_id, norm);
+
   try {
     await ensureTicketsTable();
     await db.execute(`
@@ -126,28 +162,28 @@ export async function saveTicketRecord(ticket: TicketRecord): Promise<TicketReco
         checked_in_at = EXCLUDED.checked_in_at,
         updated_at = CURRENT_TIMESTAMP
     `, [
-      ticket.id,
-      ticket.ticket_id,
-      ticket.booking_id,
-      ticket.customer_name,
-      ticket.mobile,
-      ticket.email,
-      ticket.instagram_id,
-      ticket.date_of_birth,
-      ticket.quantity,
-      ticket.amount,
-      ticket.razorpay_order_id,
-      ticket.razorpay_payment_id,
-      ticket.payment_status,
-      ticket.ticket_status,
-      ticket.qr_token,
-      ticket.checked_in,
-      ticket.checked_in_at,
+      norm.id,
+      norm.ticket_id,
+      norm.booking_id,
+      norm.customer_name,
+      norm.mobile,
+      norm.email,
+      norm.instagram_id,
+      norm.date_of_birth,
+      norm.quantity,
+      norm.amount,
+      norm.razorpay_order_id,
+      norm.razorpay_payment_id,
+      norm.payment_status,
+      norm.ticket_status,
+      norm.qr_token,
+      norm.checked_in,
+      norm.checked_in_at,
     ]);
   } catch (err) {
     console.warn('saveTicketRecord database notice:', err);
   }
-  return ticket;
+  return norm;
 }
 
 /**
@@ -184,13 +220,14 @@ export async function getTicketByTicketId(ticketIdOrUrl: string): Promise<Ticket
   // 2. Query Neon PostgreSQL database
   try {
     await ensureTicketsTable();
-    const row = await db.queryOne<TicketRecord>(
+    const row = await db.queryOne<any>(
       `SELECT * FROM tickets WHERE UPPER(ticket_id) = ? OR qr_token = ? OR UPPER(booking_id) = ? OR UPPER(razorpay_order_id) = ? OR UPPER(razorpay_payment_id) = ? OR UPPER(ticket_id) = ?`,
       [cleanId, rawInput, rawInput.toUpperCase(), rawInput.toUpperCase(), rawInput.toUpperCase(), rawInput.toUpperCase()]
     );
     if (row) {
-      memoryTickets.set(row.ticket_id, row);
-      return row;
+      const norm = normalizeTicketRecord(row);
+      memoryTickets.set(norm.ticket_id, norm);
+      return norm;
     }
   } catch (err) {
     console.warn('getTicketByTicketId database notice:', err);
@@ -213,9 +250,12 @@ export async function getAllTickets(): Promise<TicketRecord[]> {
   const list = Array.from(memoryTickets.values());
   try {
     await ensureTicketsTable();
-    const rows = await db.query<TicketRecord>(`SELECT * FROM tickets ORDER BY created_at DESC`);
+    const rows = await db.query<any>(`SELECT * FROM tickets ORDER BY created_at DESC`);
     if (rows && rows.length > 0) {
-      rows.forEach(r => memoryTickets.set(r.ticket_id, r));
+      rows.forEach(r => {
+        const norm = normalizeTicketRecord(r);
+        memoryTickets.set(norm.ticket_id, norm);
+      });
       return Array.from(memoryTickets.values());
     }
   } catch (err) {
@@ -233,13 +273,13 @@ export async function searchTickets(queryStr: string): Promise<TicketRecord[]> {
 
   const q = queryStr.toLowerCase().trim();
   return all.filter(t => 
-    t.ticket_id.toLowerCase().includes(q) ||
-    t.customer_name.toLowerCase().includes(q) ||
-    t.mobile.toLowerCase().includes(q) ||
-    t.email.toLowerCase().includes(q) ||
-    t.instagram_id.toLowerCase().includes(q) ||
-    (t.razorpay_order_id && t.razorpay_order_id.toLowerCase().includes(q)) ||
-    (t.razorpay_payment_id && t.razorpay_payment_id.toLowerCase().includes(q))
+    (t.ticket_id && String(t.ticket_id).toLowerCase().includes(q)) ||
+    (t.customer_name && String(t.customer_name).toLowerCase().includes(q)) ||
+    (t.mobile && String(t.mobile).toLowerCase().includes(q)) ||
+    (t.email && String(t.email).toLowerCase().includes(q)) ||
+    (t.instagram_id && String(t.instagram_id).toLowerCase().includes(q)) ||
+    (t.razorpay_order_id && String(t.razorpay_order_id).toLowerCase().includes(q)) ||
+    (t.razorpay_payment_id && String(t.razorpay_payment_id).toLowerCase().includes(q))
   );
 }
 
@@ -300,10 +340,17 @@ export async function getTicketStats() {
   const todayStr = new Date().toISOString().slice(0, 10);
 
   const totalBooked = all.length;
-  const todayBookings = all.filter(t => t.created_at && t.created_at.startsWith(todayStr)).length;
-  const paidTickets = all.filter(t => t.payment_status === 'PAID').length;
-  const pendingOrFailed = all.filter(t => t.payment_status !== 'PAID').length;
-  const checkedIn = all.filter(t => t.checked_in === 1).length;
+  const todayBookings = all.filter(t => {
+    if (!t.created_at) return false;
+    const dateStr = typeof t.created_at === 'string' 
+      ? t.created_at 
+      : ((t.created_at as any) instanceof Date ? (t.created_at as Date).toISOString() : String(t.created_at));
+    return dateStr.startsWith(todayStr);
+  }).length;
+
+  const paidTickets = all.filter(t => t.payment_status === 'PAID' || t.payment_status === 'FREE' || Number(t.amount) === 0).length;
+  const pendingOrFailed = all.filter(t => t.payment_status !== 'PAID' && t.payment_status !== 'FREE' && Number(t.amount) !== 0).length;
+  const checkedIn = all.filter(t => Number(t.checked_in) === 1).length;
   const totalRevenue = all.filter(t => t.payment_status === 'PAID').reduce((sum, t) => sum + Number(t.amount || 0), 0);
 
   return {

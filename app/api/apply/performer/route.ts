@@ -84,7 +84,7 @@ export async function POST(req: Request) {
       performance_category: effectiveCategory,
       status: 'SUBMITTED',
       created_at: new Date().toISOString()
-    }).catch(err => console.error('S3 individual performer save error:', err));
+    }).catch((err: any) => console.error('S3 individual performer save error:', err));
 
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
 
@@ -114,7 +114,7 @@ export async function POST(req: Request) {
       payment_amount: 0,
       payment_verified_at: new Date().toISOString(),
       application_status: 'SUBMITTED',
-    }).then(res => {
+    }).then((res: any) => {
       if (res.success) {
         db.execute("UPDATE performer_applications SET email_status = 'SENT', admin_email_status = 'SENT' WHERE app_id = ?", [appId]).catch(e => console.error(e));
       } else {

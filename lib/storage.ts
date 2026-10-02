@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { query } from './db';
 
 const endpoint = process.env.AWS_ENDPOINT_URL_S3;
@@ -11,14 +11,36 @@ if (!endpoint || !accessKeyId || !secretAccessKey || !S3_BUCKET) {
   throw new Error('Storage is not configured. Set AWS_ENDPOINT_URL_S3, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and S3_BUCKET_NAME.');
 }
 
-export const s3 = new S3Client({
-  endpoint,
-  region,
-  credentials: {
-    accessKeyId,
-    secretAccessKey,
-  },
-  forcePathStyle: true,
+let s3ClientInstance: S3Client | null = null;
+
+export function getS3Client(): S3Client | null {
+  if (!accessKeyId || !secretAccessKey || !endpoint) {
+    return null;
+  }
+  if (!s3ClientInstance) {
+    s3ClientInstance = new S3Client({
+      endpoint,
+      region,
+      credentials: {
+        accessKeyId,
+        secretAccessKey,
+      },
+      forcePathStyle: true,
+    });
+  }
+  return s3ClientInstance;
+}
+
+// Exported client proxy for direct calls (with safe null fallback handling)
+export const s3 = new Proxy({} as S3Client, {
+  get(_target, prop) {
+    const client = getS3Client();
+    if (!client) {
+      return () => Promise.reject(new Error('S3 client not configured (missing AWS credentials environment variables).'));
+    }
+    const val = (client as any)[prop];
+    return typeof val === 'function' ? val.bind(client) : val;
+  }
 });
 
 export const STORAGE_FOLDERS = {
@@ -40,6 +62,12 @@ export async function saveIndividualEntryToS3(
   id: string,
   data: any
 ): Promise<string | null> {
+  const client = getS3Client();
+  if (!client || !endpoint) {
+    console.warn(`[Storage] Skipping S3 upload for ${category}/${id}: S3 environment variables not configured.`);
+    return null;
+  }
+
   try {
     const safeName = (data.full_name || data.company_name || data.customer_name || 'entry').replace(/[^a-zA-Z0-9_-]/g, '_');
     const key = `${category}/${id}_${safeName}.json`;
@@ -49,7 +77,7 @@ export async function saveIndividualEntryToS3(
       s3_folder: category
     }, null, 2);
 
-    await s3.send(
+    await client.send(
       new PutObjectCommand({
         Bucket: S3_BUCKET,
         Key: key,
@@ -60,8 +88,8 @@ export async function saveIndividualEntryToS3(
 
     const cleanEndpoint = endpoint.replace(/\/$/, '');
     return `${cleanEndpoint}/${S3_BUCKET}/${key}`;
-  } catch (err) {
-    console.error(`Error saving individual entry to S3 for ${category}/${id}:`, err);
+  } catch (err: any) {
+    console.warn(`[Storage] S3 notice for ${category}/${id}:`, err?.message || err);
     return null;
   }
 }
@@ -92,32 +120,47 @@ export function jsonToCSV(items: any[]): string {
 /**
  * Upload live CSV Sheet to Neon S3 storage
  */
-export async function uploadSheetToS3(sheetName: string, csvContent: string): Promise<string> {
-  const key = `${STORAGE_FOLDERS.sheets}/${sheetName}`;
-  await s3.send(
-    new PutObjectCommand({
-      Bucket: S3_BUCKET,
-      Key: key,
-      Body: Buffer.from(csvContent, 'utf-8'),
-      ContentType: 'text/csv; charset=utf-8',
-    })
-  );
+export async function uploadSheetToS3(sheetName: string, csvContent: string): Promise<string | null> {
+  const client = getS3Client();
+  if (!client || !endpoint) {
+    console.warn(`[Storage] Skipping sheet upload ${sheetName}: S3 environment variables not configured.`);
+    return null;
+  }
 
-  const cleanEndpoint = endpoint.replace(/\/$/, '');
-  return `${cleanEndpoint}/${S3_BUCKET}/${key}`;
+  try {
+    const key = `${STORAGE_FOLDERS.sheets}/${sheetName}`;
+    await client.send(
+      new PutObjectCommand({
+        Bucket: S3_BUCKET,
+        Key: key,
+        Body: Buffer.from(csvContent, 'utf-8'),
+        ContentType: 'text/csv; charset=utf-8',
+      })
+    );
+
+    const cleanEndpoint = endpoint.replace(/\/$/, '');
+    return `${cleanEndpoint}/${S3_BUCKET}/${key}`;
+  } catch (err: any) {
+    console.warn(`[Storage] Sheet upload notice (${sheetName}):`, err?.message || err);
+    return null;
+  }
 }
 
 /**
- * Automatically synchronize live CSV Sheets for:
- * 1. Paid Performers (only ₹199 paid applicants)
- * 2. All Performers
- * 3. Sponsors
- * 4. Panel Guests / Judges
- * 5. Event Bookings
+ * Automatically synchronize live CSV Sheets
  */
 export async function syncSheetsToS3() {
+  const client = getS3Client();
+  if (!client) {
+    console.warn('[Storage] Skipping S3 sheet sync: AWS S3 credentials not configured in environment.');
+    return {
+      success: false,
+      message: 'S3 credentials not configured in Vercel environment variables.',
+    };
+  }
+
   try {
-    // 1. Paid Performers Sheet (In folder sheets/performers/paid_performers.csv)
+    // 1. Paid Performers Sheet
     const paidPerformers = await query(`
       SELECT 
         app_id, full_name, email, mobile_number, whatsapp_number, city, age,
@@ -132,7 +175,7 @@ export async function syncSheetsToS3() {
     const paidCsv = jsonToCSV(paidPerformers);
     const paidUrl = await uploadSheetToS3('performers/paid_performers.csv', paidCsv);
 
-    // 2. All Performers Sheet (In folder sheets/performers/all_performers.csv)
+    // 2. All Performers Sheet
     const allPerformers = await query(`
       SELECT 
         app_id, full_name, email, mobile_number, whatsapp_number, city, age,
@@ -146,7 +189,7 @@ export async function syncSheetsToS3() {
     const allPerfCsv = jsonToCSV(allPerformers);
     const allPerfUrl = await uploadSheetToS3('performers/all_performers.csv', allPerfCsv);
 
-    // 3. Sponsors Sheet (In folder sheets/sponsors/sponsors.csv)
+    // 3. Sponsors Sheet
     const sponsors = await query(`
       SELECT 
         app_id, company_name, contact_person, designation, biz_email, whatsapp, phone,
@@ -158,7 +201,7 @@ export async function syncSheetsToS3() {
     const sponsorsCsv = jsonToCSV(sponsors);
     const sponsorsUrl = await uploadSheetToS3('sponsors/sponsors.csv', sponsorsCsv);
 
-    // 4. Panel / Guests Sheet (In folder sheets/panel/panel_guests.csv)
+    // 4. Panel / Guests Sheet
     const panelGuests = await query(`
       SELECT 
         app_id, full_name, stage_name, email, whatsapp, phone, city, profession,
@@ -170,7 +213,7 @@ export async function syncSheetsToS3() {
     const panelCsv = jsonToCSV(panelGuests);
     const panelUrl = await uploadSheetToS3('panel/panel_guests.csv', panelCsv);
 
-    // 5. Team / Crew Applications Sheet (In folder sheets/team/team_applications.csv)
+    // 5. Team / Crew Applications Sheet
     const teamApps = await query(`
       SELECT 
         app_id, full_name, mobile_number, email, dob, address, instagram_url, about, status, created_at
@@ -180,7 +223,7 @@ export async function syncSheetsToS3() {
     const teamCsv = jsonToCSV(teamApps);
     const teamUrl = await uploadSheetToS3('team/team_applications.csv', teamCsv);
 
-    // 6. Ticket Orders Sheet (In folder sheets/orders/ticket_orders.csv)
+    // 6. Ticket Orders Sheet
     const orders = await query(`
       SELECT 
         order_number, customer_name, customer_email, customer_phone, total_amount, payment_status, razorpay_payment_id, created_at
@@ -202,10 +245,10 @@ export async function syncSheetsToS3() {
       },
     };
   } catch (err: any) {
-    console.error('Error syncing sheets to S3:', err);
+    console.warn('[Storage] S3 sheet sync notice:', err?.message || err);
     return {
       success: false,
-      error: err.message,
+      error: err?.message || 'S3 sync error',
     };
   }
 }

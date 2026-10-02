@@ -1,6 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 
-const databaseUrl = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_kBRNLDK9ne7A@ep-ancient-hill-b5xedkzo-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+const databaseUrl = process.env.DATABASE_URL;
 const sql = neon(databaseUrl);
 
 async function insertTestAlokEntries() {

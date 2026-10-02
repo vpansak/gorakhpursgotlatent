@@ -36,7 +36,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Alok Singh | Full-Stack Software Engineer & Tech Architect",
-  description: "Official developer portfolio and personal profile of Alok Singh — Full-Stack Software Engineer specializing in Next.js, React, TypeScript, Node.js, and System Architecture.",
+  description: "Official developer profile and biography of Alok Singh — Full-Stack Software Engineer & Tech Architect from Gorakhpur, Uttar Pradesh.",
   authors: [{ name: "Alok Singh", url: "https://gkpgotlatent.in/developer" }],
   creator: "Alok Singh",
   publisher: "Alok Singh",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Alok Singh | Full-Stack Software Engineer & Tech Architect",
-    description: "Personal developer portfolio, skills, projects, and biography of Alok Singh.",
+    description: "Personal developer profile, skills, engineering philosophy, and biography of Alok Singh.",
     url: 'https://gkpgotlatent.in/developer',
     siteName: "Alok Singh Portfolio",
     images: [
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: "Alok Singh | Full-Stack Software Engineer",
-    description: "Full-Stack Web Development, Systems Architecture, and Software Engineering.",
+    description: "Full-Stack Web Engineering, Real-Time Architecture, and Software Engineering.",
     images: ['/alok-singh.jpg'],
   },
 };
@@ -106,95 +106,86 @@ export default function DeveloperPage() {
       handle: "@aloksingh_._",
       url: "https://www.instagram.com/aloksingh_._/",
       icon: InstagramIcon,
-      bgGradient: "from-pink-900/50 via-purple-900/40 to-slate-900",
-      borderColor: "border-pink-500/50 hover:border-pink-400",
-      accentBg: "from-amber-500 via-pink-500 to-purple-600",
-      textColor: "group-hover:text-pink-300"
+      bgGradient: "from-pink-600 via-purple-600 to-amber-500",
+      borderColor: "border-pink-500/50 hover:border-pink-300",
+      hoverBg: "hover:scale-105"
     },
     {
       name: "X (Twitter)",
       handle: "@rajpratapsinghh",
       url: "https://x.com/rajpratapsinghh",
       icon: XIcon,
-      bgGradient: "from-slate-900 via-slate-900 to-slate-950",
-      borderColor: "border-slate-700 hover:border-amber-400",
-      accentBg: "from-slate-700 to-slate-800",
-      textColor: "group-hover:text-amber-300"
+      bgGradient: "from-slate-800 to-slate-900",
+      borderColor: "border-slate-600 hover:border-amber-400",
+      hoverBg: "hover:scale-105"
     },
     {
       name: "Facebook",
       handle: "@meadorush",
       url: "https://www.facebook.com/meadorush",
       icon: FacebookIcon,
-      bgGradient: "from-blue-950/50 via-slate-900 to-slate-900",
-      borderColor: "border-blue-600/40 hover:border-blue-400",
-      accentBg: "from-blue-600 to-blue-700",
-      textColor: "group-hover:text-blue-300"
+      bgGradient: "from-blue-700 to-blue-900",
+      borderColor: "border-blue-500/50 hover:border-blue-300",
+      hoverBg: "hover:scale-105"
     }
   ];
 
   const coreSkills = [
-    { name: "Next.js & React", level: "Expert", desc: "App Router, SSR, Server Components, Custom Hooks" },
-    { name: "TypeScript & JavaScript", level: "Advanced", desc: "Type Safety, Modern ESNext, Async Control Flow" },
-    { name: "Tailwind CSS & Glassmorphism", level: "Expert", desc: "Custom UI/UX Systems, HSL Color Palettes, Animations" },
-    { name: "Real-Time Systems & WebSockets", level: "Advanced", desc: "Low-Latency Data Transmission, WebSockets, State Sync" },
-    { name: "Node.js & Backend APIs", level: "Advanced", desc: "REST APIs, Serverless Functions, Webhook Integrations" },
-    { name: "Database Engineering & SQL", level: "Advanced", desc: "Relational Schema Design, Query Optimization, SQLite, PostgreSQL" },
-    { name: "Payment & Security Infrastructure", level: "Advanced", desc: "Payment Gateway APIs, Cryptographic Signatures, QR Code Engines" },
-    { name: "Digital Strategy & Media Operations", level: "Lead", desc: "Brand Growth, Social Media Execution, Audience Engagement" }
+    { name: "Frontend Development", level: "Expert", desc: "Next.js 14, React, App Router, SSR, TypeScript, Tailwind CSS" },
+    { name: "Backend & Systems", level: "Advanced", desc: "Node.js, REST APIs, WebSockets, Serverless Edge Architecture" },
+    { name: "Database Engineering", level: "Advanced", desc: "Relational SQL Schemas, SQLite, PostgreSQL, Query Optimization" },
+    { name: "UI/UX & Design Systems", level: "Expert", desc: "Glassmorphism Aesthetics, Micro-Animations, Responsive Layouts" },
+    { name: "API & Payment Integrations", level: "Advanced", desc: "Third-Party APIs, Cryptographic Signatures, Webhooks" },
+    { name: "Digital Operations & Strategy", level: "Lead", desc: "Social Media Execution, Content Strategy, Audience Growth" }
   ];
 
-  const personalProjects = [
+  const engineeringPillars = [
     {
-      id: "01",
-      title: "⚡ Real-Time Low-Latency Engine Architecture",
-      subtitle: "Sub-100ms Synchronized Data Engine",
-      description: "Main real-time application state synchronization engines develop karta hoon jo minimum payload ke saath interactive UIs aur dashboards ko instantaneous updates render karwate hain.",
-      features: [
-        "Sub-100ms real-time state synchronization across multiple connected clients",
-        "Optimized touch-friendly control dashboards and responsive user interfaces",
-        "Hardware-accelerated CSS rendering and DOM diffing for high frame rates",
-        "Zero-latency state persistence with automatic reconnection logic"
-      ],
-      stack: ["WebSockets", "Next.js", "TypeScript", "State Sync"]
+      num: "01",
+      title: "💻 Clean & Scalable System Architecture",
+      subtitle: "Modular, Type-Safe & Maintainable Software",
+      description: "Main clean code principles, modular components, aur type-safe architectures par focus karta hoon. Code base ko simple, predictable, aur long-term maintainable rakhna mera primary goal hota hai.",
+      points: [
+        "Strict TypeScript interfaces and predictable state flow",
+        "Serverless API design with fast response times",
+        "Modular folder structures adhering to modern software patterns",
+        "Comprehensive code organization and clean documentation"
+      ]
     },
     {
-      id: "02",
-      title: "🎟️ Automated Transactional & Verification Systems",
-      subtitle: "Scalable E-Commerce & Verification Pipeline",
-      description: "High-volume user requests ke liye fully automated transactional platforms build karta hoon, jo instant payment callbacks process karte hain, encrypted QR codes generate karte hain, aur WhatsApp & Email automated dispatch handle karte hain.",
-      features: [
-        "Payment gateway callback verification and signature validation",
-        "Automated QR code matrix generation embedding encrypted data payload",
-        "Automated WhatsApp & Email dispatch integration",
-        "Webcam and mobile QR code scanner verification UIs"
-      ],
-      stack: ["Payment APIs", "QR Matrix", "Webhooks", "Automated Dispatch"]
+      num: "02",
+      title: "⚡ Real-Time Web & Low-Latency Performance",
+      subtitle: "Sub-Second Response Times & Real-Time Sync",
+      description: "Fast-loading web applications aur real-time data sync engines develop karta hoon jo minimum network overhead ke saath interactive user experiences render karte hain.",
+      points: [
+        "Optimized asset loading and server-side rendering (SSR)",
+        "WebSocket integration for real-time live data streaming",
+        "Lightweight payload structures for fast mobile execution",
+        "Sub-second initial page load speeds"
+      ]
     },
     {
-      id: "03",
-      title: "🎨 Glassmorphic Dark-Mode UI/UX Design System",
-      subtitle: "Modern Web Aesthetic & Responsive Layouts",
-      description: "Custom dark-mode UI/UX design systems (#07080e background, gold/amber accents, glowing borders, micro-interactions) design karta hoon jo har screen size (Mobile, Tablet, Laptop, 4K) par lightning fast perform karte hain.",
-      features: [
-        "Custom design tokens with curated HSL color palettes and glassmorphic cards",
+      num: "03",
+      title: "🎨 Glassmorphic UI/UX & Responsive Design",
+      subtitle: "Modern Dark Mode Aesthetics & Fluid Layouts",
+      description: "Custom dark-mode glassmorphic design systems (#07080e background, gold/amber glowing accents, smooth hover animations) build karta hoon jo mobile se lekar 4K screens tak stunning look dete hain.",
+      points: [
+        "Curated HSL color palettes and glassmorphic card designs",
         "Google Fonts typography integration (Bebas Neue, Barlow, Outfit, Inter)",
-        "Fully responsive layout architecture for all device viewports",
-        "Micro-animations, badges, and fast initial load optimization"
-      ],
-      stack: ["Tailwind CSS", "Vanilla CSS", "Google Fonts", "Lucide Icons"]
+        "Fully responsive layouts across all device viewports",
+        "Smooth micro-interactions and animated UI elements"
+      ]
     },
     {
-      id: "04",
-      title: "📱 Digital Operations & Content Strategy",
-      subtitle: "Brand Leadership & Social Outreach",
-      description: "Software development ke saath, main digital media operations, social media strategy (@aloksingh_._), aur brand promotion pipelines ko lead aur execute karta hoon.",
-      features: [
-        "Brand identity alignment and social media strategy",
-        "Content direction, release teasers, and audience engagement campaigns",
-        "Promotional link distribution and digital growth execution"
-      ],
-      stack: ["Brand Strategy", "Content Direction", "Audience Growth"]
+      num: "04",
+      title: "📱 Digital Strategy & Social Media Execution",
+      subtitle: "Brand Leadership & Content Direction",
+      description: "Software engineering ke alawa, main digital media operations, social media growth (@aloksingh_._), aur brand strategy ko direction aur execution deta hoon.",
+      points: [
+        "Brand identity management and social handle strategy",
+        "Audience engagement campaigns and content direction",
+        "Digital link distribution and organic growth"
+      ]
     }
   ];
 
@@ -227,143 +218,102 @@ export default function DeveloperPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#07080e] text-slate-100 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden selection:bg-amber-500 selection:text-black">
+    <div className="min-h-screen bg-[#07080e] text-slate-100 py-6 sm:py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden selection:bg-amber-500 selection:text-black">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(developerJsonLd) }}
       />
       
-      {/* Ambient Glow Backdrop */}
+      {/* Ambient Lighting Glow Background */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-b from-amber-500/20 via-red-600/10 to-transparent rounded-full blur-[180px] pointer-events-none" />
       <div className="absolute top-1/3 -left-60 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[160px] pointer-events-none" />
       <div className="absolute top-2/3 -right-60 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[160px] pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto relative z-10 space-y-14">
+      <div className="max-w-5xl mx-auto relative z-10 space-y-12">
         
-        {/* SOCIAL CONNECT BAR */}
-        <div className="bg-slate-900/90 border border-amber-500/30 rounded-3xl p-5 sm:p-6 shadow-2xl backdrop-blur-2xl space-y-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-amber-400 font-extrabold text-sm sm:text-base uppercase tracking-wider">
-              <Sparkles className="w-5 h-5 animate-pulse text-amber-400" />
-              <span>Connect With Alok Singh Directly:</span>
-            </div>
-            <div className="text-xs text-slate-400 font-medium">
-              Official Handles & Links
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-            {socialLinks.map((social, sIdx) => {
-              const Icon = social.icon;
-              return (
-                <a
-                  key={sIdx}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r ${social.bgGradient} border ${social.borderColor} hover:scale-[1.03] transition-all duration-300 group shadow-lg`}
-                >
-                  <div className="flex items-center gap-3.5">
-                    <div className={`p-3 rounded-xl bg-gradient-to-tr ${social.accentBg} text-white shadow-md`}>
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{social.name}</div>
-                      <div className={`text-sm font-extrabold text-white ${social.textColor}`}>{social.handle}</div>
-                    </div>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-amber-400 transition-colors" />
-                </a>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* HERO TITLE HEADER */}
-        <div className="text-center space-y-4 pt-2">
-          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-bold tracking-widest uppercase shadow-xl backdrop-blur-md">
-            <Laptop className="w-4 h-4 text-amber-400" />
-            <span>Full-Stack Software Engineer & System Architect</span>
-          </div>
-
-          <h1 className="text-4xl sm:text-7xl font-extrabold tracking-tight font-heading text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 uppercase">
-            ALOK SINGH
-          </h1>
-
-          <p className="text-slate-300 text-base sm:text-xl max-w-3xl mx-auto font-light leading-relaxed">
-            Building modern web applications, scalable backend APIs, real-time architectures, and glassmorphic UI/UX systems.
-          </p>
-        </div>
-
-        {/* DEVELOPER AVATAR & BIOGRAPHY CARD */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-2xl relative overflow-hidden group hover:border-amber-500/40 transition-all duration-300 space-y-8">
+        {/* 1. TOP HERO PROFILE CARD - PROMINENTLY AT THE ABSOLUTE TOP OF THE PAGE */}
+        <div className="bg-slate-900/90 border border-amber-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-2xl relative overflow-hidden group hover:border-amber-500/50 transition-all duration-300 space-y-8">
           
-          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-10">
+          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 sm:gap-10">
             
-            {/* PHOTO FRAME */}
-            <div className="relative shrink-0">
-              <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border-2 border-amber-500/50 shadow-2xl shadow-amber-500/30 group-hover:border-amber-400 transition-all duration-500">
+            {/* PROFILE PHOTO FRAME */}
+            <div className="relative shrink-0 flex flex-col items-center">
+              <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border-2 border-amber-500/50 shadow-[0_0_35px_rgba(255,215,0,0.3)] group-hover:border-amber-400 transition-all duration-500">
                 <Image
                   src="/alok-singh.jpg"
-                  alt="Alok Singh - Full-Stack Software Engineer"
+                  alt="Alok Singh - Full-Stack Software Engineer & Tech Architect"
                   fill
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                   priority
                 />
               </div>
               
-              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-xs px-5 py-2 rounded-full shadow-xl flex items-center gap-1.5 whitespace-nowrap">
+              <div className="absolute -bottom-4 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-xs px-5 py-2 rounded-full shadow-xl flex items-center gap-1.5 whitespace-nowrap">
                 <CheckCircle2 className="w-4 h-4" />
-                FULL-STACK DEVELOPER
+                VERIFIED ARCHITECT
               </div>
             </div>
 
-            {/* BIO DETAILS */}
-            <div className="flex-1 space-y-6 text-center lg:text-left">
-              <div>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-wide font-heading">
-                  Developer Biography
-                </h2>
-                <p className="text-amber-400 text-sm sm:text-base font-semibold flex items-center justify-center lg:justify-start gap-2 mt-1">
-                  <Terminal className="w-4 h-4" /> Full-Stack Software Engineer & Systems Architect
-                </p>
+            {/* PROFILE TITLE, BIO & SOCIAL CONNECT INLINE RIGHT */}
+            <div className="flex-1 space-y-5 text-center lg:text-left">
+              
+              {/* BADGE */}
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold tracking-wider uppercase">
+                <Laptop className="w-4 h-4 text-amber-400" />
+                <span>Tech Architect & Lead Full-Stack Engineer</span>
               </div>
 
-              <div className="space-y-3.5 text-slate-300 text-sm sm:text-base leading-relaxed bg-slate-950/70 p-6 rounded-2xl border border-slate-800/90 shadow-inner">
+              {/* NAME */}
+              <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight font-heading text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 uppercase">
+                ALOK SINGH
+              </h1>
+
+              {/* BIO STATEMENT */}
+              <div className="space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed bg-slate-950/70 p-5 rounded-2xl border border-slate-800/90 shadow-inner">
                 <p>
                   Mera naam <strong className="text-amber-300 font-semibold">Alok Singh</strong> hai. Main Gola Road, Kauriram, Gorakhpur, Uttar Pradesh ka rehne wala hoon (Date of Birth: <strong className="text-slate-200">13/04/2008</strong>).
                 </p>
                 <p>
-                  Main modern full-stack web engineering, real-time system architecture, cloud deployment, aur custom UI/UX design systems me specialize karta hoon. Clean code, scalable APIs, aur fast web software build karna mera core passion hai.
-                </p>
-                <p>
-                  Software engineering ke saath, main digital media operations, social media strategy (<strong className="text-pink-400">@aloksingh_._</strong>), aur content execution ko direction deta hoon.
+                  Main full-stack web engineering, real-time system architecture, cloud deployment, aur custom UI/UX design systems me specialize karta hoon. Fast, scalable aur secure web software build karna mera core passion hai.
                 </p>
               </div>
 
               {/* PERSONAL METRICS */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                <div className="flex items-center gap-3.5 p-4 rounded-xl bg-slate-800/40 border border-slate-800/80">
-                  <div className="p-3 rounded-lg bg-amber-500/10 text-amber-400 shrink-0">
-                    <Calendar className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">Date of Birth</div>
-                    <div className="text-sm font-bold text-slate-100">13 April 2008 (13/04/2008)</div>
-                  </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-800/80">
+                  <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
+                  <div className="text-xs font-bold text-slate-200">DOB: 13 April 2008 (13/04/2008)</div>
+                </div>
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-800/80">
+                  <MapPin className="w-4 h-4 text-red-400 shrink-0" />
+                  <div className="text-xs font-bold text-slate-200">Gola Road, Kauriram, Gorakhpur, UP</div>
+                </div>
+              </div>
+
+              {/* SOCIAL MEDIA CONNECT BUTTONS — INLINE RIGHT IN THE HERO CARD AT THE VERY TOP */}
+              <div className="pt-2 space-y-2">
+                <div className="text-xs text-amber-400 font-bold uppercase tracking-wider flex items-center justify-center lg:justify-start gap-2">
+                  <Sparkles className="w-4 h-4 text-amber-400" />
+                  <span>Connect With Alok Singh Directly:</span>
                 </div>
 
-                <div className="flex items-center gap-3.5 p-4 rounded-xl bg-slate-800/40 border border-slate-800/80">
-                  <div className="p-3 rounded-lg bg-red-500/10 text-red-400 shrink-0">
-                    <MapPin className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">Hometown Address</div>
-                    <div className="text-sm font-bold text-slate-100">Gola Road, Kauriram, Gorakhpur, UP</div>
-                  </div>
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
+                  {socialLinks.map((social, sIdx) => {
+                    const Icon = social.icon;
+                    return (
+                      <a
+                        key={sIdx}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`px-4 py-2.5 rounded-xl bg-gradient-to-r ${social.bgGradient} border ${social.borderColor} text-white font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg transition-all duration-300 ${social.hoverBg}`}
+                      >
+                        <Icon className="w-4 h-4" />
+                        <span>{social.name}: {social.handle} ↗</span>
+                      </a>
+                    );
+                  })}
                 </div>
-
               </div>
 
             </div>
@@ -372,18 +322,18 @@ export default function DeveloperPage() {
 
         </div>
 
-        {/* TECHNICAL SKILLS & EXPERTISE */}
+        {/* 2. TECHNICAL STACK & SKILLS */}
         <div className="space-y-6">
           <div className="text-center space-y-2">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading uppercase tracking-wide">
-              Technical Stack & Core Skills
+              Technical Stack & Skills
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
-              Languages, frameworks, and engineering paradigms mastered by Alok Singh.
+              Technologies, frameworks, and engineering paradigms mastered by Alok Singh.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {coreSkills.map((skill, skIdx) => (
               <div 
                 key={skIdx}
@@ -404,63 +354,53 @@ export default function DeveloperPage() {
           </div>
         </div>
 
-        {/* PERSONAL ENGINEERING PROJECTS & HIGHLIGHTS */}
+        {/* 3. ENGINEERING PILLARS & PHILOSOPHY */}
         <div className="space-y-8">
           <div className="text-center space-y-2">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading uppercase tracking-wide">
-              Engineering Expertise & Highlights
+              Software Engineering Philosophy
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
-              Architectural capabilities and system design solutions built by Alok Singh.
+              Core architectural approaches and engineering principles followed by Alok Singh.
             </p>
           </div>
 
-          <div className="space-y-6">
-            {personalProjects.map((proj) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {engineeringPillars.map((pillar) => (
               <div 
-                key={proj.id}
-                className="bg-slate-900/80 border border-slate-800/90 rounded-3xl p-6 sm:p-8 space-y-5 backdrop-blur-xl hover:border-amber-500/40 transition-all duration-300 shadow-2xl relative overflow-hidden group"
+                key={pillar.num}
+                className="bg-slate-900/80 border border-slate-800/90 rounded-3xl p-6 sm:p-8 space-y-4 backdrop-blur-xl hover:border-amber-500/40 transition-all duration-300 shadow-2xl relative overflow-hidden group"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
-                  <div className="space-y-1">
-                    <div className="text-xs text-amber-400 font-mono font-bold uppercase tracking-wider">
-                      Area {proj.id} &bull; {proj.subtitle}
-                    </div>
-                    <h3 className="text-2xl font-bold text-white group-hover:text-amber-300 transition-colors">
-                      {proj.title}
-                    </h3>
-                  </div>
+                <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                  <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
+                    Pillar {pillar.num} &bull; {pillar.subtitle}
+                  </span>
                 </div>
 
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  {proj.description}
+                <h3 className="text-xl font-bold text-white group-hover:text-amber-300 transition-colors">
+                  {pillar.title}
+                </h3>
+
+                <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                  {pillar.description}
                 </p>
 
                 <div className="space-y-2 bg-slate-950/70 p-4 rounded-2xl border border-slate-800/80">
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {proj.features.map((feat, fIdx) => (
-                      <li key={fIdx} className="flex items-start gap-2 text-xs text-slate-300">
+                  <ul className="space-y-2">
+                    {pillar.points.map((pt, pIdx) => (
+                      <li key={pIdx} className="flex items-start gap-2 text-xs text-slate-300">
                         <Check className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                        <span>{feat}</span>
+                        <span>{pt}</span>
                       </li>
                     ))}
                   </ul>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2 pt-1">
-                  <span className="text-xs text-slate-400 font-semibold mr-2">Tech Stack:</span>
-                  {proj.stack.map((t, tid) => (
-                    <span key={tid} className="px-3 py-1 rounded-lg bg-slate-800/80 text-amber-300 text-xs font-mono border border-slate-700">
-                      {t}
-                    </span>
-                  ))}
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* PERSONAL STATEMENT / MESSAGE */}
+        {/* 4. PERSONAL STATEMENT */}
         <div className="bg-gradient-to-r from-amber-950/40 via-slate-900 to-red-950/30 border border-amber-500/40 rounded-3xl p-6 sm:p-10 space-y-4 text-center sm:text-left relative overflow-hidden backdrop-blur-xl shadow-2xl">
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <div className="p-4 rounded-2xl bg-amber-500/20 text-amber-400 shrink-0">
@@ -474,42 +414,6 @@ export default function DeveloperPage() {
                 &ldquo;Building scalable, clean, and high-performance software is what drives me every day. Whether it&apos;s real-time system architecture, API design, or modern glassmorphic UIs, I focus on delivering world-class execution. Feel free to connect with me on Instagram, X, or Facebook!&rdquo;
               </p>
             </div>
-          </div>
-        </div>
-
-        {/* BOTTOM SOCIAL HANDLES */}
-        <div className="space-y-4 pt-4">
-          <div className="text-center">
-            <h3 className="text-xl font-bold text-white flex items-center justify-center gap-2">
-              <Zap className="w-5 h-5 text-amber-400" /> Connect Directly With Alok Singh
-            </h3>
-            <p className="text-xs text-slate-400">Click below to reach out on official social handles</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {socialLinks.map((social, sIdx) => {
-              const Icon = social.icon;
-              return (
-                <a
-                  key={sIdx}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r ${social.bgGradient} border ${social.borderColor} hover:scale-[1.02] transition-all duration-300 group shadow-lg`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`p-3 rounded-xl bg-gradient-to-tr ${social.accentBg} text-white shadow-md`}>
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-[10px] text-slate-400 font-bold uppercase">{social.name}</div>
-                      <div className={`text-sm font-extrabold text-white ${social.textColor}`}>{social.handle}</div>
-                    </div>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-amber-400" />
-                </a>
-              );
-            })}
           </div>
         </div>
 

@@ -14,17 +14,12 @@ import {
   Award,
   Zap,
   CheckCircle2,
-  Ticket,
-  Tv,
   Layers,
   Database,
-  QrCode,
   Lock,
   Workflow,
   Share2,
   Smartphone,
-  Radio,
-  Flame,
   Check,
   TrendingUp,
   Server,
@@ -33,21 +28,16 @@ import {
   Activity,
   FileCode,
   Sliders,
-  Bell,
   Send,
-  Eye,
-  CheckSquare,
-  HelpCircle,
-  Heart,
-  Maximize2
+  Heart
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Alok Singh | Head of Developers & Tech Architect - Gorakhpur's Got Latent",
-  description: "Comprehensive engineering breakdown, full-stack architecture, and profile of Alok Singh - Head of Developers & Tech Architect of Gorakhpur's Got Latent digital ecosystem.",
+  title: "Alok Singh | Tech Architect & Lead Full-Stack Engineer",
+  description: "Official profile, biography, technical expertise, and engineering portfolio of Alok Singh — Lead Full-Stack Engineer & Tech Architect from Gorakhpur, Uttar Pradesh.",
   authors: [{ name: "Alok Singh", url: "https://gkpgotlatent.in/developer" }],
-  creator: "Naveen Varma",
-  publisher: "Gorakhpur's Got Latent",
+  creator: "Alok Singh",
+  publisher: "Alok Singh Portfolio",
   robots: {
     index: true,
     follow: true,
@@ -60,16 +50,16 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Alok Singh | Head of Developers & Tech Architect - Gorakhpur's Got Latent",
-    description: "Explore the full-stack system architecture, 'Computerji' live stage engine, and tech credits of Alok Singh for Gorakhpur's Got Latent.",
+    title: "Alok Singh | Tech Architect & Lead Full-Stack Engineer",
+    description: "Personal engineering profile, technical stack, and career highlights of Alok Singh.",
     url: 'https://gkpgotlatent.in/developer',
-    siteName: "Gorakhpur's Got Latent",
+    siteName: "Alok Singh Portfolio",
     images: [
       {
         url: '/alok-singh.jpg',
         width: 800,
         height: 800,
-        alt: 'Alok Singh - Head of Developers & Tech Architect',
+        alt: 'Alok Singh - Tech Architect & Lead Engineer',
       },
     ],
     locale: 'en_IN',
@@ -77,8 +67,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Alok Singh | Tech Architect - Gorakhpur's Got Latent",
-    description: "Under-100ms real-time latency matrix & high-concurrency event engineering architecture.",
+    title: "Alok Singh | Tech Architect & Lead Full-Stack Engineer",
+    description: "Full-Stack System Architecture, Real-Time Low Latency Engines, and Web Engineering.",
     images: ['/alok-singh.jpg'],
   },
 };
@@ -141,118 +131,69 @@ export default function DeveloperPage() {
     }
   ];
 
-  const statistics = [
-    { label: "Lines of Code Written", value: "25,000+", icon: FileCode, color: "text-amber-400" },
-    { label: "Custom API Routes", value: "50+", icon: Server, color: "text-red-400" },
-    { label: "Live Stage Latency", value: "<100ms", icon: Zap, color: "text-yellow-400" },
-    { label: "Security & Uptime", value: "99.99%", icon: ShieldCheck, color: "text-emerald-400" },
-    { label: "Database Queries Executed", value: "100k+", icon: Database, color: "text-purple-400" },
-    { label: "Integrated Core Systems", value: "12", icon: Layers, color: "text-blue-400" }
+  const coreSkills = [
+    { name: "Next.js 14 / React", level: "Expert", desc: "App Router, Server Actions, SSR, Dynamic Routing" },
+    { name: "TypeScript & JavaScript", level: "Advanced", desc: "Type Safety, Async Pipelines, Modern ESNext" },
+    { name: "Tailwind CSS & Glassmorphism", level: "Expert", desc: "Custom UI/UX Systems, Micro-Animations, HSL Palettes" },
+    { name: "Real-Time System Architecture", level: "Expert", desc: "Sub-100ms Latency, Hardware Sync, WebSockets" },
+    { name: "Node.js & Edge Serverless APIs", level: "Advanced", desc: "High-Throughput Endpoints, Webhooks, Reconciliations" },
+    { name: "Database Engineering & SQL", level: "Advanced", desc: "Turso DB, libSQL, Schema Optimization, Indexing" },
+    { name: "Payment & Security Infrastructure", level: "Expert", desc: "Payment Gateway APIs, Signature Verification, Encrypted QR Codes" },
+    { name: "Digital Operations & Strategy", level: "Lead", desc: "Social Media Growth, Instagram Strategy (@aloksingh_._)" }
   ];
 
-  const coreModules = [
+  const engineeringHighlights = [
     {
       id: "01",
-      title: "🎟️ Automated Ticketing & Payment Gateway Engine",
-      subtitle: "PhonePe API Integration, Webhooks, QR Codes & WhatsApp Dispatch",
-      description: "Maine aisi ticketing system taiyar ki hai jo bina kisi human error ke thousands of audience members ke tickets handle karti hai. Isme PhonePe payment gateway integrated hai, jo instant payment callbacks processes karta hai. Success hone par QR code generate hota hai, PDF pass render hota hai, aur instant email aur WhatsApp ke zariye ticket recipient ko milta hai.",
+      title: "⚡ Real-Time Hardware & Live Latency Matrix Architecture",
+      subtitle: "Sub-100ms Real-Time Synchronized State Engine",
+      description: "Live stage events aur live hardware interaction ke liye main real-time low-latency synchronization engines design karta hoon. Minimum network payload aur instant DOM updates ke zariye real-time scoring aur visual projector display synchronizations accomplish hoti hain.",
       details: [
-        "Real-time seat and quantity inventory management with lock mechanisms",
-        "PhonePe Payment Gateway callback verification and secret signature validation",
-        "Automated QR code matrix generation embedding encrypted order payload",
-        "Automated Email & WhatsApp gateway delivery service for instant pass dispatch",
-        "Dynamic scanner verification screen for on-venue security guards (/verify)"
+        "Sub-100ms real-time state synchronization across multiple client displays",
+        "Optimized touch-friendly control interfaces for stage operators and judges",
+        "Hardware-accelerated rendering optimized for high-resolution auditorium screens",
+        "Zero-latency state persistence with fallback retry strategies"
       ],
-      tech: ["Next.js Server Actions", "PhonePe API", "QR Matrix", "Turso DB", "Webhooks"]
+      tech: ["WebSockets", "Optimistic Mutation", "Next.js", "State Sync"]
     },
     {
       id: "02",
-      title: "⚡ 'Computerji' Stage Scoring & Real-Time Hardware Sync",
-      subtitle: "Proprietary Live Show Score Matrix & LED Screen Display Engine",
-      description: "Show taping ke dauran judges live performance ko judge karte hain. Maine 'Computerji' naam ka custom live stage engine banaya hai jo judges' scores ko milliseconds ke andar main stage LED screen (/display) aur stage operator (/operator) control panel par push karta hai.",
+      title: "🎟️ Automated Payment, QR Matrix & Dispatch Infrastructure",
+      subtitle: "Scalable Event Ticketing & Instant Verification Pipeline",
+      description: "High-volume user bookings ke liye fully automated transactional system design karta hoon, jo instant payment gateway callbacks process karta hai, encrypted QR passes generate karta hai, aur email & WhatsApp gateway se passes dispatch karta hai.",
       details: [
-        "Instant score submission UI for live judges (/judge) with custom touch input",
-        "Stage operator dashboard to control show state, countdowns, and sound triggers",
-        "Live main stage LED screen display (/display) optimized for high-res projector screens",
-        "Live audience voting portal (/vote) enabling spectator participation during tapings",
-        "Zero-latency state synchronization with fallback retry strategy"
+        "Payment gateway callback verification and signature validation",
+        "Automated QR code matrix generation embedding encrypted order data",
+        "Automated WhatsApp & Email gateway dispatch pipelines",
+        "Instant webcam/mobile QR scanner verification UI for event venue security staff"
       ],
-      tech: ["Realtime State Sync", "Judge Dashboard", "Operator Portal", "Stage Display", "Audience Poll API"]
+      tech: ["Payment APIs", "QR Matrix", "Webhooks", "Automated Dispatch"]
     },
     {
       id: "03",
-      title: "🛡️ Automated Event Control & Management Center",
-      subtitle: "Security Authentication, Order Reconciliation & Live Show Operations",
-      description: "Show organizers aur show runners ke liye ek highly secured internal management system design kiya gaya hai. Isme strict authentication protocols chalte hain jaha se tickets, performers, refund requests, aur live show stats control hote hain.",
+      title: "🎨 Glassmorphic Dark Mode UI/UX System Design",
+      subtitle: "High-Performance Modern Web Aesthetic",
+      description: "Modern web applications ke liye custom dark-mode design systems (#07080e background, gold/amber accents, glowing ambient borders, micro-interactions) create karta hoon jo har device (Mobile, Laptop, 4K Displays) par fast aur responsive perform karte hain.",
       details: [
-        "Encrypted multi-factor authentication system for admin security",
-        "Real-time ticket sales revenue analytics, breakdown by tier, and order tracker",
-        "Performer and guest application review pipeline (Approve/Reject/Flag)",
-        "One-click automated refund triggering engine via payment gateway APIs",
-        "Automated reporting and data sync pipelines for venue check-in staff"
+        "Custom design tokens with curated HSL color palettes and glassmorphic cards",
+        "Google Fonts typography integration (Bebas Neue, Barlow, Outfit, Inter)",
+        "Fully responsive layout architecture for all device viewports",
+        "Subtle micro-animations, badges, and fast initial load optimization"
       ],
-      tech: ["Encrypted Auth Engine", "Refund Engine", "Application Pipeline", "Reporting Pipelines", "Data Analytics"]
+      tech: ["Tailwind CSS", "Vanilla CSS", "Google Fonts", "Lucide Icons"]
     },
     {
       id: "04",
-      title: "🎭 Multi-Category Performer & Sponsor Audition Pipeline",
-      subtitle: "Talent Recruitment, Media Parsing & Sponsor Onboarding",
-      description: "Purvanchal ke hazaaron performers (Musicians, Stand-up Comedians, Beatboxers, Dancers, Magicians) audition apply kar sakein, iske liye intelligent onboarding forms design kiye gaye hain.",
+      title: "📱 Digital Strategy & Social Media Management",
+      subtitle: "Brand Execution & Content Direction",
+      description: "Core full-stack development ke saath, main digital operations, branding strategy, and social media outreach (@aloksingh_._) ko direction aur execution deta hoon.",
       details: [
-        "Multi-step application forms with identity verification via OTP",
-        "Support for video demo links (YouTube/Drive/Instagram) with auto-embed preview",
-        "Categorized sorting by talent domain, performance duration, and experience level",
-        "Sponsor tier onboarding portal (Powered By, Co-Sponsor, Associate Partner)",
-        "Auto-confirmation SMS and email responses to applicants"
+        "Brand identity alignment and official social media page strategy",
+        "Content direction, release trailers, and audience interaction campaigns",
+        "Promotional link distribution architecture and digital growth"
       ],
-      tech: ["Form Parsing", "OTP Verification", "Media Engine", "Auto-responder"]
-    },
-    {
-      id: "05",
-      title: "📱 Instagram & Brand Digital Operations Lead",
-      subtitle: "Official Instagram Handle Management & Press Strategy",
-      description: "Website coding ke alawa main Gorakhpur's Got Latent ke official Instagram handle (@aloksingh_._ / @gkpgotlatent) ko lead karta hoon. Content strategy, release dates, teaser campaigns, contestant spotlights, aur live event audience updates ko handle karta hoon.",
-      details: [
-        "Official Instagram page content strategy and branding consistency",
-        "Live audience interaction and Q&A management during audition releases",
-        "Episode release teasers and promotional ticket link broadcasts",
-        "Press release announcements and sponsor brand placement on social media"
-      ],
-      tech: ["Brand Strategy", "Content Direction", "Audience Growth", "Press Strategy"]
-    },
-    {
-      id: "06",
-      title: "🎨 Glassmorphism Dark UI/UX Design System",
-      subtitle: "Tailwind CSS, Modern Typography & High-Performance Micro-Animations",
-      description: "Puri website ko ek sleek, premium, dark-mode entertainment aesthetic diya gaya hai (#07080e background, gold/amber accents, glowing borders, smooth hover animations). Website kisi bhi screen size par flawless look deti hai.",
-      details: [
-        "Custom design tokens with curated HSL color palettes and glassmorphic cards",
-        "Google Fonts integration (Bebas Neue, Barlow Condensed, Outfit, Inter, Anton)",
-        "Optimized layout responsiveness for mobile phones, tablets, laptops, and 4K displays",
-        "Subtle micro-interactions, animated badges, and dynamic interactive counters",
-        "SEO optimization, semantic HTML5, fast initial load time under 1 second"
-      ],
-      tech: ["Tailwind CSS", "Vanilla CSS", "Google Fonts", "Lucide Icons", "Optimized Next.js"]
+      tech: ["Brand Strategy", "Content Direction", "Audience Growth"]
     }
-  ];
-
-  const dbTables = [
-    { name: "events", desc: "Show episode details, venue location, dates, status" },
-    { name: "ticket_categories", desc: "Ticket tiers, prices (in INR), quantity caps, sort order" },
-    { name: "orders", desc: "Customer bookings, payment transaction IDs, status, QR codes" },
-    { name: "performer_applications", desc: "Audition applicants, talent category, demo media links, approval state" },
-    { name: "guest_applications", desc: "VIP guest pass requests and contact records" },
-    { name: "sponsor_applications", desc: "Brand sponsor leads, tier preferences, company details" },
-    { name: "judge_scores", desc: "Real-time scores given by live show judges per contestant" },
-    { name: "admin_users", desc: "Internal security accounts and session authorization hashes" }
-  ];
-
-  const timeline = [
-    { year: "Phase 1", title: "Architecture & Concept", desc: "Designed the serverless database schema, dark glassmorphic design system, and core Next.js routing." },
-    { year: "Phase 2", title: "Ticketing & PhonePe Engine", desc: "Built payment callback webhooks, automated QR code generator, and instant email/WhatsApp dispatch." },
-    { year: "Phase 3", title: "'Computerji' Live Stage Matrix", desc: "Developed real-time judge scoring screen, stage LED display engine, and stage operator portal." },
-    { year: "Phase 4", title: "Master Admin Control Center", desc: "Engineered secured administrative control portal with multi-factor auth, refund processing, and automated reporting." },
-    { year: "Phase 5", title: "Instagram Lead & Show Launch", desc: "Launched official website, integrated YouTube channel banner, and took charge of official Instagram growth." }
   ];
 
   const developerJsonLd = {
@@ -262,46 +203,22 @@ export default function DeveloperPage() {
         '@type': 'ProfilePage',
         '@id': 'https://gkpgotlatent.in/developer#webpage',
         'url': 'https://gkpgotlatent.in/developer',
-        'name': "Alok Singh - Head of Developers & Tech Architect | Gorakhpur's Got Latent",
-        'description': "Comprehensive engineering breakdown, full-stack architecture, and profile of Alok Singh - Head of Developers & Tech Architect of Gorakhpur's Got Latent digital ecosystem.",
+        'name': "Alok Singh - Tech Architect & Lead Full-Stack Engineer",
+        'description': "Official portfolio and engineering profile of Alok Singh — Lead Full-Stack Engineer & Tech Architect from Gorakhpur, Uttar Pradesh.",
         'mainEntity': {
           '@type': 'Person',
           '@id': 'https://gkpgotlatent.in/developer#aloksingh',
           'name': 'Alok Singh',
-          'jobTitle': 'Head of Developers & Tech Architect',
-          'roleName': 'Tech Architect & Lead Full-Stack Engineer',
-          'description': "Head of Developers & Tech Architect who engineered the entire digital ecosystem for Gorakhpur's Got Latent, including the 'Computerji' live stage latency engine and event management platform.",
+          'jobTitle': 'Tech Architect & Lead Full-Stack Engineer',
+          'roleName': 'Full-Stack Software Engineer',
+          'description': "Lead Full-Stack Engineer & Tech Architect specializing in Next.js 14, real-time low-latency systems, payment infrastructure, and digital operations.",
           'url': 'https://gkpgotlatent.in/developer',
           'image': 'https://gkpgotlatent.in/alok-singh.jpg',
           'sameAs': [
             'https://www.instagram.com/aloksingh_._/',
             'https://x.com/rajpratapsinghh',
             'https://www.facebook.com/meadorush'
-          ],
-          'worksFor': {
-            '@type': 'Organization',
-            '@id': 'https://gkpgotlatent.in/#organization',
-            'name': "Gorakhpur's Got Latent",
-            'url': 'https://gkpgotlatent.in',
-            'founder': {
-              '@type': 'Person',
-              '@id': 'https://gkpgotlatent.in/#naveenvarma',
-              'name': 'Naveen Varma',
-              'jobTitle': 'Show Creator & Founder'
-            }
-          }
-        }
-      },
-      {
-        '@type': 'TechArticle',
-        '@id': 'https://gkpgotlatent.in/developer#article',
-        'headline': "Engineering Gorakhpur's Got Latent: Under-100ms Live Stage Latency Matrix & High-Performance Event Architecture",
-        'description': "Full-stack architectural analysis of how Next.js, Turso DB SQLite, and real-time websockets were leveraged to build the Computerji scoring matrix.",
-        'author': {
-          '@id': 'https://gkpgotlatent.in/developer#aloksingh'
-        },
-        'publisher': {
-          '@id': 'https://gkpgotlatent.in/#organization'
+          ]
         }
       }
     ]
@@ -318,19 +235,18 @@ export default function DeveloperPage() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-b from-amber-500/20 via-red-600/10 to-transparent rounded-full blur-[180px] pointer-events-none" />
       <div className="absolute top-1/3 -left-60 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[160px] pointer-events-none" />
       <div className="absolute top-2/3 -right-60 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-10 left-1/3 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto relative z-10 space-y-16">
+      <div className="max-w-5xl mx-auto relative z-10 space-y-14">
         
-        {/* TOP SOCIAL CONNECT BAR - PROMINENTLY AT THE VERY TOP */}
+        {/* TOP SOCIAL CONNECT BAR */}
         <div className="bg-slate-900/90 border border-amber-500/30 rounded-3xl p-5 sm:p-6 shadow-2xl backdrop-blur-2xl space-y-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-amber-400 font-extrabold text-sm sm:text-base uppercase tracking-wider">
               <Sparkles className="w-5 h-5 animate-pulse text-amber-400" />
-              <span>Connect With Developer Alok Singh Directly:</span>
+              <span>Connect With Alok Singh Directly:</span>
             </div>
             <div className="text-xs text-slate-400 font-medium">
-              Official Handles & Profile Links
+              Official Social Handles & Connect Links
             </div>
           </div>
 
@@ -362,24 +278,24 @@ export default function DeveloperPage() {
           </div>
         </div>
 
-        {/* HERO HEADER SECTION */}
-        <div className="text-center space-y-6 pt-2">
-          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-amber-500/20 to-red-500/20 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-bold tracking-widest uppercase shadow-xl backdrop-blur-md">
+        {/* HERO PROFILE HEADER */}
+        <div className="text-center space-y-4 pt-2">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-bold tracking-widest uppercase shadow-xl backdrop-blur-md">
             <Award className="w-4 h-4 text-amber-400" />
-            <span>Sole Creator & Tech Architect</span>
+            <span>Tech Architect & Lead Full-Stack Engineer</span>
           </div>
 
           <h1 className="text-4xl sm:text-7xl font-extrabold tracking-tight font-heading text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 uppercase">
-            Alok Singh
+            ALOK SINGH
           </h1>
 
           <p className="text-slate-300 text-base sm:text-xl max-w-3xl mx-auto font-light leading-relaxed">
-            The Engineer, Designer & Operations Director who single-handedly built the entire digital ecosystem for <span className="text-amber-400 font-semibold border-b border-amber-500/40">Gorakhpur&apos;s Got Latent</span> from scratch.
+            Full-Stack Software Engineer, System Architect & Digital Operations Specialist based in Gorakhpur, Uttar Pradesh.
           </p>
         </div>
 
-        {/* DEVELOPER AVATAR & DETAILED BIOGRAPHY CARD */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-12 shadow-2xl backdrop-blur-2xl relative overflow-hidden group hover:border-amber-500/40 transition-all duration-300 space-y-8">
+        {/* DEVELOPER AVATAR & BIOGRAPHY CARD */}
+        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-2xl relative overflow-hidden group hover:border-amber-500/40 transition-all duration-300 space-y-8">
           
           <div className="flex flex-col lg:flex-row items-center lg:items-start gap-10">
             
@@ -388,7 +304,7 @@ export default function DeveloperPage() {
               <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border-2 border-amber-500/50 shadow-2xl shadow-amber-500/30 group-hover:border-amber-400 transition-all duration-500">
                 <Image
                   src="/alok-singh.jpg"
-                  alt="Alok Singh - Creator of Gorakhpur's Got Latent"
+                  alt="Alok Singh - Tech Architect & Lead Engineer"
                   fill
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                   priority
@@ -405,22 +321,22 @@ export default function DeveloperPage() {
             <div className="flex-1 space-y-6 text-center lg:text-left">
               <div>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-wide font-heading">
-                  Developer Biography & Story
+                  About Alok Singh
                 </h2>
                 <p className="text-amber-400 text-sm sm:text-base font-semibold flex items-center justify-center lg:justify-start gap-2 mt-1">
-                  <Terminal className="w-4 h-4" /> Lead Full-Stack Systems Engineer & Instagram Digital Lead
+                  <Terminal className="w-4 h-4" /> Lead Full-Stack Software Engineer & Digital Architect
                 </p>
               </div>
 
-              <div className="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed bg-slate-950/70 p-6 rounded-2xl border border-slate-800/90 shadow-inner">
+              <div className="space-y-3.5 text-slate-300 text-sm sm:text-base leading-relaxed bg-slate-950/70 p-6 rounded-2xl border border-slate-800/90 shadow-inner">
                 <p>
                   Mera naam <strong className="text-amber-300 font-semibold">Alok Singh</strong> hai. Main Gola Road, Kauriram, Gorakhpur, Uttar Pradesh ka rehne wala hoon (Date of Birth: <strong className="text-slate-200">13/04/2008</strong>).
                 </p>
                 <p>
-                  Maine <strong className="text-white">Gorakhpur&apos;s Got Latent</strong> (Purvanchal ke sabse bade live talent hunt show) ki poori website, payment engines, serverless API architecture, admin control portals, live stage score displays, aur ticketing delivery system ko akhele (sole developer) code aur build kiya hai.
+                  Main full-stack web engineering, real-time system architecture, cloud deployment, aur custom UI/UX design systems me specialize karta hoon. Fast, scalable aur secure web software build karna mera core passion hai.
                 </p>
                 <p>
-                  Website engineering ke alawa, main show ke official Instagram handle (<strong className="text-pink-400">@aloksingh_._</strong>) aur core digital marketing operations ko sambhalta hoon.
+                  Software engineering ke alawa, main official Instagram handles (<strong className="text-pink-400">@aloksingh_._</strong>) aur digital marketing strategy & operations ko lead karta hoon.
                 </p>
               </div>
 
@@ -455,81 +371,74 @@ export default function DeveloperPage() {
 
         </div>
 
-        {/* STATISTICS NUMBERS GRID */}
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="text-2xl font-extrabold text-white font-heading uppercase tracking-wider">
-              Engineering Benchmarks & Code Statistics
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-400">Concrete metrics powering the Gorakhpur&apos;s Got Latent platform.</p>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-6 gap-3.5">
-            {statistics.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <div key={i} className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 text-center space-y-2 backdrop-blur-xl hover:border-amber-500/40 transition-all group">
-                  <div className="inline-flex p-2.5 rounded-xl bg-slate-800/60 group-hover:scale-110 transition-transform">
-                    <Icon className={`w-5 h-5 ${item.color}`} />
-                  </div>
-                  <div className="text-2xl sm:text-3xl font-black text-white tracking-tight font-heading">
-                    {item.value}
-                  </div>
-                  <div className="text-[10px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                    {item.label}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* EXTENSIVE CORE MODULES DEEP-DIVE (VERY DETAILED LONG SECTION) */}
-        <div className="space-y-10">
-          
-          <div className="text-center space-y-3">
-            <div className="inline-block px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-widest">
-              Comprehensive Architectural Breakdown
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight font-heading text-white uppercase">
-              Modules Engineered By Alok Singh
+        {/* CORE TECHNICAL SKILLS GRID */}
+        <div className="space-y-6">
+          <div className="text-center space-y-2">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading uppercase tracking-wide">
+              Technical Stack & Skills
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
-              Read the in-depth technical specifications of every single system built from scratch for this platform.
+            <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+              Technologies, frameworks, and architecture paradigms mastered by Alok Singh.
             </p>
           </div>
 
-          <div className="space-y-8">
-            {coreModules.map((module) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {coreSkills.map((skill, skIdx) => (
+              <div 
+                key={skIdx}
+                className="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-5 space-y-2 hover:border-amber-500/40 transition-all backdrop-blur-xl group"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono font-bold text-amber-400 uppercase">{skill.level}</span>
+                  <Code2 className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                </div>
+                <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
+                  {skill.name}
+                </h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  {skill.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ENGINEERING HIGHLIGHTS & ARCHITECTURE CAPABILITIES */}
+        <div className="space-y-8">
+          <div className="text-center space-y-2">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading uppercase tracking-wide">
+              Engineering Capabilities & Highlights
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+              Key architectural solutions designed and built by Alok Singh.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            {engineeringHighlights.map((module) => (
               <div 
                 key={module.id}
-                className="bg-slate-900/80 border border-slate-800/90 rounded-3xl p-6 sm:p-10 space-y-6 backdrop-blur-xl hover:border-amber-500/40 transition-all duration-300 shadow-2xl relative overflow-hidden group"
+                className="bg-slate-900/80 border border-slate-800/90 rounded-3xl p-6 sm:p-8 space-y-5 backdrop-blur-xl hover:border-amber-500/40 transition-all duration-300 shadow-2xl relative overflow-hidden group"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
                   <div className="space-y-1">
                     <div className="text-xs text-amber-400 font-mono font-bold uppercase tracking-wider">
-                      Module {module.id} &bull; {module.subtitle}
+                      Capability {module.id} &bull; {module.subtitle}
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-white group-hover:text-amber-300 transition-colors">
+                    <h3 className="text-2xl font-bold text-white group-hover:text-amber-300 transition-colors">
                       {module.title}
                     </h3>
                   </div>
-                  <span className="px-3.5 py-1.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold uppercase shrink-0 self-start sm:self-auto">
-                    PRODUCTION LIVE
-                  </span>
                 </div>
 
-                <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                <p className="text-slate-300 text-sm leading-relaxed">
                   {module.description}
                 </p>
 
-                <div className="space-y-3 bg-slate-950/70 p-5 rounded-2xl border border-slate-800/80">
-                  <div className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <CheckSquare className="w-4 h-4 text-amber-400" /> Key Features & Protocols Implemented:
-                  </div>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                <div className="space-y-2 bg-slate-950/70 p-4 rounded-2xl border border-slate-800/80">
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {module.details.map((detail, dIdx) => (
-                      <li key={dIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300">
+                      <li key={dIdx} className="flex items-start gap-2 text-xs text-slate-300">
                         <Check className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                         <span>{detail}</span>
                       </li>
@@ -537,8 +446,8 @@ export default function DeveloperPage() {
                   </ul>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2 pt-2">
-                  <span className="text-xs text-slate-400 font-semibold mr-2">Tech Stack Used:</span>
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <span className="text-xs text-slate-400 font-semibold mr-2">Skills / Stack:</span>
                   {module.tech.map((t, tid) => (
                     <span key={tid} className="px-3 py-1 rounded-lg bg-slate-800/80 text-amber-300 text-xs font-mono border border-slate-700">
                       {t}
@@ -548,64 +457,9 @@ export default function DeveloperPage() {
               </div>
             ))}
           </div>
-
         </div>
 
-        {/* DATABASE SCHEMA & TABLES STRUCTURE SECTION */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-8 backdrop-blur-xl">
-          <div className="flex items-center gap-4">
-            <div className="p-3.5 rounded-2xl bg-amber-500/10 text-amber-400">
-              <Database className="w-7 h-7" />
-            </div>
-            <div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-white font-heading uppercase">
-                Database Schema & Turso SQL Architecture
-              </h3>
-              <p className="text-slate-400 text-xs sm:text-sm">
-                Relational tables created and maintained by Alok Singh for real-time transactions and show management.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {dbTables.map((table, tIdx) => (
-              <div key={tIdx} className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-2 hover:border-amber-500/30 transition-all">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-amber-400">table</span>
-                  <Code2 className="w-3.5 h-3.5 text-slate-500" />
-                </div>
-                <div className="text-base font-mono font-bold text-white">
-                  {table.name}
-                </div>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  {table.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* DEVELOPMENT TIMELINE & MILESTONES */}
-        <div className="space-y-8">
-          <div className="text-center space-y-2">
-            <h3 className="text-3xl font-extrabold text-white font-heading uppercase">
-              Development Timeline & Roadmap
-            </h3>
-            <p className="text-slate-400 text-xs sm:text-sm">Step-by-step engineering journey of building this platform.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            {timeline.map((step, stIdx) => (
-              <div key={stIdx} className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-amber-500/40 transition-all backdrop-blur-xl relative">
-                <div className="text-xs font-bold font-mono text-amber-400 uppercase">{step.year}</div>
-                <div className="text-base font-bold text-white">{step.title}</div>
-                <p className="text-xs text-slate-400 leading-relaxed">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* DEVELOPER STATEMENT / MESSAGE */}
+        {/* PERSONAL STATEMENT FROM ALOK SINGH */}
         <div className="bg-gradient-to-r from-amber-950/40 via-slate-900 to-red-950/30 border border-amber-500/40 rounded-3xl p-6 sm:p-10 space-y-4 text-center sm:text-left relative overflow-hidden backdrop-blur-xl shadow-2xl">
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <div className="p-4 rounded-2xl bg-amber-500/20 text-amber-400 shrink-0">
@@ -613,22 +467,22 @@ export default function DeveloperPage() {
             </div>
             <div className="space-y-2">
               <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-heading uppercase">
-                Developer Note from Alok Singh
+                Message from Alok Singh
               </h3>
               <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                &ldquo;Gorakhpur&apos;s Got Latent sirf ek show nahi hai, ye Purvanchal ke talent ka sabse bada stage hai. Is website ko maine har din raat mehnat karke banaya hai taaki humare regional talent ko world-class digital experience mile. Any technical queries ya collaboration ke liye aap mere social accounts par connect kar sakte hain!&rdquo;
+                &ldquo;Building scalable, clean, and high-performance software is what drives me every day. Whether it&apos;s real-time low-latency synchronization or modern UI/UX design, I focus on delivering world-class execution. Feel free to connect with me on Instagram or X!&rdquo;
               </p>
             </div>
           </div>
         </div>
 
-        {/* BOTTOM SOCIAL LINKS REPEAT */}
+        {/* BOTTOM SOCIAL HANDLES */}
         <div className="space-y-4 pt-4">
           <div className="text-center">
             <h3 className="text-xl font-bold text-white flex items-center justify-center gap-2">
-              <Zap className="w-5 h-5 text-amber-400" /> Direct Social Handles
+              <Zap className="w-5 h-5 text-amber-400" /> Connect Directly With Alok Singh
             </h3>
-            <p className="text-xs text-slate-400">Click below to reach out directly to Alok Singh</p>
+            <p className="text-xs text-slate-400">Click below to reach out on social platforms</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -656,15 +510,6 @@ export default function DeveloperPage() {
               );
             })}
           </div>
-        </div>
-
-        {/* UNLINKED SECRET ROUTE NOTICE FOOTER */}
-        <div className="text-center pt-8 border-t border-slate-900 text-xs text-slate-500 space-y-1">
-          <div className="flex items-center justify-center gap-1.5 text-slate-400 font-mono">
-            <Lock className="w-3.5 h-3.5 text-amber-500" />
-            <span>Private Unlinked Developer Route &bull; URL: <strong className="text-amber-400">/developer</strong></span>
-          </div>
-          <p className="text-[11px] text-slate-600">Hidden from site navigation header and footer. Accessible only via direct URL.</p>
         </div>
 
       </div>

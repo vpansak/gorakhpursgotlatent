@@ -140,28 +140,17 @@ export interface PerformerEmailParams {
 }
 
 export async function sendPerformerApplicationEmail(params: PerformerEmailParams): Promise<{ success: boolean; message?: string }> {
-  const serviceId = process.env.EMAILJS_PERFORMER_SERVICE_ID || 'vpansak';
-  const templateId = process.env.EMAILJS_PERFORMER_TEMPLATE_ID || 'template_b3h1egs';
-  const publicKey = process.env.EMAILJS_PERFORMER_PUBLIC_KEY || 'jjG3XUesW7Yt8McRJ';
-  const privateKey = process.env.EMAILJS_PERFORMER_PRIVATE_KEY || 'G-re211vGlwHrNVCniNgz';
+  // Credentials for Admin Notification Email (vpansak / template_b3h1egs)
+  const adminServiceId = process.env.EMAILJS_PERFORMER_SERVICE_ID || 'vpansak';
+  const adminTemplateId = process.env.EMAILJS_PERFORMER_TEMPLATE_ID || 'template_b3h1egs';
+  const adminPublicKey = process.env.EMAILJS_PERFORMER_PUBLIC_KEY || 'jjG3XUesW7Yt8McRJ';
+  const adminPrivateKey = process.env.EMAILJS_PERFORMER_PRIVATE_KEY || 'G-re211vGlwHrNVCniNgz';
 
-  if (!serviceId || !templateId || !publicKey) {
-    console.warn('⚠️ EmailJS credentials missing on server. Performer notification skipped.');
-    return { success: false, message: 'EmailJS credentials not configured' };
-  }
-
-  // Targets: Admin (alooksingh1@gmail.com) and the Applicant (params.email)
-  const targets: { email: string; name: string; replyTo: string }[] = [
-    { email: 'alooksingh1@gmail.com', name: 'Gorakhpur’s Got Latent Admin Team', replyTo: params.email },
-  ];
-
-  if (params.email && params.email.includes('@') && params.email.trim().toLowerCase() !== 'alooksingh1@gmail.com') {
-    targets.push({
-      email: params.email.trim(),
-      name: params.full_name || 'Performer Applicant',
-      replyTo: 'alooksingh1@gmail.com',
-    });
-  }
+  // Credentials for Applicant Welcome / Confirmation Email (service_15li5i6 / template_41t6fmb)
+  const userServiceId = process.env.EMAILJS_SERVICE_ID || 'service_15li5i6';
+  const userTemplateId = process.env.EMAILJS_TEMPLATE_ID || 'template_41t6fmb';
+  const userPublicKey = process.env.EMAILJS_PUBLIC_KEY || 'K2hOwDJVfSGpJ3nih';
+  const userPrivateKey = process.env.EMAILJS_PRIVATE_KEY || '30mafPjRgPPn5im53Idzh';
 
   // Format social URLs with "Not Provided" fallback for optional ones
   const youtubeUrlFormatted = (params.youtube_url && params.youtube_url.trim()) ? params.youtube_url.trim() : 'Not Provided';
@@ -190,23 +179,31 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
 --------------------------------------------------
 Gorakhpur's Got Latent Admin Notification System`;
 
-  let anySuccess = false;
+  let adminSuccess = false;
+  let userSuccess = false;
   let lastError = '';
 
-  for (const target of targets) {
-    const payload = {
-      service_id: serviceId,
-      template_id: templateId,
-      user_id: publicKey,
-      accessToken: privateKey,
+  const headers = {
+    'Content-Type': 'application/json',
+    'Origin': 'https://gorakhpursgotlatent.vercel.app',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  };
+
+  // 1. DISPATCH TO ADMIN (alooksingh1@gmail.com) -> New Performer Application Notification Template (template_b3h1egs)
+  try {
+    const adminPayload = {
+      service_id: adminServiceId,
+      template_id: adminTemplateId,
+      user_id: adminPublicKey,
+      accessToken: adminPrivateKey,
       template_params: {
-        to_email: target.email,
-        to_name: target.name,
+        to_email: 'alooksingh1@gmail.com',
+        to_name: 'Gorakhpur’s Got Latent Admin Team',
         admin_email: 'alooksingh1@gmail.com',
         email: params.email,
         user_email: params.email,
         customer_email: params.email,
-        reply_to: target.replyTo,
+        reply_to: params.email,
         subject: `🎤 GGL Performer Application | ${params.application_id} | ${params.full_name}`,
         application_id: params.application_id,
         created_at: params.created_at || new Date().toISOString(),
@@ -244,32 +241,81 @@ Gorakhpur's Got Latent Admin Notification System`;
       },
     };
 
+    const resAdmin = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(adminPayload),
+    });
+
+    if (resAdmin.ok) {
+      console.log(`📧 EmailJS: Admin notification email sent successfully to alooksingh1@gmail.com`);
+      adminSuccess = true;
+    } else {
+      const errText = await resAdmin.text();
+      console.error(`❌ EmailJS Error sending to admin (${resAdmin.status}): ${errText}`);
+      lastError = `Admin email HTTP ${resAdmin.status}: ${errText}`;
+    }
+  } catch (err: any) {
+    console.error('❌ EmailJS Exception sending to admin:', err);
+    lastError = err.message;
+  }
+
+  // 2. DISPATCH TO APPLICANT (params.email) -> Welcome / Application Received Template (template_41t6fmb)
+  const applicantEmail = (params.email || '').trim();
+  if (applicantEmail && applicantEmail.includes('@') && applicantEmail.toLowerCase() !== 'alooksingh1@gmail.com') {
     try {
-      const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Origin': 'https://gorakhpursgotlatent.vercel.app',
-          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      const userPayload = {
+        service_id: userServiceId,
+        template_id: userTemplateId,
+        user_id: userPublicKey,
+        accessToken: userPrivateKey,
+        template_params: {
+          to_email: applicantEmail,
+          to_name: params.full_name || 'Performer Applicant',
+          full_name: params.full_name || 'Performer Applicant',
+          name: params.full_name || 'Performer Applicant',
+          customer_name: params.full_name || 'Performer Applicant',
+          email: applicantEmail,
+          user_email: applicantEmail,
+          customer_email: applicantEmail,
+          reply_to: 'alooksingh1@gmail.com',
+          subject: `🎟️ Welcome to Gorakhpur’s Got Latent | Performer Application ${params.application_id}`,
+          application_id: params.application_id,
+          app_id: params.application_id,
+          order_id: params.application_id,
+          talent_category: params.performance_category,
+          performance_category: params.performance_category,
+          category: params.performance_category,
+          ticket_category: params.performance_category,
+          city: params.city,
+          venue: params.city,
+          application_status: params.application_status || 'SUBMITTED',
+          status: params.application_status || 'SUBMITTED',
+          payment_status: params.payment_status || 'SUBMITTED',
+          mobile_number: params.mobile_number,
+          created_at: params.created_at || new Date().toISOString(),
         },
-        body: JSON.stringify(payload),
+      };
+
+      const resUser = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(userPayload),
       });
 
-      if (res.ok) {
-        console.log(`📧 EmailJS: Performer application email sent successfully to ${target.email}`);
-        anySuccess = true;
+      if (resUser.ok) {
+        console.log(`📧 EmailJS: Performer welcome email sent successfully to ${applicantEmail}`);
+        userSuccess = true;
       } else {
-        const errorText = await res.text();
-        console.error(`❌ EmailJS Error sending to ${target.email} (${res.status}): ${errorText}`);
-        lastError = `HTTP ${res.status}: ${errorText}`;
+        const errText = await resUser.text();
+        console.error(`❌ EmailJS Error sending welcome email to applicant ${applicantEmail} (${resUser.status}): ${errText}`);
       }
     } catch (err: any) {
-      console.error(`❌ EmailJS Exception sending to ${target.email}:`, err);
-      lastError = err.message;
+      console.error(`❌ EmailJS Exception sending welcome email to ${applicantEmail}:`, err);
     }
   }
 
-  return anySuccess ? { success: true } : { success: false, message: lastError };
+  return (adminSuccess || userSuccess) ? { success: true } : { success: false, message: lastError };
 }
 
 export interface AdminOtpEmailParams {

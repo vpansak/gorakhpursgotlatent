@@ -20,7 +20,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import TicketCard from '@/components/TicketCard';
-import { TicketRecord } from '@/lib/ticketsStore';
+import { TicketRecord } from '@/lib/ticketTypes';
 
 export default function VerifyTicketPage() {
   // Auth State

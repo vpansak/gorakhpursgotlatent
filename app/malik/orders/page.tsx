@@ -21,7 +21,7 @@ import {
   Trash2
 } from 'lucide-react';
 import TicketCard from '@/components/TicketCard';
-import { TicketRecord } from '@/lib/ticketsStore';
+import { TicketRecord } from '@/lib/ticketTypes';
 
 export default function OrdersLedgerPage() {
   const [search, setSearch] = useState('');

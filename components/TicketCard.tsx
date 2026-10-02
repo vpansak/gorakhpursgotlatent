@@ -14,7 +14,7 @@ import {
   AlertTriangle,
   Sparkles
 } from 'lucide-react';
-import { TicketRecord } from '@/lib/ticketsStore';
+import { TicketRecord } from '@/lib/ticketTypes';
 
 interface TicketCardProps {
   ticket: TicketRecord;

@@ -23,7 +23,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import TicketCard from '@/components/TicketCard';
-import { TicketRecord, validateAgeIs18Plus } from '@/lib/ticketsStore';
+import { TicketRecord, validateAgeIs18Plus } from '@/lib/ticketTypes';
 
 export default function BookTicketPage() {
   // Form State

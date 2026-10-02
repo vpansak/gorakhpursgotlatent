@@ -145,7 +145,7 @@ export default async function HomePage() {
               className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,215,0,0.5)] hover:shadow-[0_0_45px_rgba(255,160,0,0.8)] hover:scale-105 transition-all duration-300 cursor-pointer"
             >
               <Ticket className="w-6 h-6 text-black" />
-              BOOK YOUR TICKET — ₹149
+              BOOK YOUR TICKET
             </Link>
 
             <Link

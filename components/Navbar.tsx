@@ -75,7 +75,7 @@ export default function Navbar() {
                   <span className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 rounded-xl animate-shimmer" />
                   <span className="relative flex items-center gap-2 px-4 py-2.5 rounded-[11px] bg-[#07080e] text-amber-300 font-bold group-hover:bg-transparent group-hover:text-black transition-all">
                     <Ticket className="w-4 h-4 text-amber-400 group-hover:text-black transition-colors" />
-                    BOOK TICKET — ₹149
+                    BOOK TICKET
                   </span>
                 </Link>
               </div>

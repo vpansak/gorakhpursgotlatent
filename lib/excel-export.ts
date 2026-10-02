@@ -177,12 +177,34 @@ export function downloadCategoryExcel(
   XLSX.writeFile(wb, fileName);
 }
 
-// Export master workbook with all 4 sheets in one .xlsx file
+// Map ticket records for Excel
+export function formatTicketRows(items: any[]) {
+  return items.map((t, idx) => ({
+    'S.No': idx + 1,
+    'Ticket ID': t.ticket_id || '',
+    'Customer Name': t.customer_name || '',
+    'Mobile Number': t.mobile || '',
+    'Email Address': t.email || '',
+    'Instagram ID': t.instagram_id || '',
+    'Date of Birth': t.date_of_birth || '',
+    'Quantity': t.quantity || 1,
+    'Amount (INR)': t.amount || 149,
+    'Payment Status': t.payment_status || 'PAID',
+    'Entry Status': t.checked_in === 1 ? 'USED / ENTERED' : 'NOT USED',
+    'Entry / Check-In Time': formatDate(t.checked_in_at),
+    'Razorpay Order ID': t.razorpay_order_id || '',
+    'Razorpay Payment ID': t.razorpay_payment_id || '',
+    'Booking Date': formatDate(t.created_at),
+  }));
+}
+
+// Export master workbook with all sheets in one .xlsx file
 export function downloadMasterExcel(data: {
   performers: any[];
   sponsors: any[];
   team: any[];
   guests: any[];
+  tickets?: any[];
 }) {
   const wb = XLSX.utils.book_new();
 
@@ -209,6 +231,14 @@ export function downloadMasterExcel(data: {
   const wsGuests = XLSX.utils.json_to_sheet(guestData.length > 0 ? guestData : [{ 'Status': 'No judge records' }]);
   autofitColumns(wsGuests, guestData);
   XLSX.utils.book_append_sheet(wb, wsGuests, '4. Judges & VIPs');
+
+  // 5. Booked Tickets Sheet
+  if (data.tickets && data.tickets.length > 0) {
+    const ticketData = formatTicketRows(data.tickets);
+    const wsTickets = XLSX.utils.json_to_sheet(ticketData);
+    autofitColumns(wsTickets, ticketData);
+    XLSX.utils.book_append_sheet(wb, wsTickets, '5. Booked Tickets');
+  }
 
   const timestamp = new Date().toISOString().slice(0, 10);
   XLSX.writeFile(wb, `Gorakhpur_Got_Latent_Master_Applications_${timestamp}.xlsx`);

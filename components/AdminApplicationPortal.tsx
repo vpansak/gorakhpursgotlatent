@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import {
   FileSpreadsheet, Download, RefreshCw, Search, Phone, MessageSquare,
   Eye, CheckCircle2, ShieldCheck, UserCheck, Users, Briefcase, Award,
   ExternalLink, Filter, Sparkles, Check, ChevronRight, X, Clock, HelpCircle,
-  FileText, Sliders, Calculator, Copy, Mail, RotateCcw, CreditCard, CheckCheck, Trash2
+  FileText, Sliders, Calculator, Copy, Mail, RotateCcw, CreditCard, CheckCheck, Trash2,
+  Ticket as TicketIcon
 } from 'lucide-react';
 import { downloadCategoryExcel, downloadMasterExcel } from '@/lib/excel-export';
 
@@ -29,6 +31,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
   const [activeTab, setActiveTab] = useState<TabType>('performer');
   const [data, setData] = useState(initialData);
   const [computerJiScores, setComputerJiScores] = useState<any[]>([]);
+  const [ticketStats, setTicketStats] = useState({ totalBooked: 0, paidTickets: 0 });
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -57,8 +60,21 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     }
   };
 
+  const fetchTicketStats = async () => {
+    try {
+      const res = await fetch('/api/tickets/search');
+      const json = await res.json();
+      if (json.success && json.stats) {
+        setTicketStats(json.stats);
+      }
+    } catch (err) {
+      console.error('Failed to fetch ticket stats:', err);
+    }
+  };
+
   useEffect(() => {
     fetchComputerJiScores();
+    fetchTicketStats();
   }, []);
 
   // Fetch updated data from API
@@ -409,8 +425,8 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
         </div>
       </div>
 
-      {/* 5 CORE CATEGORY STATS CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+      {/* 6 CORE CATEGORY STATS CARDS */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3.5">
         {/* Performers */}
         <button
           onClick={() => { setActiveTab('performer'); setStatusFilter('ALL'); setReadFilter('ALL'); setSearch(''); }}
@@ -431,6 +447,25 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
             <CheckCircle2 className="w-3 h-3" /> Direct Saved Auditions (Free)
           </p>
         </button>
+
+        {/* Booked Tickets */}
+        <Link
+          href="/malik/orders"
+          className="p-4 rounded-2xl text-left transition-all cursor-pointer border bg-slate-900/90 border-amber-500/40 hover:border-amber-400 hover:bg-amber-500/15 shadow-lg group flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1">
+              <span>🎟️</span> BOOKED TICKETS
+            </span>
+            <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 group-hover:scale-110 transition-transform">
+              <TicketIcon className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="text-xl sm:text-2xl font-black text-amber-300">{ticketStats.paidTickets || ticketStats.totalBooked || 0}</div>
+          <p className="text-[10px] text-emerald-400 font-bold mt-1 flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3" /> Orders & Scanner ↗
+          </p>
+        </Link>
 
         {/* Sponsors */}
         <button

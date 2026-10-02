@@ -126,7 +126,10 @@ const jsonLdData = {
         '@id': 'https://gkpgotlatent.in/#naveenvarma',
         'name': 'Naveen Varma',
         'jobTitle': 'Show Creator & Founder',
-        'url': 'https://gkpgotlatent.in'
+        'url': 'https://gkpgotlatent.in/founder',
+        'sameAs': [
+          'https://www.instagram.com/nvn_unfiltered/'
+        ]
       },
       'publisher': {
         '@type': 'Organization',
@@ -140,12 +143,17 @@ const jsonLdData = {
         'founder': {
           '@type': 'Person',
           'name': 'Naveen Varma',
-          'jobTitle': 'Show Creator & Founder'
+          'jobTitle': 'Show Creator & Founder',
+          'url': 'https://gkpgotlatent.in/founder',
+          'sameAs': [
+            'https://www.instagram.com/nvn_unfiltered/'
+          ]
         },
         'employee': {
           '@type': 'Person',
           'name': 'Alok Singh',
-          'jobTitle': 'Head of Developers & Tech Architect'
+          'jobTitle': 'Head of Developers & Tech Architect',
+          'url': 'https://gkpgotlatent.in/developer'
         }
       }
     },

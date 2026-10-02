@@ -204,6 +204,7 @@ export default function Footer() {
               <li><Link href="/privacy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
               <li><Link href="/refund-policy" className="hover:text-amber-400 transition-colors">Refund & Cancellation Policy</Link></li>
               <li><Link href="/quick-info" className="hover:text-amber-400 transition-colors">Quick Info</Link></li>
+              <li><Link href="/founder" className="hover:text-amber-400 font-semibold text-amber-300/90 transition-colors">👑 Founder & Show Creator</Link></li>
               <li><Link href="/developer" className="hover:text-amber-400 font-semibold text-amber-300/90 transition-colors">💻 Tech Architect & Engineering</Link></li>
             </ul>
           </div>
@@ -239,7 +240,7 @@ export default function Footer() {
 
         {/* Footer Bottom */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
-          <p>© {new Date().getFullYear()} Gorakhpur’s Got Latent. All rights reserved. Tech Architecture & Execution by <Link href="/developer" className="text-amber-400 font-bold hover:underline">Alok Singh</Link> | Founded by Naveen Varma.</p>
+          <p>© {new Date().getFullYear()} Gorakhpur’s Got Latent. All rights reserved. Founded by <Link href="/founder" className="text-amber-400 font-bold hover:underline">Naveen Varma</Link> | Tech Architecture by <Link href="/developer" className="text-amber-400 font-bold hover:underline">Alok Singh</Link>.</p>
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1 text-amber-400">
               <Award className="w-4 h-4" /> Secure Razorpay Verified Checkout

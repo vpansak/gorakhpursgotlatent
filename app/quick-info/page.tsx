@@ -9,7 +9,7 @@ import {
 
 export const metadata = {
   title: "Quick Info & Site Index | Gorakhpur's Got Latent",
-  description: "Official Quick Info guide for Gorakhpur's Got Latent. Explore Episode 1 winners, BookMyShow ticket passes, auditions, performer spotlights, policies, and contact help.",
+  description: "Official Quick Info guide for Gorakhpur's Got Latent. Explore Episode 1 winners, digital ticket booking, auditions, performer spotlights, policies, and contact help.",
 };
 
 export default function QuickInfoPage() {
@@ -62,17 +62,15 @@ export default function QuickInfoPage() {
               Book Show Tickets 🎟️
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Official entry passes for live audience arena, front-row stage seating, live performance roasts, and voting experience via BookMyShow.
+              Official entry passes for live audience arena, front-row stage seating, live performance roasts, and voting experience.
             </p>
           </div>
-          <a
-            href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-            target="_blank"
-            rel="noreferrer"
+          <Link
+            href="/book-ticket"
             className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-black text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-[1.02] shadow-md mt-4"
           >
-            <span>Book on BookMyShow ↗</span>
-          </a>
+            <span>Book Official Ticket — ₹149</span>
+          </Link>
         </div>
 
         {/* 3. Auditions & Applications */}

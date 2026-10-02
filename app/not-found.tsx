@@ -78,18 +78,16 @@ export default function NotFound() {
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <a
-            href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-            target="_blank"
-            rel="noreferrer"
-            className="glass-card p-4 rounded-2xl border border-red-500/30 hover:border-red-400 transition-all space-y-2 group"
+          <Link
+            href="/book-ticket"
+            className="glass-card p-4 rounded-2xl border border-amber-500/30 hover:border-amber-400 transition-all space-y-2 group"
           >
-            <div className="flex items-center justify-between text-xs font-bold text-red-400">
+            <div className="flex items-center justify-between text-xs font-bold text-amber-400">
               <span className="flex items-center gap-1.5"><Ticket className="w-4 h-4" /> Book Tickets</span>
-              <span className="group-hover:translate-x-1 transition-transform">↗</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
             </div>
-            <p className="text-xs text-slate-300">Book live audience passes on BookMyShow.</p>
-          </a>
+            <p className="text-xs text-slate-300">Book live audience show passes online (₹149).</p>
+          </Link>
 
           <Link
             href="/apply/sponsor"

@@ -21,7 +21,7 @@ export default function Navbar() {
     { name: 'Performers', href: '/performers' },
     { name: 'Guests', href: '/guests' },
     { name: 'Sponsors', href: '/sponsors' },
-    { name: 'Tickets', href: 'https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio', isExternal: true },
+    { name: 'Book Ticket', href: '/book-ticket' },
     { name: 'Apply Now', href: '/apply' },
     { name: 'Contact', href: '/contact' },
   ];
@@ -50,19 +50,6 @@ export default function Navbar() {
               <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
                 {navLinks.map((link) => {
                   const isActive = pathname === link.href;
-                  if (link.isExternal) {
-                    return (
-                      <a
-                        key={link.name}
-                        href={link.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="px-3 py-2 rounded-lg text-sm font-semibold font-barlow tracking-wide text-amber-400 hover:text-amber-300 hover:bg-white/5 transition-all duration-200"
-                      >
-                        {link.name} ↗
-                      </a>
-                    );
-                  }
                   return (
                     <Link
                       key={link.name}
@@ -81,31 +68,27 @@ export default function Navbar() {
 
               {/* Header Right Action Buttons (Desktop) */}
               <div className="hidden sm:flex items-center gap-3">
-                <a
-                  href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-                  target="_blank"
-                  rel="noreferrer"
+                <Link
+                  href="/book-ticket"
                   className="relative group overflow-hidden rounded-xl p-[1px] font-semibold text-sm transition-all duration-300 shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:shadow-[0_0_30px_rgba(255,160,0,0.6)]"
                 >
                   <span className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 rounded-xl animate-shimmer" />
                   <span className="relative flex items-center gap-2 px-4 py-2.5 rounded-[11px] bg-[#07080e] text-amber-300 font-bold group-hover:bg-transparent group-hover:text-black transition-all">
                     <Ticket className="w-4 h-4 text-amber-400 group-hover:text-black transition-colors" />
-                    BOOK ON BOOKMYSHOW
+                    BOOK TICKET — ₹149
                   </span>
-                </a>
+                </Link>
               </div>
 
               {/* Mobile Hamburger Toggle & Primary Action */}
               <div className="flex items-center lg:hidden gap-2">
-                <a
-                  href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-                  target="_blank"
-                  rel="noreferrer"
+                <Link
+                  href="/book-ticket"
                   className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-black font-extrabold text-xs flex items-center gap-1 shadow-md"
                 >
                   <Ticket className="w-3.5 h-3.5" />
                   BOOK TICKET
-                </a>
+                </Link>
 
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -121,32 +104,16 @@ export default function Navbar() {
           {/* Mobile Slide-Out Drawer */}
           {mobileMenuOpen && (
             <div className="lg:hidden border-b border-amber-500/20 bg-[#07080e]/95 backdrop-blur-2xl px-4 pt-3 pb-6 space-y-2 animate-in slide-in-from-top duration-300">
-              {navLinks.map((link) => {
-                if (link.isExternal) {
-                  return (
-                    <a
-                      key={link.name}
-                      href={link.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block px-4 py-3 rounded-xl text-base font-semibold text-amber-400 hover:bg-amber-500/10 border border-transparent transition-all"
-                    >
-                      {link.name} ↗
-                    </a>
-                  );
-                }
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20 transition-all"
-                  >
-                    {link.name}
-                  </Link>
-                );
-              })}
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20 transition-all"
+                >
+                  {link.name}
+                </Link>
+              ))}
             </div>
           )}
         </header>
@@ -164,15 +131,15 @@ export default function Navbar() {
           <span>Home</span>
         </Link>
 
-        <a
-          href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-col items-center gap-0.5 text-xs text-slate-300 hover:text-amber-400 transition-colors"
+        <Link
+          href="/book-ticket"
+          className={`flex flex-col items-center gap-0.5 text-xs transition-colors ${
+            pathname.startsWith('/book-ticket') ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-amber-400'
+          }`}
         >
           <Ticket className="w-5 h-5 text-amber-400" />
           <span>Tickets</span>
-        </a>
+        </Link>
 
         <Link
           href="/apply"

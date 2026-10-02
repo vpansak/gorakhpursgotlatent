@@ -61,7 +61,7 @@ export default function TermsPage() {
 
           <div className="space-y-3 pl-1 text-slate-300">
             <p>
-              1.1 <strong className="text-white">Digital Pass Authentication:</strong> Entry to all Gorakhpur’s Got Latent live shows and recording sessions is strictly restricted to ticket holders possessing a valid, tamper-proof digital QR ticket pass generated exclusively via our official website (<code className="text-amber-300">gorakhpursgotlatent.vercel.app</code>) or designated authorized ticketing partners (e.g., BookMyShow).
+              1.1 <strong className="text-white">Digital Pass Authentication:</strong> Entry to all Gorakhpur’s Got Latent live shows and recording sessions is strictly restricted to ticket holders possessing a valid, tamper-proof digital QR ticket pass generated exclusively via our official website (<code className="text-amber-300">gkpgotlatent.in</code>).
             </p>
             <p>
               1.2 <strong className="text-white">Gate Verification & Scanner Check-in:</strong> Attendees must present their official digital QR code pass (on smartphone display or printed copy) at the venue entry gates for high-resolution laser scanner check-in. Duplicate, altered, forged, or previously scanned QR passes will be immediately flagged and rejected by security systems.

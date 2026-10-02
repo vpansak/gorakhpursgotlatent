@@ -31,14 +31,6 @@ function XIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
-function BookMyShowIcon({ className = "w-5 h-5" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M19.5 3h-15A2.5 2.5 0 0 0 2 5.5v3a1.5 1.5 0 0 0 0 3v3A2.5 2.5 0 0 0 4.5 17h15a2.5 2.5 0 0 0 2.5-2.5v-3a1.5 1.5 0 0 0 0-3v-3A2.5 2.5 0 0 0 19.5 3zM12 13.5l-2.06 1.08.39-2.3-1.67-1.63 2.3-.33L12 8.25l1.04 2.07 2.3.33-1.67 1.63.39 2.3L12 13.5z" />
-    </svg>
-  );
-}
-
 export default function Footer() {
   const pathname = usePathname();
   const isLiveRoute =

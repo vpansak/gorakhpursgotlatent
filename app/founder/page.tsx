@@ -103,7 +103,7 @@ export default function FounderPage() {
     },
     {
       title: "🚀 Purvanchal to National Spotlight",
-      description: "Gorakhpur aur aas-paas ke tier-2/tier-3 cities ke hidden stars ko BookMyShow live audience, YouTube spotlight, aur industry representation dena.",
+      description: "Gorakhpur aur aas-paas ke tier-2/tier-3 cities ke hidden stars ko live audience spotlight, YouTube visibility, aur industry representation dena.",
       icon: TrendingUp,
       tag: "TALENT GROWTH"
     }

@@ -140,15 +140,13 @@ export default async function HomePage() {
 
           {/* Action CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-1">
-            <a
-              href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              href="/book-ticket"
               className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,215,0,0.5)] hover:shadow-[0_0_45px_rgba(255,160,0,0.8)] hover:scale-105 transition-all duration-300 cursor-pointer"
             >
               <Ticket className="w-6 h-6 text-black" />
-              BOOK YOUR TICKET
-            </a>
+              BOOK YOUR TICKET — ₹149
+            </Link>
 
             <Link
               href="/apply/performer"
@@ -253,7 +251,7 @@ export default async function HomePage() {
               <div className="space-y-3">
                 <h3 className="font-bebas text-2xl sm:text-3xl text-white uppercase tracking-wide">Purvanchal’s Biggest Stage Is Ready</h3>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Book your pass now on BookMyShow to witness raw talent and live roasts directly from front-row seats.
+                  Book your digital ticket now to witness raw talent and live roasts directly from front-row seats.
                 </p>
               </div>
             </div>
@@ -292,15 +290,15 @@ export default async function HomePage() {
 
                 <div className="space-y-2">
                   <h3 className="font-bebas text-3xl sm:text-5xl text-amber-300 tracking-wide uppercase leading-tight">
-                    BOOKMYSHOW OFFICIAL TICKETING
+                    OFFICIAL GGL TICKETING — ₹149
                   </h3>
                   <p className="text-xs sm:text-sm text-emerald-400 font-bold uppercase tracking-wider font-barlow flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> Direct Booking Active & Instant QR Confirmation
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> Direct Online Booking Active & Instant QR Pass
                   </p>
                 </div>
 
                 <p className="text-xs sm:text-base text-slate-300 leading-relaxed">
-                  Access to live audience arena, front stage seating, live performance roasts & interactive voting experience. Book directly via BookMyShow official link.
+                  Access to live audience arena, front stage seating, live performance roasts & interactive voting experience. Unique Ticket ID and instant QR code for entry verification.
                 </p>
 
                 {/* Feature Tags */}
@@ -312,7 +310,7 @@ export default async function HomePage() {
                     <UserCheck className="w-3.5 h-3.5 text-amber-400" /> Audience Arena Access
                   </span>
                   <span className="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center gap-1.5">
-                    <Ticket className="w-3.5 h-3.5 text-amber-400" /> Live Voting Experience
+                    <Ticket className="w-3.5 h-3.5 text-amber-400" /> Instant E-Ticket
                   </span>
                 </div>
               </div>
@@ -321,25 +319,23 @@ export default async function HomePage() {
               <div className="lg:col-span-5 bg-slate-900/90 p-6 sm:p-7 rounded-2xl border border-amber-500/30 space-y-5 text-center flex flex-col justify-center">
                 <div className="space-y-1">
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-widest font-barlow block">
-                    STATUS
+                    PRICE PER TICKET
                   </span>
-                  <span className="text-base font-black text-amber-400 uppercase tracking-wider font-barlow block">
-                    BOOKMYSHOW VERIFIED
+                  <span className="text-3xl font-black text-amber-400 uppercase tracking-wider font-barlow block">
+                    ₹149 <span className="text-xs text-slate-400 font-normal">/ person</span>
                   </span>
                 </div>
 
-                <a
-                  href="https://in.bookmyshow.com/events/gorakhpur-got-latent/ET00518139?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-                  target="_blank"
-                  rel="noreferrer"
+                <Link
+                  href="/book-ticket"
                   className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-black font-barlow font-black uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(255,215,0,0.5)] hover:shadow-[0_0_35px_rgba(255,160,0,0.8)] hover:scale-[1.02] active:scale-[0.99] transition-all"
                 >
                   <Ticket className="w-6 h-6 text-black shrink-0" />
-                  <span>BOOK ON BOOKMYSHOW ↗</span>
-                </a>
+                  <span>BOOK TICKET NOW</span>
+                </Link>
 
                 <p className="text-[11px] text-slate-400 font-medium">
-                  🔒 Official Ticketing Partner • Direct Mobile E-Pass
+                  🔒 Secure Razorpay Payment • Instant E-Ticket with QR Code
                 </p>
               </div>
             </div>

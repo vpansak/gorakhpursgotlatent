@@ -1,12 +1,15 @@
 import { neon } from '@neondatabase/serverless';
 
-const databaseUrl = process.env.DATABASE_URL || '';
-
 let sqlClientInstance: any = null;
 
 function getSqlClient() {
-  if (!sqlClientInstance && databaseUrl) {
-    sqlClientInstance = neon(databaseUrl);
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    console.warn('⚠️ DATABASE_URL environment variable is not configured.');
+    return null;
+  }
+  if (!sqlClientInstance) {
+    sqlClientInstance = neon(url);
   }
   return sqlClientInstance;
 }

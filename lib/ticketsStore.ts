@@ -14,7 +14,7 @@ export interface TicketRecord {
   amount: number;
   razorpay_order_id: string;
   razorpay_payment_id: string;
-  payment_status: 'PAID' | 'PENDING' | 'FAILED';
+  payment_status: string;
   ticket_status: 'VALID' | 'CANCELLED';
   qr_token: string;
   checked_in: number; // 0 or 1
@@ -151,19 +151,43 @@ export async function saveTicketRecord(ticket: TicketRecord): Promise<TicketReco
 }
 
 /**
- * Finds ticket by Ticket ID (e.g. GGLT123456)
+ * Finds ticket by Ticket ID (e.g. GGLT123456), QR token, or verification URL
  */
-export async function getTicketByTicketId(ticketId: string): Promise<TicketRecord | null> {
-  const cleanId = ticketId.trim().toUpperCase();
-  
-  // Check memory store
-  if (memoryTickets.has(cleanId)) {
-    return memoryTickets.get(cleanId)!;
+export async function getTicketByTicketId(ticketIdOrUrl: string): Promise<TicketRecord | null> {
+  if (!ticketIdOrUrl || !ticketIdOrUrl.trim()) return null;
+
+  const rawInput = ticketIdOrUrl.trim();
+
+  // Extract Ticket ID if input contains URL or full string (e.g. /ticket/verify/GGLT123456)
+  let cleanId = rawInput;
+  const match = rawInput.match(/GGLT[A-Z0-9]{4,10}/i);
+  if (match) {
+    cleanId = match[0].toUpperCase();
+  } else {
+    cleanId = cleanId.toUpperCase();
   }
 
+  // 1. Search memory store
+  for (const tck of memoryTickets.values()) {
+    if (
+      tck.ticket_id.toUpperCase() === cleanId ||
+      tck.ticket_id.toUpperCase() === rawInput.toUpperCase() ||
+      tck.qr_token === rawInput ||
+      tck.booking_id?.toUpperCase() === rawInput.toUpperCase() ||
+      tck.razorpay_order_id?.toUpperCase() === rawInput.toUpperCase() ||
+      tck.razorpay_payment_id?.toUpperCase() === rawInput.toUpperCase()
+    ) {
+      return tck;
+    }
+  }
+
+  // 2. Query Neon PostgreSQL database
   try {
     await ensureTicketsTable();
-    const row = await db.queryOne<TicketRecord>(`SELECT * FROM tickets WHERE UPPER(ticket_id) = ?`, [cleanId]);
+    const row = await db.queryOne<TicketRecord>(
+      `SELECT * FROM tickets WHERE UPPER(ticket_id) = ? OR qr_token = ? OR UPPER(booking_id) = ? OR UPPER(razorpay_order_id) = ? OR UPPER(razorpay_payment_id) = ? OR UPPER(ticket_id) = ?`,
+      [cleanId, rawInput, rawInput.toUpperCase(), rawInput.toUpperCase(), rawInput.toUpperCase(), rawInput.toUpperCase()]
+    );
     if (row) {
       memoryTickets.set(row.ticket_id, row);
       return row;
@@ -179,32 +203,7 @@ export async function getTicketByTicketId(ticketId: string): Promise<TicketRecor
  * Finds ticket by QR token or verification URL payload
  */
 export async function getTicketByQrToken(qrTokenOrUrl: string): Promise<TicketRecord | null> {
-  const cleanToken = qrTokenOrUrl.trim();
-  
-  // Check if string contains ticket ID (e.g. /ticket/verify/GGLT123456 or GGLT123456)
-  const match = cleanToken.match(/GGLT\d{6}/i);
-  if (match) {
-    const found = await getTicketByTicketId(match[0]);
-    if (found) return found;
-  }
-
-  // Check by token
-  for (const tck of memoryTickets.values()) {
-    if (tck.qr_token === cleanToken) return tck;
-  }
-
-  try {
-    await ensureTicketsTable();
-    const row = await db.queryOne<TicketRecord>(`SELECT * FROM tickets WHERE qr_token = ? OR ticket_id = ?`, [cleanToken, cleanToken]);
-    if (row) {
-      memoryTickets.set(row.ticket_id, row);
-      return row;
-    }
-  } catch (err) {
-    console.warn('getTicketByQrToken database notice:', err);
-  }
-
-  return null;
+  return getTicketByTicketId(qrTokenOrUrl);
 }
 
 /**
@@ -239,21 +238,34 @@ export async function searchTickets(queryStr: string): Promise<TicketRecord[]> {
     t.mobile.toLowerCase().includes(q) ||
     t.email.toLowerCase().includes(q) ||
     t.instagram_id.toLowerCase().includes(q) ||
-    (t.razorpay_order_id && t.razorpay_order_id.toLowerCase().includes(q))
+    (t.razorpay_order_id && t.razorpay_order_id.toLowerCase().includes(q)) ||
+    (t.razorpay_payment_id && t.razorpay_payment_id.toLowerCase().includes(q))
   );
 }
 
 /**
- * Check In Ticket (Requirement #1, #6, #7)
+ * Check In Ticket
  * Prevents duplicate check-in!
  */
-export async function checkInTicket(ticketId: string): Promise<{ success: boolean; ticket?: TicketRecord; message: string; isDuplicate?: boolean }> {
-  const ticket = await getTicketByTicketId(ticketId);
+export async function checkInTicket(ticketIdOrUrl: string): Promise<{ success: boolean; ticket?: TicketRecord; message: string; isDuplicate?: boolean }> {
+  let ticket = await getTicketByTicketId(ticketIdOrUrl);
   if (!ticket) {
-    return { success: false, message: '✕ INVALID TICKET: Ticket ID not found in database.' };
+    ticket = await getTicketByQrToken(ticketIdOrUrl);
   }
 
-  if (ticket.ticket_status !== 'VALID' || ticket.payment_status !== 'PAID') {
+  if (!ticket) {
+    return { success: false, message: `✕ INVALID TICKET: Ticket ID "${ticketIdOrUrl}" not found in database.` };
+  }
+
+  // Check valid status: accept PAID, FREE, SUCCESS, or amount === 0
+  const isPaidOrFree =
+    ticket.payment_status === 'PAID' ||
+    ticket.payment_status === 'FREE' ||
+    ticket.payment_status === 'SUCCESS' ||
+    Number(ticket.amount) === 0 ||
+    ticket.ticket_status === 'VALID';
+
+  if (!isPaidOrFree) {
     return { success: false, ticket, message: '✕ INVALID TICKET: Ticket payment is not verified.' };
   }
 
@@ -262,7 +274,7 @@ export async function checkInTicket(ticketId: string): Promise<{ success: boolea
       success: false,
       ticket,
       isDuplicate: true,
-      message: `⚠️ ALREADY CHECKED IN: Ticket ${ticket.ticket_id} was already used for entry at ${ticket.checked_in_at || 'earlier session'}.`,
+      message: `⚠️ ALREADY CHECKED IN: Ticket ${ticket.ticket_id} was already used for entry at ${ticket.checked_in_at ? new Date(ticket.checked_in_at).toLocaleString('en-IN') : 'earlier session'}.`,
     };
   }
 

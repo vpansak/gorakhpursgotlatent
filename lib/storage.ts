@@ -163,7 +163,7 @@ export async function syncSheetsToS3() {
         app_id, full_name, email, mobile_number, whatsapp_number, city, age,
         performance_category, performance_title, performance_type, performer_count,
         performance_duration, performance_language, instagram_url, youtube_url,
-        payment_status, payment_id, order_id, payment_amount, payment_verified_at,
+        payment_status, payment_id, order_id, payment_amount,
         application_status, created_at
       FROM performer_applications 
       WHERE payment_status = 'PAID' OR payment_status = 'PAYMENT_VERIFIED'

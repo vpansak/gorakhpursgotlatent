@@ -135,7 +135,7 @@ export async function uploadSheetToS3(sheetName: string, csvContent: string): Pr
       })
     );
 
-    const cleanEndpoint = endpoint.replace(/\/$/, '');
+    const cleanEndpoint = process.env.AWS_ENDPOINT_URL_S3!.replace(/\/$/, '');
     return `${cleanEndpoint}/${S3_BUCKET}/${key}`;
   } catch (err: any) {
     console.warn(`[Storage] Sheet upload notice (${sheetName}):`, err?.message || err);

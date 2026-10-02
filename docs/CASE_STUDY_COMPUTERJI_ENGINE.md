@@ -1,4 +1,4 @@
-# Case Study: Engineering Gorakhpur's Got Latent — Under-100ms Live Stage Latency Matrix & Secure 'Malik' Control Engine
+# Case Study: Engineering Gorakhpur's Got Latent — Under-100ms Live Stage Latency Matrix & Automated Ticketing Engine
 
 > **Author**: Alok Singh (Head of Developers & Tech Architect)  
 > **Show Creator & Founder**: Naveen Varma  
@@ -13,7 +13,7 @@
 
 This technical case study breaks down how we engineered the complete **gkpgotlatent.in** digital ecosystem, focusing on:
 1. **The 'Computerji' Engine**: A sub-100ms real-time latency matrix synchronizing live judges (`/judge`), stage operators (`/operator`), spectator voting (`/vote`), and main auditorium LED display screens (`/display`).
-2. **The 'Malik' Admin Command Center**: A multi-layered, role-authenticated control system handling ticket inventories, automated QR code generation, refund processing, and live event overrides.
+2. **Automated Ticketing & Verification Infrastructure**: An automated pipeline handling seat inventory lock, payment webhooks, dynamic QR Code pass generation, and venue entry scanning (`/verify`).
 3. **Structured Schema & AI Search Engine Graph Interlocking**: Deployed JSON-LD hierarchy (`WebApplication`, `author: Alok Singh`, `creator: Naveen Varma`) to optimize discoverability for Google, Bing, and AI search engines (ChatGPT Search).
 
 ---
@@ -32,9 +32,9 @@ graph TD
         E -->|Sub-100ms Render| H[Main LED Display - /display]
     end
     
-    subgraph Malik Admin Portal
-        I[Malik Command Center - /malik] -->|JWT / Auth Guard| C
-        J[Razorpay Payment Webhook] -->|Verified Callbacks| C
+    subgraph Public Ticketing & Entry Verification
+        I[Razorpay Payment Webhook] -->|Verified Callbacks| C
+        J[Venue Security Scanner - /verify] -->|QR Code Validation| C
     end
 ```
 
@@ -49,7 +49,7 @@ During live show tapings, judges evaluate contestants in real time across multip
 We designed the **Computerji Engine**, combining optimistic state mutation with lightweight libSQL queries and websockets:
 - **Judge Portal (`/judge`)**: A custom touch-optimized UI allowing judges to set ratings and submit them in a single tap.
 - **Stage Display (`/display`)**: Built with hardware-accelerated CSS animations and instant DOM diffing, optimized for 4K auditorium projectors.
-- **Operator Dashboard (`/operator`)**: Gives stage managers granular authority to freeze scores, override glitches, trigger timers, and send sound cue triggers.
+- **Operator Dashboard (`/operator`)**: Gives stage managers granular authority to freeze scores, trigger timers, and send sound cue triggers.
 
 ### Latency Benchmarks
 | Metric | Standard REST Polling | Computerji Matrix Engine |
@@ -61,12 +61,11 @@ We designed the **Computerji Engine**, combining optimistic state mutation with 
 
 ---
 
-## 🔒 2. The 'Malik' Admin Portal: Security & Ticketing Automation
+## 🎫 2. Ticketing & Gate Entry Verification Engine
 
-### Key Features of Malik Panel:
+### Key Features of Public Infrastructure:
 - **Instant E-Ticket Dispatch**: Validated via Razorpay webhook signatures. Once payment succeeds, an encrypted payload generates a dynamic QR Code, PDF pass, and triggers automated WhatsApp & Email delivery.
-- **Venue Scanner Guard (`/verify`)**: Security guards at the auditorium gates scan QR passes using webcams; the system validates ticket authenticity and prevents duplicate entry attempts in **< 100ms**.
-- **Role Hierarchy**: Structured access for show managers, seating coordinators, and finance administrators.
+- **Venue Scanner Guard (`/verify`)**: Security guards at auditorium gates scan QR passes using webcams; the system validates ticket authenticity and prevents duplicate entry attempts in **< 100ms**.
 
 ---
 

@@ -78,7 +78,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: "Alok Singh | Tech Architect - Gorakhpur's Got Latent",
-    description: "Under-100ms real-time latency matrix & secure Malik panel engineering architecture.",
+    description: "Under-100ms real-time latency matrix & high-concurrency event engineering architecture.",
     images: ['/alok-singh.jpg'],
   },
 };
@@ -181,17 +181,17 @@ export default function DeveloperPage() {
     },
     {
       id: "03",
-      title: "🛡️ 'Malik' Master Admin Command Center",
-      subtitle: "Security Authentication, Order Management & Google Sheets Sync",
-      description: "Show organizers aur show runners ke liye maine 'Malik' portal design kiya hai. Ye ek highly secured dashboard hai jo OTP-based double authentication par chalta hai. Yaha se tickets, performers, refund requests, aur live show stats control hote hain.",
+      title: "🛡️ Automated Event Control & Management Center",
+      subtitle: "Security Authentication, Order Reconciliation & Live Show Operations",
+      description: "Show organizers aur show runners ke liye ek highly secured internal management system design kiya gaya hai. Isme strict authentication protocols chalte hain jaha se tickets, performers, refund requests, aur live show stats control hote hain.",
       details: [
-        "Secure OTP mobile/email multi-factor authentication system",
+        "Encrypted multi-factor authentication system for admin security",
         "Real-time ticket sales revenue analytics, breakdown by tier, and order tracker",
         "Performer and guest application review pipeline (Approve/Reject/Flag)",
         "One-click automated refund triggering engine via payment gateway APIs",
-        "Automated Google Sheets sync export for offline event check-in staff (/api/malik/sheets)"
+        "Automated reporting and data sync pipelines for venue check-in staff"
       ],
-      tech: ["OTP Auth Engine", "Refund Engine", "Application Pipeline", "Google Sheets Sync", "Data Analytics"]
+      tech: ["Encrypted Auth Engine", "Refund Engine", "Application Pipeline", "Reporting Pipelines", "Data Analytics"]
     },
     {
       id: "04",
@@ -244,14 +244,14 @@ export default function DeveloperPage() {
     { name: "guest_applications", desc: "VIP guest pass requests and contact records" },
     { name: "sponsor_applications", desc: "Brand sponsor leads, tier preferences, company details" },
     { name: "judge_scores", desc: "Real-time scores given by live show judges per contestant" },
-    { name: "admin_users", desc: "Malik admin portal access accounts and session hashes" }
+    { name: "admin_users", desc: "Internal security accounts and session authorization hashes" }
   ];
 
   const timeline = [
     { year: "Phase 1", title: "Architecture & Concept", desc: "Designed the serverless database schema, dark glassmorphic design system, and core Next.js routing." },
     { year: "Phase 2", title: "Ticketing & PhonePe Engine", desc: "Built payment callback webhooks, automated QR code generator, and instant email/WhatsApp dispatch." },
     { year: "Phase 3", title: "'Computerji' Live Stage Matrix", desc: "Developed real-time judge scoring screen, stage LED display engine, and stage operator portal." },
-    { year: "Phase 4", title: "'Malik' Admin Command Center", desc: "Engineered secured admin portal with OTP authentication, refund processing, and Google Sheets export." },
+    { year: "Phase 4", title: "Master Admin Control Center", desc: "Engineered secured administrative control portal with multi-factor auth, refund processing, and automated reporting." },
     { year: "Phase 5", title: "Instagram Lead & Show Launch", desc: "Launched official website, integrated YouTube channel banner, and took charge of official Instagram growth." }
   ];
 
@@ -270,7 +270,7 @@ export default function DeveloperPage() {
           'name': 'Alok Singh',
           'jobTitle': 'Head of Developers & Tech Architect',
           'roleName': 'Tech Architect & Lead Full-Stack Engineer',
-          'description': "Head of Developers & Tech Architect who engineered the entire digital ecosystem for Gorakhpur's Got Latent, including the 'Computerji' live stage latency engine and 'Malik' admin portal.",
+          'description': "Head of Developers & Tech Architect who engineered the entire digital ecosystem for Gorakhpur's Got Latent, including the 'Computerji' live stage latency engine and event management platform.",
           'url': 'https://gkpgotlatent.in/developer',
           'image': 'https://gkpgotlatent.in/alok-singh.jpg',
           'sameAs': [
@@ -295,7 +295,7 @@ export default function DeveloperPage() {
       {
         '@type': 'TechArticle',
         '@id': 'https://gkpgotlatent.in/developer#article',
-        'headline': "Engineering Gorakhpur's Got Latent: Under-100ms Live Stage Latency Matrix & Secure Malik Control System",
+        'headline': "Engineering Gorakhpur's Got Latent: Under-100ms Live Stage Latency Matrix & High-Performance Event Architecture",
         'description': "Full-stack architectural analysis of how Next.js, Turso DB SQLite, and real-time websockets were leveraged to build the Computerji scoring matrix.",
         'author': {
           '@id': 'https://gkpgotlatent.in/developer#aloksingh'

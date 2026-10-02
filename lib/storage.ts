@@ -1,19 +1,16 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { query } from './db';
 
-const endpoint = process.env.AWS_ENDPOINT_URL_S3;
-const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 const region = process.env.AWS_REGION || 'us-east-2';
 export const S3_BUCKET = process.env.S3_BUCKET_NAME;
-
-if (!endpoint || !accessKeyId || !secretAccessKey || !S3_BUCKET) {
-  throw new Error('Storage is not configured. Set AWS_ENDPOINT_URL_S3, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and S3_BUCKET_NAME.');
-}
 
 let s3ClientInstance: S3Client | null = null;
 
 export function getS3Client(): S3Client | null {
+  const endpoint = process.env.AWS_ENDPOINT_URL_S3;
+  const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+
   if (!accessKeyId || !secretAccessKey || !endpoint) {
     return null;
   }
@@ -63,7 +60,7 @@ export async function saveIndividualEntryToS3(
   data: any
 ): Promise<string | null> {
   const client = getS3Client();
-  if (!client || !endpoint) {
+  if (!client || !process.env.AWS_ENDPOINT_URL_S3 || !S3_BUCKET) {
     console.warn(`[Storage] Skipping S3 upload for ${category}/${id}: S3 environment variables not configured.`);
     return null;
   }
@@ -86,7 +83,7 @@ export async function saveIndividualEntryToS3(
       })
     );
 
-    const cleanEndpoint = endpoint.replace(/\/$/, '');
+    const cleanEndpoint = process.env.AWS_ENDPOINT_URL_S3!.replace(/\/$/, '');
     return `${cleanEndpoint}/${S3_BUCKET}/${key}`;
   } catch (err: any) {
     console.warn(`[Storage] S3 notice for ${category}/${id}:`, err?.message || err);
@@ -122,7 +119,7 @@ export function jsonToCSV(items: any[]): string {
  */
 export async function uploadSheetToS3(sheetName: string, csvContent: string): Promise<string | null> {
   const client = getS3Client();
-  if (!client || !endpoint) {
+  if (!client || !process.env.AWS_ENDPOINT_URL_S3 || !S3_BUCKET) {
     console.warn(`[Storage] Skipping sheet upload ${sheetName}: S3 environment variables not configured.`);
     return null;
   }

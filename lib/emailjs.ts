@@ -140,10 +140,10 @@ export interface PerformerEmailParams {
 }
 
 export async function sendPerformerApplicationEmail(params: PerformerEmailParams): Promise<{ success: boolean; message?: string }> {
-  const serviceId = process.env.EMAILJS_SERVICE_ID || 'service_15li5i6';
-  const templateId = process.env.EMAILJS_PERFORMER_TEMPLATE_ID || process.env.EMAILJS_TEMPLATE_ID || 'template_41t6fmb';
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY || 'K2hOwDJVfSGpJ3nih';
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY || '30mafPjRgPPn5im53Idzh';
+  const serviceId = process.env.EMAILJS_PERFORMER_SERVICE_ID || 'vpansak';
+  const templateId = process.env.EMAILJS_PERFORMER_TEMPLATE_ID || 'template_b3h1egs';
+  const publicKey = process.env.EMAILJS_PERFORMER_PUBLIC_KEY || 'jjG3XUesW7Yt8McRJ';
+  const privateKey = process.env.EMAILJS_PERFORMER_PRIVATE_KEY || 'G-re211vGlwHrNVCniNgz';
 
   if (!serviceId || !templateId || !publicKey) {
     console.warn('⚠️ EmailJS credentials missing on server. Performer notification skipped.');

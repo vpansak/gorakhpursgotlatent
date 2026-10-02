@@ -123,92 +123,32 @@ export default function BookTicketPage() {
         throw new Error(orderData.error || 'Failed to initialize ticket booking.');
       }
 
-      // 2. Launch Razorpay Checkout Popup
-      const options = {
-        key: orderData.keyId,
-        amount: orderData.amountPaise,
-        currency: 'INR',
-        name: "Gorakhpur's Got Latent",
-        description: `GGL Live Show Ticket (${quantity}x ₹149)`,
-        image: '/ggl-logo.png',
-        order_id: orderData.razorpayOrderId.startsWith('rzp_order_') ? orderData.razorpayOrderId : undefined,
-        handler: async function (response: any) {
-          setLoading(true);
-          try {
-            // 3. Verify Payment Server-Side
-            const verifyRes = await fetch('/api/tickets/verify-payment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                bookingId: orderData.bookingId,
-                razorpay_order_id: response.razorpay_order_id || orderData.razorpayOrderId,
-                razorpay_payment_id: response.razorpay_payment_id || `pay_${Date.now()}`,
-                razorpay_signature: response.razorpay_signature || 'sig_verified',
-                customerName,
-                mobile,
-                email,
-                instagramId,
-                dob: ageCheck.formattedDob,
-                quantity,
-                amount: totalPrice,
-              }),
-            });
+      // 2. Directly verify and issue instant free ticket pass
+      const verifyRes = await fetch('/api/tickets/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bookingId: orderData.bookingId,
+          razorpay_order_id: orderData.razorpayOrderId || `free_order_${orderData.bookingId}`,
+          razorpay_payment_id: `free_pass_${Date.now()}`,
+          razorpay_signature: 'free_verified_signature',
+          customerName,
+          mobile,
+          email,
+          instagramId,
+          dob: ageCheck.formattedDob,
+          quantity,
+          amount: 0,
+        }),
+      });
 
-            const verifyData = await verifyRes.json();
-            if (verifyData.success && verifyData.ticket) {
-              setConfirmedTicket(verifyData.ticket);
-            } else {
-              throw new Error(verifyData.error || 'Server payment verification failed.');
-            }
-          } catch (verr: any) {
-            setErrorMsg(verr.message || 'Payment verification failed.');
-          } finally {
-            setLoading(false);
-          }
-        },
-        prefill: {
-          name: customerName,
-          email: email,
-          contact: mobile,
-        },
-        theme: {
-          color: '#FFD700',
-        },
-        modal: {
-          ondismiss: function () {
-            setLoading(false);
-          },
-        },
-      };
-
-      if (typeof window !== 'undefined' && (window as any).Razorpay) {
-        const rzp = new (window as any).Razorpay(options);
-        rzp.open();
+      const verifyData = await verifyRes.json();
+      if (verifyData.success && verifyData.ticket) {
+        setConfirmedTicket(verifyData.ticket);
       } else {
-        // Fallback for environment without checkout script
-        const verifyRes = await fetch('/api/tickets/verify-payment', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            bookingId: orderData.bookingId,
-            razorpay_order_id: orderData.razorpayOrderId,
-            razorpay_payment_id: `pay_direct_${Date.now()}`,
-            razorpay_signature: 'sig_direct',
-            customerName,
-            mobile,
-            email,
-            instagramId,
-            dob: ageCheck.formattedDob,
-            quantity,
-            amount: totalPrice,
-          }),
-        });
-        const verifyData = await verifyRes.json();
-        if (verifyData.success && verifyData.ticket) {
-          setConfirmedTicket(verifyData.ticket);
-        }
-        setLoading(false);
+        throw new Error(verifyData.error || 'Server ticket issuance failed.');
       }
+      setLoading(false);
     } catch (err: any) {
       setErrorMsg(err.message || 'An unexpected error occurred. Please try again.');
       setLoading(false);
@@ -318,8 +258,8 @@ export default function BookTicketPage() {
                   Please enter attendee details accurately. Attendees must be 18 years or above.
                 </p>
               </div>
-              <span className="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-bold uppercase shrink-0">
-                ₹149 EACH
+              <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold uppercase shrink-0">
+                FREE PASS
               </span>
             </div>
 
@@ -420,11 +360,11 @@ export default function BookTicketPage() {
                     onChange={(e) => setQuantity(Number(e.target.value))}
                     className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-amber-500 transition-all text-sm font-bold"
                   >
-                    <option value={1}>1 Ticket — ₹149</option>
-                    <option value={2}>2 Tickets — ₹298</option>
-                    <option value={3}>3 Tickets — ₹447</option>
-                    <option value={4}>4 Tickets — ₹596</option>
-                    <option value={5}>5 Tickets — ₹745</option>
+                    <option value={1}>1 Ticket — FREE PASS</option>
+                    <option value={2}>2 Tickets — FREE PASS</option>
+                    <option value={3}>3 Tickets — FREE PASS</option>
+                    <option value={4}>4 Tickets — FREE PASS</option>
+                    <option value={5}>5 Tickets — FREE PASS</option>
                   </select>
                 </div>
 
@@ -450,11 +390,11 @@ export default function BookTicketPage() {
               <div className="pt-4 space-y-4">
                 <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center justify-between">
                   <div>
-                    <div className="text-xs text-slate-400 uppercase font-bold">Total Amount Payable</div>
-                    <div className="text-xs text-slate-500 font-mono">{quantity} Ticket(s) x ₹149</div>
+                    <div className="text-xs text-slate-400 uppercase font-bold">Ticket Booking Fee</div>
+                    <div className="text-xs text-emerald-400 font-mono font-bold">Instant E-Ticket Pass</div>
                   </div>
-                  <div className="font-bebas text-3xl text-amber-300 tracking-wide">
-                    ₹{totalPrice}
+                  <div className="font-bebas text-3xl text-emerald-400 tracking-wide">
+                    FREE (₹0)
                   </div>
                 </div>
 
@@ -464,10 +404,10 @@ export default function BookTicketPage() {
                   className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 text-black font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-2xl hover:scale-[1.02] transition-all cursor-pointer disabled:opacity-50"
                 >
                   {loading ? (
-                    <span>Processing Booking...</span>
+                    <span>Generating Ticket Pass...</span>
                   ) : (
                     <>
-                      <span>PROCEED TO PAY — ₹{totalPrice}</span>
+                      <span>CONFIRM & GET FREE TICKET</span>
                       <ArrowRight className="w-5 h-5" />
                     </>
                   )}
@@ -476,26 +416,6 @@ export default function BookTicketPage() {
             </form>
           </div>
         )}
-
-        {/* DEMO TICKET PREVIEW ACCORDION (REQUIREMENT #9) */}
-        <div className="bg-slate-900/60 border border-amber-500/20 rounded-3xl p-5 space-y-4">
-          <button
-            onClick={() => setShowDemoPreview(!showDemoPreview)}
-            className="w-full flex items-center justify-between text-left focus:outline-none"
-          >
-            <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-amber-300 uppercase tracking-wider">
-              <Eye className="w-4 h-4 text-amber-400" />
-              <span>Preview Sample Digital Ticket (Rahul Sharma — GGLT123456)</span>
-            </div>
-            <ChevronDown className={`w-5 h-5 text-amber-400 transition-transform ${showDemoPreview ? 'rotate-180' : ''}`} />
-          </button>
-
-          {showDemoPreview && (
-            <div className="pt-4 border-t border-slate-800">
-              <TicketCard ticket={demoTicketSample} showActions={false} />
-            </div>
-          )}
-        </div>
 
       </div>
     </div>

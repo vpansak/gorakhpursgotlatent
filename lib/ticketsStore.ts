@@ -27,32 +27,6 @@ export interface TicketRecord {
 // In-memory fallback store to ensure zero data loss & instant sync across serverless calls
 const memoryTickets: Map<string, TicketRecord> = new Map();
 
-// Seed Demo Ticket (Requirement #9)
-const DEMO_TICKET: TicketRecord = {
-  id: 'tck-demo-123456',
-  ticket_id: 'GGLT123456',
-  booking_id: 'ord-demo-123456',
-  customer_name: 'Rahul Sharma',
-  mobile: '9876543210',
-  email: 'rahul.demo@example.com',
-  instagram_id: '@rahul_demo',
-  date_of_birth: '2000-08-15',
-  quantity: 1,
-  amount: 149.00,
-  razorpay_order_id: 'rzp_demo_order_123456',
-  razorpay_payment_id: 'pay_demo_123456',
-  payment_status: 'PAID',
-  ticket_status: 'VALID',
-  qr_token: 'ggl_qr_demo_token_GGLT123456',
-  checked_in: 0,
-  checked_in_at: null,
-  created_at: '2026-10-02T10:00:00.000Z',
-  updated_at: '2026-10-02T10:00:00.000Z',
-  is_demo: true,
-};
-
-memoryTickets.set(DEMO_TICKET.ticket_id, DEMO_TICKET);
-
 /**
  * Ensures tickets table exists in database
  */

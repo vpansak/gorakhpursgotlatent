@@ -210,7 +210,7 @@ export default function OrdersLedgerPage() {
           <div className="text-2xl font-black text-amber-400">{stats.todayBookings}</div>
         </div>
         <div className="glass-panel p-4 rounded-2xl border border-slate-800 bg-slate-900/80 space-y-1">
-          <div className="text-[10px] text-slate-400 font-extrabold uppercase">Paid Tickets (₹149)</div>
+          <div className="text-[10px] text-slate-400 font-extrabold uppercase">Paid Tickets</div>
           <div className="text-2xl font-black text-emerald-400">{stats.paidTickets}</div>
         </div>
         <div className="glass-panel p-4 rounded-2xl border border-slate-800 bg-slate-900/80 space-y-1">
@@ -296,7 +296,7 @@ export default function OrdersLedgerPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && fetchTickets(search)}
-            placeholder="Search by Ticket ID (GGLT123456), Customer Name, Mobile, Email, Instagram ID..."
+            placeholder="Search by Ticket ID (GGLT123456), Customer Name, Mobile, Email, Instagram ID, Razorpay ID..."
             className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-amber-500 font-mono"
           />
         </div>
@@ -332,6 +332,7 @@ export default function OrdersLedgerPage() {
                   <th className="p-4">Instagram</th>
                   <th className="p-4">DOB</th>
                   <th className="p-4">Amount</th>
+                  <th className="p-4">Razorpay ID</th>
                   <th className="p-4">Payment</th>
                   <th className="p-4">Entry Status</th>
                   <th className="p-4 text-center">Action</th>
@@ -344,9 +345,6 @@ export default function OrdersLedgerPage() {
                     {/* Ticket ID */}
                     <td className="p-4 font-mono font-black text-amber-400">
                       {tck.ticket_id}
-                      {tck.is_demo && (
-                        <span className="block text-[9px] text-amber-500/80 font-normal">DEMO SAMPLE</span>
-                      )}
                     </td>
 
                     {/* Customer Name */}
@@ -373,6 +371,11 @@ export default function OrdersLedgerPage() {
                     {/* Amount */}
                     <td className="p-4 font-bold text-white font-mono">
                       ₹{tck.amount} ({tck.quantity}x)
+                    </td>
+
+                    {/* Razorpay ID */}
+                    <td className="p-4 font-mono text-[11px] text-amber-300">
+                      {tck.razorpay_payment_id || tck.razorpay_order_id || 'N/A'}
                     </td>
 
                     {/* Payment Status */}

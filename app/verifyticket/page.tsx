@@ -457,19 +457,6 @@ export default function VerifyTicketPage() {
                 </button>
               </form>
             </div>
-
-            <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] text-slate-400 space-y-1">
-              <span className="font-bold text-amber-400 uppercase block">Sample Demo Ticket ID:</span>
-              <button
-                onClick={() => {
-                  setTicketIdInput('GGLT123456');
-                  verifyAndCheckInTicket('GGLT123456');
-                }}
-                className="text-amber-300 font-mono font-bold hover:underline"
-              >
-                GGLT123456 (Click to verify demo)
-              </button>
-            </div>
           </div>
 
         </div>

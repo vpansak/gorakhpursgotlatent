@@ -90,6 +90,10 @@ export default function PerformerApplyClient() {
       setError('Please enter a valid Email address.');
       return;
     }
+    if (!formData.instagramUrl.trim()) {
+      setError('Please enter your Instagram Profile URL or handle (Instagram ID compulsory hai).');
+      return;
+    }
     if (!formData.sendClipConfirmed) {
       setError('Please check the box confirming you will send your performance video clip on WhatsApp.');
       return;
@@ -263,15 +267,16 @@ export default function PerformerApplyClient() {
             </select>
           </div>
 
-          {/* 4. Instagram Profile URL */}
+          {/* 4. Instagram Profile URL / Handle */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Profile URL (लिंक)</label>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Profile Link / Handle (इन्स्टाग्राम ID / लिंक) *</label>
             <input
-              type="url"
+              type="text"
               name="instagramUrl"
+              required
               value={formData.instagramUrl}
               onChange={handleChange}
-              placeholder="https://www.instagram.com/your_handle"
+              placeholder="e.g. https://www.instagram.com/your_handle or @your_handle"
               className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
             />
           </div>

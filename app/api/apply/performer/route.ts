@@ -19,8 +19,8 @@ export async function POST(req: Request) {
     const effectiveCity = (city || '').toString().trim();
     const effectiveInstagram = (instagramUrl || instagram || '').toString().trim();
 
-    if (!effectiveFullName || !effectiveEmail || !effectiveMobile) {
-      return NextResponse.json({ error: 'Please complete all required fields (Name, Mobile, Email)' }, { status: 400 });
+    if (!effectiveFullName || !effectiveEmail || !effectiveMobile || !effectiveInstagram) {
+      return NextResponse.json({ error: 'Please complete all required fields (Name, Mobile, Email, Instagram)' }, { status: 400 });
     }
 
     const appId = generateAppId('PER');

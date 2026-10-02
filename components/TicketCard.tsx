@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import QRCode from 'qrcode';
+import html2canvas from 'html2canvas';
 import { 
   ShieldCheck, 
   Ticket as TicketIcon, 
@@ -45,8 +46,28 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
     generateQr();
   }, [ticket]);
 
-  const handlePrint = () => {
-    window.print();
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownloadImage = async () => {
+    if (!ticketRef.current || downloading) return;
+    setDownloading(true);
+    try {
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const canvas = await html2canvas(ticketRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#07080e',
+        logging: false,
+      });
+      const link = document.createElement('a');
+      link.download = `GGL-Ticket-${ticket.ticket_id}.png`;
+      link.href = canvas.toDataURL('image/png', 1.0);
+      link.click();
+    } catch (error) {
+      console.error('Ticket image download failed:', error);
+    } finally {
+      setDownloading(false);
+    }
   };
 
   const formattedAmount = ticket.amount ? `₹${ticket.amount}` : '₹149';
@@ -248,11 +269,11 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
       {showActions && (
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2 print:hidden">
           <button
-            onClick={handlePrint}
+            onClick={handleDownloadImage}
             className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-black font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-xl hover:scale-105 transition-all cursor-pointer"
           >
-            <Printer className="w-4 h-4" />
-            <span>PRINT / DOWNLOAD TICKET</span>
+            <Download className="w-4 h-4" />
+            <span>{downloading ? 'GENERATING IMAGE...' : 'DOWNLOAD TICKET IMAGE'}</span>
           </button>
         </div>
       )}

@@ -156,7 +156,7 @@ export default function VerifyTicketPage() {
 
     const cleanCode = expireCode.trim();
     if (cleanCode !== '11') {
-      setCodeError('✕ INCORRECT CODE! Enter "11" to expire ticket.');
+      setCodeError('Incorrect Verification Code. Please enter the correct code.');
       return;
     }
 
@@ -182,6 +182,7 @@ export default function VerifyTicketPage() {
           checkedInAt: data.ticket.checked_in_at || new Date().toISOString(),
         });
         setExpireCode('');
+        setCodeError('');
       } else {
         setCodeError(data.message || 'Failed to expire ticket. Please try again.');
       }
@@ -523,118 +524,108 @@ export default function VerifyTicketPage() {
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-slate-400 text-xs space-y-1">
               <span className="font-bold text-amber-400 block uppercase">Gate Rules:</span>
               <p>• Scan QR or type Ticket ID first.</p>
-              <p>• If valid, enter code <span className="text-amber-300 font-mono font-bold">11</span> to expire ticket & allow entry.</p>
+              <p>• If valid, a verification popup will appear to confirm entry.</p>
               <p>• Expired tickets show <span className="text-red-400 font-bold">USED</span> without code input.</p>
             </div>
           </div>
 
         </div>
 
+
+        {/* ERROR POPUP */}
+        {codeError && verificationResult.status === 'LOOKUP_VALID' && (
+          <div className="fixed inset-0 z-[110] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="w-full max-w-sm rounded-3xl border-2 border-red-500/70 bg-slate-950 shadow-2xl p-6 space-y-5 text-center">
+              <div className="w-14 h-14 rounded-full bg-red-500/20 border border-red-500 mx-auto flex items-center justify-center">
+                <XCircle className="w-8 h-8 text-red-400" />
+              </div>
+              <div>
+                <h3 className="font-bebas text-3xl text-red-300 uppercase">Verification Error</h3>
+                <p className="text-sm text-slate-300 mt-2">{codeError}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCodeError('')}
+                className="w-full py-3 rounded-xl bg-red-500 hover:bg-red-400 text-white font-black uppercase"
+              >
+                TRY AGAIN
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* VERIFICATION RESULT DISPLAY CARD */}
         {verificationResult.status !== 'IDLE' && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom duration-300">
             
-            {/* LOOKUP VALID STATE — ASKS FOR CODE 11 TO EXPIRE */}
+            {/* LOOKUP VALID STATE — CODE 11 IS ENTERED ONLY IN THE POPUP */}
             {verificationResult.status === 'LOOKUP_VALID' && verificationResult.ticket && (
-              <div className="glass-panel p-6 sm:p-8 rounded-3xl border-2 border-amber-500/60 bg-amber-950/30 space-y-6 shadow-[0_0_50px_rgba(245,158,11,0.25)]">
-                
-                {/* Header */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-amber-500/30 pb-4 text-center sm:text-left">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-400 shrink-0">
-                      <Sparkles className="w-8 h-8" />
+              <>
+                <div className="glass-panel p-6 sm:p-8 rounded-3xl border-2 border-amber-500/60 bg-amber-950/30 space-y-6 shadow-[0_0_50px_rgba(245,158,11,0.25)]">
+                  <div className="text-center space-y-3">
+                    <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-400 mx-auto flex items-center justify-center text-emerald-400">
+                      <CheckCircle2 className="w-9 h-9" />
                     </div>
-                    <div>
-                      <span className="px-3 py-1 rounded-full bg-emerald-500/30 text-emerald-300 font-black text-xs uppercase tracking-widest font-barlow inline-block mb-1 border border-emerald-500/40">
-                        ✓ VALID TICKET FOUND
-                      </span>
-                      <h2 className="font-bebas text-3xl sm:text-4xl text-white uppercase tracking-wide">
-                        ENTER CODE 11 TO EXPIRE & CONFIRM ENTRY
-                      </h2>
-                    </div>
-                  </div>
-
-                  <div className="text-right">
-                    <span className="text-[10px] text-slate-400 font-mono uppercase block">Ticket ID</span>
-                    <span className="text-xl font-mono font-black text-amber-400">
-                      {verificationResult.ticket.ticket_id}
+                    <span className="px-3 py-1 rounded-full bg-emerald-500/30 text-emerald-300 font-black text-xs uppercase tracking-widest inline-block border border-emerald-500/40">
+                      ✓ VALID TICKET FOUND
                     </span>
+                    <h2 className="font-bebas text-3xl sm:text-4xl text-white uppercase tracking-wide">
+                      VERIFICATION REQUIRED
+                    </h2>
+                    <p className="text-sm text-slate-300">
+                      Enter the verification code in the popup to confirm entry.
+                    </p>
+                    <div className="pt-2">
+                      <span className="text-[10px] text-slate-400 font-mono uppercase block">Ticket ID</span>
+                      <span className="text-xl font-mono font-black text-amber-400">
+                        {verificationResult.ticket.ticket_id}
+                      </span>
+                    </div>
                   </div>
+                <TicketCard ticket={verificationResult.ticket} showActions={true} />
                 </div>
 
-                {/* Attendee Details Summary */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-950/80 border border-amber-500/30 text-xs">
-                  <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Attendee Name</span>
-                    <span className="font-bold text-white text-sm">{verificationResult.ticket.customer_name}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Contact Mobile</span>
-                    <span className="font-mono font-bold text-slate-200 text-sm">{verificationResult.ticket.mobile}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Instagram ID</span>
-                    <span className="font-bold text-pink-400 text-sm">{verificationResult.ticket.instagram_id}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Payment Status</span>
-                    <span className="font-black text-emerald-400 uppercase text-sm">PAID (₹{verificationResult.ticket.amount})</span>
-                  </div>
-                </div>
-
-                {/* PROMINENT CODE 11 EXPIRATION BOX */}
-                <form
-                  onSubmit={handleConfirmExpireWithCode}
-                  className="p-5 rounded-2xl bg-slate-950 border-2 border-amber-500/70 space-y-4 shadow-xl"
-                >
-                  <div className="flex items-center gap-2">
-                    <KeyRound className="w-6 h-6 text-amber-400" />
-                    <div>
-                      <h4 className="font-bebas text-xl text-amber-300 uppercase tracking-wide">
-                        GATE CONFIRMATION CODE REQUIRED
-                      </h4>
-                      <p className="text-xs text-slate-300">
-                        Type <span className="text-amber-300 font-mono font-bold">11</span> in box below to mark ticket as EXPIRED / USED.
+                {/* Verification code modal */}
+                <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+                  <div className="w-full max-w-md rounded-3xl border-2 border-amber-500/60 bg-slate-950 shadow-2xl p-6 sm:p-8 space-y-6">
+                    <div className="text-center space-y-2">
+                      <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400 mx-auto flex items-center justify-center">
+                        <KeyRound className="w-7 h-7 text-amber-400" />
+                      </div>
+                      <h3 className="font-bebas text-3xl text-white uppercase tracking-wide">
+                        Enter Verification Code
+                      </h3>
+                      <p className="text-sm text-slate-400">
+                        Enter the gate verification code to confirm this ticket.
                       </p>
                     </div>
+
+                    <form onSubmit={handleConfirmExpireWithCode} className="space-y-4">
+                      <input
+                        type="password"
+                        inputMode="numeric"
+                        autoFocus
+                        required
+                        value={expireCode}
+                        onChange={(e) => {
+                          setExpireCode(e.target.value.replace(/\D/g, '').slice(0, 2));
+                          setCodeError('');
+                        }}
+                        placeholder="Enter code"
+                        className="w-full px-5 py-4 rounded-2xl bg-slate-900 border-2 border-amber-500/60 text-amber-300 placeholder-slate-600 font-mono font-black text-center text-2xl tracking-[0.5em] focus:outline-none focus:border-amber-400"
+                      />
+                      <button
+                        type="submit"
+                        disabled={expiring}
+                        className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-black uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-50"
+                      >
+                        {expiring ? <RefreshCw className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
+                        {expiring ? 'VERIFYING...' : 'VERIFY'}
+                      </button>
+                    </form>
                   </div>
-
-                  {codeError && (
-                    <div className="p-3 rounded-xl bg-red-950/90 border border-red-500 text-red-300 text-xs font-bold text-center">
-                      {codeError}
-                    </div>
-                  )}
-
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <input
-                      type="text"
-                      required
-                      value={expireCode}
-                      onChange={(e) => setExpireCode(e.target.value)}
-                      placeholder="Type 11"
-                      className="flex-1 px-4 py-3.5 rounded-xl bg-slate-900 border-2 border-amber-500/60 text-amber-300 placeholder-slate-600 font-mono font-black text-center text-xl tracking-widest focus:outline-none focus:border-amber-400 transition-all"
-                    />
-
-                    <button
-                      type="submit"
-                      disabled={expiring}
-                      className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-barlow font-black text-base uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all cursor-pointer disabled:opacity-50"
-                    >
-                      {expiring ? (
-                        <RefreshCw className="w-5 h-5 text-black animate-spin" />
-                      ) : (
-                        <>
-                          <CheckCircle2 className="w-5 h-5 text-black" />
-                          <span>CONFIRM & EXPIRE TICKET</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </form>
-
-                {/* Graphic Ticket Card Preview */}
-                <TicketCard ticket={verificationResult.ticket} showActions={true} />
-              </div>
+                </div>
+              </>
             )}
 
             {/* SUCCESS STATE — JUST EXPIRED WITH CODE 11 */}

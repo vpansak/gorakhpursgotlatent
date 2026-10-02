@@ -1,13 +1,15 @@
 import { neon } from '@neondatabase/serverless';
 
-const databaseUrl = process.env.DATABASE_URL;
+const databaseUrl = process.env.DATABASE_URL || '';
 
-if (!databaseUrl) {
-  throw new Error('DATABASE_URL environment variable is not configured');
+let sqlClientInstance: any = null;
+
+function getSqlClient() {
+  if (!sqlClientInstance && databaseUrl) {
+    sqlClientInstance = neon(databaseUrl);
+  }
+  return sqlClientInstance;
 }
-
-// Stateless Neon HTTP client: zero TCP connection drops, fast HTTPS requests
-const sqlClient = neon(databaseUrl);
 
 declare global {
   var _schemaInitPromise: Promise<void> | undefined;
@@ -26,11 +28,17 @@ export function normalizeSql(sql: string): string {
  * Executes queries using stateless HTTP client with automatic retry logic for transient errors
  */
 async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], retries = 2): Promise<T[]> {
+  const client = getSqlClient();
+  if (!client) {
+    console.warn('⚠️ DATABASE_URL environment variable is not configured.');
+    return [];
+  }
+
   const normalized = normalizeSql(sqlText);
   let lastErr: any;
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const rows = await sqlClient.query(normalized, params);
+      const rows = await client.query(normalized, params);
       return (rows || []) as T[];
     } catch (err: any) {
       lastErr = err;
@@ -43,9 +51,6 @@ async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], re
   return [];
 }
 
-/**
- * Compatible Pool wrapper providing pg-like interface backed by stateless HTTP client
- */
 export const pool = {
   query: async (sqlText: string, params: any[] = []) => {
     try {
@@ -68,15 +73,18 @@ export interface AppDatabase {
 }
 
 /**
- * Ensures all required PostgreSQL tables exist in Neon DB (individual query calls)
+ * Ensures all required PostgreSQL tables exist in Neon DB
  */
 export async function ensureDatabaseSchema() {
   if (global._schemaInitPromise) return global._schemaInitPromise;
 
   global._schemaInitPromise = (async () => {
+    const client = getSqlClient();
+    if (!client) return;
+
     try {
       // 1. team_applications
-      await sqlClient.query(`
+      await client.query(`
         CREATE TABLE IF NOT EXISTS team_applications (
           id TEXT PRIMARY KEY,
           app_id TEXT UNIQUE NOT NULL,
@@ -96,7 +104,7 @@ export async function ensureDatabaseSchema() {
       `);
 
       // 2. performer_applications
-      await sqlClient.query(`
+      await client.query(`
         CREATE TABLE IF NOT EXISTS performer_applications (
           id TEXT PRIMARY KEY,
           app_id TEXT UNIQUE NOT NULL,
@@ -130,7 +138,7 @@ export async function ensureDatabaseSchema() {
       `);
 
       // 3. guest_applications
-      await sqlClient.query(`
+      await client.query(`
         CREATE TABLE IF NOT EXISTS guest_applications (
           id TEXT PRIMARY KEY,
           app_id TEXT UNIQUE NOT NULL,
@@ -161,7 +169,7 @@ export async function ensureDatabaseSchema() {
       `);
 
       // 4. sponsor_applications
-      await sqlClient.query(`
+      await client.query(`
         CREATE TABLE IF NOT EXISTS sponsor_applications (
           id TEXT PRIMARY KEY,
           app_id TEXT UNIQUE NOT NULL,
@@ -193,7 +201,7 @@ export async function ensureDatabaseSchema() {
       `);
 
       // 5. ticket_orders
-      await sqlClient.query(`
+      await client.query(`
         CREATE TABLE IF NOT EXISTS ticket_orders (
           id TEXT PRIMARY KEY,
           order_number TEXT UNIQUE NOT NULL,
@@ -217,7 +225,7 @@ export async function ensureDatabaseSchema() {
       `);
 
       // 6. application_status_history
-      await sqlClient.query(`
+      await client.query(`
         CREATE TABLE IF NOT EXISTS application_status_history (
           id TEXT PRIMARY KEY,
           app_type TEXT NOT NULL,
@@ -231,7 +239,7 @@ export async function ensureDatabaseSchema() {
       `);
 
       // 7. application_notes
-      await sqlClient.query(`
+      await client.query(`
         CREATE TABLE IF NOT EXISTS application_notes (
           id TEXT PRIMARY KEY,
           app_type TEXT NOT NULL,
@@ -244,7 +252,7 @@ export async function ensureDatabaseSchema() {
       `);
 
       // 8. users
-      await sqlClient.query(`
+      await client.query(`
         CREATE TABLE IF NOT EXISTS users (
           id TEXT PRIMARY KEY,
           email TEXT UNIQUE NOT NULL,
@@ -259,7 +267,7 @@ export async function ensureDatabaseSchema() {
       `);
 
       // 9. admin_otps
-      await sqlClient.query(`
+      await client.query(`
         CREATE TABLE IF NOT EXISTS admin_otps (
           id TEXT PRIMARY KEY,
           email TEXT NOT NULL,
@@ -272,11 +280,11 @@ export async function ensureDatabaseSchema() {
         );
       `);
 
-      // 10. tickets
-      await sqlClient.query(`CREATE TABLE IF NOT EXISTS ticket_application (id TEXT PRIMARY KEY, ticket_id TEXT UNIQUE NOT NULL, booking_id TEXT, customer_name TEXT NOT NULL, mobile TEXT NOT NULL, email TEXT NOT NULL, instagram_id TEXT NOT NULL, date_of_birth TEXT NOT NULL, quantity INTEGER DEFAULT 1, amount NUMERIC(10,2) DEFAULT 0, razorpay_order_id TEXT, razorpay_payment_id TEXT, payment_status TEXT DEFAULT 'PAID', ticket_status TEXT DEFAULT 'VALID', qr_token TEXT NOT NULL, checked_in INTEGER DEFAULT 0, checked_in_at TIMESTAMP WITH TIME ZONE, created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP);`);
+      // 10. ticket_application
+      await client.query(`CREATE TABLE IF NOT EXISTS ticket_application (id TEXT PRIMARY KEY, ticket_id TEXT UNIQUE NOT NULL, booking_id TEXT, customer_name TEXT NOT NULL, mobile TEXT NOT NULL, email TEXT NOT NULL, instagram_id TEXT NOT NULL, date_of_birth TEXT NOT NULL, quantity INTEGER DEFAULT 1, amount NUMERIC(10,2) DEFAULT 0, razorpay_order_id TEXT, razorpay_payment_id TEXT, payment_status TEXT DEFAULT 'PAID', ticket_status TEXT DEFAULT 'VALID', qr_token TEXT NOT NULL, checked_in INTEGER DEFAULT 0, checked_in_at TIMESTAMP WITH TIME ZONE, created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP);`);
 
       // 11. tickets
-      await sqlClient.query(`
+      await client.query(`
         CREATE TABLE IF NOT EXISTS tickets (
           id TEXT PRIMARY KEY,
           ticket_id TEXT UNIQUE NOT NULL,

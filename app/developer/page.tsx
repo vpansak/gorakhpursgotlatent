@@ -29,15 +29,17 @@ import {
   FileCode,
   Sliders,
   Send,
-  Heart
+  Heart,
+  Laptop,
+  Rocket
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Alok Singh | Tech Architect & Lead Full-Stack Engineer",
-  description: "Official profile, biography, technical expertise, and engineering portfolio of Alok Singh — Lead Full-Stack Engineer & Tech Architect from Gorakhpur, Uttar Pradesh.",
+  title: "Alok Singh | Full-Stack Software Engineer & Tech Architect",
+  description: "Official developer portfolio and personal profile of Alok Singh — Full-Stack Software Engineer specializing in Next.js, React, TypeScript, Node.js, and System Architecture.",
   authors: [{ name: "Alok Singh", url: "https://gkpgotlatent.in/developer" }],
   creator: "Alok Singh",
-  publisher: "Alok Singh Portfolio",
+  publisher: "Alok Singh",
   robots: {
     index: true,
     follow: true,
@@ -50,8 +52,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Alok Singh | Tech Architect & Lead Full-Stack Engineer",
-    description: "Personal engineering profile, technical stack, and career highlights of Alok Singh.",
+    title: "Alok Singh | Full-Stack Software Engineer & Tech Architect",
+    description: "Personal developer portfolio, skills, projects, and biography of Alok Singh.",
     url: 'https://gkpgotlatent.in/developer',
     siteName: "Alok Singh Portfolio",
     images: [
@@ -59,7 +61,7 @@ export const metadata: Metadata = {
         url: '/alok-singh.jpg',
         width: 800,
         height: 800,
-        alt: 'Alok Singh - Tech Architect & Lead Engineer',
+        alt: 'Alok Singh - Full-Stack Software Engineer',
       },
     ],
     locale: 'en_IN',
@@ -67,8 +69,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Alok Singh | Tech Architect & Lead Full-Stack Engineer",
-    description: "Full-Stack System Architecture, Real-Time Low Latency Engines, and Web Engineering.",
+    title: "Alok Singh | Full-Stack Software Engineer",
+    description: "Full-Stack Web Development, Systems Architecture, and Software Engineering.",
     images: ['/alok-singh.jpg'],
   },
 };
@@ -132,67 +134,67 @@ export default function DeveloperPage() {
   ];
 
   const coreSkills = [
-    { name: "Next.js 14 / React", level: "Expert", desc: "App Router, Server Actions, SSR, Dynamic Routing" },
-    { name: "TypeScript & JavaScript", level: "Advanced", desc: "Type Safety, Async Pipelines, Modern ESNext" },
-    { name: "Tailwind CSS & Glassmorphism", level: "Expert", desc: "Custom UI/UX Systems, Micro-Animations, HSL Palettes" },
-    { name: "Real-Time System Architecture", level: "Expert", desc: "Sub-100ms Latency, Hardware Sync, WebSockets" },
-    { name: "Node.js & Edge Serverless APIs", level: "Advanced", desc: "High-Throughput Endpoints, Webhooks, Reconciliations" },
-    { name: "Database Engineering & SQL", level: "Advanced", desc: "Turso DB, libSQL, Schema Optimization, Indexing" },
-    { name: "Payment & Security Infrastructure", level: "Expert", desc: "Payment Gateway APIs, Signature Verification, Encrypted QR Codes" },
-    { name: "Digital Operations & Strategy", level: "Lead", desc: "Social Media Growth, Instagram Strategy (@aloksingh_._)" }
+    { name: "Next.js & React", level: "Expert", desc: "App Router, SSR, Server Components, Custom Hooks" },
+    { name: "TypeScript & JavaScript", level: "Advanced", desc: "Type Safety, Modern ESNext, Async Control Flow" },
+    { name: "Tailwind CSS & Glassmorphism", level: "Expert", desc: "Custom UI/UX Systems, HSL Color Palettes, Animations" },
+    { name: "Real-Time Systems & WebSockets", level: "Advanced", desc: "Low-Latency Data Transmission, WebSockets, State Sync" },
+    { name: "Node.js & Backend APIs", level: "Advanced", desc: "REST APIs, Serverless Functions, Webhook Integrations" },
+    { name: "Database Engineering & SQL", level: "Advanced", desc: "Relational Schema Design, Query Optimization, SQLite, PostgreSQL" },
+    { name: "Payment & Security Infrastructure", level: "Advanced", desc: "Payment Gateway APIs, Cryptographic Signatures, QR Code Engines" },
+    { name: "Digital Strategy & Media Operations", level: "Lead", desc: "Brand Growth, Social Media Execution, Audience Engagement" }
   ];
 
-  const engineeringHighlights = [
+  const personalProjects = [
     {
       id: "01",
-      title: "⚡ Real-Time Hardware & Live Latency Matrix Architecture",
-      subtitle: "Sub-100ms Real-Time Synchronized State Engine",
-      description: "Live stage events aur live hardware interaction ke liye main real-time low-latency synchronization engines design karta hoon. Minimum network payload aur instant DOM updates ke zariye real-time scoring aur visual projector display synchronizations accomplish hoti hain.",
-      details: [
-        "Sub-100ms real-time state synchronization across multiple client displays",
-        "Optimized touch-friendly control interfaces for stage operators and judges",
-        "Hardware-accelerated rendering optimized for high-resolution auditorium screens",
-        "Zero-latency state persistence with fallback retry strategies"
+      title: "⚡ Real-Time Low-Latency Engine Architecture",
+      subtitle: "Sub-100ms Synchronized Data Engine",
+      description: "Main real-time application state synchronization engines develop karta hoon jo minimum payload ke saath interactive UIs aur dashboards ko instantaneous updates render karwate hain.",
+      features: [
+        "Sub-100ms real-time state synchronization across multiple connected clients",
+        "Optimized touch-friendly control dashboards and responsive user interfaces",
+        "Hardware-accelerated CSS rendering and DOM diffing for high frame rates",
+        "Zero-latency state persistence with automatic reconnection logic"
       ],
-      tech: ["WebSockets", "Optimistic Mutation", "Next.js", "State Sync"]
+      stack: ["WebSockets", "Next.js", "TypeScript", "State Sync"]
     },
     {
       id: "02",
-      title: "🎟️ Automated Payment, QR Matrix & Dispatch Infrastructure",
-      subtitle: "Scalable Event Ticketing & Instant Verification Pipeline",
-      description: "High-volume user bookings ke liye fully automated transactional system design karta hoon, jo instant payment gateway callbacks process karta hai, encrypted QR passes generate karta hai, aur email & WhatsApp gateway se passes dispatch karta hai.",
-      details: [
+      title: "🎟️ Automated Transactional & Verification Systems",
+      subtitle: "Scalable E-Commerce & Verification Pipeline",
+      description: "High-volume user requests ke liye fully automated transactional platforms build karta hoon, jo instant payment callbacks process karte hain, encrypted QR codes generate karte hain, aur WhatsApp & Email automated dispatch handle karte hain.",
+      features: [
         "Payment gateway callback verification and signature validation",
-        "Automated QR code matrix generation embedding encrypted order data",
-        "Automated WhatsApp & Email gateway dispatch pipelines",
-        "Instant webcam/mobile QR scanner verification UI for event venue security staff"
+        "Automated QR code matrix generation embedding encrypted data payload",
+        "Automated WhatsApp & Email dispatch integration",
+        "Webcam and mobile QR code scanner verification UIs"
       ],
-      tech: ["Payment APIs", "QR Matrix", "Webhooks", "Automated Dispatch"]
+      stack: ["Payment APIs", "QR Matrix", "Webhooks", "Automated Dispatch"]
     },
     {
       id: "03",
-      title: "🎨 Glassmorphic Dark Mode UI/UX System Design",
-      subtitle: "High-Performance Modern Web Aesthetic",
-      description: "Modern web applications ke liye custom dark-mode design systems (#07080e background, gold/amber accents, glowing ambient borders, micro-interactions) create karta hoon jo har device (Mobile, Laptop, 4K Displays) par fast aur responsive perform karte hain.",
-      details: [
+      title: "🎨 Glassmorphic Dark-Mode UI/UX Design System",
+      subtitle: "Modern Web Aesthetic & Responsive Layouts",
+      description: "Custom dark-mode UI/UX design systems (#07080e background, gold/amber accents, glowing borders, micro-interactions) design karta hoon jo har screen size (Mobile, Tablet, Laptop, 4K) par lightning fast perform karte hain.",
+      features: [
         "Custom design tokens with curated HSL color palettes and glassmorphic cards",
         "Google Fonts typography integration (Bebas Neue, Barlow, Outfit, Inter)",
         "Fully responsive layout architecture for all device viewports",
-        "Subtle micro-animations, badges, and fast initial load optimization"
+        "Micro-animations, badges, and fast initial load optimization"
       ],
-      tech: ["Tailwind CSS", "Vanilla CSS", "Google Fonts", "Lucide Icons"]
+      stack: ["Tailwind CSS", "Vanilla CSS", "Google Fonts", "Lucide Icons"]
     },
     {
       id: "04",
-      title: "📱 Digital Strategy & Social Media Management",
-      subtitle: "Brand Execution & Content Direction",
-      description: "Core full-stack development ke saath, main digital operations, branding strategy, and social media outreach (@aloksingh_._) ko direction aur execution deta hoon.",
-      details: [
-        "Brand identity alignment and official social media page strategy",
-        "Content direction, release trailers, and audience interaction campaigns",
-        "Promotional link distribution architecture and digital growth"
+      title: "📱 Digital Operations & Content Strategy",
+      subtitle: "Brand Leadership & Social Outreach",
+      description: "Software development ke saath, main digital media operations, social media strategy (@aloksingh_._), aur brand promotion pipelines ko lead aur execute karta hoon.",
+      features: [
+        "Brand identity alignment and social media strategy",
+        "Content direction, release teasers, and audience engagement campaigns",
+        "Promotional link distribution and digital growth execution"
       ],
-      tech: ["Brand Strategy", "Content Direction", "Audience Growth"]
+      stack: ["Brand Strategy", "Content Direction", "Audience Growth"]
     }
   ];
 
@@ -203,15 +205,15 @@ export default function DeveloperPage() {
         '@type': 'ProfilePage',
         '@id': 'https://gkpgotlatent.in/developer#webpage',
         'url': 'https://gkpgotlatent.in/developer',
-        'name': "Alok Singh - Tech Architect & Lead Full-Stack Engineer",
-        'description': "Official portfolio and engineering profile of Alok Singh — Lead Full-Stack Engineer & Tech Architect from Gorakhpur, Uttar Pradesh.",
+        'name': "Alok Singh - Full-Stack Software Engineer & Tech Architect",
+        'description': "Official portfolio and personal biography of Alok Singh — Full-Stack Software Engineer & Tech Architect from Gorakhpur, Uttar Pradesh.",
         'mainEntity': {
           '@type': 'Person',
           '@id': 'https://gkpgotlatent.in/developer#aloksingh',
           'name': 'Alok Singh',
-          'jobTitle': 'Tech Architect & Lead Full-Stack Engineer',
+          'jobTitle': 'Full-Stack Software Engineer & Tech Architect',
           'roleName': 'Full-Stack Software Engineer',
-          'description': "Lead Full-Stack Engineer & Tech Architect specializing in Next.js 14, real-time low-latency systems, payment infrastructure, and digital operations.",
+          'description': "Full-Stack Software Engineer specializing in Next.js, React, TypeScript, Node.js, and real-time systems architecture.",
           'url': 'https://gkpgotlatent.in/developer',
           'image': 'https://gkpgotlatent.in/alok-singh.jpg',
           'sameAs': [
@@ -231,14 +233,14 @@ export default function DeveloperPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(developerJsonLd) }}
       />
       
-      {/* Background Decorative Glows */}
+      {/* Ambient Glow Backdrop */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-b from-amber-500/20 via-red-600/10 to-transparent rounded-full blur-[180px] pointer-events-none" />
       <div className="absolute top-1/3 -left-60 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[160px] pointer-events-none" />
       <div className="absolute top-2/3 -right-60 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-5xl mx-auto relative z-10 space-y-14">
         
-        {/* TOP SOCIAL CONNECT BAR */}
+        {/* SOCIAL CONNECT BAR */}
         <div className="bg-slate-900/90 border border-amber-500/30 rounded-3xl p-5 sm:p-6 shadow-2xl backdrop-blur-2xl space-y-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-amber-400 font-extrabold text-sm sm:text-base uppercase tracking-wider">
@@ -246,11 +248,10 @@ export default function DeveloperPage() {
               <span>Connect With Alok Singh Directly:</span>
             </div>
             <div className="text-xs text-slate-400 font-medium">
-              Official Social Handles & Connect Links
+              Official Handles & Links
             </div>
           </div>
 
-          {/* Social Links Row */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             {socialLinks.map((social, sIdx) => {
               const Icon = social.icon;
@@ -278,11 +279,11 @@ export default function DeveloperPage() {
           </div>
         </div>
 
-        {/* HERO PROFILE HEADER */}
+        {/* HERO TITLE HEADER */}
         <div className="text-center space-y-4 pt-2">
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-bold tracking-widest uppercase shadow-xl backdrop-blur-md">
-            <Award className="w-4 h-4 text-amber-400" />
-            <span>Tech Architect & Lead Full-Stack Engineer</span>
+            <Laptop className="w-4 h-4 text-amber-400" />
+            <span>Full-Stack Software Engineer & System Architect</span>
           </div>
 
           <h1 className="text-4xl sm:text-7xl font-extrabold tracking-tight font-heading text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 uppercase">
@@ -290,7 +291,7 @@ export default function DeveloperPage() {
           </h1>
 
           <p className="text-slate-300 text-base sm:text-xl max-w-3xl mx-auto font-light leading-relaxed">
-            Full-Stack Software Engineer, System Architect & Digital Operations Specialist based in Gorakhpur, Uttar Pradesh.
+            Building modern web applications, scalable backend APIs, real-time architectures, and glassmorphic UI/UX systems.
           </p>
         </div>
 
@@ -304,7 +305,7 @@ export default function DeveloperPage() {
               <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border-2 border-amber-500/50 shadow-2xl shadow-amber-500/30 group-hover:border-amber-400 transition-all duration-500">
                 <Image
                   src="/alok-singh.jpg"
-                  alt="Alok Singh - Tech Architect & Lead Engineer"
+                  alt="Alok Singh - Full-Stack Software Engineer"
                   fill
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                   priority
@@ -313,7 +314,7 @@ export default function DeveloperPage() {
               
               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-xs px-5 py-2 rounded-full shadow-xl flex items-center gap-1.5 whitespace-nowrap">
                 <CheckCircle2 className="w-4 h-4" />
-                VERIFIED ARCHITECT
+                FULL-STACK DEVELOPER
               </div>
             </div>
 
@@ -321,10 +322,10 @@ export default function DeveloperPage() {
             <div className="flex-1 space-y-6 text-center lg:text-left">
               <div>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-wide font-heading">
-                  About Alok Singh
+                  Developer Biography
                 </h2>
                 <p className="text-amber-400 text-sm sm:text-base font-semibold flex items-center justify-center lg:justify-start gap-2 mt-1">
-                  <Terminal className="w-4 h-4" /> Lead Full-Stack Software Engineer & Digital Architect
+                  <Terminal className="w-4 h-4" /> Full-Stack Software Engineer & Systems Architect
                 </p>
               </div>
 
@@ -333,14 +334,14 @@ export default function DeveloperPage() {
                   Mera naam <strong className="text-amber-300 font-semibold">Alok Singh</strong> hai. Main Gola Road, Kauriram, Gorakhpur, Uttar Pradesh ka rehne wala hoon (Date of Birth: <strong className="text-slate-200">13/04/2008</strong>).
                 </p>
                 <p>
-                  Main full-stack web engineering, real-time system architecture, cloud deployment, aur custom UI/UX design systems me specialize karta hoon. Fast, scalable aur secure web software build karna mera core passion hai.
+                  Main modern full-stack web engineering, real-time system architecture, cloud deployment, aur custom UI/UX design systems me specialize karta hoon. Clean code, scalable APIs, aur fast web software build karna mera core passion hai.
                 </p>
                 <p>
-                  Software engineering ke alawa, main official Instagram handles (<strong className="text-pink-400">@aloksingh_._</strong>) aur digital marketing strategy & operations ko lead karta hoon.
+                  Software engineering ke saath, main digital media operations, social media strategy (<strong className="text-pink-400">@aloksingh_._</strong>), aur content execution ko direction deta hoon.
                 </p>
               </div>
 
-              {/* PERSONAL METRICS GRID */}
+              {/* PERSONAL METRICS */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
                 <div className="flex items-center gap-3.5 p-4 rounded-xl bg-slate-800/40 border border-slate-800/80">
@@ -371,14 +372,14 @@ export default function DeveloperPage() {
 
         </div>
 
-        {/* CORE TECHNICAL SKILLS GRID */}
+        {/* TECHNICAL SKILLS & EXPERTISE */}
         <div className="space-y-6">
           <div className="text-center space-y-2">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading uppercase tracking-wide">
-              Technical Stack & Skills
+              Technical Stack & Core Skills
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
-              Technologies, frameworks, and architecture paradigms mastered by Alok Singh.
+              Languages, frameworks, and engineering paradigms mastered by Alok Singh.
             </p>
           </div>
 
@@ -403,52 +404,52 @@ export default function DeveloperPage() {
           </div>
         </div>
 
-        {/* ENGINEERING HIGHLIGHTS & ARCHITECTURE CAPABILITIES */}
+        {/* PERSONAL ENGINEERING PROJECTS & HIGHLIGHTS */}
         <div className="space-y-8">
           <div className="text-center space-y-2">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading uppercase tracking-wide">
-              Engineering Capabilities & Highlights
+              Engineering Expertise & Highlights
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
-              Key architectural solutions designed and built by Alok Singh.
+              Architectural capabilities and system design solutions built by Alok Singh.
             </p>
           </div>
 
           <div className="space-y-6">
-            {engineeringHighlights.map((module) => (
+            {personalProjects.map((proj) => (
               <div 
-                key={module.id}
+                key={proj.id}
                 className="bg-slate-900/80 border border-slate-800/90 rounded-3xl p-6 sm:p-8 space-y-5 backdrop-blur-xl hover:border-amber-500/40 transition-all duration-300 shadow-2xl relative overflow-hidden group"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
                   <div className="space-y-1">
                     <div className="text-xs text-amber-400 font-mono font-bold uppercase tracking-wider">
-                      Capability {module.id} &bull; {module.subtitle}
+                      Area {proj.id} &bull; {proj.subtitle}
                     </div>
                     <h3 className="text-2xl font-bold text-white group-hover:text-amber-300 transition-colors">
-                      {module.title}
+                      {proj.title}
                     </h3>
                   </div>
                 </div>
 
                 <p className="text-slate-300 text-sm leading-relaxed">
-                  {module.description}
+                  {proj.description}
                 </p>
 
                 <div className="space-y-2 bg-slate-950/70 p-4 rounded-2xl border border-slate-800/80">
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {module.details.map((detail, dIdx) => (
-                      <li key={dIdx} className="flex items-start gap-2 text-xs text-slate-300">
+                    {proj.features.map((feat, fIdx) => (
+                      <li key={fIdx} className="flex items-start gap-2 text-xs text-slate-300">
                         <Check className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                        <span>{detail}</span>
+                        <span>{feat}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2 pt-1">
-                  <span className="text-xs text-slate-400 font-semibold mr-2">Skills / Stack:</span>
-                  {module.tech.map((t, tid) => (
+                  <span className="text-xs text-slate-400 font-semibold mr-2">Tech Stack:</span>
+                  {proj.stack.map((t, tid) => (
                     <span key={tid} className="px-3 py-1 rounded-lg bg-slate-800/80 text-amber-300 text-xs font-mono border border-slate-700">
                       {t}
                     </span>
@@ -459,7 +460,7 @@ export default function DeveloperPage() {
           </div>
         </div>
 
-        {/* PERSONAL STATEMENT FROM ALOK SINGH */}
+        {/* PERSONAL STATEMENT / MESSAGE */}
         <div className="bg-gradient-to-r from-amber-950/40 via-slate-900 to-red-950/30 border border-amber-500/40 rounded-3xl p-6 sm:p-10 space-y-4 text-center sm:text-left relative overflow-hidden backdrop-blur-xl shadow-2xl">
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <div className="p-4 rounded-2xl bg-amber-500/20 text-amber-400 shrink-0">
@@ -467,10 +468,10 @@ export default function DeveloperPage() {
             </div>
             <div className="space-y-2">
               <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-heading uppercase">
-                Message from Alok Singh
+                Personal Statement
               </h3>
               <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                &ldquo;Building scalable, clean, and high-performance software is what drives me every day. Whether it&apos;s real-time low-latency synchronization or modern UI/UX design, I focus on delivering world-class execution. Feel free to connect with me on Instagram or X!&rdquo;
+                &ldquo;Building scalable, clean, and high-performance software is what drives me every day. Whether it&apos;s real-time system architecture, API design, or modern glassmorphic UIs, I focus on delivering world-class execution. Feel free to connect with me on Instagram, X, or Facebook!&rdquo;
               </p>
             </div>
           </div>
@@ -482,7 +483,7 @@ export default function DeveloperPage() {
             <h3 className="text-xl font-bold text-white flex items-center justify-center gap-2">
               <Zap className="w-5 h-5 text-amber-400" /> Connect Directly With Alok Singh
             </h3>
-            <p className="text-xs text-slate-400">Click below to reach out on social platforms</p>
+            <p className="text-xs text-slate-400">Click below to reach out on official social handles</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

@@ -385,12 +385,17 @@ export default function OrdersLedgerPage() {
                     </td>
 
                     {/* Entry Status */}
-                    <td className="p-4">
-                      <span className={`px-2.5 py-1 rounded-full font-black text-[10px] uppercase ${
-                        tck.checked_in === 1 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-slate-800 text-slate-300'
+                    <td className="p-4 space-y-1">
+                      <span className={`px-2.5 py-1 rounded-full font-black text-[10px] uppercase block w-max ${
+                        tck.checked_in === 1 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-slate-800 text-slate-400'
                       }`}>
-                        {tck.checked_in === 1 ? 'CHECKED IN' : 'NOT CHECKED IN'}
+                        {tck.checked_in === 1 ? 'USED / ENTERED' : 'NOT USED'}
                       </span>
+                      {tck.checked_in === 1 && tck.checked_in_at && (
+                        <div className="text-[10px] text-slate-400 font-mono">
+                          {new Date(tck.checked_in_at).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      )}
                     </td>
 
                     {/* Action */}

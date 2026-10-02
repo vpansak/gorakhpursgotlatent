@@ -372,3 +372,28 @@ export async function getTicketStats() {
     totalRevenue,
   };
 }
+
+/**
+ * Delete ticket from database ('tickets' and 'ticket_application' tables) and memory
+ */
+export async function deleteTicketRecord(ticketId: string): Promise<boolean> {
+  if (!ticketId || !ticketId.trim()) return false;
+  const cleanId = ticketId.trim().toUpperCase();
+
+  memoryTickets.delete(cleanId);
+  for (const [key, tck] of Array.from(memoryTickets.entries())) {
+    if (tck.ticket_id.toUpperCase() === cleanId || tck.id === ticketId) {
+      memoryTickets.delete(key);
+    }
+  }
+
+  try {
+    await ensureTicketsTable();
+    await db.execute(`DELETE FROM tickets WHERE UPPER(ticket_id) = ? OR id = ?`, [cleanId, ticketId]);
+    await db.execute(`DELETE FROM ticket_application WHERE UPPER(ticket_id) = ? OR id = ?`, [cleanId, ticketId]);
+    return true;
+  } catch (err) {
+    console.warn('deleteTicketRecord database notice:', err);
+    return false;
+  }
+}

@@ -1,11 +1,15 @@
 import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { query } from './db';
 
-const endpoint = process.env.AWS_ENDPOINT_URL_S3 || 'https://br-shy-meadow-b5n9zrpd.storage.c-7.us-east-2.aws.neon.tech';
-const accessKeyId = process.env.AWS_ACCESS_KEY_ID || 'nak_live_524326177daf4840a2d1a157186dd525';
-const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY || 'nsk_live_13183df1f56b2a50df9e2a15effb1463d06b874eb15be66707db310d45ca6728';
+const endpoint = process.env.AWS_ENDPOINT_URL_S3;
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 const region = process.env.AWS_REGION || 'us-east-2';
-export const S3_BUCKET = process.env.S3_BUCKET_NAME || 'gorakhpur-got-latent';
+export const S3_BUCKET = process.env.S3_BUCKET_NAME;
+
+if (!endpoint || !accessKeyId || !secretAccessKey || !S3_BUCKET) {
+  throw new Error('Storage is not configured. Set AWS_ENDPOINT_URL_S3, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and S3_BUCKET_NAME.');
+}
 
 export const s3 = new S3Client({
   endpoint,

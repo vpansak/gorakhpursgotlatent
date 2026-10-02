@@ -90,8 +90,19 @@ export default function PerformerApplyClient() {
       setError('Please enter a valid Email address.');
       return;
     }
-    if (!formData.instagramUrl.trim()) {
-      setError('Please enter your Instagram Profile URL or handle (Instagram ID compulsory hai).');
+    let formattedIgUrl = formData.instagramUrl.trim();
+    if (formattedIgUrl.startsWith('instagram.com/') || formattedIgUrl.startsWith('www.instagram.com/')) {
+      formattedIgUrl = `https://${formattedIgUrl}`;
+    }
+
+    const isIgUrl = (
+      formattedIgUrl.toLowerCase().includes('instagram.com/') ||
+      formattedIgUrl.toLowerCase().includes('instagr.am/') ||
+      (formattedIgUrl.startsWith('http://') || formattedIgUrl.startsWith('https://'))
+    );
+
+    if (!formattedIgUrl || !isIgUrl) {
+      setError('Please enter your valid Instagram Profile URL link (e.g. https://www.instagram.com/your_handle). Simply entering a name or handle without URL link is not allowed.');
       return;
     }
     if (!formData.sendClipConfirmed) {
@@ -267,17 +278,17 @@ export default function PerformerApplyClient() {
             </select>
           </div>
 
-          {/* 4. Instagram Profile URL / Handle */}
+          {/* 4. Instagram Profile URL Link */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Profile Link / Handle (इन्स्टाग्राम ID / लिंक) *</label>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Profile URL Link (इन्स्टाग्राम प्रोफाइल लिंक) *</label>
             <input
               type="text"
               name="instagramUrl"
               required
               value={formData.instagramUrl}
               onChange={handleChange}
-              placeholder="e.g. https://www.instagram.com/your_handle or @your_handle"
-              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
+              placeholder="e.g. https://www.instagram.com/your_handle"
+              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm font-mono"
             />
           </div>
 

@@ -24,6 +24,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Please complete all required fields (Name, Mobile, Email, Instagram)' }, { status: 400 });
     }
 
+    const isIgUrl = (
+      effectiveInstagram.toLowerCase().includes('instagram.com') ||
+      effectiveInstagram.toLowerCase().includes('instagr.am') ||
+      effectiveInstagram.startsWith('http://') ||
+      effectiveInstagram.startsWith('https://')
+    );
+
+    if (!isIgUrl) {
+      return NextResponse.json({ error: 'Please enter a valid Instagram Profile Link / URL (e.g. https://www.instagram.com/your_handle). Plain names or handles without link are not allowed.' }, { status: 400 });
+    }
+
     const appId = generateAppId('PER');
     const id = `per-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 

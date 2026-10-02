@@ -1,8 +1,9 @@
 import { neon } from '@neondatabase/serverless';
 
-const databaseUrl = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_kBRNLDK9ne7A@ep-ancient-hill-b5xedkzo-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
-if (!process.env.DATABASE_URL) {
-  console.warn('⚠️ DATABASE_URL environment variable is not explicitly set; using default Neon pooler connection.');
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL environment variable is not configured');
 }
 
 // Stateless Neon HTTP client: zero TCP connection drops, fast HTTPS requests

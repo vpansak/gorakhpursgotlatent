@@ -140,12 +140,22 @@ export interface PerformerEmailParams {
 }
 
 export async function sendPerformerApplicationEmail(params: PerformerEmailParams): Promise<{ success: boolean; message?: string }> {
-  const serviceId = process.env.EMAILJS_SERVICE_ID || 'vpansak';
-  const templateId = process.env.EMAILJS_PERFORMER_TEMPLATE_ID || process.env.EMAILJS_TEMPLATE_ID || 'template_b3h1egs';
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY || 'jjG3XUesW7Yt8McRJ';
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY || 'G-re211vGlwHrNVCniNgz';
+  const serviceId = process.env.EMAILJS_SERVICE_ID || 'service_15li5i6';
+  const templateId = process.env.EMAILJS_PERFORMER_TEMPLATE_ID || process.env.EMAILJS_TEMPLATE_ID || 'template_41t6fmb';
+  const publicKey = process.env.EMAILJS_PUBLIC_KEY || 'K2hOwDJVfSGpJ3nih';
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY || '30mafPjRgPPn5im53Idzh';
 
-  const recipientEmails = 'help.gglatemt@gmail.com, alooksingh1@gmail.com';
+  if (!serviceId || !templateId || !publicKey) {
+    console.warn('⚠️ EmailJS credentials missing on server. Performer notification skipped.');
+    return { success: false, message: 'EmailJS credentials not configured' };
+  }
+
+  const adminEmails = (process.env.ADMIN_EMAILS || 'alooksingh1@gmail.com')
+    .split(',')
+    .map(e => e.trim())
+    .filter(Boolean);
+
+  const recipientEmails = adminEmails.length > 0 ? adminEmails.join(', ') : 'alooksingh1@gmail.com';
 
   // Format social URLs with "Not Provided" fallback for optional ones
   const youtubeUrlFormatted = (params.youtube_url && params.youtube_url.trim()) ? params.youtube_url.trim() : 'Not Provided';
@@ -153,6 +163,26 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
   const specialReqFormatted = (params.special_requirements && params.special_requirements.trim()) ? params.special_requirements.trim() : 'Not Provided';
   const addMsgFormatted = (params.additional_message && params.additional_message.trim()) ? params.additional_message.trim() : 'Not Provided';
   const callNumFormatted = params.call_number || params.alternate_contact || params.mobile_number || 'N/A';
+
+  const summaryMessage = `🎤 NEW PERFORMER AUDITION APPLICATION RECEIVED!
+
+🆔 Application ID: ${params.application_id}
+👤 Performer Name: ${params.full_name}
+📱 Mobile Number: ${params.mobile_number}
+💬 WhatsApp Number: ${params.whatsapp_number}
+📧 Performer Email: ${params.email}
+🎂 Age: ${params.age || 'N/A'}
+📍 City: ${params.city}
+📸 Instagram: ${params.instagram_url}
+
+🎭 Performance Category: ${params.performance_category}
+🎵 Act Title: ${params.performance_title}
+📝 Act Details: ${params.performance_description}
+⌛ Duration: ${params.performance_duration || 'N/A'}
+
+💰 Payment Status: ${params.payment_status} (Amount: ₹${params.payment_amount || 0})
+--------------------------------------------------
+Gorakhpur's Got Latent Admin Notification System`;
 
   const payload = {
     service_id: serviceId,
@@ -162,13 +192,19 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
     template_params: {
       to_email: recipientEmails,
       to_name: 'Gorakhpur’s Got Latent Admin Team',
-      subject: `🎤 GGL Application | ${params.application_id}`,
+      admin_email: 'alooksingh1@gmail.com',
+      email: params.email,
+      user_email: params.email,
+      customer_email: params.email,
+      reply_to: params.email,
+      subject: `🎤 GGL Performer Application | ${params.application_id} | ${params.full_name}`,
       application_id: params.application_id,
       created_at: params.created_at || new Date().toISOString(),
       application_status: params.application_status,
       full_name: params.full_name,
+      name: params.full_name,
+      customer_name: params.full_name,
       age: String(params.age || 'N/A'),
-      email: params.email,
       mobile_number: params.mobile_number,
       whatsapp_number: params.whatsapp_number,
       call_number: callNumFormatted,
@@ -188,12 +224,13 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
       discovery_source: params.discovery_source || 'Not Provided',
       additional_message: addMsgFormatted,
       payment_status: params.payment_status,
-      payment_amount: String(params.payment_amount || 199),
+      payment_amount: String(params.payment_amount || 0),
       payment_currency: params.payment_currency || 'INR',
       razorpay_order_id: params.order_id || 'N/A',
       razorpay_payment_id: params.payment_id || 'N/A',
       payment_verified_at: params.payment_verified_at || new Date().toISOString(),
       admin_notes: params.admin_notes || '',
+      message: summaryMessage,
     },
   };
 
@@ -210,8 +247,8 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.error(`❌ EmailJS Error: ${errorText}`);
-      return { success: false, message: errorText };
+      console.error(`❌ EmailJS Error (${res.status}): ${errorText}`);
+      return { success: false, message: `HTTP ${res.status}: ${errorText}` };
     } else {
       console.log(`📧 EmailJS: Performer application notification sent successfully to ${recipientEmails}`);
       return { success: true };

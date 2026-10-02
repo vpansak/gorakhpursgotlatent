@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
+import { sendPerformerApplicationEmail } from '@/lib/emailjs';
 
 export async function POST(req: Request) {
   try {
@@ -75,6 +76,40 @@ export async function POST(req: Request) {
     }).catch(err => console.error('S3 individual performer save error:', err));
 
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
+
+    // Trigger instant EmailJS notification to Admin (alooksingh1@gmail.com)
+    sendPerformerApplicationEmail({
+      application_id: appId,
+      created_at: new Date().toISOString(),
+      full_name: effectiveFullName,
+      email: effectiveEmail,
+      mobile_number: effectiveMobile,
+      whatsapp_number: effectiveMobile,
+      call_number: effectiveMobile,
+      alternate_contact: effectiveMobile,
+      performance_category: effectiveCategory,
+      performance_title: (performanceTitle || 'Audition Act').toString().trim(),
+      performance_description: (performanceDescription || '').toString().trim(),
+      performance_type: (performanceType || 'Solo').toString().trim(),
+      performer_count: parsedCount,
+      performance_duration: (duration || '2 Minutes').toString().trim(),
+      performance_language: (language || 'Hindi').toString().trim(),
+      city: effectiveCity,
+      age: parsedAge,
+      instagram_url: effectiveInstagram,
+      payment_status: 'FREE_AUDITION_SUBMITTED',
+      order_id: 'N/A',
+      payment_id: 'N/A',
+      payment_amount: 0,
+      payment_verified_at: new Date().toISOString(),
+      application_status: 'SUBMITTED',
+    }).then(res => {
+      if (res.success) {
+        db.execute("UPDATE performer_applications SET email_status = 'SENT', admin_email_status = 'SENT' WHERE app_id = ?", [appId]).catch(e => console.error(e));
+      } else {
+        console.warn(`⚠️ Performer application email notice for ${appId}: ${res.message}`);
+      }
+    }).catch(err => console.error('EmailJS notification trigger exception:', err));
 
     return NextResponse.json({
       success: true,

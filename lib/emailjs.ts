@@ -16,17 +16,17 @@ export interface BookingEmailParams {
 }
 
 export async function sendBookingConfirmationEmail(params: BookingEmailParams): Promise<{ success: boolean; message?: string }> {
-  const serviceId = process.env.EMAILJS_SERVICE_ID || 'service_15li5i6';
-  const templateId = process.env.EMAILJS_TEMPLATE_ID || 'template_41t6fmb';
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY || 'K2hOwDJVfSGpJ3nih';
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY || '30mafPjRgPPn5im53Idzh';
+  const serviceId = process.env.EMAILJS_SERVICE_ID;
+  const templateId = process.env.EMAILJS_TEMPLATE_ID;
+  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
-  if (!serviceId || !templateId || !publicKey) {
+  if (!serviceId || !templateId || !publicKey || !privateKey) {
     console.warn('⚠️ EmailJS credentials missing on server. Email notification skipped.');
     return { success: false, message: 'EmailJS credentials not configured' };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
   const payload = {
     service_id: serviceId,
@@ -94,10 +94,10 @@ export async function sendBookingConfirmationEmail(params: BookingEmailParams): 
         'Origin': 'https://gorakhpursgotlatent.vercel.app',
       },
       body: JSON.stringify({
-        service_id: 'vpansak',
-        template_id: 'template_b3h1egs',
-        user_id: 'jjG3XUesW7Yt8McRJ',
-        accessToken: 'G-re211vGlwHrNVCniNgz',
+        service_id: process.env.EMAILJS_BACKUP_SERVICE_ID,
+        template_id: process.env.EMAILJS_BACKUP_TEMPLATE_ID,
+        user_id: process.env.EMAILJS_BACKUP_PUBLIC_KEY,
+        accessToken: process.env.EMAILJS_BACKUP_PRIVATE_KEY,
         template_params: payload.template_params,
       }),
     });
@@ -150,16 +150,21 @@ export interface PerformerEmailParams {
 
 export async function sendPerformerApplicationEmail(params: PerformerEmailParams): Promise<{ success: boolean; message?: string }> {
   // Credentials for Admin Notification Email (vpansak / template_b3h1egs)
-  const adminServiceId = process.env.EMAILJS_PERFORMER_SERVICE_ID || 'vpansak';
-  const adminTemplateId = process.env.EMAILJS_PERFORMER_TEMPLATE_ID || 'template_b3h1egs';
-  const adminPublicKey = process.env.EMAILJS_PERFORMER_PUBLIC_KEY || 'jjG3XUesW7Yt8McRJ';
-  const adminPrivateKey = process.env.EMAILJS_PERFORMER_PRIVATE_KEY || 'G-re211vGlwHrNVCniNgz';
+  const adminServiceId = process.env.EMAILJS_PERFORMER_SERVICE_ID;
+  const adminTemplateId = process.env.EMAILJS_PERFORMER_TEMPLATE_ID;
+  const adminPublicKey = process.env.EMAILJS_PERFORMER_PUBLIC_KEY;
+  const adminPrivateKey = process.env.EMAILJS_PERFORMER_PRIVATE_KEY;
 
   // Credentials for Applicant Welcome / Confirmation Email (service_15li5i6 / template_41t6fmb)
-  const userServiceId = process.env.EMAILJS_SERVICE_ID || 'service_15li5i6';
-  const userTemplateId = process.env.EMAILJS_TEMPLATE_ID || 'template_41t6fmb';
-  const userPublicKey = process.env.EMAILJS_PUBLIC_KEY || 'K2hOwDJVfSGpJ3nih';
-  const userPrivateKey = process.env.EMAILJS_PRIVATE_KEY || '30mafPjRgPPn5im53Idzh';
+  const userServiceId = process.env.EMAILJS_SERVICE_ID;
+  const userTemplateId = process.env.EMAILJS_TEMPLATE_ID;
+  const userPublicKey = process.env.EMAILJS_PUBLIC_KEY;
+  const userPrivateKey = process.env.EMAILJS_PRIVATE_KEY;
+
+  if (!adminServiceId || !adminTemplateId || !adminPublicKey || !adminPrivateKey || !userServiceId || !userTemplateId || !userPublicKey || !userPrivateKey) {
+    console.warn('⚠️ Performer EmailJS credentials are not fully configured.');
+    return { success: false, message: 'EmailJS performer credentials not configured' };
+  }
 
   // Format social URLs with "Not Provided" fallback for optional ones
   const youtubeUrlFormatted = (params.youtube_url && params.youtube_url.trim()) ? params.youtube_url.trim() : 'Not Provided';
@@ -376,12 +381,17 @@ export interface AdminOtpEmailParams {
  * Send secure 6-digit OTP to authorized admin email address using EmailJS
  */
 export async function sendAdminLoginOtpEmail(params: AdminOtpEmailParams): Promise<{ success: boolean; message?: string }> {
-  const serviceId = process.env.EMAILJS_OTP_SERVICE_ID || 'service_uvjpamq';
-  const templateId = process.env.EMAILJS_OTP_TEMPLATE_ID || 'template_6l63rff';
-  const publicKey = process.env.EMAILJS_OTP_PUBLIC_KEY || 'YRdAw-LarammkaqtX';
-  const privateKey = process.env.EMAILJS_OTP_PRIVATE_KEY || 'ur81P_T37pPwE0ivVNSkq';
+  const serviceId = process.env.EMAILJS_OTP_SERVICE_ID;
+  const templateId = process.env.EMAILJS_OTP_TEMPLATE_ID;
+  const publicKey = process.env.EMAILJS_OTP_PUBLIC_KEY;
+  const privateKey = process.env.EMAILJS_OTP_PRIVATE_KEY;
 
   const { toEmail, otp } = params;
+
+  if (!serviceId || !templateId || !publicKey || !privateKey) {
+    console.warn('⚠️ Admin OTP EmailJS credentials are not configured.');
+    return { success: false, message: 'EmailJS OTP credentials not configured' };
+  }
 
   const templateParams = {
     to_email: toEmail,
@@ -434,10 +444,10 @@ export async function sendAdminLoginOtpEmail(params: AdminOtpEmailParams): Promi
         'Origin': 'https://gorakhpursgotlatent.vercel.app',
       },
       body: JSON.stringify({
-        service_id: 'vpansak',
-        template_id: 'template_b3h1egs',
-        user_id: 'jjG3XUesW7Yt8McRJ',
-        accessToken: 'G-re211vGlwHrNVCniNgz',
+        service_id: process.env.EMAILJS_BACKUP_SERVICE_ID,
+        template_id: process.env.EMAILJS_BACKUP_TEMPLATE_ID,
+        user_id: process.env.EMAILJS_BACKUP_PUBLIC_KEY,
+        accessToken: process.env.EMAILJS_BACKUP_PRIVATE_KEY,
         template_params: templateParams,
       }),
     });

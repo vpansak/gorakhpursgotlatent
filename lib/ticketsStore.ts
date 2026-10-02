@@ -28,11 +28,11 @@ export interface TicketRecord {
 const memoryTickets: Map<string, TicketRecord> = new Map();
 
 /**
- * Ensures tickets table exists in database
+ * Ensures tickets & ticket_application tables exist in database
  */
 export async function ensureTicketsTable() {
   try {
-    await db.execute(`
+    const tableSql = `
       CREATE TABLE IF NOT EXISTS tickets (
         id TEXT PRIMARY KEY,
         ticket_id TEXT UNIQUE NOT NULL,
@@ -54,7 +54,11 @@ export async function ensureTicketsTable() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
-    `);
+    `;
+    await db.execute(tableSql);
+
+    const appTableSql = tableSql.replace('CREATE TABLE IF NOT EXISTS tickets', 'CREATE TABLE IF NOT EXISTS ticket_application');
+    await db.execute(appTableSql);
   } catch (err) {
     console.warn('ensureTicketsTable notice:', err);
   }
@@ -141,7 +145,7 @@ function normalizeTicketRecord(r: any): TicketRecord {
 }
 
 /**
- * Save new ticket to database and memory
+ * Save new ticket to database (both 'tickets' and 'ticket_application' tables) and memory
  */
 export async function saveTicketRecord(ticket: TicketRecord): Promise<TicketRecord> {
   const norm = normalizeTicketRecord(ticket);
@@ -149,8 +153,8 @@ export async function saveTicketRecord(ticket: TicketRecord): Promise<TicketReco
 
   try {
     await ensureTicketsTable();
-    await db.execute(`
-      INSERT INTO tickets (
+    const queryStr = `
+      INSERT INTO %TABLE% (
         id, ticket_id, booking_id, customer_name, mobile, email, instagram_id,
         date_of_birth, quantity, amount, razorpay_order_id, razorpay_payment_id,
         payment_status, ticket_status, qr_token, checked_in, checked_in_at
@@ -161,7 +165,9 @@ export async function saveTicketRecord(ticket: TicketRecord): Promise<TicketReco
         checked_in = EXCLUDED.checked_in,
         checked_in_at = EXCLUDED.checked_in_at,
         updated_at = CURRENT_TIMESTAMP
-    `, [
+    `;
+    
+    const params = [
       norm.id,
       norm.ticket_id,
       norm.booking_id,
@@ -179,7 +185,11 @@ export async function saveTicketRecord(ticket: TicketRecord): Promise<TicketReco
       norm.qr_token,
       norm.checked_in,
       norm.checked_in_at,
-    ]);
+    ];
+
+    // Execute save for both tables
+    await db.execute(queryStr.replace('%TABLE%', 'tickets'), params);
+    await db.execute(queryStr.replace('%TABLE%', 'ticket_application'), params);
   } catch (err) {
     console.warn('saveTicketRecord database notice:', err);
   }
@@ -194,7 +204,6 @@ export async function getTicketByTicketId(ticketIdOrUrl: string): Promise<Ticket
 
   const rawInput = ticketIdOrUrl.trim();
 
-  // Extract Ticket ID if input contains URL or full string (e.g. /ticket/verify/GGLT123456)
   let cleanId = rawInput;
   const match = rawInput.match(/GGLT[A-Z0-9]{4,10}/i);
   if (match) {
@@ -217,13 +226,17 @@ export async function getTicketByTicketId(ticketIdOrUrl: string): Promise<Ticket
     }
   }
 
-  // 2. Query Neon PostgreSQL database
+  // 2. Query Neon PostgreSQL database (check 'tickets' and 'ticket_application')
   try {
     await ensureTicketsTable();
-    const row = await db.queryOne<any>(
-      `SELECT * FROM tickets WHERE UPPER(ticket_id) = ? OR qr_token = ? OR UPPER(booking_id) = ? OR UPPER(razorpay_order_id) = ? OR UPPER(razorpay_payment_id) = ? OR UPPER(ticket_id) = ?`,
-      [cleanId, rawInput, rawInput.toUpperCase(), rawInput.toUpperCase(), rawInput.toUpperCase(), rawInput.toUpperCase()]
-    );
+    const sqlStr = `SELECT * FROM %TABLE% WHERE UPPER(ticket_id) = ? OR qr_token = ? OR UPPER(booking_id) = ? OR UPPER(razorpay_order_id) = ? OR UPPER(razorpay_payment_id) = ? OR UPPER(ticket_id) = ?`;
+    const params = [cleanId, rawInput, rawInput.toUpperCase(), rawInput.toUpperCase(), rawInput.toUpperCase(), rawInput.toUpperCase()];
+
+    let row = await db.queryOne<any>(sqlStr.replace('%TABLE%', 'tickets'), params);
+    if (!row) {
+      row = await db.queryOne<any>(sqlStr.replace('%TABLE%', 'ticket_application'), params);
+    }
+
     if (row) {
       const norm = normalizeTicketRecord(row);
       memoryTickets.set(norm.ticket_id, norm);
@@ -244,24 +257,23 @@ export async function getTicketByQrToken(qrTokenOrUrl: string): Promise<TicketRe
 }
 
 /**
- * Retrieves all tickets
+ * Retrieves all tickets from both 'tickets' and 'ticket_application' tables
  */
 export async function getAllTickets(): Promise<TicketRecord[]> {
-  const list = Array.from(memoryTickets.values());
   try {
     await ensureTicketsTable();
-    const rows = await db.query<any>(`SELECT * FROM tickets ORDER BY created_at DESC`);
-    if (rows && rows.length > 0) {
-      rows.forEach(r => {
-        const norm = normalizeTicketRecord(r);
-        memoryTickets.set(norm.ticket_id, norm);
-      });
-      return Array.from(memoryTickets.values());
-    }
+    const rows1 = await db.query<any>(`SELECT * FROM tickets ORDER BY created_at DESC`);
+    const rows2 = await db.query<any>(`SELECT * FROM ticket_application ORDER BY created_at DESC`);
+    
+    const combined = [...(rows1 || []), ...(rows2 || [])];
+    combined.forEach(r => {
+      const norm = normalizeTicketRecord(r);
+      memoryTickets.set(norm.ticket_id, norm);
+    });
   } catch (err) {
     console.warn('getAllTickets database notice:', err);
   }
-  return list;
+  return Array.from(memoryTickets.values());
 }
 
 /**
@@ -285,7 +297,6 @@ export async function searchTickets(queryStr: string): Promise<TicketRecord[]> {
 
 /**
  * Check In Ticket
- * Prevents duplicate check-in!
  */
 export async function checkInTicket(ticketIdOrUrl: string): Promise<{ success: boolean; ticket?: TicketRecord; message: string; isDuplicate?: boolean }> {
   let ticket = await getTicketByTicketId(ticketIdOrUrl);
@@ -297,7 +308,6 @@ export async function checkInTicket(ticketIdOrUrl: string): Promise<{ success: b
     return { success: false, message: `✕ INVALID TICKET: Ticket ID "${ticketIdOrUrl}" not found in database.` };
   }
 
-  // Check valid status: accept PAID, FREE, SUCCESS, or amount === 0
   const isPaidOrFree =
     ticket.payment_status === 'PAID' ||
     ticket.payment_status === 'FREE' ||

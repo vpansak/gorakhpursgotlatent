@@ -113,7 +113,7 @@ export default async function HomePage() {
 
         <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 sm:space-y-5">
           {/* Official Logo Banner */}
-          <div className="relative w-[340px] sm:w-[560px] md:w-[680px] lg:w-[780px] h-44 sm:h-64 md:h-76 lg:h-84 mx-auto animate-float">
+          <div className="relative w-[300px] sm:w-[520px] md:w-[650px] lg:w-[760px] h-40 sm:h-60 md:h-72 lg:h-80 mx-auto">
             <div className="stage-logo-glow" />
             <Image
               src="/logo.png"
@@ -127,7 +127,7 @@ export default async function HomePage() {
           {/* Tagline & Description */}
           <div className="space-y-2 max-w-3xl mx-auto -mt-3 sm:-mt-4">
             <h1 className="sr-only">Gorakhpur's Got Latent</h1>
-            <p className="font-bebas text-3xl sm:text-5xl md:text-6xl text-amber-300 tracking-wide uppercase drop-shadow-[0_0_12px_rgba(255,215,0,0.35)]">
+            <p className="font-bebas text-2xl sm:text-4xl md:text-5xl text-white tracking-[0.16em] uppercase">
               "KUCH BHI HO SAKTA HAI"
             </p>
           </div>
@@ -139,10 +139,10 @@ export default async function HomePage() {
           </div>
 
           {/* Action CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-1">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-3">
             <Link
               href="/book-ticket"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,215,0,0.5)] hover:shadow-[0_0_45px_rgba(255,160,0,0.8)] hover:scale-105 transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-[#f5c451] via-[#e8a92e] to-[#c87917] text-black font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,215,0,0.5)] hover:shadow-[0_0_45px_rgba(255,160,0,0.8)] hover:scale-105 transition-all duration-300 cursor-pointer"
             >
               <Ticket className="w-6 h-6 text-black" />
               BOOK YOUR TICKET
@@ -150,9 +150,9 @@ export default async function HomePage() {
 
             <Link
               href="/apply/performer"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-black/70 hover:bg-slate-900 border border-amber-500/40 text-amber-200 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-emerald-400 transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/15 text-white font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-amber-400 transition-all duration-300 cursor-pointer"
             >
-              <UserCheck className="w-6 h-6 text-emerald-400" />
+              <UserCheck className="w-6 h-6 text-amber-400" />
               APPLY FOR EPISODE 2 (LIVE NOW)
             </Link>
           </div>
@@ -205,8 +205,8 @@ export default async function HomePage() {
       </section>
 
       {/* 3. PROMOTIONAL SHOWCASE BANNER / VIDEO SPOTLIGHT */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-16 items-center">
           {/* Left Text */}
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-barlow text-xs font-bold uppercase tracking-wider">
@@ -232,7 +232,7 @@ export default async function HomePage() {
           </div>
 
           {/* Right Visual Card */}
-          <div className="relative rounded-3xl p-1 bg-gradient-to-tr from-amber-500/40 via-orange-500/20 to-transparent shadow-[0_0_50px_rgba(255,215,0,0.15)]">
+          <div className="relative rounded-[2rem] p-px bg-gradient-to-br from-white/20 via-amber-500/30 to-red-500/20 shadow-[0_25px_80px_rgba(0,0,0,0.55)]">
             <div className="relative rounded-[23px] bg-slate-950 p-6 sm:p-8 space-y-6">
               <div className="relative h-64 sm:h-72 w-full rounded-2xl overflow-hidden border border-amber-500/30">
                 <Image

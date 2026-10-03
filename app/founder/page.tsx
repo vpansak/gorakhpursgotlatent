@@ -15,8 +15,7 @@ import {
   Zap, 
   Flame, 
   Tv, 
-  Code2, 
-  ArrowRight,
+  Code2,
   Heart,
   Award,
   CheckCircle2,
@@ -28,7 +27,7 @@ import {
 export const metadata: Metadata = {
   title: "Naveen Varma | Founder & Show Creator - Gorakhpur's Got Latent",
   description: "Official profile, vision, and creator spotlight of Naveen Varma — Founder, Show Creator & Host of Gorakhpur's Got Latent digital entertainment ecosystem.",
-  authors: [{ name: "Naveen Varma", url: "https://gkpgotlatent.in/founder" }, { name: "Alok Singh", url: "https://gkpgotlatent.in/developer" }],
+  authors: [{ name: "Naveen Varma", url: "https://gkpgotlatent.in/founder" }],
   creator: "Naveen Varma",
   publisher: "Gorakhpur's Got Latent",
   robots: {
@@ -91,7 +90,7 @@ export default function FounderPage() {
     },
     {
       title: "💻 State-of-the-Art Tech Architecture",
-      description: "Head of Developers Alok Singh (@aloksingh_._) ke saath collaborate karke ek powerful, sub-100ms real-time 'Computerji' stage scoring system aur digital ticketing platform design karwaya.",
+      description: "Ek powerful, sub-100ms real-time 'Computerji' stage scoring system aur digital ticketing platform.",
       icon: Code2,
       tag: "DIGITAL INNOVATION"
     },
@@ -134,13 +133,6 @@ export default function FounderPage() {
             '@id': 'https://gkpgotlatent.in/#organization',
             'name': "Gorakhpur's Got Latent",
             'url': 'https://gkpgotlatent.in'
-          },
-          'employee': {
-            '@type': 'Person',
-            '@id': 'https://gkpgotlatent.in/developer#aloksingh',
-            'name': 'Alok Singh',
-            'jobTitle': 'Head of Developers & Tech Architect',
-            'url': 'https://gkpgotlatent.in/developer'
           }
         }
       }
@@ -293,30 +285,7 @@ export default function FounderPage() {
           </div>
         </div>
 
-        {/* 4. KEY TECH PARTNER & TEAM COLLABORATION */}
-        <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/30 bg-gradient-to-r from-slate-900 via-slate-900 to-amber-950/30 space-y-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="space-y-2 text-center md:text-left">
-              <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest font-barlow">
-                CORE TECHNICAL ARCHITECTURE
-              </span>
-              <h3 className="font-bebas text-3xl text-white uppercase">
-                ENGINEERED WITH HEAD OF DEVELOPERS <span className="gold-gradient-text">ALOK SINGH</span>
-              </h3>
-              <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
-                Naveen Varma partnered with Lead Tech Architect Alok Singh (@aloksingh_._) to build the custom Next.js 14 platform, real-time judge scoring UI ('Computerji' engine), and automated ticketing system.
-              </p>
-            </div>
 
-            <Link
-              href="/developer"
-              className="px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-xl shrink-0 transition-all hover:scale-105"
-            >
-              <span>View Tech Architecture Page</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
 
         {/* 5. CALL TO ACTION & SOCIAL CONNECT */}
         <div className="text-center bg-slate-900/90 border border-amber-500/30 rounded-3xl p-8 sm:p-12 space-y-6 relative overflow-hidden">

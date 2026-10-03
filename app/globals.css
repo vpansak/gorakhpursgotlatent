@@ -374,3 +374,47 @@
 .home-faq p{margin-top:.55rem;padding-left:1.55rem;color:#94a3b8;font-size:.84rem;line-height:1.7;font-weight:500}
 @media(max-width:900px){.home-ticket{grid-template-columns:1fr}.home-ticket-cta{border-left:0;border-top:1px solid rgba(255,255,255,.08)}}
 @media(max-width:640px){.home-hero{min-height:auto!important;padding-top:7rem!important}.home-primary-btn,.home-secondary-btn{width:100%}.home-title{font-size:2.65rem}.home-ticket-main,.home-ticket-cta{padding:1.35rem}.home-ticket-cta strong{font-size:3.4rem}}
+
+
+/* ===== GGL SITE-WIDE CINEMATIC THEME ===== */
+.ggl-site {
+  background:
+    radial-gradient(circle at 50% -10%, rgba(245,158,11,.07), transparent 34%),
+    radial-gradient(circle at 0% 45%, rgba(185,28,28,.045), transparent 28%),
+    radial-gradient(circle at 100% 55%, rgba(185,28,28,.045), transparent 28%),
+    #030304;
+}
+.ggl-site main {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.008), transparent 18%, transparent 82%, rgba(245,158,11,.012));
+}
+.ggl-site main h1 {
+  text-shadow: 0 10px 35px rgba(0,0,0,.45);
+}
+.ggl-site main input,
+.ggl-site main select,
+.ggl-site main textarea {
+  background: rgba(7,7,10,.82);
+  border-color: rgba(255,255,255,.10);
+  color: #f8fafc;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.ggl-site main input:focus,
+.ggl-site main select:focus,
+.ggl-site main textarea:focus {
+  border-color: rgba(245,158,11,.55);
+  box-shadow: 0 0 0 3px rgba(245,158,11,.08);
+  outline: none;
+}
+.ggl-site main ::selection {
+  background: rgba(245,158,11,.9);
+  color: #050505;
+}
+.ggl-site main a {
+  transition: color .2s ease, border-color .2s ease, background-color .2s ease, transform .2s ease;
+}
+@media (max-width: 640px) {
+  .ggl-site main {
+    padding-bottom: 3.75rem;
+  }
+}

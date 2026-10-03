@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: "Gorakhpur's Got Latent – Gorakhpur Live Talent Show, Auditions & Tickets",
+  title: "About Gorakhpur's Got Latent – ABOUT",
   description:
     "Learn about Gorakhpur's Got Latent (GGL), a live entertainment and talent show from Gorakhpur, Uttar Pradesh featuring music, comedy, dance, poetry, beatboxing and original performances.",
   keywords: [
@@ -20,13 +20,13 @@ export const metadata: Metadata = {
     "Gorakhpur singer auditions",
   ],
   alternates: {
-    canonical: "https://www.gkpgotlatent.in/googleseo",
+    canonical: "https://www.gkpgotlatent.in/about",
   },
   openGraph: {
-    title: "Gorakhpur's Got Latent – Gorakhpur Live Talent & Entertainment Show",
+    title: "About Gorakhpur's Got Latent – Official Information",
     description:
       "Official information about Gorakhpur's Got Latent, its talent categories, auditions, audience tickets and official online presence.",
-    url: "https://www.gkpgotlatent.in/googleseo",
+    url: "https://www.gkpgotlatent.in/about",
     type: "article",
     siteName: "Gorakhpur's Got Latent",
   },
@@ -40,7 +40,7 @@ const articleSchema = {
     "Official public information about Gorakhpur's Got Latent, a live entertainment and talent show in Gorakhpur, Uttar Pradesh.",
   mainEntityOfPage: {
     "@type": "WebPage",
-    "@id": "https://www.gkpgotlatent.in/googleseo",
+    "@id": "https://www.gkpgotlatent.in/about",
   },
   publisher: {
     "@type": "Organization",
@@ -63,7 +63,7 @@ const organizationSchema = {
   sameAs: ["https://www.youtube.com/@GkpGotLatent"],
 };
 
-export default function GoogleSeoPage() {
+export default function AboutPage() {
   return (
     <main className="min-h-screen bg-[#07080e] text-slate-200">
       <script
@@ -81,8 +81,9 @@ export default function GoogleSeoPage() {
             Official Information
           </p>
           <h1 className="text-4xl font-black leading-tight text-white sm:text-6xl">
-            Gorakhpur&apos;s Got Latent
+            About
           </h1>
+          <p className="mt-3 text-xl font-bold text-white/90 sm:text-2xl">Gorakhpur&apos;s Got Latent</p>
           <p className="mt-4 text-2xl font-bold text-amber-300">
             Gorakhpur&apos;s Live Talent &amp; Entertainment Show
           </p>

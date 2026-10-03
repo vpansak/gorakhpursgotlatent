@@ -46,7 +46,7 @@ export default async function HomePage() {
   return (
     <div className="home-dark relative overflow-hidden">
       {/* PREMIUM HERO */}
-      <section className="home-hero relative min-h-[82vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <section className="home-hero relative min-h-[68vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="absolute inset-0 pointer-events-none">
           <div className="home-spot home-spot-left" />
           <div className="home-spot home-spot-right" />
@@ -112,7 +112,7 @@ export default async function HomePage() {
       </section>
 
       {/* EVENT COUNTDOWN */}
-      <section className="px-4 sm:px-6 lg:px-8 -mt-5 relative z-20">
+      <section className="px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-12 relative z-20">
         <CountdownTimer
           targetDate={activeEvent?.event_date ? `${activeEvent.event_date}T${activeEvent.start_time}` : "2026-09-26T13:00:00"}
           venue={activeEvent?.venue_name || "Announce Soon"}
@@ -121,7 +121,7 @@ export default async function HomePage() {
       </section>
 
       {/* SHOW INTRO */}
-      <section className="home-section py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
+      <section className="home-section py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-6xl grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <div>
             <div className="home-kicker"><Sparkles className="h-4 w-4" /> THE SHOW</div>
@@ -154,7 +154,7 @@ export default async function HomePage() {
       </section>
 
       {/* TICKET */}
-      <section className="home-section px-4 sm:px-6 lg:px-8 py-16">
+      <section className="home-section px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-9">
             <div className="home-kicker justify-center"><Ticket className="h-4 w-4" /> OFFICIAL SHOW PASS</div>
@@ -195,7 +195,7 @@ export default async function HomePage() {
 
       {/* PERFORMERS */}
       {performers.length > 0 && (
-        <section className="home-section py-20 px-4 sm:px-6 lg:px-8">
+        <section className="home-section py-12 sm:py-14 px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-10">
               <div>
@@ -226,7 +226,7 @@ export default async function HomePage() {
       )}
 
       {/* APPLY */}
-      <section className="home-section py-20 px-4 sm:px-6 lg:px-8">
+      <section className="home-section py-12 sm:py-14 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
             <div className="home-kicker justify-center"><UserCheck className="h-4 w-4" /> Application Workflow</div>
@@ -251,7 +251,7 @@ export default async function HomePage() {
       </section>
 
       {/* FAQ */}
-      <section className="home-section py-20 px-4 sm:px-6 lg:px-8">
+      <section className="home-section py-12 sm:py-14 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
           <div className="text-center mb-10">
             <div className="home-kicker justify-center"><HelpCircle className="h-4 w-4" /> Frequently Asked Questions</div>

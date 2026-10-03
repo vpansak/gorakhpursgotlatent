@@ -339,7 +339,7 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
           </a>
 
           <a
-            href="mailto:help.gglatemt@gmail.com?subject=Brand%20Sponsorship%20Inquiry%20-%20Gorakhpur%27s%20Got%20Latent"
+            href="mailto:help.gglatent@gmail.com?subject=Brand%20Sponsorship%20Inquiry%20-%20Gorakhpur%27s%20Got%20Latent"
             className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30 hover:border-blue-400 transition-all flex items-center justify-center gap-3 text-blue-300 group shadow-md"
           >
             <div className="p-2.5 rounded-xl bg-blue-500/20 text-blue-400 shrink-0">
@@ -348,7 +348,7 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
             <div className="text-left">
               <span className="text-[10px] text-slate-400 block uppercase font-bold">Official Business Email</span>
               <strong className="text-sm text-white group-hover:text-blue-300 transition-colors flex items-center gap-1">
-                help.gglatemt@gmail.com <ArrowRight className="w-3.5 h-3.5" />
+                help.gglatent@gmail.com <ArrowRight className="w-3.5 h-3.5" />
               </strong>
             </div>
           </a>

@@ -353,7 +353,7 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
                 <input
                   type="email"
                   required
-                  placeholder="help.gglatemt@gmail.com"
+                  placeholder="help.gglatent@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder:text-slate-500 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 focus:outline-none transition-all"

@@ -160,7 +160,7 @@ export default function NotFound() {
 
           {/* Email */}
           <a
-            href="mailto:help.gglatemt@gmail.com"
+            href="mailto:help.gglatent@gmail.com"
             className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30 hover:border-blue-400 transition-all flex items-center gap-3 text-blue-300 group"
           >
             <div className="p-2 rounded-xl bg-blue-500/20 text-blue-400 shrink-0">
@@ -168,7 +168,7 @@ export default function NotFound() {
             </div>
             <div>
               <span className="text-[10px] text-slate-400 block uppercase font-bold">Official Support Email</span>
-              <strong className="text-sm text-white group-hover:text-blue-300 transition-colors">help.gglatemt@gmail.com</strong>
+              <strong className="text-sm text-white group-hover:text-blue-300 transition-colors">help.gglatent@gmail.com</strong>
             </div>
           </a>
 

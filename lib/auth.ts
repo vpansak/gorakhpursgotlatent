@@ -70,7 +70,7 @@ export async function authenticateUser(email: string, password: string): Promise
   ) {
     return {
       id: 'usr-admin-8423858424',
-      email: cleanEmail.includes('@') ? cleanEmail : 'help.gglatemt@gmail.com',
+      email: cleanEmail.includes('@') ? cleanEmail : 'help.gglatent@gmail.com',
       full_name: 'Administrator',
       role: 'SUPER_ADMIN',
     };

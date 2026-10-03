@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { ShieldCheck, Mail, Phone, MapPin, Award, MessageSquare, ArrowRight } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
 
 function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -230,11 +230,7 @@ export default function Footer() {
         {/* Footer Bottom */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
           <p>© {new Date().getFullYear()} Gorakhpur’s Got Latent. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1 text-amber-400">
-              <Award className="w-4 h-4" /> Secure Razorpay Verified Checkout
-            </span>
-          </div>
+
         </div>
       </div>
     </footer>

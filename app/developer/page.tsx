@@ -236,7 +236,7 @@ export default function DeveloperPage() {
                 <div className="absolute bottom-5 left-5 right-5">
                   <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-black/45 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-amber-200 backdrop-blur-md">
                     <Sparkles className="h-3.5 w-3.5" />
-                    Developer · Founder · Builder
+                    Developer · Co-Founder · Builder
                   </div>
                 </div>
               </div>
@@ -257,7 +257,7 @@ export default function DeveloperPage() {
           <div>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-amber-300">
               <Terminal className="h-3.5 w-3.5" />
-              Full-Stack Developer · Founder · Product Builder
+              Full-Stack Developer · Co-Founder · AI Builder
             </div>
 
             <h1 className="max-w-4xl text-5xl font-black leading-[0.92] tracking-[-0.05em] sm:text-7xl lg:text-[6.2rem]">
@@ -280,7 +280,7 @@ export default function DeveloperPage() {
                 APIs, cloud deployment and real-time web systems.
               </p>
               <p>
-                I&apos;m building <span className="font-semibold text-white">VPANSAK</span>, an
+                I&apos;m building , an
                 own-brand digital commerce and product venture powered by A&amp;A Group, while also
                 working on <span className="font-semibold text-white">ALØK STUDIO</span>, a
                 multi-language online coding and development environment.
@@ -317,7 +317,7 @@ export default function DeveloperPage() {
               <MapPin className="h-4 w-4 text-amber-400" />
               Gorakhpur, Uttar Pradesh, India
               <span className="h-1 w-1 rounded-full bg-slate-700" />
-              <span>Developer · Founder · Student</span>
+              <span>Developer · Co-Founder · Student</span>
             </div>
           </div>
         </section>
@@ -336,45 +336,41 @@ export default function DeveloperPage() {
 
             <div className="space-y-5 text-base leading-8 text-slate-400">
               <p>
-                Alok Singh is a full-stack web developer, founder and product builder from
-                Gorakhpur, Uttar Pradesh. He enjoys taking an idea that starts as a rough concept
-                and turning it into a working digital product with a polished interface and a
-                dependable technical foundation.
+                Alok Singh is a self-taught Full-Stack Developer and Co-Founder based in
+                Gorakhpur, Uttar Pradesh. His journey into technology began around Class 12,
+                influenced by seeing engineering and technology closely within his family.
               </p>
               <p>
-                His development work covers frontend and backend engineering, responsive UI/UX,
-                database design, APIs, authentication, cloud deployment and real-time application
-                workflows. He prefers learning through hands-on building, testing, debugging and
-                improving systems in production.
+                Rather than following a purely academic route, he learned by building. Websites,
+                software experiments, AI tools and digital products became the way he understood
+                how technology works — from frontend interfaces and backend systems to databases,
+                APIs and deployment.
               </p>
               <p>
-                His current work includes <span className="font-semibold text-white">VPANSAK</span>,
-                his own-brand digital commerce venture powered by A&amp;A Group;
-                <span className="font-semibold text-white"> ALØK STUDIO</span>, a multi-language
-                coding and online IDE project; and the technology/web work associated with
-                <span className="font-semibold text-white"> Gorakhpur&apos;s Got Latent</span>.
+                Today, his work sits across <span className="font-semibold text-white">web development,
+                AI and marketing</span>. As Head Developer and Co-Founder, he focuses on turning
+                ideas into products that are useful, visually strong and practical to grow.
               </p>
               <p>
-                Alongside building products, Alok is pursuing BCA and exploring web development,
-                AI and software technology. The long-term focus is simple: keep learning, keep
-                building and create software that is genuinely useful to people.
+                He is especially interested in <span className="font-semibold text-white">AI products,
+                modern web development and startup/product building</span>, with a long-term goal
+                of creating technology that people actually use.
               </p>
 
               <div className="grid gap-3 pt-3 sm:grid-cols-3">
                 <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
-                  <span className="block text-xs font-bold uppercase tracking-wider text-amber-300">Focus</span>
-                  <span className="mt-2 block text-sm font-semibold text-white">Web + Software</span>
+                  <span className="block text-xs font-bold uppercase tracking-wider text-amber-300">Role</span>
+                  <span className="mt-2 block text-sm font-semibold text-white">Developer · Co-Founder</span>
                 </div>
                 <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
-                  <span className="block text-xs font-bold uppercase tracking-wider text-amber-300">Currently</span>
-                  <span className="mt-2 block text-sm font-semibold text-white">BCA + Building</span>
+                  <span className="block text-xs font-bold uppercase tracking-wider text-amber-300">Focus</span>
+                  <span className="mt-2 block text-sm font-semibold text-white">AI · Web · Marketing</span>
                 </div>
                 <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
                   <span className="block text-xs font-bold uppercase tracking-wider text-amber-300">Based in</span>
                   <span className="mt-2 block text-sm font-semibold text-white">Gorakhpur, UP</span>
                 </div>
-              </div>
-            </div>
+              </div>            </div>
           </div>
         </section>
 

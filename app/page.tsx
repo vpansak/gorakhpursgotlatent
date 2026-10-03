@@ -60,7 +60,7 @@ export default async function HomePage() {
             EPISODE 2 • AUDITIONS LIVE
           </div>
 
-          <div className="relative mx-auto h-48 w-[310px] sm:h-64 sm:w-[570px] md:h-80 md:w-[760px] lg:h-[360px] lg:w-[900px]">
+          <div className="relative mx-auto -mt-5 h-48 w-[310px] sm:h-64 sm:w-[570px] md:h-80 md:w-[760px] lg:h-[360px] lg:w-[900px]">
             <div className="home-logo-aura" />
             <Image
               src="/logo.png"

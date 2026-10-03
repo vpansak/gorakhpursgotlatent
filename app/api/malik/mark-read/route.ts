@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { execute } from '@/lib/db';
+import { markLeadRead } from '@/lib/leadsStore';
 import { getSession } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
@@ -20,6 +21,11 @@ export async function POST(req: NextRequest) {
 
     const readVal = isRead ? 1 : 0;
     const readAt = isRead ? new Date().toISOString() : null;
+
+    if (type === 'lead') {
+      await markLeadRead(String(id), Boolean(isRead));
+      return NextResponse.json({ success: true, message: `Lead marked as ${isRead ? 'READ' : 'UNREAD'}`, isRead: Boolean(readVal) });
+    }
 
     let sql = '';
     switch (type) {

@@ -13,8 +13,6 @@ export default function Navbar() {
   const isLiveRoute = pathname.startsWith('/display') || pathname.startsWith('/live') || pathname.startsWith('/operator') || pathname.startsWith('/judge') || pathname.startsWith('/vote') || pathname.startsWith('/malik/live') || pathname.startsWith('/computerji');
   if (isLiveRoute) return null;
 
-  const isHomePage = pathname === '/';
-
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
@@ -27,8 +25,8 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top Header Navbar - RENDERED ONLY ON HOME PAGE */}
-      {isHomePage && (
+      {/* Top Header Navbar - shared across public pages */}
+      {(
         <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#07080e]/85 border-b border-amber-500/20 transition-all duration-300">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-20">

@@ -243,12 +243,9 @@ export default function Footer() {
             <span className="font-black italic tracking-tight text-base text-slate-200" title="RuPay accepted">RuPay</span>
             <span className="h-5 w-px bg-slate-700" aria-hidden="true" />
             <span className="inline-flex items-center gap-2.5 text-[10px] sm:text-[11px] font-semibold text-slate-300">
-              <span className="rounded-md border border-slate-600 bg-white px-2.5 py-1 text-slate-900 font-extrabold tracking-tight" title="UPI payments accepted">
-                UPI
-              </span>
+              <span className="font-black italic tracking-tight text-base text-slate-200" title="UPI accepted">UPI</span>
               <span className="leading-tight">
-                <span className="block text-white font-bold uppercase tracking-wide">Secure Payments</span>
-                <span className="block text-slate-500">Powered by <span className="text-[#2563eb] font-bold">Razorpay</span></span>
+                <span className="block text-[9px] text-slate-500">Powered by <span className="text-[#2563eb] font-bold">Razorpay</span></span>
               </span>
             </span>
           </div>

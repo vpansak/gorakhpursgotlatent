@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { parseResponse } from '@/lib/client-fetch';
+import { useLeadCapture } from '@/lib/leadCapture';
 import {
   Users, User, Phone, Mail, Calendar, MapPin, FileText, CheckCircle2,
   ArrowRight, Sparkles, HeartHandshake, Briefcase, Loader2
@@ -46,6 +47,8 @@ export default function JoinTeamApplyClient() {
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [submittedAppId, setSubmittedAppId] = useState('');
+
+  useLeadCapture({ source: 'team', data: formData, customerName: formData.name, mobile: formData.mobile, email: formData.email, instagramId: formData.instagram, dob: formData.dob });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;

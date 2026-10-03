@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Building2, CheckCircle2, ArrowRight, Loader2, MessageSquare, Mail } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
+import { useLeadCapture } from '@/lib/leadCapture';
 
 function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -33,6 +34,8 @@ export default function SponsorApplyClient() {
     industry: '',
     message: '',
   });
+
+  useLeadCapture({ source: 'sponsor', data: formData, customerName: formData.contactPerson || formData.companyName, mobile: formData.whatsapp, email: formData.bizEmail });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

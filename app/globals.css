@@ -418,3 +418,74 @@
     padding-bottom: 3.75rem;
   }
 }
+
+
+/* ===== GGL SHOW-BRAND SYSTEM — PUBLIC SITE ===== */
+.ggl-site {
+  --ggl-gold:#f5c452;
+  --ggl-gold-bright:#ffe6a0;
+  --ggl-red:#b91c1c;
+  --ggl-bg:#030304;
+}
+.ggl-site > header,
+.ggl-site header.sticky {
+  background:linear-gradient(180deg,rgba(4,4,6,.96),rgba(4,4,6,.82)) !important;
+  border-bottom:1px solid rgba(245,196,82,.16) !important;
+  box-shadow:0 10px 40px rgba(0,0,0,.28);
+}
+.ggl-site header.sticky::after {
+  content:"";
+  position:absolute;
+  left:12%;
+  right:12%;
+  bottom:-1px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(245,196,82,.55),rgba(185,28,28,.45),rgba(245,196,82,.55),transparent);
+  pointer-events:none;
+}
+.ggl-site footer {
+  background:
+    radial-gradient(circle at 50% 0%,rgba(245,196,82,.07),transparent 30%),
+    linear-gradient(180deg,#070708,#030304) !important;
+  border-top-color:rgba(245,196,82,.16) !important;
+}
+.ggl-site footer::before {
+  content:"";
+  position:absolute;
+  top:0;
+  left:10%;
+  right:10%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(245,196,82,.4),transparent);
+}
+.ggl-site footer a {
+  transition:color .2s ease,transform .2s ease,background .2s ease,border-color .2s ease;
+}
+.ggl-site footer a:hover { transform:translateY(-1px); }
+.ggl-site main > section:not(.home-dark section) {
+  position:relative;
+}
+.ggl-site main h1 {
+  letter-spacing:-.025em;
+}
+.ggl-site main h2,
+.ggl-site main h3 {
+  letter-spacing:-.015em;
+}
+.ggl-site main button:not([aria-label="Toggle Navigation Menu"]) {
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease;
+}
+.ggl-site main button:not([aria-label="Toggle Navigation Menu"]):hover {
+  filter:brightness(1.05);
+}
+.ggl-site main img {
+  max-width:100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ggl-site *, .ggl-site *::before, .ggl-site *::after {
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    scroll-behavior:auto !important;
+    transition-duration:.01ms !important;
+  }
+}

@@ -218,7 +218,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-[#07080e] text-slate-100 antialiased selection:bg-amber-500 selection:text-black min-h-screen flex flex-col justify-between">
+      <body className="ggl-site bg-[#07080e] text-slate-100 antialiased selection:bg-amber-500 selection:text-black min-h-screen flex flex-col justify-between">
         <div>
           <Navbar />
           <main className="relative">{children}</main>

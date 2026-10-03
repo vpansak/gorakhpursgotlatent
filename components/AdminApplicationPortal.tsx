@@ -25,12 +25,13 @@ interface AdminApplicationPortalProps {
   };
 }
 
-type TabType = 'performer' | 'sponsor' | 'team' | 'guest' | 'computerji';
+type TabType = 'performer' | 'sponsor' | 'team' | 'guest' | 'computerji' | 'leads';
 
 export default function AdminApplicationPortal({ session, initialData }: AdminApplicationPortalProps) {
   const [activeTab, setActiveTab] = useState<TabType>('performer');
   const [data, setData] = useState(initialData);
   const [computerJiScores, setComputerJiScores] = useState<any[]>([]);
+  const [leads, setLeads] = useState<any[]>([]);
   const [ticketStats, setTicketStats] = useState({ totalBooked: 0, paidTickets: 0 });
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
@@ -60,6 +61,31 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     }
   };
 
+  const fetchLeads = async () => {
+    try {
+      const res = await fetch('/api/leads');
+      const json = await res.json();
+      if (json.success && json.leads) {
+        setLeads(json.leads);
+      }
+    } catch (err) {
+      console.error('Failed to fetch leads:', err);
+    }
+  };
+
+  const handleDeleteLead = async (id: string, name: string) => {
+    if (!confirm(`Kya aap ${name || 'is lead'} ko delete karna chahte hain?`)) return;
+    try {
+      const res = await fetch(`/api/leads?id=${id}`, { method: 'DELETE' });
+      const json = await res.json();
+      if (json.success) {
+        setLeads((prev) => prev.filter((it) => it.id !== id));
+      }
+    } catch (err) {
+      console.error('Failed to delete lead:', err);
+    }
+  };
+
   const fetchTicketStats = async () => {
     try {
       const res = await fetch('/api/tickets/search');
@@ -74,6 +100,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
 
   useEffect(() => {
     fetchComputerJiScores();
+    fetchLeads();
     fetchTicketStats();
   }, []);
 
@@ -87,6 +114,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
         setData(json.data);
       }
       await fetchComputerJiScores();
+      await fetchLeads();
     } catch (err) {
       console.error('Failed to refresh applications:', err);
     } finally {
@@ -234,12 +262,24 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     if (activeTab === 'team') return data.team || [];
     if (activeTab === 'guest') return data.guests || [];
     if (activeTab === 'computerji') return computerJiScores || [];
+    if (activeTab === 'leads') return leads || [];
     return [];
-  }, [activeTab, data, computerJiScores]);
+  }, [activeTab, data, computerJiScores, leads]);
 
   // Filter & Sort items: Unread at TOP (is_read = 0), Read at BOTTOM (is_read = 1)
   const filteredItems = useMemo(() => {
     const list = currentList.filter((item) => {
+      // Leads custom search
+      if (activeTab === 'leads') {
+        if (!search.trim()) return true;
+        const q = search.toLowerCase();
+        const name = (item.customer_name || '').toLowerCase();
+        const contact = (item.mobile || '').toLowerCase();
+        const email = (item.email || '').toLowerCase();
+        const code = (item.lead_code || item.id || '').toLowerCase();
+        return name.includes(q) || contact.includes(q) || email.includes(q) || code.includes(q);
+      }
+
       // Computer Ji custom search
       if (activeTab === 'computerji') {
         if (!search.trim()) return true;
@@ -542,6 +582,25 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
           <div className="text-xl sm:text-2xl font-black text-white">{computerJiScores.length}</div>
           <p className="text-[10px] text-amber-400 font-semibold mt-1">Live Scores (10-Day Retention)</p>
         </button>
+
+        {/* Abandoned Leads */}
+        <button
+          onClick={() => { setActiveTab('leads'); setStatusFilter('ALL'); setReadFilter('ALL'); setSearch(''); }}
+          className={`p-4 rounded-2xl text-left transition-all cursor-pointer border ${
+            activeTab === 'leads'
+              ? 'bg-rose-500/20 border-rose-400 shadow-lg shadow-rose-500/15'
+              : 'bg-slate-900/80 border-slate-800 hover:border-slate-700'
+          }`}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-bold text-rose-400 uppercase tracking-wider">6. LEADS (DRAFTS)</span>
+            <div className="p-1.5 rounded-lg bg-rose-500/20 text-rose-300">
+              <UserCheck className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="text-xl sm:text-2xl font-black text-white">{leads.length}</div>
+          <p className="text-[10px] text-rose-400 font-semibold mt-1">Auto-Saved Form Drafts</p>
+        </button>
       </div>
 
       {/* MAIN APPLICATION CONSOLE */}
@@ -555,6 +614,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
               { id: 'team', label: '👥 Join Team (टीम सदस्य)', count: data.team?.length || 0 },
               { id: 'guest', label: '⚖️ Judges & VIPs (जज / पैनल)', count: data.guests?.length || 0 },
               { id: 'computerji', label: '💻 Computer Ji Scores (10-दिन डेटा)', count: computerJiScores.length },
+              { id: 'leads', label: '⚡ Leads (Auto-Saved Drafts)', count: leads.length },
             ].map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -743,10 +803,19 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                     <th className="py-3.5 px-4 text-right">Action</th>
                   </>
                 )}
-                {activeTab !== 'computerji' && (
+                {activeTab !== 'computerji' && activeTab !== 'leads' && (
                   <>
                     <th className="py-3.5 px-4 text-center">Mark as Read</th>
                     <th className="py-3.5 px-4">Status</th>
+                    <th className="py-3.5 px-4 text-right">Action</th>
+                  </>
+                )}
+                {activeTab === 'leads' && (
+                  <>
+                    <th className="py-3.5 px-4">Email & Instagram</th>
+                    <th className="py-3.5 px-4 text-center">Ticket Qty</th>
+                    <th className="py-3.5 px-4">Status</th>
+                    <th className="py-3.5 px-4">Captured Time</th>
                     <th className="py-3.5 px-4 text-right">Action</th>
                   </>
                 )}
@@ -758,13 +827,93 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                   <td colSpan={10} className="py-14 text-center text-slate-400">
                     <div className="flex flex-col items-center gap-2">
                       <FileText className="w-8 h-8 text-slate-600" />
-                      <span className="text-sm font-bold text-slate-300">No applications found</span>
-                      <span className="text-xs text-slate-500">All saved applications are displayed in this portal</span>
+                      <span className="text-sm font-bold text-slate-300">No applications or leads found</span>
+                      <span className="text-xs text-slate-500">All saved data and form drafts are displayed in this portal</span>
                     </div>
                   </td>
                 </tr>
               ) : (
                 filteredItems.map((item, idx) => {
+                  if (activeTab === 'leads') {
+                    return (
+                      <tr
+                        key={item.id}
+                        className="hover:bg-slate-900/60 transition-colors border-l-2 border-l-transparent hover:border-l-rose-500"
+                      >
+                        <td className="py-3.5 px-4 text-center text-slate-500 font-mono text-[11px]">
+                          {idx + 1}
+                        </td>
+                        <td className="py-3.5 px-4 font-mono font-bold text-rose-400 text-xs whitespace-nowrap">
+                          {item.lead_code || item.id}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <div className="font-black text-white text-sm">{item.customer_name || 'Anonymous Guest'}</div>
+                          <div className="text-[11px] text-slate-400 font-medium">Source: {item.source || 'book-ticket'}</div>
+                        </td>
+                        <td className="py-3.5 px-4 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-white font-bold">{item.mobile}</span>
+                            {item.mobile && (
+                              <div className="flex items-center gap-1">
+                                <a
+                                  href={`https://wa.me/91${String(item.mobile).replace(/[^0-9]/g, '').slice(-10)}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="p-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-400 transition-colors"
+                                  title="Chat on WhatsApp"
+                                >
+                                  <MessageSquare className="w-3.5 h-3.5" />
+                                </a>
+                                <a
+                                  href={`tel:${item.mobile}`}
+                                  className="p-1.5 rounded-lg bg-blue-500/20 hover:bg-blue-500/40 text-blue-400 transition-colors"
+                                  title="Call phone"
+                                >
+                                  <Phone className="w-3.5 h-3.5" />
+                                </a>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <div className="text-slate-300 text-xs">{item.email || '—'}</div>
+                          {item.instagram_id && <div className="text-[11px] text-amber-300">@{item.instagram_id.replace(/^@/, '')}</div>}
+                        </td>
+                        <td className="py-3.5 px-4 text-center font-mono font-bold text-amber-300 text-xs">
+                          {item.quantity || 1} Ticket(s)
+                        </td>
+                        <td className="py-3.5 px-4 whitespace-nowrap">
+                          {item.status === 'CONVERTED' ? (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                              ✅ BOOKED (PAID)
+                            </span>
+                          ) : (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-black bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                              ⚠️ ABANDONED DRAFT
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3.5 px-4 font-mono text-[11px] text-slate-400 whitespace-nowrap">
+                          {new Date(item.updated_at || item.created_at).toLocaleString('en-IN', {
+                            day: '2-digit',
+                            month: 'short',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </td>
+                        <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                          <button
+                            onClick={() => handleDeleteLead(item.id, item.customer_name)}
+                            className="px-2.5 py-1 rounded-lg bg-red-950/70 hover:bg-red-800 border border-red-500/40 text-red-300 hover:text-white text-[11px] font-bold transition-all cursor-pointer inline-flex items-center gap-1"
+                            title="Delete this lead"
+                          >
+                            <Trash2 className="w-3 h-3 text-red-400" />
+                            <span>Delete</span>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  }
                   if (activeTab === 'computerji') {
                     return (
                       <tr

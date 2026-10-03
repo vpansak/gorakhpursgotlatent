@@ -310,6 +310,24 @@ export async function ensureDatabaseSchema() {
           updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
       `);
+
+      // 12. abandoned_leads
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS abandoned_leads (
+          id TEXT PRIMARY KEY,
+          lead_code TEXT UNIQUE NOT NULL,
+          customer_name TEXT,
+          mobile TEXT NOT NULL,
+          email TEXT,
+          instagram_id TEXT,
+          dob TEXT,
+          quantity INTEGER DEFAULT 1,
+          source TEXT DEFAULT 'book-ticket',
+          status TEXT DEFAULT 'ABANDONED',
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
     } catch (err) {
       console.warn('Schema init notice:', err);
     }

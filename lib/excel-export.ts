@@ -135,10 +135,27 @@ export function formatComputerJiRows(items: any[]) {
   }));
 }
 
+// Map lead records for Excel
+export function formatLeadRows(items: any[]) {
+  return items.map((l, idx) => ({
+    'S.No': idx + 1,
+    'Lead Code': l.lead_code || l.id || '',
+    'Customer Name': l.customer_name || 'Anonymous Guest',
+    'Mobile Number': l.mobile || '',
+    'Email Address': l.email || '',
+    'Instagram Handle': l.instagram_id || '',
+    'Date of Birth': l.dob || '',
+    'Ticket Quantity': l.quantity || 1,
+    'Source': l.source || 'book-ticket',
+    'Status': l.status || 'ABANDONED',
+    'Captured / Updated Time': formatDate(l.updated_at || l.created_at),
+  }));
+}
+
 // Export single category to Excel (.xlsx)
 export function downloadCategoryExcel(
   items: any[],
-  category: 'performer' | 'sponsor' | 'team' | 'guest' | 'computerji',
+  category: 'performer' | 'sponsor' | 'team' | 'guest' | 'computerji' | 'leads',
   customTitle?: string
 ) {
   let mappedData: any[] = [];
@@ -165,6 +182,10 @@ export function downloadCategoryExcel(
     mappedData = formatComputerJiRows(items);
     sheetName = 'Computer Ji Scores';
     filePrefix = 'GGL_ComputerJi_Scores';
+  } else if (category === 'leads') {
+    mappedData = formatLeadRows(items);
+    sheetName = 'Abandoned Leads';
+    filePrefix = 'GGL_Abandoned_Leads';
   }
 
   const wb = XLSX.utils.book_new();

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Ticket as TicketIcon, CheckCircle2, AlertCircle, ShieldCheck, Lock } from 'lucide-react';
 import TicketCard from '@/components/TicketCard';
 import { TicketRecord, validateAgeIs18Plus } from '@/lib/ticketTypes';
@@ -32,6 +32,29 @@ export default function BookTicketPage() {
   const [confirmedTicket, setConfirmedTicket] = useState<TicketRecord | null>(null);
 
   const totalAmount = quantity * 149;
+
+  // Auto-capture abandoned lead as customer fills details
+  useEffect(() => {
+    if (!mobile.trim() || mobile.trim().length < 5) return;
+    const timer = setTimeout(() => {
+      fetch('/api/leads/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName,
+          mobile,
+          email,
+          instagramId,
+          dob,
+          quantity,
+          source: 'book-ticket',
+          status: 'ABANDONED',
+        }),
+      }).catch((err) => console.warn('Lead track notice:', err));
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [customerName, mobile, email, instagramId, dob, quantity]);
 
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

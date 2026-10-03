@@ -31,15 +31,15 @@ export async function POST(req: Request) {
       );
     }
 
-    // Quantity validation (1 to 10)
+    // Quantity & Pricing (₹149 per ticket)
     const qty = Math.max(1, Math.min(10, Number(quantity) || 1));
-    const ticketPrice = 0;
-    const totalAmount = 0;
-    const amountPaise = 0;
+    const ticketPrice = 149;
+    const totalAmount = qty * ticketPrice;
+    const amountPaise = totalAmount * 100;
 
     const bookingId = `ord-ggl-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
     const razorpayKeyId = process.env.RAZORPAY_KEY_ID || 'rzp_live_Tfu7PlxOWV6ohp';
-    let razorpayOrderId = `free_order_${bookingId}`;
+    let razorpayOrderId = `rzp_ord_${bookingId}`;
 
     // Call Razorpay API if available
     if (razorpay) {

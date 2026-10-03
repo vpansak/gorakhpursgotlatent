@@ -24,7 +24,7 @@ export function useLeadCapture(options: LeadCaptureOptions) {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    let id = sessionStorage.getItem('ggl_lead_session_id');
+    let id = sessionStorage.getItem('ggl_lead_session_${options.source}');
     if (!id) {
       id = `lead_session_${crypto.randomUUID()}`;
       sessionStorage.setItem('ggl_lead_session_id', id);

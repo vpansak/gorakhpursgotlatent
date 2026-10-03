@@ -315,10 +315,9 @@ export default function DeveloperPage() {
                 APIs, cloud deployment and real-time web systems.
               </p>
               <p>
-                I&apos;m building , an
-                own-brand digital commerce and product venture powered by A&amp;A Group, while also
-                working on <span className="font-semibold text-white">ALØK STUDIO</span>, a
-                multi-language online coding and development environment.
+                I&apos;m also building <span className="font-semibold text-white">ALØK STUDIO</span>, a
+                multi-language online coding and development environment focused on making coding
+                and experimentation more accessible.
               </p>
               <p>
                 I also work on the technology and web experience behind

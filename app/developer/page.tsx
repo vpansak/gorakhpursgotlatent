@@ -1,67 +1,52 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import { Metadata } from 'next';
-import { 
-  Code2, 
-  MapPin, 
-  Calendar, 
-  Sparkles, 
-  ShieldCheck, 
-  Terminal, 
-  Cpu, 
-  Globe, 
-  ExternalLink,
-  Award,
-  Zap,
-  CheckCircle2,
-  Layers,
-  Database,
-  Lock,
-  Workflow,
-  Share2,
-  Smartphone,
+import {
+  ArrowUpRight,
   Check,
-  TrendingUp,
+  Code2,
+  Database,
+  Github,
+  Globe2,
+  Layers3,
+  Linkedin,
+  MapPin,
+  Menu,
   Server,
-  Star,
-  Users,
-  Activity,
-  FileCode,
-  Sliders,
-  Send,
-  Heart,
-  Laptop,
-  Rocket
+  Sparkles,
+  Terminal,
+  X,
+  Zap,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Alok Singh | Full-Stack Software Engineer & Tech Architect",
-  description: "Official developer profile and biography of Alok Singh — Full-Stack Software Engineer & Tech Architect from Gorakhpur, Uttar Pradesh.",
-  authors: [{ name: "Alok Singh", url: "https://gkpgotlatent.in/developer" }],
-  creator: "Alok Singh",
-  publisher: "Alok Singh",
+  title: 'Alok Singh — Full-Stack Developer & Software Architect',
+  description:
+    'Official developer profile of Alok Singh, a full-stack web developer focused on modern web applications, real-time systems, cloud deployment and UI/UX engineering.',
+  authors: [{ name: 'Alok Singh', url: 'https://gkpgotlatent.in/developer' }],
+  creator: 'Alok Singh',
+  publisher: 'Alok Singh',
   robots: {
     index: true,
     follow: true,
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
   },
   openGraph: {
-    title: "Alok Singh | Full-Stack Software Engineer & Tech Architect",
-    description: "Personal developer profile, skills, engineering philosophy, and biography of Alok Singh.",
+    title: 'Alok Singh — Full-Stack Developer & Software Architect',
+    description:
+      'Full-stack web engineering, real-time systems, cloud deployment and UI/UX engineering.',
     url: 'https://gkpgotlatent.in/developer',
-    siteName: "Alok Singh Portfolio",
+    siteName: 'Alok Singh',
     images: [
       {
         url: '/alok-singh.jpg',
         width: 800,
         height: 800,
-        alt: 'Alok Singh - Full-Stack Software Engineer',
+        alt: 'Alok Singh — Full-Stack Developer',
       },
     ],
     locale: 'en_IN',
@@ -69,355 +54,418 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Alok Singh | Full-Stack Software Engineer",
-    description: "Full-Stack Web Engineering, Real-Time Architecture, and Software Engineering.",
+    title: 'Alok Singh — Full-Stack Developer',
+    description:
+      'Full-stack web engineering, real-time systems, cloud deployment and UI/UX engineering.',
     images: ['/alok-singh.jpg'],
   },
 };
 
-function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
-  return (
-    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-    </svg>
-  );
-}
+const socialLinks = [
+  {
+    name: 'Instagram',
+    handle: '@aloksingh_._',
+    url: 'https://www.instagram.com/aloksingh_._/',
+  },
+  {
+    name: 'X',
+    handle: '@rajpratapsinghh',
+    url: 'https://x.com/rajpratapsinghh',
+  },
+  {
+    name: 'Facebook',
+    handle: '@meadorush',
+    url: 'https://www.facebook.com/meadorush',
+  },
+];
 
-function XIcon({ className = "w-5 h-5" }: { className?: string }) {
-  return (
-    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-    </svg>
-  );
-}
+const expertise = [
+  {
+    number: '01',
+    icon: Code2,
+    title: 'Full-Stack Development',
+    description:
+      'Modern frontend and backend application development with React, Next.js, TypeScript and Node.js.',
+  },
+  {
+    number: '02',
+    icon: Zap,
+    title: 'Real-Time Systems',
+    description:
+      'Interactive applications, live data flows and low-latency experiences designed around real user interactions.',
+  },
+  {
+    number: '03',
+    icon: Globe2,
+    title: 'Cloud & Deployment',
+    description:
+      'Production-ready web workflows, serverless architecture, APIs and deployment-focused engineering.',
+  },
+  {
+    number: '04',
+    icon: Layers3,
+    title: 'UI / UX Engineering',
+    description:
+      'Responsive interfaces, design systems, micro-interactions and polished dark-mode experiences.',
+  },
+  {
+    number: '05',
+    icon: Database,
+    title: 'Database & APIs',
+    description:
+      'Structured data models, PostgreSQL/SQL workflows, API integrations and reliable application data flow.',
+  },
+  {
+    number: '06',
+    icon: Server,
+    title: 'Product Engineering',
+    description:
+      'Taking an idea from interface and architecture to a functional, connected digital product.',
+  },
+];
 
-function FacebookIcon({ className = "w-5 h-5" }: { className?: string }) {
-  return (
-    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-    </svg>
-  );
-}
+const technologies = {
+  Frontend: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'App Router'],
+  Backend: ['Node.js', 'REST APIs', 'WebSockets', 'Serverless Architecture'],
+  Database: ['PostgreSQL', 'SQLite', 'SQL'],
+  'Cloud & Deployment': ['Vercel', 'Serverless', 'Production Deployments'],
+  'Engineering Focus': ['Real-Time Systems', 'API Design', 'Responsive UI', 'Design Systems'],
+};
+
+const principles = [
+  {
+    number: '01',
+    title: 'Build with purpose',
+    text: 'Every feature should solve a real problem and remain understandable to the people who use it.',
+  },
+  {
+    number: '02',
+    title: 'Design for people',
+    text: 'Good engineering should feel simple from the user side, even when the system underneath is complex.',
+  },
+  {
+    number: '03',
+    title: 'Engineer for growth',
+    text: 'Prefer modular structures, predictable data flow and foundations that can evolve with the product.',
+  },
+];
+
+const developerJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  '@id': 'https://gkpgotlatent.in/developer#webpage',
+  url: 'https://gkpgotlatent.in/developer',
+  name: 'Alok Singh — Full-Stack Developer & Software Architect',
+  description:
+    'Official developer profile of Alok Singh, a full-stack web developer from Gorakhpur, Uttar Pradesh.',
+  mainEntity: {
+    '@type': 'Person',
+    '@id': 'https://gkpgotlatent.in/developer#person',
+    name: 'Alok Singh',
+    jobTitle: 'Full-Stack Developer & Software Architect',
+    description:
+      'Full-stack web developer focused on modern web applications, real-time systems, cloud deployment and UI/UX engineering.',
+    url: 'https://gkpgotlatent.in/developer',
+    image: 'https://gkpgotlatent.in/alok-singh.jpg',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Gorakhpur',
+      addressRegion: 'Uttar Pradesh',
+      addressCountry: 'IN',
+    },
+    sameAs: socialLinks.map((social) => social.url),
+  },
+};
 
 export default function DeveloperPage() {
-  const socialLinks = [
-    {
-      name: "Instagram",
-      handle: "@aloksingh_._",
-      url: "https://www.instagram.com/aloksingh_._/",
-      icon: InstagramIcon,
-      bgGradient: "from-pink-600 via-purple-600 to-amber-500",
-      borderColor: "border-pink-500/50 hover:border-pink-300",
-      hoverBg: "hover:scale-105"
-    },
-    {
-      name: "X (Twitter)",
-      handle: "@rajpratapsinghh",
-      url: "https://x.com/rajpratapsinghh",
-      icon: XIcon,
-      bgGradient: "from-slate-800 to-slate-900",
-      borderColor: "border-slate-600 hover:border-amber-400",
-      hoverBg: "hover:scale-105"
-    },
-    {
-      name: "Facebook",
-      handle: "@meadorush",
-      url: "https://www.facebook.com/meadorush",
-      icon: FacebookIcon,
-      bgGradient: "from-blue-700 to-blue-900",
-      borderColor: "border-blue-500/50 hover:border-blue-300",
-      hoverBg: "hover:scale-105"
-    }
-  ];
-
-  const coreSkills = [
-    { name: "Frontend Development", level: "Expert", desc: "Next.js 14, React, App Router, SSR, TypeScript, Tailwind CSS" },
-    { name: "Backend & Systems", level: "Advanced", desc: "Node.js, REST APIs, WebSockets, Serverless Edge Architecture" },
-    { name: "Database Engineering", level: "Advanced", desc: "Relational SQL Schemas, SQLite, PostgreSQL, Query Optimization" },
-    { name: "UI/UX & Design Systems", level: "Expert", desc: "Glassmorphism Aesthetics, Micro-Animations, Responsive Layouts" },
-    { name: "API & Payment Integrations", level: "Advanced", desc: "Third-Party APIs, Cryptographic Signatures, Webhooks" },
-    { name: "Digital Operations & Strategy", level: "Lead", desc: "Social Media Execution, Content Strategy, Audience Growth" }
-  ];
-
-  const engineeringPillars = [
-    {
-      num: "01",
-      title: "💻 Clean & Scalable System Architecture",
-      subtitle: "Modular, Type-Safe & Maintainable Software",
-      description: "Main clean code principles, modular components, aur type-safe architectures par focus karta hoon. Code base ko simple, predictable, aur long-term maintainable rakhna mera primary goal hota hai.",
-      points: [
-        "Strict TypeScript interfaces and predictable state flow",
-        "Serverless API design with fast response times",
-        "Modular folder structures adhering to modern software patterns",
-        "Comprehensive code organization and clean documentation"
-      ]
-    },
-    {
-      num: "02",
-      title: "⚡ Real-Time Web & Low-Latency Performance",
-      subtitle: "Sub-Second Response Times & Real-Time Sync",
-      description: "Fast-loading web applications aur real-time data sync engines develop karta hoon jo minimum network overhead ke saath interactive user experiences render karte hain.",
-      points: [
-        "Optimized asset loading and server-side rendering (SSR)",
-        "WebSocket integration for real-time live data streaming",
-        "Lightweight payload structures for fast mobile execution",
-        "Sub-second initial page load speeds"
-      ]
-    },
-    {
-      num: "03",
-      title: "🎨 Glassmorphic UI/UX & Responsive Design",
-      subtitle: "Modern Dark Mode Aesthetics & Fluid Layouts",
-      description: "Custom dark-mode glassmorphic design systems (#07080e background, gold/amber glowing accents, smooth hover animations) build karta hoon jo mobile se lekar 4K screens tak stunning look dete hain.",
-      points: [
-        "Curated HSL color palettes and glassmorphic card designs",
-        "Google Fonts typography integration (Bebas Neue, Barlow, Outfit, Inter)",
-        "Fully responsive layouts across all device viewports",
-        "Smooth micro-interactions and animated UI elements"
-      ]
-    },
-    {
-      num: "04",
-      title: "📱 Digital Strategy & Social Media Execution",
-      subtitle: "Brand Leadership & Content Direction",
-      description: "Software engineering ke alawa, main digital media operations, social media growth (@aloksingh_._), aur brand strategy ko direction aur execution deta hoon.",
-      points: [
-        "Brand identity management and social handle strategy",
-        "Audience engagement campaigns and content direction",
-        "Digital link distribution and organic growth"
-      ]
-    }
-  ];
-
-  const developerJsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'ProfilePage',
-        '@id': 'https://gkpgotlatent.in/developer#webpage',
-        'url': 'https://gkpgotlatent.in/developer',
-        'name': "Alok Singh - Full-Stack Software Engineer & Tech Architect",
-        'description': "Official portfolio and personal biography of Alok Singh — Full-Stack Software Engineer & Tech Architect from Gorakhpur, Uttar Pradesh.",
-        'mainEntity': {
-          '@type': 'Person',
-          '@id': 'https://gkpgotlatent.in/developer#aloksingh',
-          'name': 'Alok Singh',
-          'jobTitle': 'Full-Stack Software Engineer & Tech Architect',
-          'roleName': 'Full-Stack Software Engineer',
-          'description': "Full-Stack Software Engineer specializing in Next.js, React, TypeScript, Node.js, and real-time systems architecture.",
-          'url': 'https://gkpgotlatent.in/developer',
-          'image': 'https://gkpgotlatent.in/alok-singh.jpg',
-          'sameAs': [
-            'https://www.instagram.com/aloksingh_._/',
-            'https://x.com/rajpratapsinghh',
-            'https://www.facebook.com/meadorush'
-          ]
-        }
-      }
-    ]
-  };
-
   return (
-    <div className="min-h-screen bg-[#07080e] text-slate-100 py-6 sm:py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden selection:bg-amber-500 selection:text-black">
+    <main className="min-h-screen overflow-hidden bg-[#05070d] text-white selection:bg-amber-400 selection:text-black">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(developerJsonLd) }}
       />
-      
-      {/* Ambient Lighting Glow Background */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-b from-amber-500/20 via-red-600/10 to-transparent rounded-full blur-[180px] pointer-events-none" />
-      <div className="absolute top-1/3 -left-60 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute top-2/3 -right-60 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[160px] pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto relative z-10 space-y-12">
-        
-        {/* 1. TOP HERO PROFILE CARD - PROMINENTLY AT THE ABSOLUTE TOP OF THE PAGE */}
-        <div className="bg-slate-900/90 border border-amber-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-2xl relative overflow-hidden group hover:border-amber-500/50 transition-all duration-300 space-y-8">
-          
-          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 sm:gap-10">
-            
-            {/* PROFILE PHOTO FRAME */}
-            <div className="relative shrink-0 flex flex-col items-center">
-              <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border-2 border-amber-500/50 shadow-[0_0_35px_rgba(255,215,0,0.3)] group-hover:border-amber-400 transition-all duration-500">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute left-1/2 top-[-280px] h-[620px] w-[620px] -translate-x-1/2 rounded-full bg-amber-500/10 blur-[150px]" />
+        <div className="absolute left-[-220px] top-[35%] h-[500px] w-[500px] rounded-full bg-red-500/5 blur-[140px]" />
+        <div className="absolute right-[-220px] top-[65%] h-[520px] w-[520px] rounded-full bg-blue-500/5 blur-[150px]" />
+        <div
+          className="absolute inset-0 opacity-[0.035]"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
+        />
+      </div>
+
+      <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#05070d]/75 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
+          <a href="#top" className="flex items-center gap-2 font-black tracking-tight">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-amber-400/30 bg-amber-400/10 text-amber-300">
+              AS
+            </span>
+            <span className="hidden sm:block">ALOK SINGH</span>
+          </a>
+          <div className="hidden items-center gap-7 text-xs font-semibold text-slate-400 md:flex">
+            <a className="transition hover:text-white" href="#about">About</a>
+            <a className="transition hover:text-white" href="#expertise">Expertise</a>
+            <a className="transition hover:text-white" href="#stack">Stack</a>
+            <a className="transition hover:text-white" href="#principles">Principles</a>
+            <a className="transition hover:text-amber-300" href="#contact">Contact</a>
+          </div>
+          <a
+            href="#contact"
+            className="rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-2 text-xs font-bold text-amber-300 transition hover:border-amber-300/60 hover:bg-amber-400/15"
+          >
+            LET&apos;S CONNECT
+          </a>
+        </div>
+      </nav>
+
+      <div id="top" className="mx-auto max-w-6xl px-5 pb-20 pt-12 sm:px-8 sm:pt-20">
+        <section className="relative grid items-center gap-12 lg:grid-cols-[1.1fr_.9fr]">
+          <div>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-amber-300">
+              <Terminal className="h-3.5 w-3.5" />
+              Full-Stack Engineer · Software Architect · Builder
+            </div>
+
+            <h1 className="max-w-4xl text-5xl font-black leading-[0.92] tracking-[-0.05em] sm:text-7xl lg:text-[6.6rem]">
+              ALOK
+              <span className="block bg-gradient-to-r from-white via-amber-100 to-amber-400 bg-clip-text text-transparent">
+                SINGH
+              </span>
+            </h1>
+
+            <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
+              Building modern digital products where{' '}
+              <span className="font-semibold text-white">engineering</span>,
+              <span className="font-semibold text-white"> design</span> and
+              <span className="font-semibold text-white"> real-world usability</span> meet.
+            </p>
+
+            <p className="mt-4 max-w-xl text-sm leading-7 text-slate-500">
+              Focused on full-stack web development, real-time systems, cloud deployment,
+              APIs and responsive UI/UX — from the first interface to the production build.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#expertise"
+                className="group inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-black text-black transition hover:-translate-y-0.5 hover:bg-amber-300"
+              >
+                EXPLORE EXPERTISE
+                <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3 text-sm font-bold text-white transition hover:border-white/20 hover:bg-white/[0.06]"
+              >
+                CONNECT WITH ME
+              </a>
+            </div>
+
+            <div className="mt-10 flex items-center gap-3 text-xs text-slate-500">
+              <MapPin className="h-4 w-4 text-amber-400" />
+              Gorakhpur, Uttar Pradesh, India
+              <span className="h-1 w-1 rounded-full bg-slate-700" />
+              <span>Open to building useful things</span>
+            </div>
+          </div>
+
+          <div className="relative mx-auto w-full max-w-[430px]">
+            <div className="absolute -inset-6 rounded-[40px] bg-amber-400/10 blur-3xl" />
+            <div className="relative overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.035] p-3 shadow-2xl shadow-black/50 backdrop-blur-xl">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[25px] border border-amber-300/20 bg-slate-900">
                 <Image
                   src="/alok-singh.jpg"
-                  alt="Alok Singh - Full-Stack Software Engineer & Tech Architect"
+                  alt="Alok Singh — Full-Stack Developer"
                   fill
-                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                   priority
+                  className="object-cover object-center"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#05070d] via-transparent to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-black/45 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-amber-200 backdrop-blur-md">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Developer Profile
+                  </div>
+                </div>
               </div>
-              
-              <div className="absolute -bottom-4 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-xs px-5 py-2 rounded-full shadow-xl flex items-center gap-1.5 whitespace-nowrap">
-                <CheckCircle2 className="w-4 h-4" />
-                VERIFIED ARCHITECT
+              <div className="grid grid-cols-3 gap-2 p-2 pt-3 text-center text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
+                  <span className="block text-white">FULL</span> STACK
+                </div>
+                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
+                  <span className="block text-white">REAL</span> TIME
+                </div>
+                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
+                  <span className="block text-white">CLOUD</span> READY
+                </div>
               </div>
             </div>
+          </div>
+        </section>
 
-            {/* PROFILE TITLE, BIO & SOCIAL CONNECT INLINE RIGHT */}
-            <div className="flex-1 space-y-5 text-center lg:text-left">
-              
-              {/* BADGE */}
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold tracking-wider uppercase">
-                <Laptop className="w-4 h-4 text-amber-400" />
-                <span>Tech Architect & Lead Full-Stack Engineer</span>
-              </div>
-
-              {/* NAME */}
-              <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight font-heading text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 uppercase">
-                ALOK SINGH
-              </h1>
-
-              {/* BIO STATEMENT */}
-              <div className="space-y-3 text-slate-300 text-sm sm:text-base leading-relaxed bg-slate-950/70 p-5 rounded-2xl border border-slate-800/90 shadow-inner">
-                <p>
-                  Mera naam <strong className="text-amber-300 font-semibold">Alok Singh</strong> hai. Main Gola Road, Kauriram, Gorakhpur, Uttar Pradesh ka rehne wala hoon (Date of Birth: <strong className="text-slate-200">13/04/2008</strong>).
-                </p>
-                <p>
-                  Main full-stack web engineering, real-time system architecture, cloud deployment, aur custom UI/UX design systems me specialize karta hoon. Fast, scalable aur secure web software build karna mera core passion hai.
-                </p>
-              </div>
-
-              {/* PERSONAL METRICS */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-800/80">
-                  <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
-                  <div className="text-xs font-bold text-slate-200">DOB: 13 April 2008 (13/04/2008)</div>
-                </div>
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-800/80">
-                  <MapPin className="w-4 h-4 text-red-400 shrink-0" />
-                  <div className="text-xs font-bold text-slate-200">Gola Road, Kauriram, Gorakhpur, UP</div>
-                </div>
-              </div>
-
-              {/* SOCIAL MEDIA CONNECT BUTTONS — INLINE RIGHT IN THE HERO CARD AT THE VERY TOP */}
-              <div className="pt-2 space-y-2">
-                <div className="text-xs text-amber-400 font-bold uppercase tracking-wider flex items-center justify-center lg:justify-start gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-400" />
-                  <span>Connect With Alok Singh Directly:</span>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
-                  {socialLinks.map((social, sIdx) => {
-                    const Icon = social.icon;
-                    return (
-                      <a
-                        key={sIdx}
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`px-4 py-2.5 rounded-xl bg-gradient-to-r ${social.bgGradient} border ${social.borderColor} text-white font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg transition-all duration-300 ${social.hoverBg}`}
-                      >
-                        <Icon className="w-4 h-4" />
-                        <span>{social.name}: {social.handle} ↗</span>
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-
+        <section id="about" className="mt-28 scroll-mt-24">
+          <div className="grid gap-8 lg:grid-cols-[.7fr_1.3fr]">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300">01 — About</p>
+              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">Engineering with purpose.</h2>
             </div>
-
-          </div>
-
-        </div>
-
-        {/* 2. TECHNICAL STACK & SKILLS */}
-        <div className="space-y-6">
-          <div className="text-center space-y-2">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading uppercase tracking-wide">
-              Technical Stack & Skills
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
-              Technologies, frameworks, and engineering paradigms mastered by Alok Singh.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {coreSkills.map((skill, skIdx) => (
-              <div 
-                key={skIdx}
-                className="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-5 space-y-2 hover:border-amber-500/40 transition-all backdrop-blur-xl group"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-amber-400 uppercase">{skill.level}</span>
-                  <Code2 className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
-                </div>
-                <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
-                  {skill.name}
-                </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  {skill.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 3. ENGINEERING PILLARS & PHILOSOPHY */}
-        <div className="space-y-8">
-          <div className="text-center space-y-2">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading uppercase tracking-wide">
-              Software Engineering Philosophy
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
-              Core architectural approaches and engineering principles followed by Alok Singh.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {engineeringPillars.map((pillar) => (
-              <div 
-                key={pillar.num}
-                className="bg-slate-900/80 border border-slate-800/90 rounded-3xl p-6 sm:p-8 space-y-4 backdrop-blur-xl hover:border-amber-500/40 transition-all duration-300 shadow-2xl relative overflow-hidden group"
-              >
-                <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-                  <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-                    Pillar {pillar.num} &bull; {pillar.subtitle}
-                  </span>
-                </div>
-
-                <h3 className="text-xl font-bold text-white group-hover:text-amber-300 transition-colors">
-                  {pillar.title}
-                </h3>
-
-                <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-                  {pillar.description}
-                </p>
-
-                <div className="space-y-2 bg-slate-950/70 p-4 rounded-2xl border border-slate-800/80">
-                  <ul className="space-y-2">
-                    {pillar.points.map((pt, pIdx) => (
-                      <li key={pIdx} className="flex items-start gap-2 text-xs text-slate-300">
-                        <Check className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                        <span>{pt}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 4. PERSONAL STATEMENT */}
-        <div className="bg-gradient-to-r from-amber-950/40 via-slate-900 to-red-950/30 border border-amber-500/40 rounded-3xl p-6 sm:p-10 space-y-4 text-center sm:text-left relative overflow-hidden backdrop-blur-xl shadow-2xl">
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <div className="p-4 rounded-2xl bg-amber-500/20 text-amber-400 shrink-0">
-              <Heart className="w-8 h-8 fill-amber-500 text-amber-500" />
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-heading uppercase">
-                Personal Statement
-              </h3>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                &ldquo;Building scalable, clean, and high-performance software is what drives me every day. Whether it&apos;s real-time system architecture, API design, or modern glassmorphic UIs, I focus on delivering world-class execution. Feel free to connect with me on Instagram, X, or Facebook!&rdquo;
+            <div className="border-l border-white/10 pl-6 text-base leading-8 text-slate-400 sm:pl-8">
+              <p>
+                Alok Singh is a full-stack web developer focused on building modern digital
+                products, real-time systems and responsive web experiences.
+              </p>
+              <p className="mt-4">
+                The work combines frontend engineering, backend architecture, cloud deployment
+                and thoughtful UI/UX into complete products that are practical, connected and
+                designed to evolve.
               </p>
             </div>
           </div>
-        </div>
+        </section>
 
+        <section id="expertise" className="mt-28 scroll-mt-24">
+          <div className="mb-10 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300">02 — Expertise</p>
+              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">What I build.</h2>
+            </div>
+            <p className="max-w-md text-sm leading-6 text-slate-500">
+              A practical engineering toolkit spanning interfaces, application logic, data and deployment.
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {expertise.map((item) => {
+              const Icon = item.icon;
+              return (
+                <article
+                  key={item.number}
+                  className="group relative overflow-hidden rounded-2xl border border-white/8 bg-white/[0.025] p-6 transition duration-300 hover:-translate-y-1 hover:border-amber-400/30 hover:bg-white/[0.045]"
+                >
+                  <div className="mb-10 flex items-center justify-between">
+                    <span className="text-xs font-mono text-slate-600">{item.number}</span>
+                    <Icon className="h-5 w-5 text-amber-300/70 transition group-hover:text-amber-300" />
+                  </div>
+                  <h3 className="text-lg font-bold">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-500">{item.description}</p>
+                  <div className="mt-6 h-px w-10 bg-amber-400/40 transition-all group-hover:w-20" />
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <section id="stack" className="mt-28 scroll-mt-24">
+          <div className="grid gap-10 lg:grid-cols-[.7fr_1.3fr]">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300">03 — Stack</p>
+              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">Tools behind the work.</h2>
+              <p className="mt-5 max-w-md text-sm leading-7 text-slate-500">
+                Technologies currently represented across the developer profile and engineering work.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              {Object.entries(technologies).map(([category, items]) => (
+                <div
+                  key={category}
+                  className="rounded-2xl border border-white/8 bg-white/[0.025] p-5 sm:flex sm:items-center sm:gap-6"
+                >
+                  <div className="mb-3 w-40 shrink-0 text-xs font-bold uppercase tracking-wider text-slate-500 sm:mb-0">
+                    {category}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {items.map((item) => (
+                      <span
+                        key={item}
+                        className="rounded-lg border border-white/8 bg-black/20 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-amber-400/25 hover:text-amber-200"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="principles" className="mt-28 scroll-mt-24">
+          <div className="mb-10">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300">04 — Principles</p>
+            <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">How I approach software.</h2>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {principles.map((item) => (
+              <article
+                key={item.number}
+                className="rounded-2xl border border-white/8 bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-6"
+              >
+                <span className="font-mono text-xs text-amber-300">{item.number}</span>
+                <h3 className="mt-8 text-xl font-bold">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-500">{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-28 overflow-hidden rounded-3xl border border-amber-400/15 bg-gradient-to-br from-amber-400/[0.08] via-white/[0.025] to-red-400/[0.04] p-7 sm:p-10">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300">A note from the builder</p>
+              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
+                Good software should feel simple.
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-slate-400">
+                I enjoy turning complex ideas into interfaces and systems that people can actually use.
+                The goal is not just to make software work — it is to make the experience feel intentional.
+              </p>
+            </div>
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-amber-300/20 bg-amber-400/10">
+              <Check className="h-9 w-9 text-amber-300" />
+            </div>
+          </div>
+        </section>
+
+        <section id="contact" className="mt-28 scroll-mt-24 pb-8 text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300">05 — Contact</p>
+          <h2 className="mx-auto mt-4 max-w-3xl text-4xl font-black tracking-tight sm:text-6xl">
+            Let&apos;s build something useful.
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-slate-500">
+            Have an idea, product or technical challenge? Connect through the social profiles below.
+          </p>
+
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            {socialLinks.map((social) => (
+              <a
+                key={social.name}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.035] px-5 py-3 text-left transition hover:-translate-y-0.5 hover:border-amber-400/30 hover:bg-white/[0.06]"
+              >
+                <span>
+                  <span className="block text-xs font-bold text-white">{social.name}</span>
+                  <span className="text-[11px] text-slate-500">{social.handle}</span>
+                </span>
+                <ArrowUpRight className="h-4 w-4 text-slate-500 transition group-hover:text-amber-300" />
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <footer className="border-t border-white/5 pt-6 text-center text-xs text-slate-600">
+          <p>ALOK SINGH · Full-Stack Developer · Gorakhpur, Uttar Pradesh, India</p>
+          <p className="mt-2">© 2026 Alok Singh</p>
+        </footer>
       </div>
-    </div>
+    </main>
   );
 }

@@ -7,10 +7,10 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { customerName, mobile, email, instagramId, dob, quantity = 1, termsAgreed } = body;
 
-    // Validate mandatory fields
-    if (!customerName || !mobile || !email || !instagramId || !dob) {
+    // Validate mandatory fields (Only Full Name and Mobile are required)
+    if (!customerName || !customerName.trim() || !mobile || !mobile.trim()) {
       return NextResponse.json(
-        { error: 'Please fill all required attendee details (Full Name, Mobile, Email, Instagram ID, and Date of Birth).' },
+        { error: 'Please provide both Full Name and Mobile Number.' },
         { status: 400 }
       );
     }
@@ -22,13 +22,21 @@ export async function POST(req: Request) {
       );
     }
 
-    // Age validation (18+)
-    const ageCheck = validateAgeIs18Plus(dob);
-    if (!ageCheck.is18Plus) {
-      return NextResponse.json(
-        { error: 'You must be 18 or above to book this ticket.' },
-        { status: 400 }
-      );
+    // Optional fields with sensible defaults
+    const cleanEmail = (email || '').trim();
+    const cleanInsta = (instagramId || '').trim();
+    const cleanDob = (dob || '').trim();
+
+    let formattedDob = '2000-01-01';
+    if (cleanDob) {
+      const ageCheck = validateAgeIs18Plus(cleanDob);
+      if (!ageCheck.is18Plus) {
+        return NextResponse.json(
+          { error: 'You must be 18 or above to book this ticket.' },
+          { status: 400 }
+        );
+      }
+      formattedDob = ageCheck.formattedDob;
     }
 
     // Quantity & Pricing (₹149 per ticket)
@@ -50,10 +58,10 @@ export async function POST(req: Request) {
           receipt: bookingId,
           notes: {
             customer_name: customerName,
-            customer_email: email,
+            customer_email: cleanEmail || 'attendee@gkpgotlatent.in',
             customer_mobile: mobile,
-            instagram_id: instagramId,
-            dob: ageCheck.formattedDob,
+            instagram_id: cleanInsta || '@ggl_guest',
+            dob: formattedDob,
             quantity: String(qty),
             event: "Gorakhpur's Got Latent Live Show",
           },
@@ -74,9 +82,9 @@ export async function POST(req: Request) {
       keyId: razorpayKeyId,
       customerName,
       mobile,
-      email,
-      instagramId,
-      dob: ageCheck.formattedDob,
+      email: cleanEmail,
+      instagramId: cleanInsta,
+      dob: formattedDob,
       quantity: qty,
       ticketPrice,
     });

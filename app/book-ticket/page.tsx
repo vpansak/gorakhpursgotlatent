@@ -37,8 +37,8 @@ export default function BookTicketPage() {
     e.preventDefault();
     setErrorMsg('');
 
-    if (!customerName.trim() || !mobile.trim() || !email.trim() || !instagramId.trim() || !dob) {
-      setErrorMsg('Please fill all required attendee fields.');
+    if (!customerName.trim() || !mobile.trim()) {
+      setErrorMsg('Please enter both your Full Name and Mobile Number.');
       return;
     }
 
@@ -47,10 +47,12 @@ export default function BookTicketPage() {
       return;
     }
 
-    const ageCheck = validateAgeIs18Plus(dob);
-    if (!ageCheck.is18Plus) {
-      setErrorMsg('You must be 18 or above to book this ticket.');
-      return;
+    if (dob) {
+      const ageCheck = validateAgeIs18Plus(dob);
+      if (!ageCheck.is18Plus) {
+        setErrorMsg('You must be 18 or above to book this ticket.');
+        return;
+      }
     }
 
     setLoading(true);
@@ -82,7 +84,7 @@ export default function BookTicketPage() {
         order_id: orderData.razorpayOrderId,
         prefill: {
           name: customerName,
-          email: email,
+          email: email || '',
           contact: mobile,
         },
         theme: {
@@ -102,7 +104,7 @@ export default function BookTicketPage() {
                 mobile,
                 email,
                 instagramId,
-                dob: ageCheck.formattedDob,
+                dob,
                 quantity,
                 amount: totalAmount,
               }),
@@ -187,7 +189,7 @@ export default function BookTicketPage() {
             </div>
             <div>
               <span className="font-extrabold text-white block">Official Ticket Pass</span>
-              <span className="text-slate-300 text-xs">₹149 per ticket (18+ Mandatory)</span>
+              <span className="text-slate-300 text-xs">₹149 per ticket</span>
             </div>
           </div>
           <div className="text-right">
@@ -205,30 +207,29 @@ export default function BookTicketPage() {
 
         <form onSubmit={handleBookingSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Full Name *</label>
-            <input type="text" required value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Enter your full name" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
+            <label className="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Full Name *</label>
+            <input type="text" required value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Enter your full name" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-amber-500/50 text-white outline-none focus:border-amber-400" />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Mobile Number (WhatsApp) *</label>
-            <input type="tel" required inputMode="numeric" value={mobile} onChange={(e) => setMobile(e.target.value)} placeholder="10-digit mobile number" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
+            <label className="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Mobile Number (WhatsApp) *</label>
+            <input type="tel" required inputMode="numeric" value={mobile} onChange={(e) => setMobile(e.target.value)} placeholder="10-digit mobile number" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-amber-500/50 text-white outline-none focus:border-amber-400" />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Email Address *</label>
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Email Address <span className="text-[10px] text-slate-500 font-normal lowercase">(optional)</span></label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email (optional)" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Instagram Handle *</label>
-            <input type="text" required value={instagramId} onChange={(e) => setInstagramId(e.target.value)} placeholder="@username" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Instagram Handle <span className="text-[10px] text-slate-500 font-normal lowercase">(optional)</span></label>
+            <input type="text" value={instagramId} onChange={(e) => setInstagramId(e.target.value)} placeholder="@username (optional)" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Date of Birth * (Must be 18+)</label>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Date of Birth <span className="text-[10px] text-slate-500 font-normal lowercase">(optional - 18+)</span></label>
             <input
               type="date"
-              required
               value={dob}
               onChange={(e) => {
                 const value = e.target.value;

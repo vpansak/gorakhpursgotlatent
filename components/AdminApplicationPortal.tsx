@@ -33,6 +33,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
   const [data, setData] = useState(initialData);
   const [computerJiScores, setComputerJiScores] = useState<any[]>([]);
   const [leads, setLeads] = useState<any[]>([]);
+  const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
   const [ticketStats, setTicketStats] = useState({ totalBooked: 0, paidTickets: 0 });
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
@@ -85,6 +86,48 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     } catch (err) {
       console.error('Failed to delete lead:', err);
     }
+  };
+
+  const handleBulkDeleteLeads = async () => {
+    if (selectedLeadIds.length === 0) return;
+    const confirmed = confirm(
+      'Kya aap ' + selectedLeadIds.length + ' selected lead(s) ko permanently DELETE karna chahte hain? Ye action undo nahi hoga.'
+    );
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedLeadIds }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setLeads((prev) => prev.filter((it) => !selectedLeadIds.includes(it.id)));
+        setSelectedLeadIds([]);
+      } else {
+        alert(json.error || 'Failed to delete selected leads');
+      }
+    } catch (err) {
+      console.error('Failed to bulk delete leads:', err);
+      alert('Error deleting selected leads');
+    }
+  };
+
+  const toggleLeadSelection = (id: string) => {
+    setSelectedLeadIds((prev) =>
+      prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]
+    );
+  };
+
+  const toggleAllVisibleLeads = () => {
+    const visibleIds = filteredItems.map((item) => item.id);
+    const allSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedLeadIds.includes(id));
+    setSelectedLeadIds((prev) =>
+      allSelected
+        ? prev.filter((id) => !visibleIds.includes(id))
+        : Array.from(new Set([...prev, ...visibleIds]))
+    );
   };
 
   const fetchTicketStats = async () => {
@@ -779,6 +822,30 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
           </div>
         </div>
 
+        {activeTab === 'leads' && (
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-rose-950/20 border border-rose-500/20 rounded-2xl px-4 py-3">
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-bold text-slate-300">
+                {selectedLeadIds.length > 0 ? selectedLeadIds.length + ' lead(s) selected' : 'Select leads using the checkboxes'}
+              </span>
+              {selectedLeadIds.length > 0 && (
+                <button type="button" onClick={() => setSelectedLeadIds([])} className="text-[11px] font-bold text-slate-400 hover:text-white cursor-pointer">
+                  Clear Selection
+                </button>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={handleBulkDeleteLeads}
+              disabled={selectedLeadIds.length === 0}
+              className="px-4 py-2 rounded-xl bg-red-950/80 hover:bg-red-800 border border-red-500/50 text-red-300 hover:text-white text-xs font-black flex items-center gap-2 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete Selected {selectedLeadIds.length > 0 ? '(' + selectedLeadIds.length + ')' : ''}
+            </button>
+          </div>
+        )}
+
         {/* APPLICANTS DATA TABLE */}
         <div className="overflow-x-auto rounded-2xl border border-white/10 shadow-inner">
           <table className="w-full text-left text-xs border-collapse">
@@ -836,6 +903,15 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                 )}
                 {activeTab === 'leads' && (
                   <>
+                    <th className="py-3.5 px-4 w-12 text-center">
+                      <input
+                        type="checkbox"
+                        checked={filteredItems.length > 0 && filteredItems.every((item) => selectedLeadIds.includes(item.id))}
+                        onChange={toggleAllVisibleLeads}
+                        className="w-4 h-4 accent-rose-500 cursor-pointer"
+                        aria-label="Select all visible leads"
+                      />
+                    </th>
                     <th className="py-3.5 px-4">Email & Instagram</th>
                     <th className="py-3.5 px-4 text-center">Ticket Qty</th>
                     <th className="py-3.5 px-4">Status</th>
@@ -866,6 +942,15 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                       >
                         <td className="py-3.5 px-4 text-center text-slate-500 font-mono text-[11px]">
                           {idx + 1}
+                        </td>
+                        <td className="py-3.5 px-4 text-center">
+                          <input
+                            type="checkbox"
+                            checked={selectedLeadIds.includes(item.id)}
+                            onChange={() => toggleLeadSelection(item.id)}
+                            className="w-4 h-4 accent-rose-500 cursor-pointer"
+                            aria-label={`Select lead ${item.lead_code || item.id}`}
+                          />
                         </td>
                         <td className="py-3.5 px-4 font-mono font-bold text-rose-400 text-xs whitespace-nowrap">
                           <div>{item.lead_code || item.id}</div>
@@ -1597,132 +1682,3 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                       {selectedItem.payment_status || 'PAID'}
                     </span>
                   </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-300 bg-black/40 p-3 rounded-xl border border-white/5 font-mono text-[11px]">
-                    <div>
-                      <span className="text-slate-500 block text-[10px]">PAYMENT ID:</span>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <strong className="text-amber-300 text-xs break-all">{selectedItem.payment_id || selectedItem.razorpay_payment_id || 'N/A'}</strong>
-                        {selectedItem.payment_id && (
-                          <button
-                            onClick={() => copyToClipboard(selectedItem.payment_id)}
-                            className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white shrink-0 cursor-pointer"
-                            title="Copy Payment ID"
-                          >
-                            {copiedId === selectedItem.payment_id ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                          </button>
-                        )}
-                      </div>
-                    </div>
-
-                    <div>
-                      <span className="text-slate-500 block text-[10px]">ORDER ID:</span>
-                      <strong className="text-white text-xs block mt-0.5 break-all">{selectedItem.order_id || 'N/A'}</strong>
-                    </div>
-
-                    <div>
-                      <span className="text-slate-500 block text-[10px]">FEE AMOUNT PAID:</span>
-                      <strong className="text-emerald-400 text-xs block mt-0.5">₹{selectedItem.payment_amount} INR</strong>
-                    </div>
-
-                    <div>
-                      <span className="text-slate-500 block text-[10px]">VERIFIED AT:</span>
-                      <span className="text-slate-300 text-xs block mt-0.5">
-                        {selectedItem.payment_verified_at ? new Date(selectedItem.payment_verified_at).toLocaleString('en-IN') : 'Verified'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-                    <p className="text-[11px] text-amber-200/90 leading-tight">
-                      💡 Slot full hone par ya performer shortlist na hone par refund initiate karein.
-                    </p>
-
-                    {selectedItem.payment_status === 'REFUNDED' || selectedItem.status === 'REFUNDED' ? (
-                      <span className="px-3 py-1.5 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold text-xs shrink-0 flex items-center gap-1.5">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> REFUNDED ({selectedItem.refund_id || 'PROCESSED'})
-                      </span>
-                    ) : (
-                      <button
-                        onClick={() => handleProcessRefund(selectedItem.app_id, selectedItem.full_name)}
-                        disabled={refunding || !selectedItem.payment_id}
-                        className="px-4 py-2 rounded-xl bg-red-950/80 hover:bg-red-900 border border-red-500/50 text-red-200 font-extrabold text-xs flex items-center gap-1.5 shrink-0 transition-all cursor-pointer disabled:opacity-50"
-                        title="Refund customer fee"
-                      >
-                        <RotateCcw className={`w-3.5 h-3.5 ${refunding ? 'animate-spin' : ''}`} />
-                        <span>{refunding ? 'Processing Refund...' : 'Initiate Refund'}</span>
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )
-            )}
-
-            {/* STATUS UPDATE & INTERNAL NOTE (NO DELETION) */}
-            <div className="space-y-4 pt-4 border-t border-slate-800 text-xs">
-              <div>
-                <label className="block font-bold text-slate-300 mb-1.5">Update Application Status</label>
-                <select
-                  value={newStatus}
-                  onChange={(e) => setNewStatus(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold focus:outline-none"
-                >
-                  <option value="UNDER_REVIEW">UNDER_REVIEW</option>
-                  <option value="SHORTLISTED">SHORTLISTED</option>
-                  <option value="CONFIRMED">CONFIRMED / SELECTED</option>
-                  <option value="PAYMENT_VERIFIED">PAYMENT_VERIFIED</option>
-                  <option value="REJECTED">REJECTED</option>
-                  <option value="REFUNDED">REFUNDED</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-300 mb-1.5">Add Internal Admin Note</label>
-                <textarea
-                  rows={2}
-                  value={noteText}
-                  onChange={(e) => setNoteText(e.target.value)}
-                  placeholder="Notes regarding audition call, interview time, or feedback..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none"
-                />
-              </div>
-
-              {saveSuccess && (
-                <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-2">
-                  <Check className="w-4 h-4" />
-                  <span>Status and note updated successfully in Neon Database!</span>
-                </div>
-              )}
-            </div>
-
-            {/* Modal Actions */}
-            <div className="flex items-center justify-between pt-2">
-              <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>Protected Record (Permanent Storage)</span>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setSelectedItem(null)}
-                  className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs cursor-pointer"
-                >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSaveStatus}
-                  disabled={savingNote}
-                  className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs cursor-pointer shadow-lg transition-all"
-                >
-                  {savingNote ? 'Saving Changes...' : 'Save Updates'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}

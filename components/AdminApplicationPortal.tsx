@@ -945,6 +945,15 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                         <td className="py-3.5 px-4 text-center text-slate-500 font-mono text-[11px]">
                           {idx + 1}
                         </td>
+                        <td className="py-3.5 px-4 text-center">
+                          <input
+                            type="checkbox"
+                            checked={selectedLeadIds.includes(item.id)}
+                            onChange={() => toggleLeadSelection(item.id)}
+                            className="w-4 h-4 accent-rose-500 cursor-pointer"
+                            aria-label={`Select lead ${item.lead_code || item.id}`}
+                          />
+                        </td>
                         <td className="py-3.5 px-4 font-mono font-bold text-rose-400 text-xs whitespace-nowrap">
                           <div>{item.lead_code || item.id}</div>
                           <button

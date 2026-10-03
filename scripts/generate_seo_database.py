@@ -75,7 +75,7 @@ def main():
         })
         return True
 
-    print("Generating Updated SEO Research Database (>10,000 records)...")
+    print("Generating Updated SEO Research Database...")
 
     # ==========================================
     # 1. CANONICAL BRAND & MISSPELLINGS
@@ -318,17 +318,15 @@ def main():
         add_kw(sv, cat, cat, intent, funnel, "Gorakhpur", kw_t, sv, sv, path, rec, ctype, "High", "High", "Low", cat, "Existing Page" if rec == "Existing Page" else "New Page Recommended", "Social / video platform discovery search")
 
     # ==========================================
-    # 8. REAL USER QUESTION EXPANSION (WHO, WHAT, WHERE, WHEN, HOW, WHY, CAN, IS, PRICE)
+    # 8. REAL USER QUESTION EXPANSION
     # ==========================================
     q_templates = [
-        # WHO
         ("what is gorakhpur's got latent", "GGL Brand", "Brand Keywords", "Informational", "Awareness", "/about"),
         ("who can participate in gorakhpur got latent", "Auditions", "Question Keywords", "Informational", "Consideration", "/quick-info"),
         ("who can audition for gorakhpur got latent", "Auditions", "Question Keywords", "Informational", "Consideration", "/apply/performer"),
         ("who can attend gorakhpur got latent", "Audience Information", "Question Keywords", "Informational", "Consideration", "/quick-info"),
         ("who can perform in gorakhpur got latent", "Auditions", "Question Keywords", "Informational", "Consideration", "/apply/performer"),
 
-        # WHAT
         ("what is gorakhpur got latent", "GGL Brand", "Question Keywords", "Informational", "Awareness", "/about"),
         ("what happens in gorakhpur got latent", "GGL Brand", "Question Keywords", "Informational", "Awareness", "/about"),
         ("what talents are accepted", "Auditions", "Question Keywords", "Informational", "Consideration", "/quick-info"),
@@ -338,21 +336,18 @@ def main():
         ("what is episode 2", "Episode 2", "Question Keywords", "Informational", "Discovery", "/episodes/episode-2"),
         ("what happens after applying", "Auditions", "Question Keywords", "Informational", "Post-visit / support", "/apply/performer"),
 
-        # WHERE
         ("where is gorakhpur got latent", "GGL Brand", "Question Keywords", "Informational", "Awareness", "/quick-info"),
         ("where can I audition in gorakhpur", "Auditions", "Question Keywords", "Informational", "Discovery", "/apply/performer"),
         ("where can I buy tickets", "Tickets", "Question Keywords", "Transactional", "Transaction", "/book-ticket"),
         ("where can I watch gorakhpur got latent", "YouTube", "Question Keywords", "Informational", "Discovery", "/ep1"),
         ("where is the event happening", "Local SEO", "Question Keywords", "Informational", "Awareness", "/quick-info"),
 
-        # WHEN
         ("when is gorakhpur got latent", "Local SEO", "Question Keywords", "Informational", "Awareness", "/quick-info"),
         ("when are auditions", "Auditions", "Question Keywords", "Informational", "Discovery", "/apply/performer"),
         ("when are tickets available", "Tickets", "Question Keywords", "Informational", "Discovery", "/book-ticket"),
         ("when is episode 2", "Episode 2", "Question Keywords", "Informational", "Discovery", "/episodes/episode-2"),
         ("when will the next episode come", "Episode 2", "Question Keywords", "Informational", "Discovery", "/episodes/episode-2"),
 
-        # HOW
         ("how to apply for gorakhpur got latent", "Auditions", "Question Keywords", "Transactional", "Intent", "/apply/performer"),
         ("how to audition", "Auditions", "Question Keywords", "Transactional", "Intent", "/apply/performer"),
         ("how to buy tickets", "Tickets", "Question Keywords", "Transactional", "Transaction", "/book-ticket"),
@@ -362,13 +357,11 @@ def main():
         ("how to verify ticket", "Tickets", "Question Keywords", "Informational", "Post-visit / support", "/verifyticket"),
         ("how does ticket verification work", "Tickets", "Question Keywords", "Informational", "Post-visit / support", "/verifyticket"),
 
-        # WHY
         ("why participate in gorakhpur got latent", "Auditions", "Question Keywords", "Informational", "Awareness", "/about"),
         ("why should I audition", "Auditions", "Question Keywords", "Informational", "Consideration", "/about"),
         ("why is gorakhpur got latent popular", "GGL Brand", "Question Keywords", "Informational", "Awareness", "/about"),
         ("why are auditions conducted", "Auditions", "Question Keywords", "Informational", "Awareness", "/quick-info"),
 
-        # CAN
         ("can I participate", "Auditions", "Question Keywords", "Informational", "Awareness", "/apply/performer"),
         ("can students participate", "Auditions", "Question Keywords", "Informational", "Awareness", "/quick-info"),
         ("can singers participate", "Singing", "Question Keywords", "Informational", "Awareness", "/categories/singing"),
@@ -379,7 +372,6 @@ def main():
         ("can I attend as audience", "Audience Information", "Question Keywords", "Informational", "Awareness", "/quick-info"),
         ("can I buy a ticket online", "Tickets", "Question Keywords", "Transactional", "Transaction", "/book-ticket"),
 
-        # IS
         ("is gorakhpur got latent real", "GGL Brand", "Question Keywords", "Informational", "Awareness", "/about"),
         ("is gorakhpur got latent in gorakhpur", "GGL Brand", "Question Keywords", "Informational", "Awareness", "/quick-info"),
         ("is gorakhpur got latent an audition show", "GGL Brand", "Question Keywords", "Informational", "Awareness", "/about"),
@@ -387,7 +379,6 @@ def main():
         ("is there an audition", "Auditions", "Question Keywords", "Informational", "Awareness", "/apply/performer"),
         ("is there a ticket for audience", "Tickets", "Question Keywords", "Informational", "Awareness", "/book-ticket"),
 
-        # PRICE / TICKET
         ("gorakhpur got latent ticket price", "Tickets", "Ticket Keywords", "Informational", "Consideration", "/book-ticket"),
         ("gorakhpur got latent ticket booking", "Tickets", "Ticket Keywords", "Transactional", "Transaction", "/book-ticket"),
         ("gorakhpur got latent ₹149 ticket", "Tickets", "Ticket Keywords", "Informational", "Consideration", "/book-ticket"),
@@ -500,6 +491,9 @@ def main():
                 )
 
     print(f"Total Unique Keywords Generated: {len(rows)}")
+    
+    # WRITE CSV FILES FROM WITHIN MAIN
+    write_csv_files(rows)
     return rows
 
 def write_csv_files(rows):

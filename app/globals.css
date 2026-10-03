@@ -573,3 +573,246 @@
     font-weight: 600;
   }
 }
+
+
+/* ===== GGL 1000% PREMIUM PUBLIC-SITE LAYER ===== */
+/* Visual-only enhancement. No routes, forms, payments, database logic or API behavior changed. */
+.ggl-site {
+  --ggl-gold:#f5c452;
+  --ggl-gold-2:#ffd978;
+  --ggl-red:#b91c1c;
+  --ggl-red-2:#ef4444;
+  --ggl-black:#030304;
+  --ggl-panel:rgba(12,12,16,.78);
+  --ggl-line:rgba(255,255,255,.095);
+  --ggl-soft:rgba(255,255,255,.045);
+}
+
+/* Cinematic page atmosphere */
+.ggl-site main {
+  position:relative;
+  isolation:isolate;
+}
+.ggl-site main::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse 38% 24% at 50% 0%,rgba(245,196,82,.065),transparent 72%),
+    radial-gradient(ellipse 22% 42% at 0% 38%,rgba(185,28,28,.055),transparent 72%),
+    radial-gradient(ellipse 22% 42% at 100% 58%,rgba(185,28,28,.045),transparent 72%);
+}
+.ggl-site main::after {
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.32;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:linear-gradient(to bottom,black,transparent 80%);
+}
+
+/* Premium navigation on every public page */
+.ggl-site > header {
+  min-height:72px;
+  backdrop-filter:blur(22px) saturate(140%);
+  -webkit-backdrop-filter:blur(22px) saturate(140%);
+}
+.ggl-site > header nav a {
+  position:relative;
+}
+.ggl-site > header nav a:not([class*="bg-"]):hover {
+  transform:translateY(-1px);
+}
+.ggl-site > header nav a::after {
+  content:"";
+  position:absolute;
+  left:18%;
+  right:18%;
+  bottom:3px;
+  height:2px;
+  border-radius:99px;
+  background:linear-gradient(90deg,transparent,var(--ggl-gold),transparent);
+  transform:scaleX(0);
+  transform-origin:center;
+  transition:transform .22s ease;
+}
+.ggl-site > header nav a:hover::after,
+.ggl-site > header nav a[class*="bg-"]::after {
+  transform:scaleX(1);
+}
+.ggl-site > header img {
+  filter:drop-shadow(0 0 18px rgba(245,196,82,.34));
+}
+
+/* Universal premium surfaces for common Tailwind cards */
+.ggl-site main .rounded-2xl.border,
+.ggl-site main .rounded-3xl.border,
+.ggl-site main .rounded-xl.border {
+  box-shadow:
+    0 22px 65px rgba(0,0,0,.28),
+    inset 0 1px rgba(255,255,255,.025);
+}
+.ggl-site main .rounded-2xl.border:hover,
+.ggl-site main .rounded-3xl.border:hover {
+  border-color:rgba(245,196,82,.28);
+  box-shadow:
+    0 28px 80px rgba(0,0,0,.38),
+    0 0 0 1px rgba(245,196,82,.035),
+    inset 0 1px rgba(255,255,255,.045);
+}
+
+/* Stronger glass cards where existing glass utilities are used */
+.ggl-site .glass-card,
+.ggl-site .glass-panel {
+  position:relative;
+  overflow:hidden;
+}
+.ggl-site .glass-card::before,
+.ggl-site .glass-panel::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.045),transparent 28%,transparent 72%,rgba(245,196,82,.025));
+}
+.ggl-site .glass-card > *,
+.ggl-site .glass-panel > * {
+  position:relative;
+  z-index:1;
+}
+
+/* Premium typography hierarchy */
+.ggl-site main h1 {
+  font-weight:900 !important;
+  text-wrap:balance;
+}
+.ggl-site main h2,
+.ggl-site main h3 {
+  font-weight:850 !important;
+  text-wrap:balance;
+}
+.ggl-site main h4,
+.ggl-site main h5,
+.ggl-site main h6 {
+  font-weight:800 !important;
+}
+.ggl-site main p,
+.ggl-site main li,
+.ggl-site main label {
+  text-wrap:pretty;
+}
+
+/* Gold headline utility */
+.ggl-site .gold-gradient-text {
+  background:linear-gradient(105deg,#fff5ce 0%,#f8d56c 28%,#d99225 62%,#fff0b5 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 5px 20px rgba(245,196,82,.10));
+}
+
+/* Buttons — cinematic depth without changing their colors/meaning */
+.ggl-site main a[class*="bg-amber-"],
+.ggl-site main button[class*="bg-amber-"],
+.ggl-site main a[class*="bg-gradient-"],
+.ggl-site main button[class*="bg-gradient-"] {
+  box-shadow:0 12px 30px rgba(245,158,11,.12),inset 0 1px rgba(255,255,255,.22);
+}
+.ggl-site main a[class*="bg-amber-"]:hover,
+.ggl-site main button[class*="bg-amber-"]:hover,
+.ggl-site main a[class*="bg-gradient-"]:hover,
+.ggl-site main button[class*="bg-gradient-"]:hover {
+  transform:translateY(-2px);
+  box-shadow:0 18px 42px rgba(245,158,11,.20),inset 0 1px rgba(255,255,255,.3);
+}
+
+/* Forms: premium studio-console feel */
+.ggl-site main input,
+.ggl-site main select,
+.ggl-site main textarea {
+  border-radius:12px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),
+    rgba(5,5,8,.88);
+  box-shadow:inset 0 1px rgba(255,255,255,.035),0 8px 25px rgba(0,0,0,.16);
+}
+.ggl-site main input:hover,
+.ggl-site main select:hover,
+.ggl-site main textarea:hover {
+  border-color:rgba(245,196,82,.22);
+}
+.ggl-site main input:focus,
+.ggl-site main select:focus,
+.ggl-site main textarea:focus {
+  background:rgba(8,8,11,.96);
+  border-color:rgba(245,196,82,.62);
+  box-shadow:0 0 0 3px rgba(245,196,82,.075),0 12px 32px rgba(0,0,0,.25);
+}
+
+/* Section headings that have common divider/border patterns */
+.ggl-site main hr {
+  border-color:rgba(255,255,255,.08);
+}
+
+/* Footer gets a real show-finale treatment */
+.ggl-site footer {
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 -25px 80px rgba(0,0,0,.35);
+}
+.ggl-site footer::after {
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-90px;
+  width:520px;
+  height:180px;
+  transform:translateX(-50%);
+  background:radial-gradient(ellipse,rgba(245,196,82,.10),transparent 70%);
+  filter:blur(25px);
+  pointer-events:none;
+}
+.ggl-site footer .text-slate-400,
+.ggl-site footer .text-slate-300 {
+  color:#aeb7c7;
+}
+
+/* Mobile: keep the premium look without making pages cramped */
+@media (max-width: 1023px) {
+  .ggl-site > header {
+    min-height:64px;
+  }
+  .ggl-site main {
+    padding-bottom:4.6rem;
+  }
+}
+@media (max-width: 640px) {
+  .ggl-site main::after {
+    background-size:38px 38px;
+    opacity:.18;
+  }
+  .ggl-site main .rounded-2xl.border,
+  .ggl-site main .rounded-3xl.border {
+    box-shadow:0 16px 42px rgba(0,0,0,.28);
+  }
+  .ggl-site main h1 {
+    letter-spacing:-.02em;
+  }
+}
+
+/* Accessibility / performance guard */
+@media (prefers-reduced-motion: reduce) {
+  .ggl-site *,
+  .ggl-site *::before,
+  .ggl-site *::after {
+    animation-duration:.01ms !important;
+    transition-duration:.01ms !important;
+  }
+}

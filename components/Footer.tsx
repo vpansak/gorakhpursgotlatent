@@ -44,25 +44,8 @@ export default function Footer() {
 
   if (isLiveRoute || pathname.startsWith('/developer')) return null;
 
-  // Application pages keep only the official GGL logo; hide the full marketing/footer links.
-  if (pathname.startsWith('/apply/')) {
-    return (
-      <footer className="bg-[#05060a] border-t border-amber-500/20 py-8 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex justify-center">
-          <Link href="/" className="inline-block group">
-            <div className="relative w-56 sm:w-64 h-16 sm:h-20 transition-transform group-hover:scale-105">
-              <Image
-                src="/logo.png"
-                alt="Gorakhpur's Got Latent Official Logo"
-                fill
-                className="object-contain filter drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]"
-              />
-            </div>
-          </Link>
-        </div>
-      </footer>
-    );
-  }
+  // Application pages place the official logo above the form itself; no footer on form pages.
+  if (pathname.startsWith('/apply/')) return null;
 
   // Compute Page-Specific Pre-Drafted WhatsApp Message & Reason
   let whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI have a general inquiry regarding the show.";

@@ -5,16 +5,12 @@ import {
   Check,
   Code2,
   Database,
-  Github,
   Globe2,
   Layers3,
-  Linkedin,
   MapPin,
-  Menu,
   Server,
   Sparkles,
   Terminal,
-  X,
   Zap,
 } from 'lucide-react';
 

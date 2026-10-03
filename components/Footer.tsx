@@ -95,11 +95,11 @@ export default function Footer() {
   const encodedEmailUrl = `mailto:help.gglatent@gmail.com?subject=${encodeURIComponent(emailSubject)}`;
 
   return (
-    <footer className="bg-[#05060a] border-t border-amber-500/20 text-slate-300 pt-10 pb-24 lg:pb-12 relative overflow-hidden">
+    <footer className="bg-[#05060a] border-t border-amber-500/20 text-slate-300 pt-8 pb-8 lg:pb-8 relative overflow-hidden">
       {/* Ambient background light glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-amber-500/10 blur-[100px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6">
         {/* GLOBAL COMPACT QUICK SUPPORT BAR WITH PAGE-SPECIFIC WHATSAPP REASON DRAFT */}
         <div className="bg-gradient-to-r from-slate-900/90 via-slate-900 to-amber-950/40 border border-amber-500/30 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
           <div className="flex items-center gap-3 text-center md:text-left">
@@ -142,7 +142,7 @@ export default function Footer() {
         </div>
 
         {/* FOOTER MAIN GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800/80">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-6 border-b border-slate-800/80">
           {/* Col 1: Brand & Logo */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-block group -ml-2 sm:-ml-3">
@@ -248,9 +248,24 @@ export default function Footer() {
         </div>
 
         {/* Footer Bottom */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
-          <p>© {new Date().getFullYear()} Gorakhpur’s Got Latent. All rights reserved.</p>
+        <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+          <p className="text-center sm:text-left">
+            © {new Date().getFullYear()} Gorakhpur’s Got Latent. All rights reserved.
+          </p>
 
+          <div className="flex items-center justify-center gap-3 sm:gap-4" aria-label="Secure payment methods">
+            <span className="font-black italic tracking-tight text-lg text-slate-200" title="Visa accepted">VISA</span>
+            <span className="h-5 w-px bg-slate-700" aria-hidden="true" />
+            <span className="font-black italic tracking-tight text-base text-slate-200" title="RuPay accepted">RuPay</span>
+            <span className="h-5 w-px bg-slate-700" aria-hidden="true" />
+            <span className="inline-flex items-center gap-2 text-[10px] sm:text-[11px] font-semibold text-slate-300">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-300" aria-hidden="true">🔒</span>
+              <span className="leading-tight">
+                <span className="block text-emerald-300 font-bold uppercase tracking-wide">Secure Payments</span>
+                <span className="block text-slate-500">Powered by Razorpay</span>
+              </span>
+            </span>
+          </div>
         </div>
       </div>
     </footer>

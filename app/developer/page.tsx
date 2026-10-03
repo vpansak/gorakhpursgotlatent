@@ -541,10 +541,14 @@ export default function DeveloperPage() {
           </div>
         </section>
 
-        <footer className="border-t border-white/5 pt-6 text-center text-xs text-slate-600">
-          <p>ALOK SINGH · Full-Stack Developer · Gorakhpur, Uttar Pradesh, India</p>
-          <p className="mt-2">© 2026 Alok Singh</p>
-        </footer>
+        <div className="border-t border-white/5 pt-8 pb-4 text-center">
+          <a
+            href="/"
+            className="inline-flex items-center gap-2 rounded-xl border border-amber-400/30 bg-amber-400/10 px-5 py-3 text-sm font-bold text-amber-300 transition hover:-translate-y-0.5 hover:border-amber-300/60 hover:bg-amber-400/15"
+          >
+            ← Back to Home
+          </a>
+        </div>
       </div>
     </main>
   );

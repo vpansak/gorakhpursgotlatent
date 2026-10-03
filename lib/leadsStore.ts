@@ -49,6 +49,8 @@ async function ensureLeadsTable() {
   await db.execute(`ALTER TABLE abandoned_leads ADD COLUMN IF NOT EXISTS read_at TIMESTAMP WITH TIME ZONE`);
   await db.execute(`ALTER TABLE abandoned_leads ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'unknown'`);
   await db.execute(`ALTER TABLE abandoned_leads ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'IN_PROGRESS'`);
+  })().catch((err) => { schemaReady = null; throw err; });
+  return schemaReady;
 }
 
 export async function trackLead(input: {

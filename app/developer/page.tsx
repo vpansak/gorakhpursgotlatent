@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     siteName: 'Alok Singh',
     images: [
       {
-        url: '/alok-singh.jpg',
+        url: '/developer-photo-1.jpg',
         width: 800,
         height: 800,
         alt: 'Alok Singh — Full-Stack Developer',
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     title: 'Alok Singh — Full-Stack Developer',
     description:
       'Full-stack web engineering, real-time systems, cloud deployment and UI/UX engineering.',
-    images: ['/alok-singh.jpg'],
+    images: ['/developer-photo-1.jpg'],
   },
 };
 
@@ -162,7 +162,7 @@ const developerJsonLd = {
     description:
       'Full-stack web developer focused on modern web applications, real-time systems, cloud deployment and UI/UX engineering.',
     url: 'https://gkpgotlatent.in/developer',
-    image: 'https://gkpgotlatent.in/alok-singh.jpg',
+    image: 'https://gkpgotlatent.in/developer-photo-1.jpg',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Gorakhpur',

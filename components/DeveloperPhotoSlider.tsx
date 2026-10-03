@@ -1,50 +1,141 @@
 'use client';
 
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 
-const NEW_PHOTO = 'data:image/webp;base64,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';
-
 const slides = [
-  { src: NEW_PHOTO, alt: 'Alok Singh — Full-Stack Developer and Product Builder' },
-  { src: '/alok-singh.jpg', alt: 'Alok Singh — Full-Stack Developer and Product Builder' },
+  {
+    id: 1,
+    src: '/developer-photo-1.jpg',
+    alt: 'Alok Singh — Full-Stack Developer & Software Architect (Portrait)',
+    label: 'Developer · Founder · Builder',
+  },
+  {
+    id: 2,
+    src: '/alok-singh.jpg',
+    alt: 'Alok Singh — Full-Stack Developer & Software Architect',
+    label: 'Full-Stack Developer · Gorakhpur',
+  },
 ];
 
 export default function DeveloperPhotoSlider() {
-  const [active, setActive] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    const timer = window.setInterval(() => setActive((current) => (current + 1) % slides.length), 5000);
-    return () => window.clearInterval(timer);
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % slides.length);
   }, []);
 
-  const previous = () => setActive((current) => (current - 1 + slides.length) % slides.length);
-  const next = () => setActive((current) => (current + 1) % slides.length);
+  const prevSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+  }, []);
+
+  // Auto-slide every 5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      nextSlide();
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [nextSlide]);
 
   return (
     <div className="relative mx-auto w-full max-w-[440px] lg:mx-0">
+      {/* Ambient Outer Glow */}
       <div className="absolute -inset-8 rounded-[44px] bg-amber-400/10 blur-3xl" />
+
+      {/* Glassmorphic Container Card */}
       <div className="relative overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.035] p-3 shadow-2xl shadow-black/50 backdrop-blur-xl">
+        {/* Photo Container */}
         <div className="relative aspect-[4/5] overflow-hidden rounded-[26px] border border-amber-300/20 bg-slate-900">
-          {slides.map((slide, index) => (
-            <Image key={index} src={slide.src} alt={slide.alt} fill priority={index === 0} unoptimized={slide.src.startsWith('data:')} className={`object-cover object-center transition-opacity duration-700 ${index === active ? 'opacity-100' : 'opacity-0'}`} />
-          ))}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#05070d]/80 via-transparent to-transparent" />
-          <div className="absolute left-3 right-3 top-3 flex items-center justify-between">
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-black/45 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-amber-200 backdrop-blur-md"><Sparkles className="h-3.5 w-3.5" />Developer · Co-Founder · Builder</span>
-            <span className="rounded-full border border-white/10 bg-black/45 px-2.5 py-1 text-[10px] font-bold text-white/70 backdrop-blur-md">{active + 1}/{slides.length}</span>
+          {/* Images */}
+          {slides.map((slide, index) => {
+            const isActive = index === currentIndex;
+            return (
+              <div
+                key={slide.id}
+                className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                  isActive ? 'opacity-100 z-0' : 'opacity-0 z-0 pointer-events-none'
+                }`}
+              >
+                <Image
+                  src={slide.src}
+                  alt={slide.alt}
+                  fill
+                  priority={index === 0}
+                  sizes="(max-width: 768px) 100vw, 440px"
+                  className="object-cover object-center"
+                />
+              </div>
+            );
+          })}
+
+          {/* Gradient Overlay for Text Contrast (pointer-events-none) */}
+          <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-[#05070d]/85 via-transparent to-black/20" />
+
+          {/* Top Indicator & Navigation Controls */}
+          <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
+            {/* Slide Counter Badge (1/2) */}
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/50 px-3 py-1 text-[11px] font-bold text-white/90 backdrop-blur-md">
+              <span>{currentIndex + 1}</span>
+              <span className="text-white/40">/</span>
+              <span className="text-white/60">{slides.length}</span>
+            </div>
+
+            {/* Slider Dots */}
+            <div className="flex items-center gap-1.5 rounded-full border border-white/15 bg-black/50 px-3 py-1.5 backdrop-blur-md">
+              {slides.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentIndex(idx)}
+                  aria-label={`Go to slide ${idx + 1}`}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    idx === currentIndex
+                      ? 'w-5 bg-amber-400'
+                      : 'w-2 bg-white/30 hover:bg-white/60'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
-          <button type="button" onClick={previous} aria-label="Previous developer photo" className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/45 text-white backdrop-blur-md transition hover:border-amber-300/40 hover:bg-black/65 hover:text-amber-200"><ChevronLeft className="h-4 w-4" /></button>
-          <button type="button" onClick={next} aria-label="Next developer photo" className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/45 text-white backdrop-blur-md transition hover:border-amber-300/40 hover:bg-black/65 hover:text-amber-200"><ChevronRight className="h-4 w-4" /></button>
-          <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-1.5">
-            {slides.map((_, index) => <button key={index} type="button" onClick={() => setActive(index)} aria-label={`Show developer photo ${index + 1}`} className={`h-1.5 rounded-full transition-all ${index === active ? 'w-6 bg-amber-300' : 'w-1.5 bg-white/45'}`} />)}
+
+          {/* Navigation Arrow Buttons */}
+          <button
+            onClick={prevSlide}
+            aria-label="Previous Photo"
+            className="group absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/15 bg-black/40 p-2 text-white/80 transition-all hover:scale-110 hover:border-amber-400/40 hover:bg-black/70 hover:text-white backdrop-blur-md"
+          >
+            <ChevronLeft className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
+          </button>
+
+          <button
+            onClick={nextSlide}
+            aria-label="Next Photo"
+            className="group absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/15 bg-black/40 p-2 text-white/80 transition-all hover:scale-110 hover:border-amber-400/40 hover:bg-black/70 hover:text-white backdrop-blur-md"
+          >
+            <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+          </button>
+
+          {/* Bottom Badge */}
+          <div className="absolute bottom-5 left-5 right-5 z-20">
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-black/50 px-3.5 py-1.5 text-[10px] font-black uppercase tracking-wider text-amber-200 backdrop-blur-md">
+              <Sparkles className="h-3.5 w-3.5 text-amber-400 animate-pulse" />
+              {slides[currentIndex].label}
+            </div>
           </div>
         </div>
+
+        {/* Feature Tags Below Slider */}
         <div className="grid grid-cols-3 gap-2 p-2 pt-3 text-center text-[10px] font-bold uppercase tracking-wider text-slate-500">
-          <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3"><span className="block text-white">FULL</span> STACK</div>
-          <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3"><span className="block text-white">PRODUCT</span> BUILDING</div>
-          <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3"><span className="block text-white">UI / UX</span> ENGINEERING</div>
+          <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
+            <span className="block text-white">FULL</span> STACK
+          </div>
+          <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
+            <span className="block text-white">PRODUCT</span> BUILDING
+          </div>
+          <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
+            <span className="block text-white">UI / UX</span> ENGINEERING
+          </div>
         </div>
       </div>
     </div>

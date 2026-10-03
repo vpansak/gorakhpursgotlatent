@@ -489,3 +489,87 @@
     transition-duration:.01ms !important;
   }
 }
+
+
+/* ===== GGL GLOBAL BOLD TYPOGRAPHY PASS ===== */
+/* Visual-only: strengthens typography across the public site without changing layout, routes, forms or logic. */
+.ggl-site {
+  font-weight: 600;
+}
+
+.ggl-site main,
+.ggl-site main p,
+.ggl-site main li,
+.ggl-site main label,
+.ggl-site main span {
+  font-weight: 600;
+}
+
+.ggl-site main h1,
+.ggl-site main h2,
+.ggl-site main h3,
+.ggl-site main h4,
+.ggl-site main h5,
+.ggl-site main h6,
+.ggl-site main strong,
+.ggl-site main b,
+.ggl-site main button,
+.ggl-site main a.font-bold,
+.ggl-site main a.font-semibold {
+  font-weight: 800;
+}
+
+.ggl-site nav,
+.ggl-site header {
+  font-weight: 700;
+}
+
+.ggl-site footer {
+  font-weight: 600;
+}
+
+.ggl-site footer h1,
+.ggl-site footer h2,
+.ggl-site footer h3,
+.ggl-site footer h4,
+.ggl-site footer h5,
+.ggl-site footer h6,
+.ggl-site footer strong,
+.ggl-site footer b {
+  font-weight: 800;
+}
+
+.ggl-site input,
+.ggl-site select,
+.ggl-site textarea {
+  font-weight: 600;
+}
+
+.ggl-site input::placeholder,
+.ggl-site textarea::placeholder {
+  font-weight: 500;
+}
+
+.ggl-site .font-medium { font-weight: 600 !important; }
+.ggl-site .font-semibold { font-weight: 700 !important; }
+.ggl-site .font-bold { font-weight: 800 !important; }
+.ggl-site .font-extrabold { font-weight: 900 !important; }
+
+.ggl-site .text-xs,
+.ggl-site .text-sm {
+  letter-spacing: .025em;
+}
+
+.ggl-site main .text-slate-400,
+.ggl-site main .text-slate-500 {
+  color: #aab4c5;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .ggl-site main p,
+  .ggl-site main li,
+  .ggl-site main label {
+    font-weight: 600;
+  }
+}

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mic2, Star, Building2, Users, ChevronRight, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Mic2, Star, Building2, Users, ChevronRight, ShieldAlert } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -20,8 +20,8 @@ export default function ApplyPage() {
       btnBg: 'bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black hover:opacity-95',
       btnText: 'APPLY FOR EPISODE 2 AUDITION',
       alertBox: {
-        tag: 'EPISODE 2 AUDITIONS LIVE',
-        text: 'Performer registration for Episode 2 auditions is now LIVE! Auditions are free to submit.',
+        tag: 'FREE AUDITION APPLICATION',
+        text: 'Applying and submitting your audition clip is FREE. After shortlisting, selected performers will be contacted for the registration process. Any applicable registration fee and exact amount will be informed only after shortlisting.',
       },
     },
     {
@@ -61,7 +61,6 @@ export default function ApplyPage() {
 
   return (
     <div className="pt-6 sm:pt-10 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
-      {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <div className="relative w-44 h-16 mx-auto">
           <Image src="/logo.png" alt="Gorakhpur's Got Latent" fill className="object-contain" />
@@ -74,7 +73,6 @@ export default function ApplyPage() {
         </p>
       </div>
 
-      {/* Performer Registration Callout */}
       <div className="max-w-4xl mx-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-emerald-950/70 border border-amber-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs sm:text-sm text-amber-200 shadow-[0_0_30px_rgba(245,158,11,0.15)]">
         <div className="flex items-start gap-3">
           <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0 mt-0.5 sm:mt-0">
@@ -90,7 +88,7 @@ export default function ApplyPage() {
               </strong>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed font-semibold">
-              Fill in your details and send your performance clip on WhatsApp (<strong className="text-amber-400">+91 8423858424</strong>). Audition submission is FREE!
+              Apply and submit your performance clip on WhatsApp (<strong className="text-amber-400">+91 8423858424</strong>) <strong className="text-emerald-300">FREE OF CHARGE</strong>. Shortlisted performers will be informed about the registration process and any applicable fee after shortlisting.
             </p>
           </div>
         </div>
@@ -102,7 +100,6 @@ export default function ApplyPage() {
         </Link>
       </div>
 
-      {/* General Notice */}
       <div className="max-w-4xl mx-auto p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-xs sm:text-sm text-amber-200">
         <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
         <div>
@@ -111,7 +108,6 @@ export default function ApplyPage() {
         </div>
       </div>
 
-      {/* 4 Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
         {streams.map((stream, idx) => {
           const Icon = stream.icon;

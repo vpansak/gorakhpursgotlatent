@@ -7,6 +7,9 @@ import {
   Database,
   Globe2,
   Layers3,
+  Instagram,
+  Facebook,
+  Twitter,
   MapPin,
   Server,
   Sparkles,
@@ -210,12 +213,37 @@ export default function DeveloperPage() {
             <a className="transition hover:text-white" href="#principles">Principles</a>
             <a className="transition hover:text-amber-300" href="#contact">Contact</a>
           </div>
-          <a
-            href="#contact"
-            className="rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-2 text-xs font-bold text-amber-300 transition hover:border-amber-300/60 hover:bg-amber-400/15"
-          >
-            LET&apos;S CONNECT
-          </a>
+          <div className="flex items-center gap-2">
+            <div className="hidden items-center gap-1 sm:flex">
+              {socialLinks.map((social) => {
+                const Icon =
+                  social.name === 'Instagram'
+                    ? Instagram
+                    : social.name === 'Facebook'
+                      ? Facebook
+                      : Twitter;
+                return (
+                  <a
+                    key={social.name}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.name}
+                    title={social.name}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-slate-400 transition hover:-translate-y-0.5 hover:border-amber-400/30 hover:bg-amber-400/10 hover:text-amber-300"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                );
+              })}
+            </div>
+            <a
+              href="#contact"
+              className="rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-2 text-xs font-bold text-amber-300 transition hover:border-amber-300/60 hover:bg-amber-400/15"
+            >
+              LET&apos;S CONNECT
+            </a>
+          </div>
         </div>
       </nav>
 

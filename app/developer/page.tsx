@@ -7,9 +7,6 @@ import {
   Database,
   Globe2,
   Layers3,
-  Instagram,
-  Facebook,
-  Twitter,
   MapPin,
   Server,
   Sparkles,
@@ -216,12 +213,6 @@ export default function DeveloperPage() {
           <div className="flex items-center gap-2">
             <div className="hidden items-center gap-1 sm:flex">
               {socialLinks.map((social) => {
-                const Icon =
-                  social.name === 'Instagram'
-                    ? Instagram
-                    : social.name === 'Facebook'
-                      ? Facebook
-                      : Twitter;
                 return (
                   <a
                     key={social.name}
@@ -232,7 +223,23 @@ export default function DeveloperPage() {
                     title={social.name}
                     className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-slate-400 transition hover:-translate-y-0.5 hover:border-amber-400/30 hover:bg-amber-400/10 hover:text-amber-300"
                   >
-                    <Icon className="h-4 w-4" />
+                    {social.name === 'Instagram' && (
+                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="5" />
+                        <circle cx="12" cy="12" r="4.2" />
+                        <circle cx="17.4" cy="6.7" r="1" fill="currentColor" stroke="none" />
+                      </svg>
+                    )}
+                    {social.name === 'Facebook' && (
+                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
+                        <path d="M13.4 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.6 1.7-1.6h1.8V3.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.5v3h2.7v8h3.2Z" />
+                      </svg>
+                    )}
+                    {social.name === 'X' && (
+                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
+                        <path d="M18.9 2.5h2.9l-6.3 7.2 7.4 9.8h-5.8l-4.5-5.9-5.2 5.9H4.5l6.8-7.8L4.2 2.5h5.9l4.1 5.4 4.7-5.4Zm-1 15.3h1.6L9.1 4.1H7.4l10.5 13.7Z" />
+                      </svg>
+                    )}
                   </a>
                 );
               })}

@@ -20,8 +20,11 @@ export interface LeadRecord {
 }
 
 const memoryLeads: Map<string, LeadRecord> = new Map();
+let schemaReady: Promise<void> | null = null;
 
 async function ensureLeadsTable() {
+  if (schemaReady) return schemaReady;
+  schemaReady = (async () => {
   await db.execute(`
     CREATE TABLE IF NOT EXISTS abandoned_leads (
       id TEXT PRIMARY KEY,

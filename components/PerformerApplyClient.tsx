@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Mic2, CheckCircle2, ArrowRight, Loader2, Sparkles, MessageSquare, Mail, AlertCircle, CheckSquare } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
+import { useLeadCapture } from '@/lib/leadCapture';
 
 function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -42,6 +43,8 @@ export default function PerformerApplyClient() {
     performanceDescription: '',
     sendClipConfirmed: false,
   });
+
+  useLeadCapture({ source: 'performer', data: formData, customerName: formData.fullName, mobile: formData.mobile, email: formData.email, instagramId: formData.instagramUrl, quantity: 1 });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;

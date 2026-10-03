@@ -52,19 +52,58 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
     if (!ticketRef.current || downloading) return;
     setDownloading(true);
     try {
-      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-      const canvas = await html2canvas(ticketRef.current, {
+      // Pre-wait for images inside ticket element to be fully loaded
+      const images = Array.from(ticketRef.current.querySelectorAll('img'));
+      await Promise.all(
+        images.map(
+          (img) =>
+            new Promise((res) => {
+              if (img.complete && img.naturalWidth !== 0) {
+                res(true);
+              } else {
+                img.onload = () => res(true);
+                img.onerror = () => res(true);
+                setTimeout(() => res(true), 1200); // 1.2s max wait per image
+              }
+            })
+        )
+      );
+
+      // Fast render html2canvas with strict imageTimeout and CORS
+      const renderPromise = html2canvas(ticketRef.current, {
         scale: 2,
         useCORS: true,
-        backgroundColor: '#07080e',
+        allowTaint: true,
+        backgroundColor: '#08080b',
         logging: false,
+        imageTimeout: 2000,
       });
-      const link = document.createElement('a');
-      link.download = `GGL-Ticket-${ticket.ticket_id}.png`;
-      link.href = canvas.toDataURL('image/png', 1.0);
-      link.click();
+
+      // 4-second timeout protection limit
+      const timeoutPromise = new Promise<null>((res) => setTimeout(() => res(null), 4000));
+      const canvas = await Promise.race([renderPromise, timeoutPromise]);
+
+      if (canvas && canvas instanceof HTMLCanvasElement) {
+        const link = document.createElement('a');
+        link.download = `GGL-Ticket-${ticket.ticket_id}.png`;
+        link.href = canvas.toDataURL('image/png', 0.95);
+        link.click();
+      } else {
+        console.warn('Primary html2canvas render timed out, using fast fallback render...');
+        const fallbackCanvas = await html2canvas(ticketRef.current, {
+          scale: 1.5,
+          backgroundColor: '#08080b',
+          logging: false,
+          imageTimeout: 1000,
+        });
+        const link = document.createElement('a');
+        link.download = `GGL-Ticket-${ticket.ticket_id}.png`;
+        link.href = fallbackCanvas.toDataURL('image/png', 0.9);
+        link.click();
+      }
     } catch (error) {
       console.error('Ticket image download failed:', error);
+      alert('Download notice: Please tap Download Ticket Image again.');
     } finally {
       setDownloading(false);
     }

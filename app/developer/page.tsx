@@ -220,14 +220,47 @@ export default function DeveloperPage() {
       </nav>
 
       <div id="top" className="mx-auto max-w-6xl px-5 pb-20 pt-12 sm:px-8 sm:pt-20">
-        <section className="relative grid items-center gap-12 lg:grid-cols-[1.1fr_.9fr]">
+        <section className="relative grid items-center gap-12 lg:grid-cols-[.82fr_1.18fr]">
+          <div className="relative mx-auto w-full max-w-[440px] lg:mx-0">
+            <div className="absolute -inset-8 rounded-[44px] bg-amber-400/10 blur-3xl" />
+            <div className="relative overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.035] p-3 shadow-2xl shadow-black/50 backdrop-blur-xl">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[26px] border border-amber-300/20 bg-slate-900">
+                <Image
+                  src="/alok-singh.jpg"
+                  alt="Alok Singh — Full-Stack Developer and Product Builder"
+                  fill
+                  priority
+                  className="object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#05070d]/80 via-transparent to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-black/45 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-amber-200 backdrop-blur-md">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Developer · Founder · Builder
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-2 p-2 pt-3 text-center text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
+                  <span className="block text-white">FULL</span> STACK
+                </div>
+                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
+                  <span className="block text-white">PRODUCT</span> BUILDING
+                </div>
+                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
+                  <span className="block text-white">UI / UX</span> ENGINEERING
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-amber-300">
               <Terminal className="h-3.5 w-3.5" />
-              Full-Stack Engineer · Software Architect · Builder
+              Full-Stack Developer · Founder · Product Builder
             </div>
 
-            <h1 className="max-w-4xl text-5xl font-black leading-[0.92] tracking-[-0.05em] sm:text-7xl lg:text-[6.6rem]">
+            <h1 className="max-w-4xl text-5xl font-black leading-[0.92] tracking-[-0.05em] sm:text-7xl lg:text-[6.2rem]">
               ALOK
               <span className="block bg-gradient-to-r from-white via-amber-100 to-amber-400 bg-clip-text text-transparent">
                 SINGH
@@ -235,23 +268,41 @@ export default function DeveloperPage() {
             </h1>
 
             <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
-              Building modern digital products where{' '}
-              <span className="font-semibold text-white">engineering</span>,
-              <span className="font-semibold text-white"> design</span> and
-              <span className="font-semibold text-white"> real-world usability</span> meet.
+              I build <span className="font-semibold text-white">web products</span>,
+              <span className="font-semibold text-white"> developer tools</span> and
+              <span className="font-semibold text-white"> digital experiences</span> from idea to production.
             </p>
 
-            <p className="mt-4 max-w-xl text-sm leading-7 text-slate-500">
-              Focused on full-stack web development, real-time systems, cloud deployment,
-              APIs and responsive UI/UX — from the first interface to the production build.
-            </p>
+            <div className="mt-6 max-w-2xl space-y-4 text-sm leading-7 text-slate-400 sm:text-[15px]">
+              <p>
+                I&apos;m Alok Singh, a developer and product builder from Gorakhpur, Uttar Pradesh.
+                My work sits at the intersection of full-stack engineering, UI/UX, databases,
+                APIs, cloud deployment and real-time web systems.
+              </p>
+              <p>
+                I&apos;m building <span className="font-semibold text-white">VPANSAK</span>, an
+                own-brand digital commerce and product venture powered by A&amp;A Group, while also
+                working on <span className="font-semibold text-white">ALØK STUDIO</span>, a
+                multi-language online coding and development environment.
+              </p>
+              <p>
+                I also work on the technology and web experience behind
+                <span className="font-semibold text-white"> Gorakhpur&apos;s Got Latent</span>,
+                combining product thinking, frontend development, backend systems, databases,
+                deployment and practical event technology.
+              </p>
+              <p>
+                I&apos;m currently pursuing BCA with an interest in web development, AI and
+                software technology — learning by building real systems instead of only studying theory.
+              </p>
+            </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <a
-                href="#expertise"
+                href="#about"
                 className="group inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-black text-black transition hover:-translate-y-0.5 hover:bg-amber-300"
               >
-                EXPLORE EXPERTISE
+                READ MY STORY
                 <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
               <a
@@ -262,64 +313,67 @@ export default function DeveloperPage() {
               </a>
             </div>
 
-            <div className="mt-10 flex items-center gap-3 text-xs text-slate-500">
+            <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-slate-500">
               <MapPin className="h-4 w-4 text-amber-400" />
               Gorakhpur, Uttar Pradesh, India
               <span className="h-1 w-1 rounded-full bg-slate-700" />
-              <span>Open to building useful things</span>
-            </div>
-          </div>
-
-          <div className="relative mx-auto w-full max-w-[430px]">
-            <div className="absolute -inset-6 rounded-[40px] bg-amber-400/10 blur-3xl" />
-            <div className="relative overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.035] p-3 shadow-2xl shadow-black/50 backdrop-blur-xl">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[25px] border border-amber-300/20 bg-slate-900">
-                <Image
-                  src="/alok-singh.jpg"
-                  alt="Alok Singh — Full-Stack Developer"
-                  fill
-                  priority
-                  className="object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#05070d] via-transparent to-transparent" />
-                <div className="absolute bottom-5 left-5 right-5">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-black/45 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-amber-200 backdrop-blur-md">
-                    <Sparkles className="h-3.5 w-3.5" />
-                    Developer Profile
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-2 p-2 pt-3 text-center text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
-                  <span className="block text-white">FULL</span> STACK
-                </div>
-                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
-                  <span className="block text-white">REAL</span> TIME
-                </div>
-                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
-                  <span className="block text-white">CLOUD</span> READY
-                </div>
-              </div>
+              <span>Developer · Founder · Student</span>
             </div>
           </div>
         </section>
 
         <section id="about" className="mt-28 scroll-mt-24">
-          <div className="grid gap-8 lg:grid-cols-[.7fr_1.3fr]">
+          <div className="grid gap-10 lg:grid-cols-[.7fr_1.3fr]">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300">01 — About</p>
-              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">Engineering with purpose.</h2>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300">01 — Biography</p>
+              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
+                From curiosity to real products.
+              </h2>
+              <p className="mt-5 text-sm leading-7 text-slate-500">
+                A young builder&apos;s journey through code, design, products and real-world problem solving.
+              </p>
             </div>
-            <div className="border-l border-white/10 pl-6 text-base leading-8 text-slate-400 sm:pl-8">
+
+            <div className="space-y-5 text-base leading-8 text-slate-400">
               <p>
-                Alok Singh is a full-stack web developer focused on building modern digital
-                products, real-time systems and responsive web experiences.
+                Alok Singh is a full-stack web developer, founder and product builder from
+                Gorakhpur, Uttar Pradesh. He enjoys taking an idea that starts as a rough concept
+                and turning it into a working digital product with a polished interface and a
+                dependable technical foundation.
               </p>
-              <p className="mt-4">
-                The work combines frontend engineering, backend architecture, cloud deployment
-                and thoughtful UI/UX into complete products that are practical, connected and
-                designed to evolve.
+              <p>
+                His development work covers frontend and backend engineering, responsive UI/UX,
+                database design, APIs, authentication, cloud deployment and real-time application
+                workflows. He prefers learning through hands-on building, testing, debugging and
+                improving systems in production.
               </p>
+              <p>
+                His current work includes <span className="font-semibold text-white">VPANSAK</span>,
+                his own-brand digital commerce venture powered by A&amp;A Group;
+                <span className="font-semibold text-white"> ALØK STUDIO</span>, a multi-language
+                coding and online IDE project; and the technology/web work associated with
+                <span className="font-semibold text-white"> Gorakhpur&apos;s Got Latent</span>.
+              </p>
+              <p>
+                Alongside building products, Alok is pursuing BCA and exploring web development,
+                AI and software technology. The long-term focus is simple: keep learning, keep
+                building and create software that is genuinely useful to people.
+              </p>
+
+              <div className="grid gap-3 pt-3 sm:grid-cols-3">
+                <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
+                  <span className="block text-xs font-bold uppercase tracking-wider text-amber-300">Focus</span>
+                  <span className="mt-2 block text-sm font-semibold text-white">Web + Software</span>
+                </div>
+                <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
+                  <span className="block text-xs font-bold uppercase tracking-wider text-amber-300">Currently</span>
+                  <span className="mt-2 block text-sm font-semibold text-white">BCA + Building</span>
+                </div>
+                <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
+                  <span className="block text-xs font-bold uppercase tracking-wider text-amber-300">Based in</span>
+                  <span className="mt-2 block text-sm font-semibold text-white">Gorakhpur, UP</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>

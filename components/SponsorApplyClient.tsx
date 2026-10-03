@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Building2, CheckCircle2, ArrowRight, Loader2, MessageSquare, Mail } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 import { useLeadCapture } from '@/lib/leadCapture';
@@ -171,6 +172,14 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto space-y-8">
+      <div className="text-center mb-1">
+        <Link href="/" className="inline-block">
+          <div className="relative w-52 sm:w-64 h-20 sm:h-24 mx-auto">
+            <Image src="/logo.png" alt="Gorakhpur's Got Latent Official Logo" fill className="object-contain" priority />
+          </div>
+        </Link>
+      </div>
+
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold uppercase tracking-wider">
           <Building2 className="w-4 h-4" /> BRAND SPONSORSHIP PORTAL

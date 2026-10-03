@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Star, CheckCircle2, ArrowRight, Loader2, MessageSquare, Mail } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 import { useLeadCapture } from '@/lib/leadCapture';
@@ -174,6 +175,14 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto space-y-8">
+      <div className="text-center mb-1">
+        <Link href="/" className="inline-block">
+          <div className="relative w-52 sm:w-64 h-20 sm:h-24 mx-auto">
+            <Image src="/logo.png" alt="Gorakhpur's Got Latent Official Logo" fill className="object-contain" priority />
+          </div>
+        </Link>
+      </div>
+
       <div className="text-center space-y-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-bold uppercase tracking-wider">
           <Star className="w-4 h-4" /> CELEBRITY & GUEST PANEL

@@ -10,6 +10,7 @@ import {
   Ticket as TicketIcon
 } from 'lucide-react';
 import { downloadCategoryExcel, downloadMasterExcel } from '@/lib/excel-export';
+import { useLeadCapture } from '@/lib/leadCapture';
 
 interface AdminApplicationPortalProps {
   session: {
@@ -102,6 +103,8 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     fetchComputerJiScores();
     fetchLeads();
     fetchTicketStats();
+    const timer = window.setInterval(fetchLeads, 3000);
+    return () => window.clearInterval(timer);
   }, []);
 
   // Fetch updated data from API
@@ -140,6 +143,24 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
   const handleToggleRead = async (item: any) => {
     const newReadState = !item.is_read;
     const appId = item.app_id || item.id;
+
+    if (activeTab === 'leads') {
+      setLeads((prev) => prev.map((it) => it.id === appId ? {
+        ...it,
+        is_read: newReadState ? 1 : 0,
+        read_at: newReadState ? new Date().toISOString() : null,
+      } : it));
+      try {
+        await fetch('/api/malik/mark-read', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'lead', id: appId, isRead: newReadState }),
+        });
+      } catch (err) {
+        console.error('Failed to update lead read status:', err);
+      }
+      return;
+    }
 
     // Optimistically update local state so row instantly moves
     setData((prev) => {
@@ -271,13 +292,16 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     const list = currentList.filter((item) => {
       // Leads custom search
       if (activeTab === 'leads') {
+        if (readFilter === 'UNREAD' && item.is_read) return false;
+        if (readFilter === 'READ' && !item.is_read) return false;
+        if (statusFilter !== 'ALL' && (item.status || '') !== statusFilter) return false;
         if (!search.trim()) return true;
         const q = search.toLowerCase();
-        const name = (item.customer_name || '').toLowerCase();
-        const contact = (item.mobile || '').toLowerCase();
-        const email = (item.email || '').toLowerCase();
-        const code = (item.lead_code || item.id || '').toLowerCase();
-        return name.includes(q) || contact.includes(q) || email.includes(q) || code.includes(q);
+        const haystack = [
+          item.customer_name, item.mobile, item.email, item.lead_code, item.source,
+          ...(item.data ? Object.values(item.data) : [])
+        ].filter(Boolean).join(' ').toLowerCase();
+        return haystack.includes(q);
       }
 
       // Computer Ji custom search
@@ -838,7 +862,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                     return (
                       <tr
                         key={item.id}
-                        className="hover:bg-slate-900/60 transition-colors border-l-2 border-l-transparent hover:border-l-rose-500"
+                        className={`hover:bg-slate-900/60 transition-colors border-l-2 ${item.is_read ? 'border-l-transparent' : 'border-l-amber-400 bg-amber-500/5'}`}
                       >
                         <td className="py-3.5 px-4 text-center text-slate-500 font-mono text-[11px]">
                           {idx + 1}
@@ -848,7 +872,10 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                         </td>
                         <td className="py-3.5 px-4">
                           <div className="font-black text-white text-sm">{item.customer_name || 'Anonymous Guest'}</div>
-                          <div className="text-[11px] text-slate-400 font-medium">Source: {item.source || 'book-ticket'}</div>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-[11px] text-amber-300 font-bold">SOURCE: {String(item.source || 'UNKNOWN').replace(/-/g, ' ').toUpperCase()}</span>
+                            {!item.is_read && <span className="px-1.5 py-0.5 rounded bg-amber-500 text-black text-[9px] font-black">NEW</span>}
+                          </div>
                         </td>
                         <td className="py-3.5 px-4 whitespace-nowrap">
                           <div className="flex items-center gap-2">
@@ -878,9 +905,11 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                         <td className="py-3.5 px-4">
                           <div className="text-slate-300 text-xs">{item.email || '—'}</div>
                           {item.instagram_id && <div className="text-[11px] text-amber-300">@{item.instagram_id.replace(/^@/, '')}</div>}
+                          {item.data?.contactPerson && <div className="text-[11px] text-slate-400">Contact: {item.data.contactPerson}</div>}
+                          {item.data?.companyName && <div className="text-[11px] text-slate-400">Company: {item.data.companyName}</div>}
                         </td>
                         <td className="py-3.5 px-4 text-center font-mono font-bold text-amber-300 text-xs">
-                          {item.quantity || 1} Ticket(s)
+                          {item.source === 'book-ticket' ? `${item.quantity || 1} Ticket(s)` : '—'}
                         </td>
                         <td className="py-3.5 px-4 whitespace-nowrap">
                           {item.status === 'CONVERTED' ? (
@@ -902,14 +931,22 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                           })}
                         </td>
                         <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                          <button
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => handleToggleRead(item)}
+                              className={`px-2.5 py-1 rounded-lg border text-[11px] font-bold transition-all cursor-pointer ${item.is_read ? 'bg-slate-800 border-slate-700 text-slate-300' : 'bg-amber-500/20 border-amber-500/40 text-amber-300'}`}
+                            >
+                              {item.is_read ? 'Mark Unread' : 'Mark as Read'}
+                            </button>
+                            <button
                             onClick={() => handleDeleteLead(item.id, item.customer_name)}
                             className="px-2.5 py-1 rounded-lg bg-red-950/70 hover:bg-red-800 border border-red-500/40 text-red-300 hover:text-white text-[11px] font-bold transition-all cursor-pointer inline-flex items-center gap-1"
                             title="Delete this lead"
                           >
                             <Trash2 className="w-3 h-3 text-red-400" />
                             <span>Delete</span>
-                          </button>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

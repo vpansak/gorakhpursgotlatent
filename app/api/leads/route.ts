@@ -24,6 +24,25 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
+    let ids: string[] = [];
+    const contentType = req.headers.get('content-type') || '';
+
+    if (contentType.includes('application/json')) {
+      const body = await req.json().catch(() => ({}));
+      if (Array.isArray(body?.ids)) {
+        ids = body.ids.map((value: any) => String(value)).filter(Boolean);
+      }
+    }
+
+    if (ids.length > 0) {
+      await Promise.all(ids.map((id) => deleteLead(id)));
+      return NextResponse.json({
+        success: true,
+        message: ids.length + ' leads deleted successfully',
+        deletedCount: ids.length,
+      });
+    }
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
 

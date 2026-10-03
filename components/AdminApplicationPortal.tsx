@@ -868,7 +868,14 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                           {idx + 1}
                         </td>
                         <td className="py-3.5 px-4 font-mono font-bold text-rose-400 text-xs whitespace-nowrap">
-                          {item.lead_code || item.id}
+                          <div>{item.lead_code || item.id}</div>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedItem({ ...item, __isLead: true })}
+                            className="mt-1 inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/30 border border-amber-500/30 text-amber-300 text-[10px] font-black uppercase cursor-pointer"
+                          >
+                            <Eye className="w-3 h-3" /> View
+                          </button>
                         </td>
                         <td className="py-3.5 px-4">
                           <div className="font-black text-white text-sm">{item.customer_name || 'Anonymous Guest'}</div>
@@ -1261,7 +1268,77 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
       </div>
 
       {/* FULL APPLICATION DETAILS MODAL */}
-      {selectedItem && (
+      {selectedItem?.__isLead && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="glass-panel max-w-3xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 rounded-3xl border border-rose-500/40 space-y-6 shadow-2xl">
+            <div className="flex items-start justify-between border-b border-white/10 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-rose-400 uppercase font-mono">{selectedItem.lead_code || selectedItem.id}</span>
+                  <span className="px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 text-[10px] font-black uppercase">
+                    {selectedItem.status || 'ABANDONED'}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[10px] font-black uppercase">
+                    {String(selectedItem.source || 'UNKNOWN').replace(/-/g, ' ').toUpperCase()}
+                  </span>
+                </div>
+                <h3 className="text-2xl font-black text-white mt-2">{selectedItem.customer_name || 'Anonymous Guest'}</h3>
+                <p className="text-xs text-slate-400 mt-1">
+                  Captured: {selectedItem.updated_at ? new Date(selectedItem.updated_at).toLocaleString('en-IN') : 'Recent'}
+                </p>
+              </div>
+              <button onClick={() => setSelectedItem(null)} className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white cursor-pointer">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+              <div><span className="text-[11px] text-slate-400 block">Name</span><strong className="text-white">{selectedItem.customer_name || 'N/A'}</strong></div>
+              <div><span className="text-[11px] text-slate-400 block">Mobile / WhatsApp</span><strong className="text-emerald-400">{selectedItem.mobile || 'N/A'}</strong></div>
+              <div><span className="text-[11px] text-slate-400 block">Email</span><strong className="text-white break-all">{selectedItem.email || 'N/A'}</strong></div>
+              <div><span className="text-[11px] text-slate-400 block">Instagram</span><strong className="text-amber-300 break-all">{selectedItem.instagram_id ? '@' + String(selectedItem.instagram_id).replace(/^@/, '') : 'N/A'}</strong></div>
+              <div><span className="text-[11px] text-slate-400 block">Date of Birth</span><strong className="text-white">{selectedItem.dob || 'N/A'}</strong></div>
+              <div><span className="text-[11px] text-slate-400 block">Ticket Quantity</span><strong className="text-amber-300">{selectedItem.quantity ?? 'N/A'}</strong></div>
+              <div><span className="text-[11px] text-slate-400 block">Lead Created</span><strong className="text-white">{selectedItem.created_at ? new Date(selectedItem.created_at).toLocaleString('en-IN') : 'N/A'}</strong></div>
+              <div><span className="text-[11px] text-slate-400 block">Last Captured</span><strong className="text-white">{selectedItem.updated_at ? new Date(selectedItem.updated_at).toLocaleString('en-IN') : 'N/A'}</strong></div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {selectedItem.mobile && <a href={'tel:' + selectedItem.mobile} className="px-3 py-2 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-300 text-xs font-bold">Call</a>}
+              {selectedItem.mobile && <a href={'https://wa.me/91' + String(selectedItem.mobile).replace(/[^0-9]/g, '').slice(-10)} target="_blank" rel="noreferrer" className="px-3 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold">WhatsApp</a>}
+              {selectedItem.email && <a href={'mailto:' + selectedItem.email} className="px-3 py-2 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold">Email</a>}
+              <button onClick={() => handleToggleRead(selectedItem)} className="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold cursor-pointer">
+                {selectedItem.is_read ? 'Mark Unread' : 'Mark as Read'}
+              </button>
+              <button onClick={() => handleDeleteLead(selectedItem.id, selectedItem.customer_name)} className="px-3 py-2 rounded-xl bg-red-950/80 border border-red-500/40 text-red-300 text-xs font-bold cursor-pointer">Delete</button>
+            </div>
+
+            <div className="bg-slate-900/70 p-4 rounded-2xl border border-slate-800">
+              <div className="text-[11px] font-black text-amber-400 uppercase mb-3">All Captured Form Details</div>
+              {selectedItem.data && Object.keys(selectedItem.data).length > 0 ? (
+                <div className="space-y-2">
+                  {Object.entries(selectedItem.data).map(([key, value]) => (
+                    <div key={key} className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-2 py-2 border-b border-white/5 last:border-0">
+                      <span className="text-[11px] text-slate-500 font-bold break-words">{key}</span>
+                      <span className="text-xs text-slate-200 break-all whitespace-pre-wrap">
+                        {typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value ?? '—')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-slate-500">No additional form fields were captured.</p>
+              )}
+            </div>
+
+            <div className="flex justify-end">
+              <button onClick={() => setSelectedItem(null)} className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs cursor-pointer">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedItem && !selectedItem.__isLead && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
           <div className="glass-panel max-w-3xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 rounded-3xl border border-amber-500/40 space-y-6 shadow-2xl">
             {/* Modal Header */}

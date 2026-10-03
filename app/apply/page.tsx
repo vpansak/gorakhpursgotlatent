@@ -69,7 +69,7 @@ export default function ApplyPage() {
         <h1 className="text-3xl sm:text-5xl font-black text-white uppercase tracking-tight">
           APPLY <span className="gold-gradient-text">NOW</span>
         </h1>
-        <p className="text-sm sm:text-base text-slate-300">
+        <p className="text-sm sm:text-base text-slate-300 font-semibold">
           Select your application stream below to get started. All applications receive a unique Application ID for real-time status tracking.
         </p>
       </div>
@@ -89,7 +89,7 @@ export default function ApplyPage() {
                 Performer Registration: Episode 2 Auditions Are Live!
               </strong>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-300 leading-relaxed font-semibold">
               Fill in your details and send your performance clip on WhatsApp (<strong className="text-amber-400">+91 8423858424</strong>). Audition submission is FREE!
             </p>
           </div>
@@ -141,11 +141,11 @@ export default function ApplyPage() {
                       <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
                       {stream.alertBox.tag}
                     </div>
-                    <p className="text-[11px] text-slate-300 leading-snug">{stream.alertBox.text}</p>
+                    <p className="text-[11px] text-slate-300 leading-snug font-semibold">{stream.alertBox.text}</p>
                   </div>
                 )}
 
-                <p className="text-xs text-slate-300 leading-relaxed">{stream.desc}</p>
+                <p className="text-xs text-slate-300 leading-relaxed font-semibold">{stream.desc}</p>
               </div>
 
               <div className="pt-4 border-t border-white/10">

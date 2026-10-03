@@ -4,9 +4,6 @@ from collections import Counter
 
 WORKSPACE_DIR = "/Users/alok/gorakhpur got letent "
 BANK_CSV = os.path.join(WORKSPACE_DIR, "GGL_10000_plus_Keyword_Research_Bank.csv")
-CLUSTERS_CSV = os.path.join(WORKSPACE_DIR, "GGL_SEO_Topical_Clusters.csv")
-ROADMAP_CSV = os.path.join(WORKSPACE_DIR, "GGL_SEO_Content_Roadmap.csv")
-PLAN_CSV = os.path.join(WORKSPACE_DIR, "GGL_SEO_Implementation_Plan.csv")
 
 def analyze():
     with open(BANK_CSV, 'r', encoding='utf-8') as f:
@@ -26,9 +23,8 @@ def analyze():
     opportunities = Counter(r["SEO Opportunity"] for r in reader)
     rec_pages = Counter(r["Recommended Page"] for r in reader)
     gaps = Counter(r["Content Gap"] for r in reader)
-    cannibalization = Counter(r["Cannibalization Risk"] for r in reader)
 
-    print("=== SEO METRICS VERIFICATION REPORT ===")
+    print("=== UPDATED SEO METRICS VERIFICATION REPORT ===")
     print(f"Total Keyword Count: {total_count}")
     print(f"Total Unique Keyword Count: {unique_count}")
     print(f"Duplicate Count: {dup_count}")

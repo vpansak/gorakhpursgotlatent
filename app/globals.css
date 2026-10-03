@@ -269,3 +269,58 @@
   height:1px;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),rgba(245,190,70,.18),rgba(255,255,255,.10),transparent);
 }
+
+
+/* GGL homepage typography refresh — stronger, cleaner, more premium */
+.home-dark {
+  font-family: var(--font-outfit), 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+}
+
+.home-dark .font-bebas {
+  font-family: var(--font-anton), Impact, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.025em;
+}
+
+.home-dark .font-barlow {
+  font-family: var(--font-barlow), sans-serif;
+  font-weight: 700;
+}
+
+.home-dark p {
+  font-weight: 500;
+}
+
+.home-dark h1,
+.home-dark h2,
+.home-dark h3,
+.home-dark h4,
+.home-dark h5,
+.home-dark h6 {
+  font-weight: 800;
+}
+
+.home-dark .text-slate-300,
+.home-dark .text-slate-400 {
+  font-weight: 600;
+}
+
+.home-dark .text-xs,
+.home-dark .text-sm {
+  letter-spacing: 0.025em;
+}
+
+.home-dark .tracking-tight {
+  letter-spacing: -0.01em;
+}
+
+.home-dark .tracking-wide {
+  letter-spacing: 0.035em;
+}
+
+.home-dark .tracking-wider,
+.home-dark .tracking-widest {
+  letter-spacing: 0.08em;
+}

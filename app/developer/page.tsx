@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import DeveloperPhotoSlider from '@/components/DeveloperPhotoSlider';
 import { Metadata } from 'next';
 import {
   ArrowUpRight,
@@ -256,38 +256,7 @@ export default function DeveloperPage() {
 
       <div id="top" className="mx-auto max-w-6xl px-5 pb-20 pt-4 sm:px-8 sm:pt-8">
         <section className="relative grid items-center gap-12 lg:grid-cols-[.82fr_1.18fr]">
-          <div className="relative mx-auto w-full max-w-[440px] lg:mx-0">
-            <div className="absolute -inset-8 rounded-[44px] bg-amber-400/10 blur-3xl" />
-            <div className="relative overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.035] p-3 shadow-2xl shadow-black/50 backdrop-blur-xl">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[26px] border border-amber-300/20 bg-slate-900">
-                <Image
-                  src="/alok-singh.jpg"
-                  alt="Alok Singh — Full-Stack Developer and Product Builder"
-                  fill
-                  priority
-                  className="object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#05070d]/80 via-transparent to-transparent" />
-                <div className="absolute bottom-5 left-5 right-5">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-black/45 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-amber-200 backdrop-blur-md">
-                    <Sparkles className="h-3.5 w-3.5" />
-                    Developer · Co-Founder · Builder
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-2 p-2 pt-3 text-center text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
-                  <span className="block text-white">FULL</span> STACK
-                </div>
-                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
-                  <span className="block text-white">PRODUCT</span> BUILDING
-                </div>
-                <div className="rounded-xl border border-white/5 bg-black/20 px-2 py-3">
-                  <span className="block text-white">UI / UX</span> ENGINEERING
-                </div>
-              </div>
-            </div>
-          </div>
+          <DeveloperPhotoSlider />
 
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-amber-300">

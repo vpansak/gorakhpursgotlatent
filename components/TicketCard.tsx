@@ -89,12 +89,14 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
       {/* PREMIUM GGL TICKET */}
       <div ref={ticketRef} className="relative w-full max-w-5xl mx-auto overflow-hidden rounded-[24px] border-2 border-amber-400/70 bg-[#08080b] text-white shadow-[0_20px_70px_rgba(0,0,0,.55)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,190,30,.16),transparent_32%),radial-gradient(circle_at_55%_20%,rgba(180,0,0,.22),transparent_40%),linear-gradient(115deg,#100607,#08080b_55%,#120b06)]" />
-        <div className="relative grid grid-cols-1 md:grid-cols-[1.15fr_2.4fr_1fr] min-h-[330px]">
-          <div className="relative flex flex-col items-center justify-center p-5 border-b md:border-b-0 md:border-r border-amber-400/30 overflow-hidden">
-            <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,rgba(220,0,0,.32),transparent_65%)]" />
-            <img src={GGL_MASCOT_DATA} alt="GGL mascot" className="relative w-36 h-36 sm:w-44 sm:h-44 object-contain drop-shadow-[0_0_22px_rgba(255,190,30,.55)]" />
-            <div className="relative mt-2 text-[10px] font-black tracking-[.28em] text-amber-300 uppercase">LIVE EVENT TICKET</div>
-            <div className="relative mt-1 text-xs font-bold text-slate-300">KUCH BHI HO SAKTA HAI!</div>
+        <div className="relative grid grid-cols-1 md:grid-cols-[1.3fr_2.4fr_1fr] min-h-[350px]">
+          <div className="relative flex flex-col items-center justify-center p-4 sm:p-6 border-b md:border-b-0 md:border-r border-amber-400/30 overflow-hidden bg-gradient-to-b from-amber-950/40 via-black to-slate-950">
+            <div className="absolute inset-0 opacity-50 bg-[radial-gradient(circle_at_center,rgba(220,0,0,.5),transparent_70%)]" />
+            <div className="relative w-48 h-48 sm:w-60 sm:h-60 rounded-2xl overflow-hidden border-2 border-amber-400/80 shadow-[0_0_40px_rgba(255,190,30,0.55)] transition-transform hover:scale-105">
+              <img src={GGL_MASCOT_DATA} alt="GGL Mascot" className="w-full h-full object-cover" />
+            </div>
+            <div className="relative mt-3 text-[10px] font-black tracking-[.28em] text-amber-300 uppercase text-center">LIVE EVENT TICKET</div>
+            <div className="relative mt-0.5 text-xs font-bold text-slate-300 text-center">KUCH BHI HO SAKTA HAI!</div>
           </div>
           <div className="p-6 sm:p-8 flex flex-col justify-between">
             <div className="flex items-center justify-between gap-4 border-b border-amber-400/20 pb-4">

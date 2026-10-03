@@ -204,17 +204,35 @@ export default function VerifyTicketPage() {
     executeExpireWithCode(expireCode.trim());
   };
 
-  // Start Camera Stream
+  // Start Camera Stream with Hardware Fast Constraints
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
+        video: { 
+          facingMode: { ideal: 'environment' }, 
+          width: { ideal: 640 }, 
+          height: { ideal: 480 },
+          frameRate: { ideal: 30, max: 60 }
+        }
       });
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.setAttribute('playsinline', 'true');
         await videoRef.current.play();
+        
+        // Try enabling continuous hardware autofocus if supported by mobile browser
+        const track = stream.getVideoTracks()[0];
+        if (track && 'applyConstraints' in track) {
+          try {
+            await track.applyConstraints({
+              advanced: [{ focusMode: 'continuous' } as any]
+            });
+          } catch (e) {
+            // Ignore if focusMode constraint is not supported
+          }
+        }
+
         setCameraActive(true);
         requestAnimationFrame(tickScanFrame);
       }
@@ -237,31 +255,37 @@ export default function VerifyTicketPage() {
     setCameraActive(false);
   };
 
-  // Camera Frame Decoder Loop
+  // Camera Frame Decoder Loop (Downsampled 480x360 for Sub-10ms Instant Detection)
   const tickScanFrame = () => {
     if (videoRef.current && videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
-      const video = videoRef.current;
-      const canvas = canvasRef.current || document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      // Pause active scanning if a popup modal is currently open
+      if (verificationResult.status === 'IDLE') {
+        const video = videoRef.current;
+        const SCAN_WIDTH = 480;
+        const SCAN_HEIGHT = 360;
 
-      if (ctx) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const canvas = canvasRef.current || document.createElement('canvas');
+        if (canvas.width !== SCAN_WIDTH) canvas.width = SCAN_WIDTH;
+        if (canvas.height !== SCAN_HEIGHT) canvas.height = SCAN_HEIGHT;
 
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: 'dontInvert',
-        });
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-        if (code && code.data) {
-          const scannedText = code.data.trim();
-          if (scannedText !== lastScannedIdRef.current) {
-            lastScannedIdRef.current = scannedText;
-            lookupTicketDetails(scannedText);
-            setTimeout(() => {
-              lastScannedIdRef.current = null;
-            }, 3000);
+        if (ctx) {
+          ctx.drawImage(video, 0, 0, SCAN_WIDTH, SCAN_HEIGHT);
+          const imageData = ctx.getImageData(0, 0, SCAN_WIDTH, SCAN_HEIGHT);
+          const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: 'dontInvert',
+          });
+
+          if (code && code.data) {
+            const scannedText = code.data.trim();
+            if (scannedText && scannedText !== lastScannedIdRef.current) {
+              lastScannedIdRef.current = scannedText;
+              lookupTicketDetails(scannedText);
+              setTimeout(() => {
+                lastScannedIdRef.current = null;
+              }, 1200);
+            }
           }
         }
       }

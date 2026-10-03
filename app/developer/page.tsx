@@ -254,7 +254,7 @@ export default function DeveloperPage() {
         </div>
       </nav>
 
-      <div id="top" className="mx-auto max-w-6xl px-5 pb-20 pt-12 sm:px-8 sm:pt-20">
+      <div id="top" className="mx-auto max-w-6xl px-5 pb-20 pt-4 sm:px-8 sm:pt-8">
         <section className="relative grid items-center gap-12 lg:grid-cols-[.82fr_1.18fr]">
           <div className="relative mx-auto w-full max-w-[440px] lg:mx-0">
             <div className="absolute -inset-8 rounded-[44px] bg-amber-400/10 blur-3xl" />
@@ -290,7 +290,7 @@ export default function DeveloperPage() {
           </div>
 
           <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-amber-300">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-amber-300">
               <Terminal className="h-3.5 w-3.5" />
               Full-Stack Developer · Co-Founder · AI Builder
             </div>

@@ -64,9 +64,9 @@ export default async function HomePage() {
   ];
 
   return (
-    <div className="relative overflow-hidden">
+    <div className="home-dark relative overflow-hidden">
       {/* 1. HERO SECTION */}
-      <section className="relative min-h-[70vh] flex items-center justify-center pt-0 sm:pt-2 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-8 bg-stage-radial">
+      <section className="relative min-h-[70vh] flex items-center justify-center pt-0 sm:pt-2 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-8 bg-stage-radial home-hero">
         {/* Stage Lighting Rays */}
         <div className="spotlight-left" />
         <div className="spotlight-right" />
@@ -133,7 +133,7 @@ export default async function HomePage() {
           </div>
 
           {/* Performer Registration Status Banner */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold font-barlow uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-950/40 border border-red-500/30 text-red-200 text-xs font-bold font-barlow uppercase tracking-wider">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             🎉 Episode 2 Auditions Are Now LIVE • Apply Below
           </div>
@@ -150,7 +150,7 @@ export default async function HomePage() {
 
             <Link
               href="/apply/performer"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border-2 border-emerald-500/40 text-emerald-300 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-emerald-400 transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-black/70 hover:bg-slate-900 border border-amber-500/40 text-amber-200 font-barlow font-bold uppercase tracking-wider text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-emerald-400 transition-all duration-300 cursor-pointer"
             >
               <UserCheck className="w-6 h-6 text-emerald-400" />
               APPLY FOR EPISODE 2 (LIVE NOW)

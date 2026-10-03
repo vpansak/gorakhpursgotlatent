@@ -42,7 +42,7 @@ export default function Footer() {
     pathname.startsWith('/malik/live') ||
     pathname.startsWith('/computerji');
 
-  if (isLiveRoute) return null;
+  if (isLiveRoute || pathname.startsWith('/developer')) return null;
 
   // Compute Page-Specific Pre-Drafted WhatsApp Message & Reason
   let whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI have a general inquiry regarding the show.";

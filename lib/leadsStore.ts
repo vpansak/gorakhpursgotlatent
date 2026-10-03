@@ -12,26 +12,53 @@ export interface LeadRecord {
   quantity?: number;
   source?: string;
   status: string;
+  data?: Record<string, any>;
+  is_read: number;
+  read_at?: string | null;
   created_at: string;
   updated_at: string;
 }
 
-// In-memory fallback map for sub-millisecond sync across serverless lambdas
 const memoryLeads: Map<string, LeadRecord> = new Map();
 
-/**
- * Upsert or track an abandoned/draft lead
- */
+async function ensureLeadsTable() {
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS abandoned_leads (
+      id TEXT PRIMARY KEY,
+      lead_code TEXT UNIQUE NOT NULL,
+      customer_name TEXT DEFAULT '',
+      mobile TEXT DEFAULT '',
+      email TEXT DEFAULT '',
+      instagram_id TEXT DEFAULT '',
+      dob TEXT DEFAULT '',
+      quantity INTEGER DEFAULT 1,
+      source TEXT DEFAULT 'unknown',
+      status TEXT DEFAULT 'IN_PROGRESS',
+      data JSONB DEFAULT '{}'::jsonb,
+      is_read INTEGER DEFAULT 0,
+      read_at TIMESTAMP WITH TIME ZONE,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await db.execute(`ALTER TABLE abandoned_leads ADD COLUMN IF NOT EXISTS data JSONB DEFAULT '{}'::jsonb`);
+  await db.execute(`ALTER TABLE abandoned_leads ADD COLUMN IF NOT EXISTS is_read INTEGER DEFAULT 0`);
+  await db.execute(`ALTER TABLE abandoned_leads ADD COLUMN IF NOT EXISTS read_at TIMESTAMP WITH TIME ZONE`);
+  await db.execute(`ALTER TABLE abandoned_leads ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'unknown'`);
+  await db.execute(`ALTER TABLE abandoned_leads ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'IN_PROGRESS'`);
+}
+
 export async function trackLead(input: {
   leadId?: string;
   customerName?: string;
-  mobile: string;
+  mobile?: string;
   email?: string;
   instagramId?: string;
   dob?: string;
   quantity?: number;
   source?: string;
   status?: string;
+  data?: Record<string, any>;
 }): Promise<LeadRecord> {
   const cleanMobile = (input.mobile || '').trim();
   const cleanName = (input.customerName || '').trim();
@@ -39,26 +66,14 @@ export async function trackLead(input: {
   const cleanInsta = (input.instagramId || '').trim();
   const cleanDob = (input.dob || '').trim();
   const qty = Number(input.quantity) || 1;
-  const source = input.source || 'book-ticket';
-  const status = input.status || 'ABANDONED';
+  const source = (input.source || 'unknown').trim();
+  const status = input.status || 'IN_PROGRESS';
   const now = new Date().toISOString();
+  const id = input.leadId || `lead_${crypto.randomUUID()}`;
 
-  // Search existing by leadId or cleanMobile
-  let existingKey = '';
-  if (input.leadId && memoryLeads.has(input.leadId)) {
-    existingKey = input.leadId;
-  } else {
-    for (const [k, v] of memoryLeads.entries()) {
-      if (v.mobile === cleanMobile && cleanMobile.length >= 10) {
-        existingKey = k;
-        break;
-      }
-    }
-  }
-
-  const id = existingKey || input.leadId || `lead_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-  const lead_code = existingKey ? memoryLeads.get(existingKey)?.lead_code || `LEAD-${Date.now().toString().slice(-6)}` : `LEAD-${Date.now().toString().slice(-6)}`;
-  const created_at = existingKey ? memoryLeads.get(existingKey)?.created_at || now : now;
+  const existing = memoryLeads.get(id);
+  const lead_code = existing?.lead_code || `LEAD-${Date.now().toString().slice(-8)}`;
+  const created_at = existing?.created_at || now;
 
   const record: LeadRecord = {
     id,
@@ -71,6 +86,9 @@ export async function trackLead(input: {
     quantity: qty,
     source,
     status,
+    data: input.data || {},
+    is_read: existing?.is_read || 0,
+    read_at: existing?.read_at || null,
     created_at,
     updated_at: now,
   };
@@ -78,86 +96,80 @@ export async function trackLead(input: {
   memoryLeads.set(id, record);
 
   try {
-    const sql = `
-      INSERT INTO abandoned_leads 
-        (id, lead_code, customer_name, mobile, email, instagram_id, dob, quantity, source, status, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    await ensureLeadsTable();
+    await db.execute(`
+      INSERT INTO abandoned_leads
+        (id, lead_code, customer_name, mobile, email, instagram_id, dob, quantity, source, status, data, is_read, read_at, created_at, updated_at)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11::jsonb,$12,$13,$14,$15)
       ON CONFLICT (id) DO UPDATE SET
-        customer_name = EXCLUDED.customer_name,
-        mobile = EXCLUDED.mobile,
-        email = EXCLUDED.email,
-        instagram_id = EXCLUDED.instagram_id,
-        dob = EXCLUDED.dob,
-        quantity = EXCLUDED.quantity,
-        source = EXCLUDED.source,
-        status = EXCLUDED.status,
-        updated_at = EXCLUDED.updated_at
-    `;
-    await db.execute(sql, [
-      record.id,
-      record.lead_code,
-      record.customer_name,
-      record.mobile,
-      record.email,
-      record.instagram_id,
-      record.dob,
-      record.quantity,
-      record.source,
-      record.status,
-      record.created_at,
-      record.updated_at,
+        customer_name=EXCLUDED.customer_name,
+        mobile=EXCLUDED.mobile,
+        email=EXCLUDED.email,
+        instagram_id=EXCLUDED.instagram_id,
+        dob=EXCLUDED.dob,
+        quantity=EXCLUDED.quantity,
+        source=EXCLUDED.source,
+        status=EXCLUDED.status,
+        data=EXCLUDED.data,
+        updated_at=EXCLUDED.updated_at
+    `, [
+      record.id, record.lead_code, record.customer_name, record.mobile,
+      record.email, record.instagram_id, record.dob, record.quantity,
+      record.source, record.status, JSON.stringify(record.data || {}),
+      record.is_read, record.read_at, record.created_at, record.updated_at
     ]);
   } catch (err) {
-    console.warn('trackLead DB notice (using fallback):', err);
+    console.error('Lead DB save failed:', err);
+    throw err;
   }
 
   return record;
 }
 
-/**
- * Fetch all tracked leads
- */
 export async function getLeads(): Promise<LeadRecord[]> {
   try {
+    await ensureLeadsTable();
     const rows = await db.query<any>('SELECT * FROM abandoned_leads ORDER BY updated_at DESC');
-    if (rows && rows.length > 0) {
-      rows.forEach((r: any) => {
-        const item: LeadRecord = {
-          id: String(r.id || ''),
-          lead_code: String(r.lead_code || ''),
-          customer_name: String(r.customer_name || ''),
-          mobile: String(r.mobile || ''),
-          email: String(r.email || ''),
-          instagram_id: String(r.instagram_id || ''),
-          dob: String(r.dob || ''),
-          quantity: Number(r.quantity || 1),
-          source: String(r.source || 'book-ticket'),
-          status: String(r.status || 'ABANDONED'),
-          created_at: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
-          updated_at: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString(),
-        };
-        memoryLeads.set(item.id, item);
-      });
-    }
+    const result = (rows || []).map((r: any) => ({
+      id: String(r.id || ''),
+      lead_code: String(r.lead_code || ''),
+      customer_name: String(r.customer_name || ''),
+      mobile: String(r.mobile || ''),
+      email: String(r.email || ''),
+      instagram_id: String(r.instagram_id || ''),
+      dob: String(r.dob || ''),
+      quantity: Number(r.quantity || 1),
+      source: String(r.source || 'unknown'),
+      status: String(r.status || 'IN_PROGRESS'),
+      data: r.data && typeof r.data === 'object' ? r.data : {},
+      is_read: Number(r.is_read || 0),
+      read_at: r.read_at ? new Date(r.read_at).toISOString() : null,
+      created_at: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
+      updated_at: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString(),
+    }));
+    result.forEach((item: LeadRecord) => memoryLeads.set(item.id, item));
+    return result;
   } catch (err) {
-    console.warn('getLeads DB notice:', err);
+    console.error('getLeads DB failed:', err);
+    return Array.from(memoryLeads.values()).sort((a,b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
   }
-
-  return Array.from(memoryLeads.values()).sort(
-    (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-  );
 }
 
-/**
- * Delete a lead by ID
- */
+export async function markLeadRead(id: string, isRead: boolean): Promise<boolean> {
+  await ensureLeadsTable();
+  const readAt = isRead ? new Date().toISOString() : null;
+  await db.execute('UPDATE abandoned_leads SET is_read=$1, read_at=$2 WHERE id=$3 OR lead_code=$3', [isRead ? 1 : 0, readAt, id]);
+  const existing = memoryLeads.get(id);
+  if (existing) {
+    existing.is_read = isRead ? 1 : 0;
+    existing.read_at = readAt;
+  }
+  return true;
+}
+
 export async function deleteLead(id: string): Promise<boolean> {
   memoryLeads.delete(id);
-  try {
-    await db.execute('DELETE FROM abandoned_leads WHERE id = $1 OR lead_code = $1', [id]);
-    return true;
-  } catch (err) {
-    console.warn('deleteLead DB notice:', err);
-    return true;
-  }
+  await ensureLeadsTable();
+  await db.execute('DELETE FROM abandoned_leads WHERE id=$1 OR lead_code=$1', [id]);
+  return true;
 }

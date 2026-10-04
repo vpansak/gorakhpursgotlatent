@@ -603,6 +603,27 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
 
     if (res.ok) return { success: true };
     const errorText = await res.text();
+
+    // Nitrosend can temporarily defer delivery when its provider pacing/cooldown is active.
+    // Retry the exact same idempotent request once after a short delay so applications
+    // are not affected by a transient 503 delivery-admission response.
+    if (res.status === 503) {
+      await new Promise(resolve => setTimeout(resolve, 3500));
+      const retry = await fetch('https://api.nitrosend.com/v1/my/messages', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'Idempotency-Key': `ggl-${to.toLowerCase()}-${subject}`.replace(/[^a-zA-Z0-9._-]/g, '-').slice(0, 240),
+        },
+        body: JSON.stringify({ channel: 'email', to, subject, html, body }),
+      });
+      if (retry.ok) return { success: true };
+      const retryText = await retry.text();
+      console.error('❌ Nitrosend retry error:', retry.status, retryText);
+      return { success: false, message: `Nitrosend HTTP ${retry.status}: ${retryText}` };
+    }
+
     console.error('❌ Nitrosend error:', res.status, errorText);
     return { success: false, message: `Nitrosend HTTP ${res.status}: ${errorText}` };
   } catch (err: any) {

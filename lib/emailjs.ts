@@ -592,6 +592,7 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
+        'Idempotency-Key': `ggl-${to.toLowerCase()}-${subject}`.replace(/[^a-zA-Z0-9._-]/g, '-').slice(0, 240),
       },
       body: JSON.stringify({
         channel: 'email',

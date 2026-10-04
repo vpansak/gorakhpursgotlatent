@@ -289,9 +289,9 @@ Gorakhpur's Got Latent Team`;
       }
     }
 
-    return results.some(r => r.success)
+    return (adminResult.success || applicantResult.success)
       ? { success: true }
-      : { success: false, message: results.map(r => r.message).filter(Boolean).join(' | ') };
+      : { success: false, message: [adminResult.message, applicantResult.message].filter(Boolean).join(' | ') };
   }
 
   // Credentials for Admin Notification Email (vpansak / template_b3h1egs)

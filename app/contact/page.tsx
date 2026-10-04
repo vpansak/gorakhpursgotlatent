@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Mail, Phone, MapPin, Clock, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
+import SupportForm from './SupportForm';
 
 function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -90,11 +91,13 @@ export default function ContactPage() {
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-white">Need Immediate Help?</h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              For any inquiries regarding auditions, tickets, or sponsorships, reach out directly to our team via Email or WhatsApp.
+              Tell us your issue below. Our AI support assistant can reply to your email automatically.
             </p>
           </div>
 
-          <div className="space-y-3">
+          <SupportForm />
+
+          <div className="space-y-3 pt-1">
             <Link
               href="/book-ticket"
               className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg"

@@ -804,9 +804,51 @@ Regards,
 Gorakhpur's Got Latent Team`;
 
   if (process.env.NITROSEND_API_KEY) {
+    const sendWithFallback = async (to: string, subject: string, message: string) => {
+      const primary = await sendNitrosendEmail(to, subject, message);
+      if (primary.success) return primary;
+
+      const serviceId = process.env.EMAILJS_SERVICE_ID;
+      const templateId = process.env.EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+      const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+      if (!serviceId || !templateId || !publicKey || !privateKey) return primary;
+
+      try {
+        const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            service_id: serviceId,
+            template_id: templateId,
+            user_id: publicKey,
+            accessToken: privateKey,
+            template_params: {
+              to_email: to, email: to, user_email: to,
+              to_name: params.name, name: params.name, customer_name: params.name,
+              application_id: params.applicationId, app_id: params.applicationId,
+              application_status: 'SUBMITTED', status: 'SUBMITTED',
+              subject, message,
+              help_email: 'help.gglatent@gmail.com',
+              support_email: 'help.gglatent@gmail.com',
+              help_whatsapp: '+91 84238 58424',
+              instagram_handle: '@gkp_got_latent',
+              instagram_url: 'https://www.instagram.com/gkp_got_latent/',
+            },
+          }),
+        });
+        if (response.ok) return { success: true };
+        return { success: false, message: `Nitrosend failed; EmailJS fallback HTTP ${response.status}` };
+      } catch (err: any) {
+        return { success: false, message: `Nitrosend failed; EmailJS fallback error: ${err?.message || 'unknown'}` };
+      }
+    };
+
     const results = await Promise.all([
-      sendNitrosendEmail('alooksingh1@gmail.com', adminSubject, adminBody),
-      sendNitrosendEmail(params.email, userSubject, userBody),
+      sendWithFallback('alooksingh1@gmail.com', adminSubject, adminBody),
+      params.email.toLowerCase() !== 'alooksingh1@gmail.com'
+        ? sendWithFallback(params.email, userSubject, userBody)
+        : Promise.resolve({ success: false, message: 'Applicant is admin address' }),
     ]);
     return results.some(r => r.success)
       ? { success: true }

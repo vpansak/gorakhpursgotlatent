@@ -1,1 +1,1 @@
-Production deployment trigger for the latest email fix.
+Production deployment trigger: Hide header and footer on verifyticket scanner and admin pages.

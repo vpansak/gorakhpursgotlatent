@@ -51,11 +51,10 @@ export default function Navbar() {
                     <Link
                       key={link.name}
                       href={link.href}
-                      className={`px-3 py-2 rounded-lg text-sm font-medium font-barlow tracking-wide transition-all duration-200 ${
-                        isActive
+                      className={`px-3 py-2 rounded-lg text-sm font-medium font-barlow tracking-wide transition-all duration-200 ${isActive
                           ? 'text-amber-400 bg-amber-500/10 border border-amber-500/30 shadow-[0_0_12px_rgba(255,215,0,0.15)]'
                           : 'text-slate-300 hover:text-amber-300 hover:bg-white/5'
-                      }`}
+                        }`}
                     >
                       {link.name}
                     </Link>
@@ -120,9 +119,8 @@ export default function Navbar() {
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#07080e]/95 backdrop-blur-xl border-t border-amber-500/20 px-3 py-2 flex items-center justify-around text-center shadow-[0_-5px_20px_rgba(0,0,0,0.8)]">
         <Link
           href="/"
-          className={`flex flex-col items-center gap-0.5 text-xs transition-colors ${
-            pathname === '/' ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-amber-400'
-          }`}
+          className={`flex flex-col items-center gap-0.5 text-xs transition-colors ${pathname === '/' ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-amber-400'
+            }`}
         >
           <Sparkles className="w-5 h-5 text-amber-400" />
           <span>Home</span>
@@ -130,9 +128,8 @@ export default function Navbar() {
 
         <Link
           href="/book-ticket"
-          className={`flex flex-col items-center gap-0.5 text-xs transition-colors ${
-            pathname.startsWith('/book-ticket') ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-amber-400'
-          }`}
+          className={`flex flex-col items-center gap-0.5 text-xs transition-colors ${pathname.startsWith('/book-ticket') ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-amber-400'
+            }`}
         >
           <Ticket className="w-5 h-5 text-amber-400" />
           <span>Tickets</span>
@@ -140,9 +137,8 @@ export default function Navbar() {
 
         <Link
           href="/apply"
-          className={`flex flex-col items-center gap-0.5 text-xs transition-colors ${
-            pathname.startsWith('/apply') ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-amber-400'
-          }`}
+          className={`flex flex-col items-center gap-0.5 text-xs transition-colors ${pathname.startsWith('/apply') ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-amber-400'
+            }`}
         >
           <UserCheck className="w-5 h-5 text-orange-400" />
           <span>Apply</span>
@@ -150,9 +146,8 @@ export default function Navbar() {
 
         <Link
           href="/contact"
-          className={`flex flex-col items-center gap-0.5 text-xs transition-colors ${
-            pathname === '/contact' ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-amber-400'
-          }`}
+          className={`flex flex-col items-center gap-0.5 text-xs transition-colors ${pathname === '/contact' ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-amber-400'
+            }`}
         >
           <PhoneCall className="w-5 h-5 text-amber-400" />
           <span>Contact</span>

@@ -73,16 +73,15 @@ export async function POST(req: Request) {
 
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
 
-    sendGenericApplicationEmails({
+    const emailResult = await sendGenericApplicationEmails({
       applicationType: 'GUEST',
       applicationId: appId,
       name: effectiveFullName,
       email: effectiveEmail,
       mobile: effectiveWhatsapp,
       summary: `Profession: ${effectiveProfession}\nCategory: ${effectiveCategory}\nCity: ${effectiveCity}\nStage Name: ${(stageName || '').toString().trim() || 'N/A'}`,
-    }).then((res) => {
-      if (!res.success) console.warn('Guest application email warning:', res.message);
-    }).catch((err) => console.error('Guest application email error:', err));
+    });
+    if (!emailResult.success) console.warn('Guest application email warning:', emailResult.message);
 
 
     return NextResponse.json({

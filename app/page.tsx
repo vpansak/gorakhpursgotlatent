@@ -60,14 +60,14 @@ export default async function HomePage() {
             EPISODE 2 AUDITIONS LIVE
           </div>
 
-          <div className="relative mx-auto h-36 w-[270px] sm:h-52 sm:w-[500px] md:h-64 md:w-[680px] lg:h-[300px] lg:w-[820px]">
+          <div className="relative mx-auto h-36 w-[330px] sm:h-52 sm:w-[560px] md:h-64 md:w-[720px] lg:h-[300px] lg:w-[820px]">
             <div className="home-logo-aura" />
             <Image
               src="/logo.png"
               alt="Gorakhpur's Got Latent Official Title Logo"
               fill
               priority
-              className="object-contain drop-shadow-[0_18px_55px_rgba(0,0,0,.8)]"
+              className="object-contain scale-x-[1.22] origin-center drop-shadow-[0_18px_55px_rgba(0,0,0,.8)]"
             />
           </div>
 

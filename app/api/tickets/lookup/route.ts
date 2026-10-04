@@ -30,8 +30,7 @@ export async function POST(req: Request) {
       ticket.payment_status === 'PAID' ||
       ticket.payment_status === 'FREE' ||
       ticket.payment_status === 'SUCCESS' ||
-      Number(ticket.amount) === 0 ||
-      ticket.ticket_status === 'VALID';
+      Number(ticket.amount) === 0;
 
     if (!isPaidOrFree) {
       return NextResponse.json({

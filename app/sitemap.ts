@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '',
     '/founder',
     '/developer',
+    '/cofounder',
     '/quick-info',
     '/ep1',
     '/tickets',
@@ -27,6 +28,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === '' || route === '/ep1' ? 'daily' : 'weekly',
-    priority: route === '' ? 1.0 : route === '/developer' || route === '/ep1' ? 0.9 : 0.8,
+    priority: route === '' ? 1.0 : route === '/developer' || route === '/cofounder' || route === '/ep1' ? 0.9 : 0.8,
   }));
 }

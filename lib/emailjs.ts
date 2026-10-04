@@ -182,22 +182,44 @@ export interface PerformerEmailParams {
 
 export async function sendPerformerApplicationEmail(params: PerformerEmailParams): Promise<{ success: boolean; message?: string }> {
   if (process.env.NITROSEND_API_KEY) {
-    const adminBody = `New performer audition application received.
+    const adminBody = `New Performer Audition Application Received
 
+APPLICATION DETAILS
+------------------
 Application ID: ${params.application_id}
+Application Status: ${params.application_status || 'SUBMITTED'}
+Submitted At: ${params.created_at || 'N/A'}
+
+APPLICANT DETAILS
+-----------------
 Name: ${params.full_name}
 Email: ${params.email}
 Mobile: ${params.mobile_number}
 WhatsApp: ${params.whatsapp_number}
 Age: ${params.age}
-City: ${params.city}
-Category: ${params.performance_category}
-Act: ${params.performance_title}
-Description: ${params.performance_description}
-Instagram: ${params.instagram_url}
-Payment Status: ${params.payment_status}
+City / Address: ${params.city || 'N/A'}
+Instagram: ${params.instagram_url || 'N/A'}
 
-Please review it in the GGL admin panel.`;
+PERFORMANCE DETAILS
+-------------------
+Category: ${params.performance_category}
+Act Title: ${params.performance_title}
+Act Description: ${params.performance_description || 'N/A'}
+Performance Type: ${params.performance_type || 'N/A'}
+Number of Performers: ${params.performer_count || 1}
+Duration: ${params.performance_duration || 'N/A'}
+Language: ${params.performance_language || 'N/A'}
+
+PAYMENT DETAILS
+--------------
+Payment Status: ${params.payment_status}
+Amount: ₹${params.payment_amount || 0}
+Order ID: ${params.order_id || 'N/A'}
+Payment ID: ${params.payment_id || 'N/A'}
+
+Please review this application in the GGL admin panel.
+
+Gorakhpur's Got Latent Admin`;
 
     const userBody = `Hi ${params.full_name},
 

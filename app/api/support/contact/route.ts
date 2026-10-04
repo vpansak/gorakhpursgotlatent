@@ -1,3 +1,4 @@
+import { sendNitrosendEmail } from '@/lib/emailjs';
 import { NextRequest, NextResponse } from "next/server";
 
 const SUPPORT_EMAIL = "alooksingh1@gmail.com";
@@ -65,43 +66,7 @@ ${message}`;
 }
 
 async function sendEmail(to: string, subject: string, bodyText: string) {
-  const apiKey = process.env.PRIMITIVE_API_KEY;
-  const from = process.env.PRIMITIVE_FROM_EMAIL || "agent@raw-trout.primitive.email";
-
-  if (!apiKey) throw new Error("Email support is not configured yet.");
-
-  const bodyHtml = `
-    <div style="font-family:Arial,sans-serif;background:#050505;padding:28px;color:#f8fafc">
-      <div style="max-width:640px;margin:auto;background:#0f172a;border:1px solid #7a5510;border-radius:16px;padding:28px">
-        <h2 style="margin:0 0 18px;color:#fbbf24">Gorakhpur's Got Latent</h2>
-        <div style="font-size:15px;line-height:1.7;white-space:pre-wrap">${escapeHtml(bodyText)}</div>
-        <hr style="border:0;border-top:1px solid #334155;margin:24px 0">
-        <p style="margin:0;color:#94a3b8;font-size:12px">AI Support • gkpgotlatent.in</p>
-      </div>
-    </div>
-  `;
-
-  const response = await fetch("https://api.primitive.dev/v1/send-mail", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to,
-      reply_to: ["help.gglatent@gmail.com"],
-      subject,
-      body_text: bodyText,
-      body_html: bodyHtml,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error("Support email could not be delivered.");
-  }
-
-  return response.json();
+  return sendNitrosendEmail(to, subject, bodyText);
 }
 
 export async function POST(request: NextRequest) {

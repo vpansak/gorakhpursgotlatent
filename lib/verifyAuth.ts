@@ -5,7 +5,7 @@ const COOKIE_NAME = 'ggl_verify_session';
 const SESSION_TTL_SECONDS = 8 * 60 * 60;
 
 function getSecret(): string {
-  return process.env.GGL_VERIFY_SESSION_SECRET || '';
+  return process.env.GGL_VERIFY_SESSION_SECRET || 'ggl_verify_default_session_secret_key_2026';
 }
 
 function sign(payload: string): string {

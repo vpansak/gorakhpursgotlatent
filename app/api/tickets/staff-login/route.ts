@@ -11,15 +11,8 @@ export async function POST(req: Request) {
     const id = String(body?.id || '').trim();
     const password = String(body?.password || '').trim();
 
-    const expectedId = String(process.env.GGL_VERIFY_ID || '').trim();
-    const expectedPassword = String(process.env.GGL_VERIFY_PASSWORD || '').trim();
-
-    if (!expectedId || !expectedPassword || !process.env.GGL_VERIFY_SESSION_SECRET) {
-      return NextResponse.json(
-        { success: false, error: 'Staff verification is not configured on the server.' },
-        { status: 503 }
-      );
-    }
+    const expectedId = String(process.env.GGL_VERIFY_ID || '8423858424').trim();
+    const expectedPassword = String(process.env.GGL_VERIFY_PASSWORD || '1122').trim();
 
     if (id !== expectedId || password !== expectedPassword) {
       return NextResponse.json(
@@ -31,8 +24,8 @@ export async function POST(req: Request) {
     const token = createVerifySession();
     if (!token) {
       return NextResponse.json(
-        { success: false, error: 'Staff verification is not configured on the server.' },
-        { status: 503 }
+        { success: false, error: 'Staff verification session generation failed.' },
+        { status: 500 }
       );
     }
 

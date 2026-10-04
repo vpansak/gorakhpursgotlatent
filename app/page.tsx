@@ -57,7 +57,7 @@ export default async function HomePage() {
         <div className="relative z-10 w-full max-w-6xl mx-auto text-center">
           <div className="home-live-pill mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-black/45 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-amber-200 backdrop-blur-xl">
             <span className="h-2 w-2 rounded-full bg-red-500 shadow-[0_0_12px_rgba(239,68,68,.9)] animate-pulse" />
-            THE STAGE IS SET • EPISODE 2
+            EPISODE 2 AUDITIONS LIVE
           </div>
 
           <div className="relative mx-auto h-36 w-[270px] sm:h-52 sm:w-[500px] md:h-64 md:w-[680px] lg:h-[300px] lg:w-[820px]">
@@ -76,12 +76,12 @@ export default async function HomePage() {
           </div>
 
           <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3 max-w-xl mx-auto">
-            <Link href="/book-ticket" className="home-primary-btn">
+            <Link href="/book-ticket" className="home-primary-btn !min-h-[64px] !px-6 !text-[1rem] sm:!min-h-[70px] sm:!px-8 sm:!text-[1.08rem]">
               <Ticket className="h-5 w-5" />
               BOOK YOUR TICKET
               <ChevronRight className="h-4 w-4" />
             </Link>
-            <Link href="/apply/performer" className="home-secondary-btn">
+            <Link href="/apply/performer" className="home-secondary-btn !min-h-[64px] !px-6 !text-[1rem] sm:!min-h-[70px] sm:!px-8 sm:!text-[1.08rem]">
               <UserCheck className="h-5 w-5 text-amber-400" />
               APPLY FOR EPISODE 2
             </Link>
@@ -94,11 +94,11 @@ export default async function HomePage() {
                   <YouTubeIcon className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-red-400">Official YouTube Channel</p>
-                  <h3 className="mt-1 text-sm sm:text-base font-extrabold text-white">Gorakhpur's Got Latent</h3>
+                  <p className="text-xs sm:text-sm font-black uppercase tracking-[0.15em] text-red-400">Official YouTube Channel</p>
+                  <h3 className="mt-1 text-base sm:text-lg font-extrabold text-white">Gorakhpur's Got Latent</h3>
                 </div>
               </div>
-              <a href="https://www.youtube.com/@GkpGotLatent" target="_blank" rel="noreferrer" className="w-full sm:w-auto rounded-xl bg-red-600 px-5 py-3 text-center text-xs font-black uppercase tracking-wider text-white transition hover:bg-red-500 hover:scale-[1.03]">
+              <a href="https://www.youtube.com/@GkpGotLatent" target="_blank" rel="noreferrer" className="w-full sm:w-auto rounded-xl bg-red-600 px-6 py-3.5 text-center text-sm font-black uppercase tracking-wider text-white transition hover:bg-red-500 hover:scale-[1.03]">
                 SUBSCRIBE NOW ↗
               </a>
             </div>

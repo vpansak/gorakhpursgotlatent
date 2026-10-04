@@ -259,10 +259,7 @@ export async function searchTickets(queryStr: string): Promise<TicketRecord[]> {
  * Check In Ticket
  */
 export async function checkInTicket(ticketIdOrUrl: string): Promise<{ success: boolean; ticket?: TicketRecord; message: string; isDuplicate?: boolean }> {
-  let ticket = await getTicketByTicketId(ticketIdOrUrl);
-  if (!ticket) {
-    ticket = await getTicketByQrToken(ticketIdOrUrl);
-  }
+  const ticket = await getTicketByTicketId(ticketIdOrUrl);
 
   if (!ticket) {
     return { success: false, message: `✕ INVALID TICKET: Ticket ID "${ticketIdOrUrl}" not found in database.` };
@@ -272,33 +269,78 @@ export async function checkInTicket(ticketIdOrUrl: string): Promise<{ success: b
     ticket.payment_status === 'PAID' ||
     ticket.payment_status === 'FREE' ||
     ticket.payment_status === 'SUCCESS' ||
-    Number(ticket.amount) === 0 ||
-    ticket.ticket_status === 'VALID';
+    Number(ticket.amount) === 0;
 
   if (!isPaidOrFree) {
     return { success: false, ticket, message: '✕ INVALID TICKET: Ticket payment is not verified.' };
   }
 
-  if (ticket.checked_in === 1) {
+  const now = new Date().toISOString();
+
+  try {
+    const updatedRow = await db.queryOne<any>(
+      `UPDATE tickets
+       SET checked_in = 1, checked_in_at = ?, updated_at = CURRENT_TIMESTAMP
+       WHERE ticket_id = ? AND checked_in = 0
+       RETURNING *`,
+      [now, ticket.ticket_id]
+    );
+
+    if (updatedRow) {
+      const updated = normalizeTicketRecord(updatedRow);
+      memoryTickets.set(updated.ticket_id, updated);
+
+      // Keep the legacy mirror in sync without making it the authoritative check-in decision.
+      await db.execute(
+        `UPDATE ticket_application
+         SET checked_in = 1, checked_in_at = ?, updated_at = CURRENT_TIMESTAMP
+         WHERE ticket_id = ?`,
+        [now, updated.ticket_id]
+      );
+
+      return {
+        success: true,
+        ticket: updated,
+        message: `✓ CHECK-IN SUCCESSFUL: Welcome ${updated.customer_name}! Ticket ${updated.ticket_id} marked as CHECKED IN.`,
+      };
+    }
+
+    // Fallback for records that only exist in the legacy mirror table.
+    const legacyUpdatedRow = await db.queryOne<any>(
+      `UPDATE ticket_application
+       SET checked_in = 1, checked_in_at = ?, updated_at = CURRENT_TIMESTAMP
+       WHERE ticket_id = ? AND checked_in = 0
+       RETURNING *`,
+      [now, ticket.ticket_id]
+    );
+
+    if (legacyUpdatedRow) {
+      const updated = normalizeTicketRecord(legacyUpdatedRow);
+      memoryTickets.set(updated.ticket_id, updated);
+      return {
+        success: true,
+        ticket: updated,
+        message: `✓ CHECK-IN SUCCESSFUL: Welcome ${updated.customer_name}! Ticket ${updated.ticket_id} marked as CHECKED IN.`,
+      };
+    }
+  } catch (err) {
+    console.warn('Atomic ticket check-in notice:', err);
+  }
+
+  const latest = await getTicketByTicketId(ticket.ticket_id);
+  if (latest?.checked_in === 1) {
     return {
       success: false,
-      ticket,
+      ticket: latest,
       isDuplicate: true,
-      message: `⚠️ ALREADY CHECKED IN: Ticket ${ticket.ticket_id} was already used for entry at ${ticket.checked_in_at ? new Date(ticket.checked_in_at).toLocaleString('en-IN') : 'earlier session'}.`,
+      message: `⚠️ ALREADY CHECKED IN: Ticket ${latest.ticket_id} was already used for entry at ${latest.checked_in_at ? new Date(latest.checked_in_at).toLocaleString('en-IN') : 'earlier session'}.`,
     };
   }
 
-  const now = new Date().toISOString();
-  ticket.checked_in = 1;
-  ticket.checked_in_at = now;
-  ticket.updated_at = now;
-
-  await saveTicketRecord(ticket);
-
   return {
-    success: true,
+    success: false,
     ticket,
-    message: `✓ CHECK-IN SUCCESSFUL: Welcome ${ticket.customer_name}! Ticket ${ticket.ticket_id} marked as CHECKED IN.`,
+    message: '✕ CHECK-IN FAILED: Could not update ticket status. Please try again.',
   };
 }
 

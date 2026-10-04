@@ -816,3 +816,80 @@
     transition-duration:.01ms !important;
   }
 }
+
+
+/* ===== GGL HOMEPAGE MOBILE HERO POLISH ===== */
+.home-dark .home-hero{
+  position:relative;
+  background:
+    radial-gradient(ellipse 65% 75% at 50% 12%,rgba(245,196,82,.13),transparent 62%),
+    radial-gradient(ellipse 28% 70% at 0% 30%,rgba(185,28,28,.24),transparent 72%),
+    radial-gradient(ellipse 28% 70% at 100% 30%,rgba(185,28,28,.20),transparent 72%),
+    linear-gradient(180deg,#040405 0%,#080607 48%,#030304 100%);
+}
+.home-dark .home-hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.72;
+  background:
+    linear-gradient(90deg,rgba(110,8,8,.30),transparent 18%,transparent 82%,rgba(110,8,8,.26)),
+    repeating-linear-gradient(92deg,transparent 0 8%,rgba(190,28,28,.035) 10%,transparent 15%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 65%,transparent 100%);
+}
+.home-live-pill{
+  box-shadow:0 0 30px rgba(245,158,11,.08),inset 0 1px rgba(255,255,255,.08);
+}
+.home-hero-eyebrow{
+  font-family:var(--font-barlow),sans-serif;
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.20em;
+  color:#d6d8dd;
+  text-transform:uppercase;
+  text-shadow:0 3px 15px rgba(0,0,0,.8);
+}
+.home-hero-title{
+  font-family:var(--font-anton),Impact,sans-serif;
+  font-size:clamp(3.2rem,13vw,8.5rem);
+  line-height:.82;
+  letter-spacing:.015em;
+  text-transform:uppercase;
+  color:#f4f4f5;
+  text-shadow:0 8px 35px rgba(0,0,0,.65);
+}
+.home-hero-title span{
+  color:#f5c452;
+  background:linear-gradient(180deg,#fff0ae 0%,#f5c452 42%,#d88716 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 7px 22px rgba(245,158,11,.18));
+}
+@media(max-width:640px){
+  .home-dark .home-hero{
+    min-height:auto !important;
+    padding-top:1rem !important;
+    padding-bottom:2.25rem !important;
+  }
+  .home-dark .home-hero > div.relative.z-10{
+    margin-top:0 !important;
+  }
+  .home-dark .home-logo-aura{
+    filter:blur(30px);
+  }
+  .home-dark .home-primary-btn,
+  .home-dark .home-secondary-btn{
+    min-height:58px;
+    border-radius:16px;
+    font-size:.82rem;
+  }
+  .home-hero-title{
+    font-size:clamp(3.15rem,16vw,5.1rem);
+  }
+  .home-hero-eyebrow{
+    font-size:.61rem;
+    letter-spacing:.13em;
+  }
+}

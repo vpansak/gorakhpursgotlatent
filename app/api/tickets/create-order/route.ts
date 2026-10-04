@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     }
 
     let razorpayOrderId = '';
-      try {
+    try {
         const rzpOrder = await razorpay.orders.create({
           amount: amountPaise,
           currency: 'INR',
@@ -82,7 +82,6 @@ export async function POST(req: Request) {
           { error: 'Unable to create payment order. Please try again.' },
           { status: 502 }
         );
-      }
     }
 
     return NextResponse.json({

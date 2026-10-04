@@ -679,21 +679,81 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
   if (!apiKey) return { success: false, message: 'NITROSEND_API_KEY not configured' };
 
   const logoUrl = 'https://www.gkpgotlatent.in/logo-transparent.png';
-  const html = `<div style="margin:0;padding:20px 12px;background:#f6f6f6;font-family:Arial,Helvetica,sans-serif;color:#222;">
-    <div style="width:100%;max-width:560px;margin:0 auto;background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:20px 18px;box-sizing:border-box;text-align:left;">
-      <div style="text-align:center;margin:0 0 14px;">
-        <img src="${logoUrl}" alt="Gorakhpur's Got Latent" width="58" style="display:block;width:58px;height:auto;margin:0 auto;border:0;">
-      </div>
-      <div style="font-size:15px;line-height:1.65;word-break:break-word;overflow-wrap:anywhere;">${escapeEmailHtml(body).replace(/\\n/g, '<br>')}</div>
-      <div style="margin-top:18px;padding-top:12px;border-top:1px solid #eee;text-align:center;font-size:12px;line-height:1.6;color:#666;">
-        <a href="https://www.gkpgotlatent.in/" style="color:#b00000;text-decoration:none;">Website</a>
-        &nbsp;·&nbsp;
-        <a href="mailto:help.gglatent@gmail.com" style="color:#b00000;text-decoration:none;">Email</a>
-        &nbsp;·&nbsp;
-        <a href="https://wa.me/918423858424" style="color:#b00000;text-decoration:none;">WhatsApp</a>
-      </div>
-    </div>
-  </div>`;
+
+  // One consistent, responsive HTML design for every Nitrosend email.
+  // The source body stays plain text for deliverability/fallbacks, while the
+  // HTML version turns headings and "Label: value" lines into a clean card.
+  const bodyLines = body.split(/\\r?\\n/);
+  const firstNonEmpty = bodyLines.findIndex(line => line.trim().length > 0);
+  const heading = firstNonEmpty >= 0 ? bodyLines[firstNonEmpty].trim() : "Gorakhpur's Got Latent";
+  const contentLines = firstNonEmpty >= 0 ? bodyLines.slice(firstNonEmpty + 1) : [];
+
+  const contentHtml = contentLines.map(line => {
+    const trimmed = line.trim();
+    if (!trimmed) return '<div style="height:8px;line-height:8px;">&nbsp;</div>';
+
+    const match = trimmed.match(/^([^:]{1,45}):\\s*(.*)$/);
+    if (match) {
+      const label = escapeEmailHtml(match[1]);
+      const value = escapeEmailHtml(match[2]);
+      return `<div style="margin:0 0 8px;padding:10px 12px;background:#fafafa;border:1px solid #eeeeee;border-radius:8px;">
+        <div style="font-size:11px;line-height:16px;color:#777;text-transform:uppercase;letter-spacing:.5px;font-weight:700;">${label}</div>
+        <div style="margin-top:2px;font-size:14px;line-height:21px;color:#1f1f1f;word-break:break-word;overflow-wrap:anywhere;">${value || '—'}</div>
+      </div>`;
+    }
+
+    const escaped = escapeEmailHtml(trimmed);
+    const emphasized = escaped.startsWith('Please ') || escaped.startsWith('Thank you') || escaped.startsWith('Our team');
+    return `<p style="margin:0 0 10px;font-size:14px;line-height:22px;color:#333;">${emphasized ? `<strong>${escaped}</strong>` : escaped}</p>`;
+  }).join('');
+
+  const html = `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>${escapeEmailHtml(subject)}</title>
+</head>
+<body style="margin:0;padding:0;background:#f3f3f3;font-family:Arial,Helvetica,sans-serif;color:#222;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeEmailHtml(subject)}</div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f3f3f3;margin:0;padding:0;width:100%;">
+    <tr>
+      <td align="center" style="padding:24px 10px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px;background:#ffffff;border:1px solid #e2e2e2;border-radius:14px;overflow:hidden;">
+          <tr>
+            <td style="padding:22px 22px 18px;background:#111111;text-align:center;">
+              <img src="${logoUrl}" alt="Gorakhpur's Got Latent" width="76" style="display:block;width:76px;max-width:76px;height:auto;margin:0 auto 10px;border:0;">
+              <div style="font-size:12px;line-height:18px;letter-spacing:1.5px;color:#ffffff;font-weight:700;text-transform:uppercase;">GORAKHPUR'S GOT LATENT</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:26px 22px 8px;">
+              <div style="font-size:21px;line-height:28px;font-weight:800;color:#171717;">${escapeEmailHtml(heading)}</div>
+              <div style="margin-top:7px;font-size:12px;line-height:18px;color:#888;">Official communication from Gorakhpur's Got Latent</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:14px 22px 24px;">${contentHtml}</td>
+          </tr>
+          <tr>
+            <td style="padding:18px 22px;background:#fafafa;border-top:1px solid #eeeeee;text-align:center;">
+              <div style="font-size:12px;line-height:18px;color:#666;">Need help? <a href="mailto:help.gglatent@gmail.com" style="color:#b00000;text-decoration:none;font-weight:700;">help.gglatent@gmail.com</a></div>
+              <div style="margin-top:8px;font-size:12px;line-height:18px;color:#777;">
+                <a href="https://www.gkpgotlatent.in/" style="color:#b00000;text-decoration:none;">Website</a>
+                &nbsp;·&nbsp;
+                <a href="https://www.instagram.com/gkp_got_latent/" style="color:#b00000;text-decoration:none;">Instagram</a>
+                &nbsp;·&nbsp;
+                <a href="https://wa.me/918423858424" style="color:#b00000;text-decoration:none;">WhatsApp</a>
+              </div>
+              <div style="margin-top:10px;font-size:10px;line-height:16px;color:#999;">© Gorakhpur's Got Latent · Official Email</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 
   try {
     const res = await fetch('https://api.nitrosend.com/v1/my/messages', {

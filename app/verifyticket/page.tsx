@@ -70,7 +70,7 @@ export default function VerifyTicketPage() {
   }, [isAuthenticated, facingMode]);
 
   // Handle Login
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError('');
 

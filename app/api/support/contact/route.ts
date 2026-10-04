@@ -88,11 +88,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Please enter a message between 5 and 4000 characters." }, { status: 400 });
     }
 
-    const aiReply = await generateAiReply(name, email, message);
+    let aiReply = "";
+    try {
+      aiReply = await generateAiReply(name, email, message);
+    } catch (aiError) {
+      console.error("GGL AI support generation failed:", aiError);
+      aiReply = "Thanks for contacting Gorakhpur's Got Latent. Your request has been received. Our support team will review it and get back to you if further action is needed.";
+    }
 
     await sendEmail(
       email,
-      "GGL Support — AI Reply to Your Request",
+      "GGL Support — Reply to Your Request",
       `Hi ${name},
 
 Thanks for contacting Gorakhpur's Got Latent.

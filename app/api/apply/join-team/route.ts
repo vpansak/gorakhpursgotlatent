@@ -67,16 +67,15 @@ export async function POST(req: Request) {
     // Trigger instant background sync to Neon S3 sheets/team/team_applications.csv
     syncSheetsToS3().catch(err => console.error('S3 sheet sync warning:', err));
 
-    sendGenericApplicationEmails({
+    const emailResult = await sendGenericApplicationEmails({
       applicationType: 'TEAM',
       applicationId: appId,
       name: effectiveName,
       email: effectiveEmail,
       mobile: effectiveMobile,
       summary: `City/Address: ${effectiveAddress || 'N/A'}\nInstagram: ${effectiveInstagram || 'N/A'}\nAbout: ${effectiveAbout || 'N/A'}`,
-    }).then((res) => {
-      if (!res.success) console.warn('Team application email warning:', res.message);
-    }).catch((err) => console.error('Team application email error:', err));
+    });
+    if (!emailResult.success) console.warn('Team application email warning:', emailResult.message);
 
 
     return NextResponse.json({

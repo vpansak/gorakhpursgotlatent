@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
-import { checkInTicket, getTicketByTicketId } from '@/lib/ticketsStore';
+import { checkInTicket } from '@/lib/ticketsStore';
+import { isVerifyAuthenticated } from '@/lib/verifyAuth';
 
 export async function POST(req: Request) {
   try {
+    if (!(await isVerifyAuthenticated())) {
+      return NextResponse.json({ error: 'Staff authentication required.' }, { status: 401 });
+    }
+
     const body = await req.json();
     const { ticketId, code } = body;
 
@@ -11,11 +16,12 @@ export async function POST(req: Request) {
     }
 
     const cleanCode = String(code || '').trim();
-    if (cleanCode !== '11') {
+    const expectedCode = String(process.env.GGL_CHECKIN_CODE || '').trim();
+    if (!expectedCode || cleanCode !== expectedCode) {
       return NextResponse.json({
         success: false,
         invalidCode: true,
-        message: '✕ INCORRECT CODE: Enter code "11" to confirm entry and expire this ticket.',
+        message: '✕ INCORRECT CONFIRMATION CODE.',
       }, { status: 200 });
     }
 

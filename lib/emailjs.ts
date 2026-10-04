@@ -231,7 +231,46 @@ WhatsApp: +91 84238 58424
 Regards,
 Gorakhpur's Got Latent Team`;
 
-    const adminResult = await sendNitrosendEmail('alooksingh1@gmail.com', `🎤 Performer Application | ${params.application_id}`, adminBody);
+    const sendEmailJsFallback = async (to: string, subject: string, message: string) => {
+      const serviceId = process.env.EMAILJS_SERVICE_ID;
+      const templateId = process.env.EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+      const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+      if (!serviceId || !templateId || !publicKey || !privateKey) {
+        return { success: false, message: 'EmailJS fallback credentials not configured' };
+      }
+      try {
+        const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            service_id: serviceId,
+            template_id: templateId,
+            user_id: publicKey,
+            accessToken: privateKey,
+            template_params: {
+              to_email: to, email: to, user_email: to, to_name: params.full_name,
+              name: params.full_name, full_name: params.full_name,
+              application_id: params.application_id, app_id: params.application_id,
+              application_status: params.application_status || 'SUBMITTED',
+              status: params.application_status || 'SUBMITTED', subject, message,
+              help_email: 'help.gglatent@gmail.com', support_email: 'help.gglatent@gmail.com',
+              help_whatsapp: '+91 84238 58424', whatsapp: '+91 84238 58424',
+              instagram_url: 'https://www.instagram.com/gkp_got_latent/',
+            },
+          }),
+        });
+        return res.ok ? { success: true } : { success: false, message: `EmailJS HTTP ${res.status}` };
+      } catch (err: any) {
+        return { success: false, message: err?.message || 'EmailJS fallback failed' };
+      }
+    };
+
+    let adminResult = await sendNitrosendEmail('alooksingh1@gmail.com', `🎤 Performer Application | ${params.application_id}`, adminBody);
+    if (!adminResult.success) {
+      console.warn(`Nitrosend admin delivery failed for ${params.application_id}; trying EmailJS fallback.`);
+      adminResult = await sendEmailJsFallback('alooksingh1@gmail.com', `🎤 Performer Application | ${params.application_id}`, adminBody);
+    }
 
     let applicantResult: { success: boolean; message?: string } = { success: false, message: 'Applicant email not attempted' };
     if (params.email.toLowerCase() !== 'alooksingh1@gmail.com') {

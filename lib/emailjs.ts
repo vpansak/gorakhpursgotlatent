@@ -573,18 +573,48 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
   const apiKey = process.env.NITROSEND_API_KEY;
   if (!apiKey) return { success: false, message: 'NITROSEND_API_KEY not configured' };
 
-  const html = `
-    <div style="margin:0;background:#050505;padding:32px 16px;font-family:Arial,sans-serif;color:#f8fafc">
-      <div style="max-width:680px;margin:auto;background:#0f172a;border:1px solid #6b4a08;border-radius:18px;padding:30px">
-        <div style="font-size:24px;font-weight:800;color:#fbbf24;margin-bottom:20px">GORAKHPUR'S GOT LATENT</div>
-        <div style="font-size:15px;line-height:1.7;white-space:pre-wrap">${escapeEmailHtml(body)}</div>
-        <div style="margin-top:26px;padding-top:18px;border-top:1px solid #334155;color:#94a3b8;font-size:12px">
-          Official Support • gkpgotlatent.in<br>
-          help.gglatent@gmail.com • +91 84238 58424
-        </div>
+  const bodyHtml = escapeEmailHtml(body)
+    .split(/\n\n+/)
+    .map((paragraph) => `<p style="margin:0 0 16px;line-height:1.65;color:#334155;font-size:15px;white-space:pre-line">${paragraph}</p>`)
+    .join('');
+
+  const title = subject.includes(' | ') ? subject.split(' | ').slice(0, -1).join(' | ') : subject;
+
+  const html = `<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
+    <div style="padding:32px 16px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden">
+        <tr>
+          <td style="background:#111827;padding:24px 28px;border-bottom:4px solid #f4b400">
+            <div style="font-size:21px;font-weight:700;letter-spacing:.2px;color:#ffffff">GORAKHPUR'S GOT LATENT</div>
+            <div style="margin-top:5px;font-size:12px;color:#d1d5db">Official Communication</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:30px 28px">
+            <h1 style="margin:0 0 22px;font-size:22px;line-height:1.3;color:#111827;font-weight:700">${escapeEmailHtml(title)}</h1>
+            ${bodyHtml}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:20px 28px;background:#f8fafc;border-top:1px solid #e5e7eb">
+            <div style="font-size:12px;line-height:1.7;color:#64748b">
+              <strong style="color:#334155">Gorakhpur's Got Latent</strong><br>
+              Official Website: gkpgotlatent.in<br>
+              Support: help.gglatent@gmail.com<br>
+              WhatsApp: +91 84238 58424<br>
+              Instagram: @gkp_got_latent
+            </div>
+          </td>
+        </tr>
+      </table>
+      <div style="max-width:640px;margin:14px auto 0;text-align:center;font-size:11px;color:#94a3b8">
+        This is an automated email. Please keep it for your records.
       </div>
     </div>
-  `;
+  </body>
+</html>`;
 
   try {
     const res = await fetch('https://api.nitrosend.com/v1/my/messages', {
@@ -594,13 +624,7 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
         'Content-Type': 'application/json',
         'Idempotency-Key': `ggl-${to.toLowerCase()}-${subject}`.replace(/[^a-zA-Z0-9._-]/g, '-').slice(0, 240),
       },
-      body: JSON.stringify({
-        channel: 'email',
-        to,
-        subject,
-        html,
-        body,
-      }),
+      body: JSON.stringify({ channel: 'email', to, subject, html, body }),
     });
 
     if (res.ok) return { success: true };

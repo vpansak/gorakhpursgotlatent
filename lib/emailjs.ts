@@ -64,6 +64,9 @@ export async function sendBookingConfirmationEmail(params: BookingEmailParams): 
       whatsapp: '+91 84238 58424',
       WhatsApp: '+91 84238 58424',
       helpline: '+91 84238 58424',
+      instagram_handle: '@gkp_got_latent',
+      instagram_url: 'https://www.instagram.com/gkp_got_latent/',
+      official_instagram: 'https://www.instagram.com/gkp_got_latent/',
     },
   };
 
@@ -254,6 +257,9 @@ Gorakhpur's Got Latent Admin Notification System`;
         payment_verified_at: params.payment_verified_at || new Date().toISOString(),
         admin_notes: params.admin_notes || '',
         message: summaryMessage,
+        instagram_handle: '@gkp_got_latent',
+        instagram_url: 'https://www.instagram.com/gkp_got_latent/',
+        official_instagram: 'https://www.instagram.com/gkp_got_latent/',
       },
     };
 
@@ -347,6 +353,9 @@ Gorakhpur's Got Latent Admin Notification System`;
           Help_WhatsApp: '+91 84238 58424',
           Support_WhatsApp: '+91 84238 58424',
           helpline: '+91 84238 58424',
+          instagram_handle: '@gkp_got_latent',
+          instagram_url: 'https://www.instagram.com/gkp_got_latent/',
+          official_instagram: 'https://www.instagram.com/gkp_got_latent/',
           Helpline: '+91 84238 58424',
         },
       };

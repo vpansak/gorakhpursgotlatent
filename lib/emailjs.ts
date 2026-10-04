@@ -258,7 +258,6 @@ Gorakhpur's Got Latent Admin Notification System`;
         admin_notes: params.admin_notes || '',
         message: summaryMessage,
         instagram_handle: '@gkp_got_latent',
-        instagram_url: 'https://www.instagram.com/gkp_got_latent/',
         official_instagram: 'https://www.instagram.com/gkp_got_latent/',
       },
     };

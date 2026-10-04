@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { generateAppId } from '@/lib/helpers';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
+import { sendGenericApplicationEmails } from '@/lib/emailjs';
 
 export async function POST(req: Request) {
   try {
@@ -65,6 +66,18 @@ export async function POST(req: Request) {
 
     // Trigger instant background sync to Neon S3 sheets/team/team_applications.csv
     syncSheetsToS3().catch(err => console.error('S3 sheet sync warning:', err));
+
+    sendGenericApplicationEmails({
+      applicationType: 'TEAM',
+      applicationId: appId,
+      name: effectiveName,
+      email: effectiveEmail,
+      mobile: effectiveMobile,
+      summary: `City/Address: ${effectiveAddress || 'N/A'}\nInstagram: ${effectiveInstagram || 'N/A'}\nAbout: ${effectiveAbout || 'N/A'}`,
+    }).then((res) => {
+      if (!res.success) console.warn('Team application email warning:', res.message);
+    }).catch((err) => console.error('Team application email error:', err));
+
 
     return NextResponse.json({
       success: true,

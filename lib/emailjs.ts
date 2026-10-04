@@ -569,7 +569,7 @@ function escapeEmailHtml(value: string): string {
     .replaceAll("'", '&#039;');
 }
 
-async function sendNitrosendEmail(to: string, subject: string, body: string): Promise<{ success: boolean; message?: string }> {
+export async function sendNitrosendEmail(to: string, subject: string, body: string): Promise<{ success: boolean; message?: string }> {
   const apiKey = process.env.NITROSEND_API_KEY;
   if (!apiKey) return { success: false, message: 'NITROSEND_API_KEY not configured' };
 

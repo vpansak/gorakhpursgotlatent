@@ -1,9 +1,27 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import {
+  Code2,
+  Database,
+  Globe,
+  GraduationCap,
+  MapPin,
+  Sparkles,
+  UserCheck,
+  Zap,
+  ChevronDown,
+  ExternalLink,
+  Laptop,
+  Cpu,
+  Layers,
+  Award,
+  BookOpen,
+} from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Alok Singh — Biography, Story, Developer & Co-Founder in Gorakhpur',
   description:
-    'Official Alok Singh profile: biography, life story, education journey from Kaudiram and Gorakhpur, BCA at KIPM College, technology work, and Co-Founder journey with Gorakhpur’s Got Latent.',
+    'Learn about Alok Singh from Kaudiram, Gorakhpur — his education, technology journey, full-stack development work, social profiles and role as Co-Founder of Gorakhpur’s Got Latent.',
   keywords: [
     'Alok Singh',
     'Alok Singh Gorakhpur',
@@ -13,67 +31,60 @@ export const metadata: Metadata = {
     'Alok Singh biography',
     'Alok Singh story',
     'Alok Singh life story',
-    'Alok Singh education',
+    'Alok Singh profile',
+    'Alok Singh official',
+    'Alok Singh official website',
+    'Who is Alok Singh',
+    'Alok Singh Gorakhpur biography',
+    'Alok Singh Gorakhpur developer',
+    'Alok Singh Gorakhpur technology',
+    'Alok Singh Gorakhpur creator',
+    'Alok Singh Gorakhpur entrepreneur',
+    'Alok Singh Gorakhpur co-founder',
+    'Alok Singh Kaudiram biography',
+    'Alok Singh from Gorakhpur',
+    'Alok Singh from Kaudiram',
+    'Alok Singh BCA',
+    'Alok Singh KIPM',
+    'Alok Singh KIPM College',
     'Alok Singh developer',
     'Alok Singh full stack developer',
     'Alok Singh software developer',
     'Alok Singh web developer',
+    'Alok Singh programmer',
+    'Alok Singh coding',
+    'Alok Singh programming',
     'Alok Singh technology builder',
+    'Alok Singh technology profile',
+    'Alok Singh digital creator',
+    'Alok Singh UI UX',
+    'Alok Singh website developer',
+    'Alok Singh software technology',
+    'Alok Singh digital products',
+    'Alok Singh cloud deployment',
+    'Alok Singh database developer',
+    'Alok Singh API developer',
+    'Alok Singh career',
+    'Alok Singh journey',
+    'Alok Singh childhood',
+    'Alok Singh school journey',
+    'Alok Singh education',
+    'Alok Singh student',
     'Alok Singh Co-Founder',
-    'Alok Singh Gorakhpur Got Latent',
     'Alok Singh GGL',
-    'Gorakhpur Got Latent Alok Singh',
-    'GGL Alok Singh',
-    'Alok Singh KIPM College',
+    'Alok Singh Gorakhpur Got Latent',
+    'Alok Singh GGL Co-Founder',
     'Alok Singh Purvanchal Public School',
     'Alok Singh Holy Angel International School',
     'Alok Singh KMR Janipur',
     'Alok Singh Instagram',
-    'Alok Singh X Twitter',
-    'Alok Singh Facebook',
-    'Alok Singh official',
-    'Alok Singh official website',
-    'Alok Singh profile',
-    'Alok Singh personal profile',
-    'Alok Singh Gorakhpur biography',
-    'Alok Singh Gorakhpur developer',
-    'Alok Singh Gorakhpur technology',
-    'Alok Singh Gorakhpur entrepreneur',
-    'Alok Singh Gorakhpur creator',
-    'Alok Singh Gorakhpur co-founder',
-    'Alok Singh Kaudiram biography',
-    'Alok Singh Kaudiram developer',
-    'Alok Singh from Gorakhpur',
-    'Alok Singh from Kaudiram',
-    'Alok Singh Uttar Pradesh developer',
-    'Alok Singh BCA',
-    'Alok Singh KIPM BCA',
-    'Alok Singh computer science',
-    'Alok Singh coding',
-    'Alok Singh programming',
-    'Alok Singh website developer',
-    'Alok Singh software technology',
-    'Alok Singh digital creator',
-    'Alok Singh technology profile',
-    'Alok Singh career',
-    'Alok Singh journey',
-    'Alok Singh childhood story',
-    'Alok Singh school journey',
-    'Alok Singh Purvanchal',
-    'Alok Singh KMR school',
-    'Alok Singh Holy Angel International School',
-    'Alok Singh Gorakhpur’s Got Latent Co-Founder',
-    'Alok Singh GGL Co-Founder',
-    'Alok Singh entertainment technology',
-    'Alok Singh social media',
-    'Alok Singh Instagram profile',
     'Alok Singh X profile',
-    'Alok Singh Facebook profile',
-    'Who is Alok Singh',
-    'Alok Singh official profile Gorakhpur',
+    'Alok Singh Twitter',
+    'Alok Singh Facebook',
+    'Alok Singh social profiles',
   ],
   alternates: {
-    canonical: 'https://gkpgotlatent.in/aboutaloksingh',
+    canonical: 'https://www.gkpgotlatent.in/aboutaloksingh',
   },
   robots: {
     index: true,
@@ -86,17 +97,17 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Alok Singh — Biography, Story, Developer & Co-Founder',
+    title: 'Alok Singh — Biography, Story, Developer & Co-Founder in Gorakhpur',
     description:
-      'The official story and profile of Alok Singh from Kaudiram, Gorakhpur — developer, technology builder and Co-Founder of Gorakhpur’s Got Latent.',
-    url: 'https://gkpgotlatent.in/aboutaloksingh',
+      'Official biography and profile of Alok Singh from Kaudiram, Gorakhpur — full-stack developer, technology builder and Co-Founder of Gorakhpur’s Got Latent.',
+    url: 'https://www.gkpgotlatent.in/aboutaloksingh',
     siteName: "Gorakhpur's Got Latent",
     images: [
       {
-        url: '/developer-photo-1.jpg',
+        url: 'https://www.gkpgotlatent.in/developer-photo-1.jpg',
         width: 800,
         height: 800,
-        alt: 'Alok Singh — Developer and Co-Founder',
+        alt: 'Alok Singh — Full-Stack Developer and Co-Founder from Gorakhpur',
       },
     ],
     locale: 'en_IN',
@@ -104,30 +115,42 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Alok Singh — Biography, Developer & Co-Founder',
+    title: 'Alok Singh — Biography, Story, Developer & Co-Founder',
     description:
-      'The story of Alok Singh from Kaudiram, Gorakhpur to technology and Gorakhpur’s Got Latent.',
-    images: ['/developer-photo-1.jpg'],
+      'Learn about Alok Singh from Kaudiram, Gorakhpur — education, technology journey, full-stack development work, social profiles and role as Co-Founder of Gorakhpur’s Got Latent.',
+    images: ['https://www.gkpgotlatent.in/developer-photo-1.jpg'],
   },
 };
 
 const profileJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
-  '@id': 'https://gkpgotlatent.in/aboutaloksingh#profile',
-  url: 'https://gkpgotlatent.in/aboutaloksingh',
-  name: 'Alok Singh — Official Biography and Profile',
+  '@id': 'https://www.gkpgotlatent.in/aboutaloksingh#profile',
+  url: 'https://www.gkpgotlatent.in/aboutaloksingh',
+  name: 'Alok Singh — Official Biography, Profile & Story',
   description:
-    'Official biography and profile of Alok Singh, a full-stack developer, technology builder and Co-Founder of Gorakhpur’s Got Latent.',
+    'Official biography and profile of Alok Singh, a full-stack developer, technology builder and Co-Founder of Gorakhpur’s Got Latent from Kaudiram, Gorakhpur, Uttar Pradesh, India.',
   mainEntity: {
     '@type': 'Person',
-    '@id': 'https://gkpgotlatent.in/aboutaloksingh#person',
+    '@id': 'https://www.gkpgotlatent.in/aboutaloksingh#person',
     name: 'Alok Singh',
-    alternateName: ['Alok Singh Gorakhpur', 'Alok Singh Kaudiram'],
+    alternateName: [
+      'Alok Singh Gorakhpur',
+      'Alok Singh Kaudiram',
+      'Alok Singh Developer',
+      'Alok Singh GGL',
+      'Alok Singh Co-Founder',
+    ],
     description:
       'Full-stack developer, technology builder and Co-Founder of Gorakhpur’s Got Latent from Kaudiram, Gorakhpur, Uttar Pradesh, India.',
-    image: 'https://gkpgotlatent.in/developer-photo-1.jpg',
-    jobTitle: ['Full-Stack Developer', 'Technology Builder', 'Co-Founder'],
+    image: 'https://www.gkpgotlatent.in/developer-photo-1.jpg',
+    jobTitle: [
+      'Co-Founder',
+      'Full-Stack Developer',
+      'Technology Builder',
+      'Software Developer',
+      'Web Developer',
+    ],
     sameAs: [
       'https://www.instagram.com/aloksingh_._/',
       'https://x.com/rajpratapsinghh',
@@ -140,336 +163,701 @@ const profileJsonLd = {
       addressCountry: 'IN',
     },
     alumniOf: [
-      { '@type': 'EducationalOrganization', name: 'Purvanchal Public School' },
-      { '@type': 'EducationalOrganization', name: 'KMR, Janipur, Gola Road' },
-      { '@type': 'EducationalOrganization', name: 'Holy Angel International School, Pali, Bansgaon' },
-      { '@type': 'EducationalOrganization', name: 'KIPM College' },
+      {
+        '@type': 'EducationalOrganization',
+        name: 'Purvanchal Public School',
+      },
+      {
+        '@type': 'EducationalOrganization',
+        name: 'KMR, Janipur, Gola Road',
+      },
+      {
+        '@type': 'EducationalOrganization',
+        name: 'Holy Angel International School, Pali, Bansgaon',
+      },
+      {
+        '@type': 'EducationalOrganization',
+        name: 'KIPM College',
+      },
     ],
     knowsAbout: [
       'Full-Stack Web Development',
-      'Software Development',
-      'Web Development',
-      'UI/UX',
-      'Databases',
-      'APIs',
+      'Software Engineering',
+      'UI/UX Design',
+      'React',
+      'Next.js',
       'Cloud Deployment',
-      'Digital Products',
-      'Technology',
-      "Gorakhpur's Got Latent",
+      'Databases',
+      'API Development',
+      'Digital Product Architecture',
+      'Entertainment Technology',
     ],
     worksFor: {
       '@type': 'Organization',
       name: "Gorakhpur's Got Latent",
-      url: 'https://gkpgotlatent.in',
+      url: 'https://www.gkpgotlatent.in',
     },
   },
 };
 
-const education = [
-  ['LKG → Class 2', 'Purvanchal Public School', 'The first chapter of Alok’s school journey.'],
-  ['Class 3', 'KMR, Janipur — Gola Road', 'A new school and a new chapter in the journey.'],
-  ['Class 4 → 10', 'Holy Angel International School, Pali — Bansgaon', 'A long formative chapter of school life, learning and growing up.'],
-  ['Class 11 → 12', 'Purvanchal Public School', 'Returning to Purvanchal for senior school and moving closer to a technology-focused future.'],
-  ['College', 'KIPM College — BCA', 'The technology chapter: web development, software, UI/UX, databases, APIs and building digital products.'],
+const faqItems = [
+  {
+    question: 'Who is Alok Singh?',
+    answer:
+      'Alok Singh is a Full-Stack Developer, technology builder, digital creator, and Co-Founder of Gorakhpur’s Got Latent. Hailing from Kaudiram, Gorakhpur, Uttar Pradesh, he designs digital platforms, web software applications, database architectures, and digital product experiences.',
+  },
+  {
+    question: 'Where is Alok Singh from?',
+    answer:
+      'Alok Singh is from Kaudiram, a prominent town in the Gorakhpur district of Uttar Pradesh, India. He completed his schooling across renowned schools in Gorakhpur and pursued his higher education in Computer Applications locally.',
+  },
+  {
+    question: 'Is Alok Singh from Gorakhpur?',
+    answer:
+      'Yes, Alok Singh is rooted in Gorakhpur, Uttar Pradesh. His family belongs to Kaudiram in Gorakhpur, and his entire education and technology initiatives—including Co-Founding Gorakhpur’s Got Latent—are centered around Gorakhpur and the Purvanchal region.',
+  },
+  {
+    question: 'Where is Kaudiram?',
+    answer:
+      'Kaudiram is a major market hub and block headquarters situated in the southern part of the Gorakhpur district, Uttar Pradesh, along the Gorakhpur-Varanasi highway. It forms an integral part of Alok Singh’s childhood background and identity.',
+  },
+  {
+    question: 'What does Alok Singh do?',
+    answer:
+      'Alok Singh works as a Full-Stack Web Developer and Technology Builder. He designs modern user interfaces (UI/UX), writes backend code, builds REST APIs, configures database systems, deploys cloud applications, and oversees the complete digital product architecture for Gorakhpur’s Got Latent.',
+  },
+  {
+    question: 'Is Alok Singh a developer?',
+    answer:
+      'Yes, Alok Singh is a skilled Full-Stack Web Developer proficient in JavaScript, TypeScript, React, Next.js, Node.js, database management (PostgreSQL/SQL), API integration, and production web deployment.',
+  },
+  {
+    question: 'What is Alok Singh’s educational background?',
+    answer:
+      'Alok Singh’s school journey includes early education at Purvanchal Public School (LKG to Class 2), KMR Janipur Gola Road (Class 3), Holy Angel International School in Pali, Bansgaon (Class 4 to Class 10), and Purvanchal Public School (Class 11 & 12). He then pursued a Bachelor of Computer Applications (BCA) degree at KIPM College.',
+  },
+  {
+    question: 'Where did Alok Singh study?',
+    answer:
+      'Alok Singh studied at Purvanchal Public School, KMR Janipur (Gola Road), Holy Angel International School (Pali, Bansgaon), and completed his college education at KIPM College in Gorakhpur, specializing in BCA.',
+  },
+  {
+    question: 'What is Alok Singh’s connection with KIPM College?',
+    answer:
+      'Alok Singh pursued his BCA (Bachelor of Computer Applications) at KIPM College. His time at KIPM College provided him with structured theoretical knowledge and practical training in programming, software engineering, databases, and web technology.',
+  },
+  {
+    question: 'Who founded Gorakhpur’s Got Latent?',
+    answer:
+      'Gorakhpur’s Got Latent was co-founded by Alok Singh and Naveen to showcase local talent, artists, comedians, and performers across Gorakhpur and Purvanchal through a premium talent platform.',
+  },
+  {
+    question: 'Who is the Co-Founder of Gorakhpur’s Got Latent?',
+    answer:
+      'Alok Singh is the Co-Founder of Gorakhpur’s Got Latent alongside Naveen. While Naveen handles creative leadership and talent execution, Alok Singh leads the technology, website engineering, digital platform building, and online systems.',
+  },
+  {
+    question: 'What is Alok Singh’s role in GGL?',
+    answer:
+      'Alok Singh serves as Co-Founder and Lead Full-Stack Developer for Gorakhpur’s Got Latent (GGL). He architected and built the official website, performer application portals, ticket booking workflows, voting modules, database schemas, and digital event technology.',
+  },
+  {
+    question: 'Where can I find Alok Singh on Instagram?',
+    answer:
+      'Alok Singh’s official Instagram profile is @aloksingh_._ (https://www.instagram.com/aloksingh_._/). You can follow his personal updates, technology projects, and GGL event highlights there.',
+  },
+  {
+    question: 'What is Alok Singh’s X/Twitter profile?',
+    answer:
+      'Alok Singh can be followed on X (formerly Twitter) at @rajpratapsinghh (https://x.com/rajpratapsinghh), where he shares thoughts on technology, software development, web tools, and startup building.',
+  },
+  {
+    question: 'Where is Alok Singh on Facebook?',
+    answer:
+      'Alok Singh’s official Facebook profile can be accessed at https://www.facebook.com/meadorush (@meadorush).',
+  },
+  {
+    question: 'What is Alok Singh known for?',
+    answer:
+      'Alok Singh is known as a young technology builder, full-stack software developer, and Co-Founder of Gorakhpur’s Got Latent from Kaudiram, Gorakhpur. He is recognized for bringing tech innovation to the local entertainment ecosystem in Eastern Uttar Pradesh.',
+  },
+  {
+    question: 'How did Alok Singh start his technology journey?',
+    answer:
+      'Alok Singh started his technology journey out of curiosity for how websites and software operate. Beginning with basic programming and web markup, he progressed into advanced full-stack development, database design, and cloud deployment during his BCA studies at KIPM College, leading up to co-founding GGL.',
+  },
 ];
 
-const searchTopics = [
-  'Alok Singh biography',
-  'Who is Alok Singh from Gorakhpur?',
-  'Alok Singh Kaudiram Gorakhpur',
-  'Alok Singh full-stack developer',
-  'Alok Singh Co-Founder of Gorakhpur’s Got Latent',
-  'Alok Singh GGL',
-  'Alok Singh KIPM College',
-  'Alok Singh education',
-  'Alok Singh Instagram',
-  'Alok Singh X Twitter',
-  'Alok Singh Facebook',
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': 'https://www.gkpgotlatent.in/aboutaloksingh#faq',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+
+const educationTimeline = [
+  {
+    stage: 'LKG → Class 2',
+    school: 'Purvanchal Public School',
+    location: 'Gorakhpur, Uttar Pradesh',
+    description:
+      'The foundational first chapter of Alok Singh’s school journey, where early curiosity and fundamental learning began.',
+    icon: BookOpen,
+  },
+  {
+    stage: 'Class 3',
+    school: 'KMR, Janipur — Gola Road',
+    location: 'Gorakhpur District, UP',
+    description:
+      'A transition to a new school environment at KMR Janipur on Gola Road, building adaptability and new friendships.',
+    icon: GraduationCap,
+  },
+  {
+    stage: 'Class 4 → Class 10',
+    school: 'Holy Angel International School, Pali — Bansgaon',
+    location: 'Bansgaon Tehsil, Gorakhpur',
+    description:
+      'A long, highly formative decade of secondary schooling. This phase shaped academic discipline, problem-solving skills, and early interest in digital systems.',
+    icon: BookOpen,
+  },
+  {
+    stage: 'Class 11 → Class 12',
+    school: 'Purvanchal Public School',
+    location: 'Gorakhpur, Uttar Pradesh',
+    description:
+      'Returning to Purvanchal Public School for senior secondary education, concentrating on science, analytical thinking, and preparing for a technology career.',
+    icon: GraduationCap,
+  },
+  {
+    stage: 'College Degree (BCA)',
+    school: 'KIPM College',
+    location: 'Gorakhpur, Uttar Pradesh',
+    description:
+      'Bachelor of Computer Applications (BCA) degree program. The pivotal technology chapter where Alok mastered computer programming, full-stack web development, database management, software engineering, and API integration.',
+    icon: Award,
+  },
+];
+
+const techPillars = [
+  {
+    icon: Code2,
+    title: 'Full-Stack Web Development',
+    description:
+      'Crafting scalable, high-performance web applications using React, Next.js, TypeScript, JavaScript, and Node.js with clean modular architecture.',
+  },
+  {
+    icon: Layers,
+    title: 'UI / UX Design & Frontend Engineering',
+    description:
+      'Building dark-mode, glassmorphism, responsive, accessible web interfaces engineered for seamless user experience across mobile and desktop devices.',
+  },
+  {
+    icon: Database,
+    title: 'Database Architecture & Backend APIs',
+    description:
+      'Designing relational database schemas (PostgreSQL/SQL), backend API endpoints, user authentication flows, and data storage solutions.',
+  },
+  {
+    icon: Cpu,
+    title: 'Cloud Deployment & DevOps',
+    description:
+      'Managing production cloud deployments on Vercel, AWS S3 asset delivery, domain setup, SSL security, and web performance optimization.',
+  },
+  {
+    icon: Laptop,
+    title: 'Digital Product Development',
+    description:
+      'Taking raw ideas from initial concept to wireframes, functional code prototypes, fully tested platforms, and production release.',
+  },
+  {
+    icon: Zap,
+    title: 'GGL Entertainment Technology',
+    description:
+      'Architecting the end-to-end digital infrastructure for Gorakhpur’s Got Latent—including performer portals, ticketing, voting, and live displays.',
+  },
 ];
 
 export default function AboutAlokSinghPage() {
   return (
-    <main className="min-h-screen bg-[#05070d] px-5 py-14 text-white sm:px-8 sm:py-20">
+    <main className="min-h-screen bg-[#05070d] px-4 py-10 text-white sm:px-8 sm:py-16 md:px-12 lg:px-16">
+      {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(profileJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
 
       <div className="mx-auto max-w-6xl">
-        <section className="grid items-center gap-10 lg:grid-cols-[1.08fr_0.92fr]">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-amber-300">
-              OFFICIAL PROFILE · ALOK SINGH
-            </p>
-            <h1 className="mt-4 text-5xl font-black tracking-[-0.05em] sm:text-7xl lg:text-8xl">
-              ALOK
-              <span className="block text-amber-300">SINGH</span>
-            </h1>
-            <p className="mt-5 max-w-3xl text-xl font-bold leading-8 text-slate-200 sm:text-2xl">
-              Full-Stack Developer · Technology Builder · Co-Founder · A story from
-              Kaudiram, Gorakhpur to building digital experiences for Gorakhpur.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <span className="rounded-full border border-amber-300/25 bg-amber-300/10 px-4 py-2 text-sm font-bold text-amber-200">
-                📍 Kaudiram, Gorakhpur, Uttar Pradesh, India
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-bold text-slate-200">
-                BCA · KIPM College
-              </span>
+        {/* Breadcrumb Navigation */}
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-8 flex items-center gap-2 text-xs font-semibold text-slate-400"
+        >
+          <Link href="/" className="transition hover:text-amber-300">
+            Home
+          </Link>
+          <span>/</span>
+          <Link href="/cofounder" className="transition hover:text-amber-300">
+            Co-Founder
+          </Link>
+          <span>/</span>
+          <span className="text-amber-300">Alok Singh Biography</span>
+        </nav>
+
+        {/* Section 1: Hero Profile Header */}
+        <section className="relative overflow-hidden rounded-[2.5rem] border border-amber-300/20 bg-gradient-to-br from-amber-500/10 via-slate-900/60 to-purple-900/20 p-6 sm:p-10 lg:p-12 shadow-2xl backdrop-blur-xl">
+          <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-amber-400/10 blur-3xl pointer-events-none" />
+          <div className="absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
+
+          <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-400/10 px-4 py-1.5 text-xs font-black tracking-widest text-amber-300 uppercase">
+                <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+                OFFICIAL PROFILE · ALOK SINGH
+              </div>
+
+              <h1 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
+                ALOK <span className="text-amber-300">SINGH</span>
+              </h1>
+
+              <p className="mt-4 text-lg font-bold text-amber-200/90 sm:text-xl lg:text-2xl">
+                Full-Stack Developer · Technology Builder · Co-Founder
+              </p>
+
+              <p className="mt-4 text-sm font-medium leading-relaxed text-slate-300 sm:text-base lg:text-lg">
+                Official profile and complete life story of{' '}
+                <strong className="text-white">Alok Singh</strong> from{' '}
+                <strong className="text-amber-300">Kaudiram, Gorakhpur, Uttar Pradesh</strong>.
+                Explore his education journey, BCA studies at KIPM College, software engineering expertise, digital creator work, and role as Co-Founder of Gorakhpur’s Got Latent (GGL).
+              </p>
+
+              {/* Quick Info Badges */}
+              <div className="mt-6 flex flex-wrap gap-2.5">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] px-3.5 py-1.5 text-xs font-bold text-slate-200">
+                  <MapPin className="h-3.5 w-3.5 text-amber-300" />
+                  Kaudiram, Gorakhpur, UP
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] px-3.5 py-1.5 text-xs font-bold text-slate-200">
+                  <GraduationCap className="h-3.5 w-3.5 text-amber-300" />
+                  BCA · KIPM College
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/30 bg-amber-400/10 px-3.5 py-1.5 text-xs font-bold text-amber-200">
+                  <UserCheck className="h-3.5 w-3.5 text-amber-300" />
+                  Co-Founder @ GGL
+                </span>
+              </div>
+
+              {/* Action Links */}
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href="/cofounder"
+                  className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-black text-black transition hover:bg-amber-300 shadow-lg shadow-amber-500/20"
+                >
+                  Co-Founder Profile
+                  <ExternalLink className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/developer"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-black text-white transition hover:bg-white/10"
+                >
+                  Developer Portfolio
+                  <Code2 className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Profile Image Column */}
+            <div className="relative mx-auto w-full max-w-sm lg:max-w-md">
+              <div className="absolute -inset-3 rounded-[2.5rem] bg-gradient-to-r from-amber-400/20 to-purple-500/20 blur-2xl" />
+              <div className="relative aspect-square overflow-hidden rounded-[2rem] border-2 border-amber-300/30 bg-slate-900 shadow-2xl">
+                <img
+                  src="/developer-photo-1.jpg"
+                  alt="Alok Singh — Full-Stack Developer and Co-Founder from Gorakhpur"
+                  width={800}
+                  height={800}
+                  className="h-full w-full object-cover object-center transition duration-500 hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-white/10 bg-black/60 p-3 backdrop-blur-md">
+                  <p className="text-xs font-black tracking-wider text-amber-300 uppercase">
+                    Alok Singh
+                  </p>
+                  <p className="text-xs text-slate-300">
+                    Full-Stack Developer & Co-Founder · Gorakhpur’s Got Latent
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div className="relative mx-auto w-full max-w-md">
-            <div className="absolute -inset-4 rounded-[2rem] bg-amber-400/10 blur-3xl" />
-            <img
-              src="/developer-photo-1.jpg"
-              alt="Alok Singh — Full-Stack Developer and Co-Founder from Gorakhpur"
-              width={800}
-              height={800}
-              className="relative aspect-square w-full rounded-[2rem] border border-amber-300/20 object-cover shadow-2xl shadow-black/50"
-            />
-          </div>
         </section>
 
-        <section className="mt-20 max-w-5xl">
-          <p className="text-xs font-black uppercase tracking-[0.25em] text-amber-300">
-            THE STORY
-          </p>
-          <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
-            From Kaudiram to code, from classrooms to a stage.
+        {/* Section 2: "Who is Alok Singh?" */}
+        <section className="mt-16 sm:mt-20">
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/10 px-3.5 py-1 text-xs font-black tracking-widest text-amber-300 uppercase">
+            SEARCH INTENT OVERVIEW
+          </div>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Who is Alok Singh?
           </h2>
-
-          <div className="mt-8 space-y-6 text-base font-semibold leading-8 text-slate-300 sm:text-lg">
+          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 space-y-4 text-base font-normal leading-relaxed text-slate-300 sm:text-lg">
             <p>
-              <strong className="text-white">Alok Singh</strong> is a young technology
-              builder and Co-Founder from <strong className="text-amber-300">Kaudiram,
-              Gorakhpur, Uttar Pradesh</strong>. His story is not a story of one sudden
-              breakthrough. It is a story of changing schools, learning new things,
-              finding technology, building through problems and slowly turning ideas
-              into things that people can actually use.
+              <strong className="text-white">Alok Singh</strong> is an Indian full-stack web developer, software technology builder, digital creator, and Co-Founder of <strong className="text-amber-300">Gorakhpur’s Got Latent (GGL)</strong>. Born and raised in <strong className="text-white">Kaudiram, Gorakhpur, Uttar Pradesh</strong>, Alok represents a new generation of self-driven technology professionals from Eastern Uttar Pradesh who blend software engineering capabilities with real-world entrepreneurial initiative.
             </p>
             <p>
-              His journey started at <strong className="text-white">Purvanchal Public
-              School</strong>, where he studied from LKG to Class 2. Class 3 brought a
-              new chapter at <strong className="text-white">KMR, Janipur, Gola Road</strong>.
-              From Class 4 to Class 10, he studied at <strong className="text-white">
-              Holy Angel International School, Pali, Bansgaon</strong>. For Classes 11
-              and 12, he returned to Purvanchal Public School.
-            </p>
-            <p>
-              Looking back, the changes in school were more than changes of address.
-              Each chapter meant new surroundings, new people and another opportunity
-              to adapt. That became an important part of Alok’s mindset: learn, adjust,
-              keep moving and keep building. The journey did not come with a perfect
-              roadmap; the direction became clearer step by step.
-            </p>
-            <p>
-              After school, Alok chose <strong className="text-amber-300">BCA at KIPM
-              College</strong>. Technology became more than an interest. Web development,
-              software engineering, UI/UX, databases, APIs, cloud deployment and digital
-              products became practical tools for turning ideas into working experiences.
-            </p>
-            <p>
-              The struggle in a builder’s journey is often invisible. It is the time
-              spent understanding something that did not work, fixing bugs, rebuilding
-              an idea, learning a new tool and trying again. For Alok, that process is
-              part of the story. He prefers building and learning by doing rather than
-              waiting for everything to be perfect before starting.
-            </p>
-            <p>
-              One of the biggest chapters came with <strong className="text-amber-300">
-              Naveen</strong>. Together, they built <strong className="text-white">
-              Gorakhpur’s Got Latent</strong> with a simple belief: Gorakhpur and
-              Purvanchal have talent, creators, performers and audiences that deserve
-              their own spotlight.
-            </p>
-            <p>
-              Today, Alok’s identity sits at the intersection of <strong className="text-white">
-              technology, creativity and entertainment</strong>. He works as a
-              Full-Stack Developer and Technology Builder while contributing as
-              Co-Founder of Gorakhpur’s Got Latent. From the digital platform to the
-              systems behind an entertainment experience, his work is about turning
-              ideas into something real.
-            </p>
-            <p>
-              This is still an unfinished story. The next chapter is being written
-              through every project, every new problem, every line of code and every
-              idea that gets a chance to become real. The journey from Kaudiram to
-              Gorakhpur, from school classrooms to BCA, and from learning technology
-              to building a platform with Naveen is only one part of what comes next.
+              His work spans across front-end web development, server-side REST API design, relational database administration, cloud server deployment, and user interface (UI/UX) engineering. As the technological backbone behind Gorakhpur’s Got Latent, Alok built the digital ecosystem that enables performers, audiences, judges, and event organizers across Gorakhpur to interact seamlessly.
             </p>
           </div>
         </section>
 
-        <section className="mt-20">
-          <p className="text-xs font-black uppercase tracking-[0.25em] text-amber-300">
-            EDUCATION JOURNEY
-          </p>
-          <h2 className="mt-3 text-3xl font-black sm:text-5xl">
-            Alok Singh — School to BCA
+        {/* Section 3 & 4: "Alok Singh Biography", "Alok Singh's Story", & "Alok Singh from Gorakhpur" */}
+        <section className="mt-16 sm:mt-20">
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/10 px-3.5 py-1 text-xs font-black tracking-widest text-amber-300 uppercase">
+            LIFE STORY & ROOTS
+          </div>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Alok Singh Biography & Story from Gorakhpur
           </h2>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {education.map(([stage, school, text], index) => (
-              <article
-                key={stage}
-                className="rounded-2xl border border-white/10 bg-white/[0.035] p-6 shadow-2xl shadow-black/20"
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs font-black tracking-[0.2em] text-amber-300">
-                    {stage}
-                  </span>
-                  <span className="text-xs font-black text-white/25">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                </div>
-                <h3 className="mt-4 text-xl font-black">{school}</h3>
-                <p className="mt-3 text-sm font-semibold leading-7 text-slate-400">
-                  {text}
-                </p>
-              </article>
-            ))}
+          <div className="mt-8 space-y-6 text-base font-normal leading-relaxed text-slate-300 sm:text-lg">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-6 sm:p-8 space-y-4">
+              <h3 className="text-xl font-bold text-amber-300 sm:text-2xl">
+                Early Life in Kaudiram & Primary Schooling
+              </h3>
+              <p>
+                Alok Singh spent his childhood in <strong className="text-white">Kaudiram</strong>, a historic market town in the Gorakhpur district of Uttar Pradesh. Growing up in Kaudiram instilled a grounded work ethic and a deep connection to the regional culture of Purvanchal.
+              </p>
+              <p>
+                His academic journey began at <strong className="text-white">Purvanchal Public School</strong>, where he completed his early education from LKG through Class 2. In Class 3, his schooling transitioned to <strong className="text-white">KMR, Janipur on Gola Road</strong>. Moving between schools early in life taught Alok adaptability and resilience—traits that would later prove essential in his software development and entrepreneurial pursuits.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-6 sm:p-8 space-y-4">
+              <h3 className="text-xl font-bold text-amber-300 sm:text-2xl">
+                Secondary Schooling & Growth in Bansgaon
+              </h3>
+              <p>
+                From Class 4 to Class 10, Alok attended <strong className="text-white">Holy Angel International School in Pali, Bansgaon</strong>. This seven-year period formed the cornerstone of his academic development. It was during these school years that Alok developed strong logical thinking, problem-solving skills, and a curiosity for how computer systems operate behind the scenes.
+              </p>
+              <p>
+                For Class 11 and Class 12, Alok returned to <strong className="text-white">Purvanchal Public School</strong> to complete his senior secondary education with a focus on science and mathematics, laying the groundwork for his future higher education in technology.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-6 sm:p-8 space-y-4">
+              <h3 className="text-xl font-bold text-amber-300 sm:text-2xl">
+                Higher Education: BCA at KIPM College
+              </h3>
+              <p>
+                Following his school graduation, Alok Singh enrolled in the <strong className="text-amber-300">Bachelor of Computer Applications (BCA)</strong> program at <strong className="text-white">KIPM College</strong> in Gorakhpur. His college years at KIPM marked his complete pivot into software engineering and web programming.
+              </p>
+              <p>
+                Rather than limiting himself to classroom curriculum, Alok actively immersed himself in practical coding, learning HTML, CSS, JavaScript, React, Node.js, database queries, and web deployment techniques. Programming transformed from an academic subject into a passion for building functional digital products that solve real-world problems.
+              </p>
+            </div>
           </div>
         </section>
 
-        <section className="mt-20 overflow-hidden rounded-[2rem] border border-amber-300/20 bg-gradient-to-br from-amber-300/[0.10] via-white/[0.03] to-red-500/[0.08] p-7 sm:p-10">
-          <p className="text-xs font-black uppercase tracking-[0.25em] text-amber-300">
-            ALOK SINGH × NAVEEN
-          </p>
-          <h2 className="mt-4 max-w-4xl text-3xl font-black leading-tight sm:text-5xl">
-            Two people. One city. One belief: Gorakhpur deserves its own spotlight.
+        {/* Section 5: "Alok Singh Education" Timeline */}
+        <section className="mt-16 sm:mt-20">
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/10 px-3.5 py-1 text-xs font-black tracking-widest text-amber-300 uppercase">
+            ACADEMIC MILESTONES
+          </div>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Alok Singh Education & Academic Journey
           </h2>
-          <p className="mt-6 max-w-4xl text-base font-semibold leading-8 text-slate-300 sm:text-lg">
-            Gorakhpur’s Got Latent became the chapter where technology and entertainment
-            came together. Alok and Naveen built around the idea of giving performers
-            and creators a local platform with an ambitious vision. For Alok, GGL is
-            not just a website. It is a real-world example of what can happen when an
-            idea is backed by technology, persistence and a willingness to build.
+          <p className="mt-4 max-w-3xl text-base text-slate-300 sm:text-lg">
+            A comprehensive look at Alok Singh’s educational path from primary school in Gorakhpur to earning his BCA degree at KIPM College.
           </p>
-        </section>
 
-        <section className="mt-20">
-          <p className="text-xs font-black uppercase tracking-[0.25em] text-amber-300">
-            WHAT ALOK DOES
-          </p>
-          <h2 className="mt-3 text-3xl font-black sm:text-5xl">
-            Technology, products and digital experiences.
-          </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              ['FULL-STACK DEVELOPMENT', 'Modern web applications, frontend interfaces, backend systems and APIs.'],
-              ['UI / UX', 'Responsive interfaces and polished digital experiences designed around real users.'],
-              ['DATABASES & SYSTEMS', 'Data models, application logic, integrations and practical system architecture.'],
-              ['CLOUD & DEPLOYMENT', 'Turning projects into accessible, production-ready web experiences.'],
-              ['DIGITAL PRODUCTS', 'Taking an idea from concept to a working website, tool or platform.'],
-              ['GGL TECHNOLOGY', 'Building technology around Gorakhpur’s Got Latent and its entertainment experience.'],
-            ].map(([title, text]) => (
-              <article key={title} className="rounded-2xl border border-white/10 bg-white/[0.035] p-6">
-                <h3 className="text-sm font-black tracking-wide text-amber-200">{title}</h3>
-                <p className="mt-3 text-sm font-semibold leading-7 text-slate-400">{text}</p>
-              </article>
-            ))}
+            {educationTimeline.map((item, index) => {
+              const IconComp = item.icon;
+              return (
+                <div
+                  key={index}
+                  className="flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-amber-300/30 hover:bg-white/[0.05]"
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="rounded-md border border-amber-300/30 bg-amber-400/10 px-2.5 py-1 text-xs font-black text-amber-300">
+                        {item.stage}
+                      </span>
+                      <IconComp className="h-5 w-5 text-slate-400" />
+                    </div>
+                    <h3 className="mt-4 text-lg font-black text-white">{item.school}</h3>
+                    <p className="mt-1 text-xs font-semibold text-slate-400">
+                      📍 {item.location}
+                    </p>
+                    <p className="mt-3 text-xs leading-relaxed text-slate-300">
+                      {item.description}
+                    </p>
+                  </div>
+                  <div className="mt-6 border-t border-white/10 pt-3 text-[11px] font-bold text-slate-400">
+                    Milestone {index + 1} of 5
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
-        <section className="mt-20">
-          <p className="text-xs font-black uppercase tracking-[0.25em] text-amber-300">
-            SEARCH AROUND THE STORY
-          </p>
-          <h2 className="mt-3 text-3xl font-black sm:text-5xl">
-            Find Alok Singh across the web.
+        {/* Section 6: "Alok Singh's Technology Journey" & "Digital & Technology Work" */}
+        <section className="mt-16 sm:mt-20">
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/10 px-3.5 py-1 text-xs font-black tracking-widest text-amber-300 uppercase">
+            SOFTWARE & ENGINEERING
+          </div>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Alok Singh’s Technology Journey & Digital Work
           </h2>
-          <p className="mt-5 max-w-4xl text-base font-semibold leading-8 text-slate-400">
-            This page brings together the public identity, biography, education journey,
-            technology profile and GGL story of Alok Singh so that people searching for
-            Alok Singh Gorakhpur, Alok Singh Kaudiram, Alok Singh developer, Alok Singh
-            Co-Founder, Alok Singh GGL, or Alok Singh social profiles can find the
-            relevant official information in one place.
+          <p className="mt-4 max-w-3xl text-base text-slate-300 sm:text-lg">
+            Alok Singh specializes in modern web software engineering, digital product architecture, database design, and cloud infrastructure.
           </p>
 
-          <div className="mt-7 flex flex-wrap gap-2">
-            {searchTopics.map((topic) => (
-              <span
-                key={topic}
-                className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-2 text-xs font-bold text-slate-300"
-              >
-                {topic}
-              </span>
-            ))}
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {techPillars.map((pillar, idx) => {
+              const IconComp = pillar.icon;
+              return (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-white/10 bg-white/[0.035] p-6 transition hover:border-amber-300/30 hover:bg-white/[0.06]"
+                >
+                  <div className="inline-flex rounded-xl bg-amber-400/10 p-3 text-amber-300 border border-amber-300/20">
+                    <IconComp className="h-6 w-6" />
+                  </div>
+                  <h3 className="mt-4 text-lg font-black text-white">{pillar.title}</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-slate-300">
+                    {pillar.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </section>
 
-        <section className="mt-20">
-          <p className="text-xs font-black uppercase tracking-[0.25em] text-amber-300">
-            SOCIAL PROFILES
-          </p>
-          <h2 className="mt-3 text-3xl font-black sm:text-5xl">
-            Connect with Alok Singh
+        {/* Section 7: "Alok Singh and Gorakhpur's Got Latent" & "What does Alok Singh do?" */}
+        <section className="mt-16 sm:mt-20 overflow-hidden rounded-[2.5rem] border border-amber-300/30 bg-gradient-to-br from-amber-500/15 via-slate-900 to-black p-8 sm:p-12 shadow-2xl relative">
+          <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-amber-400/10 blur-3xl pointer-events-none" />
+
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-400/10 px-3.5 py-1 text-xs font-black tracking-widest text-amber-300 uppercase">
+            ENTREPRENEURSHIP & CO-FOUNDING
+          </div>
+
+          <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Alok Singh and Gorakhpur’s Got Latent (GGL)
           </h2>
+
+          <div className="mt-6 space-y-4 text-base leading-relaxed text-slate-300 sm:text-lg">
+            <p>
+              The inception of <strong className="text-amber-300">Gorakhpur’s Got Latent (GGL)</strong> represents the intersection of technology, creative entertainment, and local community empowerment in Eastern Uttar Pradesh. Founded by <strong className="text-white">Alok Singh</strong> and <strong className="text-white">Naveen</strong>, GGL was established to give emerging talent, performers, comedians, singers, and artists across Gorakhpur a high-production platform.
+            </p>
+            <p>
+              As <strong className="text-white">Co-Founder and Full-Stack Developer</strong>, Alok Singh’s primary role encompasses all technical aspects of the platform:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-sm sm:text-base text-slate-200">
+              <li>Building and maintaining the official website (<Link href="/" className="text-amber-300 underline">gkpgotlatent.in</Link>).</li>
+              <li>Designing the online registration system for performers, guests, judges, and event sponsors.</li>
+              <li>Engineering digital ticket booking flows, seating options, and ticket verification logic.</li>
+              <li>Architecting real-time audience voting platforms and live score displays.</li>
+              <li>Managing cloud deployment, website security, and server performance under high visitor traffic.</li>
+            </ul>
+          </div>
+
           <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/apply"
+              className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-black text-black transition hover:bg-amber-300"
+            >
+              Apply as Performer
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/tickets"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white/20"
+            >
+              Book Event Tickets
+            </Link>
+          </div>
+        </section>
+
+        {/* Section 8: "Alok Singh Social Profiles" */}
+        <section className="mt-16 sm:mt-20">
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/10 px-3.5 py-1 text-xs font-black tracking-widest text-amber-300 uppercase">
+            CONNECT & FOLLOW
+          </div>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Alok Singh Social Profiles & Official Links
+          </h2>
+          <p className="mt-4 max-w-3xl text-base text-slate-300 sm:text-lg">
+            Connect directly with Alok Singh through his verified social media accounts and official web profiles.
+          </p>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <a
               href="https://www.instagram.com/aloksingh_._/"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-xl border border-pink-500/30 bg-pink-500/10 px-5 py-3 text-sm font-black text-pink-300 hover:bg-pink-500/20"
+              className="group flex flex-col justify-between rounded-2xl border border-pink-500/30 bg-pink-500/10 p-6 transition hover:border-pink-500 hover:bg-pink-500/20"
             >
-              INSTAGRAM · @aloksingh_._ ↗
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black text-pink-300 uppercase tracking-wider">
+                    INSTAGRAM
+                  </span>
+                  <ExternalLink className="h-4 w-4 text-pink-300 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </div>
+                <h3 className="mt-3 text-xl font-black text-white">@aloksingh_._</h3>
+                <p className="mt-2 text-xs text-pink-200">
+                  Follow personal updates, developer insights, photos, and behind-the-scenes GGL content on Instagram.
+                </p>
+              </div>
+              <span className="mt-6 text-xs font-bold text-pink-300 underline">
+                View Instagram Profile ↗
+              </span>
             </a>
+
             <a
               href="https://x.com/rajpratapsinghh"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-black text-white hover:bg-white/[0.08]"
+              className="group flex flex-col justify-between rounded-2xl border border-slate-700 bg-white/[0.04] p-6 transition hover:border-slate-500 hover:bg-white/[0.08]"
             >
-              X / TWITTER · @rajpratapsinghh ↗
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black text-slate-300 uppercase tracking-wider">
+                    X / TWITTER
+                  </span>
+                  <ExternalLink className="h-4 w-4 text-slate-300 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </div>
+                <h3 className="mt-3 text-xl font-black text-white">@rajpratapsinghh</h3>
+                <p className="mt-2 text-xs text-slate-300">
+                  Read tech posts, web engineering thoughts, software project announcements, and startup building updates.
+                </p>
+              </div>
+              <span className="mt-6 text-xs font-bold text-amber-300 underline">
+                View X Profile ↗
+              </span>
             </a>
+
             <a
               href="https://www.facebook.com/meadorush"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-xl border border-blue-500/30 bg-blue-500/10 px-5 py-3 text-sm font-black text-blue-200 hover:bg-blue-500/20"
+              className="group flex flex-col justify-between rounded-2xl border border-blue-500/30 bg-blue-500/10 p-6 transition hover:border-blue-500 hover:bg-blue-500/20"
             >
-              FACEBOOK · @meadorush ↗
-            </a>
-            <a
-              href="/developer"
-              className="rounded-xl bg-amber-400 px-5 py-3 text-sm font-black text-black hover:bg-amber-300"
-            >
-              FULL DEVELOPER PROFILE
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black text-blue-300 uppercase tracking-wider">
+                    FACEBOOK
+                  </span>
+                  <ExternalLink className="h-4 w-4 text-blue-300 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </div>
+                <h3 className="mt-3 text-xl font-black text-white">@meadorush</h3>
+                <p className="mt-2 text-xs text-blue-200">
+                  Connect on Facebook for personal updates, community posts, and regional networking in Gorakhpur.
+                </p>
+              </div>
+              <span className="mt-6 text-xs font-bold text-blue-300 underline">
+                View Facebook Profile ↗
+              </span>
             </a>
           </div>
         </section>
 
-        <section className="mt-20 border-t border-white/10 pt-14">
-          <p className="text-xs font-black uppercase tracking-[0.25em] text-amber-300">
-            FREQUENTLY SEARCHED QUESTIONS
+        {/* Section 9: "Frequently Asked Questions" (FAQ) */}
+        <section className="mt-16 sm:mt-20">
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/10 px-3.5 py-1 text-xs font-black tracking-widest text-amber-300 uppercase">
+            FAQ & SEARCH INTENT
+          </div>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Frequently Asked Questions about Alok Singh
+          </h2>
+          <p className="mt-4 max-w-3xl text-base text-slate-300 sm:text-lg">
+            Answers to common search queries regarding Alok Singh’s background, location, education, technology work, and role in Gorakhpur’s Got Latent.
           </p>
-          <div className="mt-7 space-y-5">
-            {[
-              ['Who is Alok Singh?', 'Alok Singh is a Full-Stack Developer, Technology Builder and Co-Founder associated with Gorakhpur’s Got Latent, based in Kaudiram, Gorakhpur, Uttar Pradesh.'],
-              ['Where is Alok Singh from?', 'Alok Singh is from Kaudiram, Gorakhpur, Uttar Pradesh, India.'],
-              ['What does Alok Singh do?', 'Alok Singh works in full-stack web development, technology building, digital products and the technology side of Gorakhpur’s Got Latent.'],
-              ['Who is the Co-Founder of Gorakhpur’s Got Latent?', 'Alok Singh is a Co-Founder of Gorakhpur’s Got Latent alongside Naveen, with Alok contributing technology and digital product work.'],
-              ['Where did Alok Singh study?', 'His education journey includes Purvanchal Public School, KMR in Janipur on Gola Road, Holy Angel International School in Pali, Bansgaon, and BCA at KIPM College.'],
-              ['Where can I find Alok Singh on social media?', 'Public profile links on this page include Instagram, X/Twitter and Facebook, along with his full developer profile on the official GGL website.'],
-            ].map(([question, answer]) => (
-              <article key={question} className="rounded-2xl border border-white/10 bg-white/[0.025] p-6">
-                <h3 className="text-lg font-black text-white">{question}</h3>
-                <p className="mt-2 text-sm font-semibold leading-7 text-slate-400">{answer}</p>
-              </article>
+
+          <div className="mt-8 space-y-4">
+            {faqItems.map((item, index) => (
+              <details
+                key={index}
+                className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-amber-300/30 open:bg-white/[0.05] open:border-amber-300/40"
+              >
+                <summary className="flex cursor-pointer items-center justify-between text-base sm:text-lg font-bold text-white list-none">
+                  <span>
+                    {index + 1}. {item.question}
+                  </span>
+                  <ChevronDown className="h-5 w-5 text-amber-300 transition duration-300 group-open:rotate-180 shrink-0 ml-2" />
+                </summary>
+                <div className="mt-4 border-t border-white/10 pt-4 text-xs sm:text-sm font-medium leading-relaxed text-slate-300">
+                  {item.answer}
+                </div>
+              </details>
             ))}
           </div>
         </section>
 
-        <footer className="mt-20 border-t border-white/10 pt-8 text-sm font-semibold text-slate-500">
-          Official Alok Singh profile · Gorakhpur, Uttar Pradesh, India ·
-          <a href="/cofounder" className="ml-1 text-amber-300 hover:text-amber-200">
-            Co-Founder profile
-          </a>
-          {' · '}
-          <a href="/developer" className="text-amber-300 hover:text-amber-200">
-            Developer profile
-          </a>
+        {/* Section 10: Internal Links & Footer Navigation */}
+        <footer className="mt-20 border-t border-white/10 pt-10 text-xs sm:text-sm text-slate-400">
+          <div className="flex flex-wrap justify-between gap-6">
+            <div>
+              <p className="font-bold text-white">Alok Singh Official Profile</p>
+              <p className="mt-1 text-xs text-slate-300">
+                Full-Stack Developer · Technology Builder · Co-Founder @ Gorakhpur’s Got Latent
+              </p>
+              <p className="mt-1 text-xs text-slate-300">
+                Kaudiram, Gorakhpur, Uttar Pradesh, India
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-4 text-xs font-semibold">
+              <Link href="/" className="hover:text-amber-300">
+                Home
+              </Link>
+              <Link href="/cofounder" className="hover:text-amber-300">
+                Co-Founder Profile
+              </Link>
+              <Link href="/developer" className="hover:text-amber-300">
+                Developer Profile
+              </Link>
+              <Link href="/founder" className="hover:text-amber-300">
+                Founder Profile
+              </Link>
+              <Link href="/about" className="hover:text-amber-300">
+                About GGL
+              </Link>
+              <Link href="/apply" className="hover:text-amber-300">
+                Apply
+              </Link>
+              <Link href="/tickets" className="hover:text-amber-300">
+                Tickets
+              </Link>
+              <Link href="/sponsors" className="hover:text-amber-300">
+                Sponsors
+              </Link>
+              <Link href="/contact" className="hover:text-amber-300">
+                Contact
+              </Link>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center text-xs text-slate-300">
+            © {new Date().getFullYear()} Gorakhpur’s Got Latent. All rights reserved. Canonical URL:{' '}
+            <a
+              href="https://www.gkpgotlatent.in/aboutaloksingh"
+              className="text-amber-300 hover:underline"
+            >
+              https://www.gkpgotlatent.in/aboutaloksingh
+            </a>
+          </div>
         </footer>
       </div>
     </main>

@@ -17,7 +17,20 @@ import {
 export const metadata: Metadata = {
   title: 'Alok Singh — Full-Stack Developer & Software Architect',
   description:
-    'Official developer profile of Alok Singh, a full-stack web developer focused on modern web applications, real-time systems, cloud deployment and UI/UX engineering.',
+    'Official profile of Alok Singh, Co-Founder and Full-Stack Developer associated with Gorakhpur’s Got Latent, focused on modern web applications, real-time systems, cloud deployment and UI/UX engineering.',
+  keywords: [
+    'Alok Singh',
+    'Alok Singh Developer',
+    'Alok Singh Co-Founder',
+    'Gorakhpur Got Latent Developer',
+    'Gorakhpur Got Latent Co-Founder',
+    'GGL Developer',
+    'GGL Co-Founder',
+    'Full-Stack Developer Gorakhpur',
+  ],
+  alternates: {
+    canonical: 'https://gkpgotlatent.in/developer',
+  },
   authors: [{ name: 'Alok Singh', url: 'https://gkpgotlatent.in/developer' }],
   creator: 'Alok Singh',
   publisher: 'Alok Singh',
@@ -151,14 +164,14 @@ const developerJsonLd = {
   '@type': 'ProfilePage',
   '@id': 'https://gkpgotlatent.in/developer#webpage',
   url: 'https://gkpgotlatent.in/developer',
-  name: 'Alok Singh — Full-Stack Developer & Software Architect',
+  name: 'Alok Singh — Co-Founder & Full-Stack Developer',
   description:
     'Official developer profile of Alok Singh, a full-stack web developer from Gorakhpur, Uttar Pradesh.',
   mainEntity: {
     '@type': 'Person',
     '@id': 'https://gkpgotlatent.in/developer#person',
     name: 'Alok Singh',
-    jobTitle: 'Full-Stack Developer & Software Architect',
+    jobTitle: 'Co-Founder & Full-Stack Developer',
     description:
       'Full-stack web developer focused on modern web applications, real-time systems, cloud deployment and UI/UX engineering.',
     url: 'https://gkpgotlatent.in/developer',

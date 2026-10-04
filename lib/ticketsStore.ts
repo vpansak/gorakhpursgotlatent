@@ -60,9 +60,9 @@ export function generateUniqueTicketId(): string {
 /**
  * Creates a secure verification token for QR encoding
  */
-export function generateQrToken(ticketId: string): string {
-  const secret = process.env.RAZORPAY_KEY_SECRET || 'ggl_ticket_secret_key_2026';
-  return crypto.createHmac('sha256', secret).update(ticketId).digest('hex').substring(0, 32);
+export function generateQrToken(_ticketId: string): string {
+  // QR tokens are opaque random values; the scanner validates them against the server-side ticket record.
+  return crypto.randomBytes(24).toString('hex');
 }
 
 /**

@@ -27,17 +27,21 @@ export async function POST(req: Request) {
     const cleanInsta = (instagramId || '').trim();
     const cleanDob = (dob || '').trim();
 
-    let formattedDob = '2000-01-01';
-    if (cleanDob) {
-      const ageCheck = validateAgeIs18Plus(cleanDob);
-      if (!ageCheck.is18Plus) {
-        return NextResponse.json(
-          { error: 'You must be 18 or above to book this ticket.' },
-          { status: 400 }
-        );
-      }
-      formattedDob = ageCheck.formattedDob;
+    if (!cleanDob) {
+      return NextResponse.json(
+        { error: 'Date of birth is required. You must be 18 or above to book this ticket.' },
+        { status: 400 }
+      );
     }
+
+    const ageCheck = validateAgeIs18Plus(cleanDob);
+    if (!ageCheck.is18Plus) {
+      return NextResponse.json(
+        { error: 'You must be 18 or above to book this ticket.' },
+        { status: 400 }
+      );
+    }
+    const formattedDob = ageCheck.formattedDob;
 
     // Quantity & Pricing (₹149 per ticket)
     const qty = Math.max(1, Math.min(10, Number(quantity) || 1));
@@ -46,11 +50,16 @@ export async function POST(req: Request) {
     const amountPaise = totalAmount * 100;
 
     const bookingId = `ord-ggl-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
-    const razorpayKeyId = process.env.RAZORPAY_KEY_ID || 'rzp_live_Tfu7PlxOWV6ohp';
-    let razorpayOrderId = `rzp_ord_${bookingId}`;
+    const razorpayKeyId = process.env.RAZORPAY_KEY_ID || '';
 
-    // Call Razorpay API if available
-    if (razorpay) {
+    if (!isRazorpayConfigured() || !razorpay || !razorpayKeyId) {
+      return NextResponse.json(
+        { error: 'Payment gateway is temporarily unavailable. Please try again later.' },
+        { status: 503 }
+      );
+    }
+
+    let razorpayOrderId = '';
       try {
         const rzpOrder = await razorpay.orders.create({
           amount: amountPaise,
@@ -68,7 +77,11 @@ export async function POST(req: Request) {
         });
         razorpayOrderId = rzpOrder.id;
       } catch (rzpErr: any) {
-        console.warn('Razorpay order creation fallback:', rzpErr?.message || rzpErr);
+        console.error('Razorpay order creation failed:', rzpErr?.message || rzpErr);
+        return NextResponse.json(
+          { error: 'Unable to create payment order. Please try again.' },
+          { status: 502 }
+        );
       }
     }
 

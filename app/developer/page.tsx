@@ -86,6 +86,11 @@ const socialLinks = [
     handle: '@meadorush',
     url: 'https://www.facebook.com/meadorush',
   },
+  {
+    name: 'LinkedIn',
+    handle: 'alok-singh-8102a8414',
+    url: 'https://www.linkedin.com/in/alok-singh-8102a8414/',
+  },
 ];
 
 const expertise = [

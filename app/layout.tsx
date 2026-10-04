@@ -118,7 +118,8 @@ const jsonLdData = {
         'url': 'https://gkpgotlatent.in/developer',
         'sameAs': [
           'https://www.instagram.com/aloksingh_._/',
-          'https://x.com/rajpratapsinghh'
+          'https://x.com/rajpratapsinghh',
+          'https://www.linkedin.com/in/alok-singh-8102a8414/'
         ]
       },
       'creator': {

@@ -71,6 +71,7 @@ const personJsonLd = {
     sameAs: [
       'https://www.instagram.com/aloksingh_._/',
       'https://x.com/rajpratapsinghh',
+      'https://www.linkedin.com/in/alok-singh-8102a8414/',
     ],
     address: {
       '@type': 'PostalAddress',
@@ -310,6 +311,14 @@ export default function CofounderPage() {
             className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-white/[0.08]"
           >
             X / TWITTER ↗
+          </a>
+          <a
+            href="https://www.linkedin.com/in/alok-singh-8102a8414/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl border border-sky-500/30 bg-sky-500/10 px-5 py-3 text-sm font-black text-sky-300 transition hover:-translate-y-0.5 hover:border-sky-400 hover:bg-sky-500/20"
+          >
+            LINKEDIN ↗
           </a>
           <a
             href="/developer"

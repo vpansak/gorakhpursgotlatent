@@ -81,6 +81,8 @@ export const metadata: Metadata = {
     'Alok Singh X profile',
     'Alok Singh Twitter',
     'Alok Singh Facebook',
+    'Alok Singh LinkedIn',
+    'Alok Singh LinkedIn profile',
     'Alok Singh social profiles',
   ],
   alternates: {
@@ -155,6 +157,7 @@ const profileJsonLd = {
       'https://www.instagram.com/aloksingh_._/',
       'https://x.com/rajpratapsinghh',
       'https://www.facebook.com/meadorush',
+      'https://www.linkedin.com/in/alok-singh-8102a8414/',
     ],
     address: {
       '@type': 'PostalAddress',
@@ -275,6 +278,11 @@ const faqItems = [
     question: 'Where is Alok Singh on Facebook?',
     answer:
       'Alok Singh’s official Facebook profile can be accessed at https://www.facebook.com/meadorush (@meadorush).',
+  },
+  {
+    question: 'Where can I find Alok Singh on LinkedIn?',
+    answer:
+      'Alok Singh’s official LinkedIn profile is https://www.linkedin.com/in/alok-singh-8102a8414/, where you can view his professional technology background, software engineering skills, and project experience.',
   },
   {
     question: 'What is Alok Singh known for?',
@@ -768,6 +776,29 @@ export default function AboutAlokSinghPage() {
               </div>
               <span className="mt-6 text-xs font-bold text-blue-300 underline">
                 View Facebook Profile ↗
+              </span>
+            </a>
+
+            <a
+              href="https://www.linkedin.com/in/alok-singh-8102a8414/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col justify-between rounded-2xl border border-sky-500/30 bg-sky-500/10 p-6 transition hover:border-sky-400 hover:bg-sky-500/20"
+            >
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black text-sky-300 uppercase tracking-wider">
+                    LINKEDIN
+                  </span>
+                  <ExternalLink className="h-4 w-4 text-sky-300 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </div>
+                <h3 className="mt-3 text-xl font-black text-white">Alok Singh</h3>
+                <p className="mt-2 text-xs text-sky-200">
+                  Connect professionally on LinkedIn to view software engineering background, technology skills, and project portfolio.
+                </p>
+              </div>
+              <span className="mt-6 text-xs font-bold text-sky-300 underline">
+                View LinkedIn Profile ↗
               </span>
             </a>
           </div>

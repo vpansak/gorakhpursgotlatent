@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
+import { sendGenericApplicationEmails } from '@/lib/emailjs';
 
 export async function POST(req: Request) {
   try {
@@ -71,6 +72,18 @@ export async function POST(req: Request) {
     }).catch(err => console.error('S3 individual panel save error:', err));
 
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
+
+    sendGenericApplicationEmails({
+      applicationType: 'GUEST',
+      applicationId: appId,
+      name: effectiveFullName,
+      email: effectiveEmail,
+      mobile: effectiveWhatsapp,
+      summary: `Profession: ${effectiveProfession}\nCategory: ${effectiveCategory}\nCity: ${effectiveCity}\nStage Name: ${(stageName || '').toString().trim() || 'N/A'}`,
+    }).then((res) => {
+      if (!res.success) console.warn('Guest application email warning:', res.message);
+    }).catch((err) => console.error('Guest application email error:', err));
+
 
     return NextResponse.json({
       success: true,

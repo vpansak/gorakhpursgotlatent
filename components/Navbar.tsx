@@ -32,13 +32,13 @@ export default function Navbar() {
             <div className="flex items-center justify-between h-16 sm:h-20">
               {/* Logo Brand with Standalone GGL Character Logo */}
               <Link href="/" className="flex items-center group shrink-0">
-                <div className="relative w-36 sm:w-40 h-12 sm:h-14 transition-transform duration-300 group-hover:scale-105 shrink-0 overflow-visible">
+                <div className="relative w-44 sm:w-48 h-12 sm:h-14 transition-transform duration-300 group-hover:scale-105 shrink-0 overflow-visible">
                   <Image
                     src="/ggl-logo.png"
                     alt="GGL Golden Character Logo"
                     fill
                     priority
-                    className="object-contain object-left scale-x-[1.36] origin-left filter drop-shadow-[0_0_15px_rgba(255,215,0,0.7)]"
+                    className="object-fill object-left filter drop-shadow-[0_0_15px_rgba(255,215,0,0.7)]"
                   />
                 </div>
               </Link>

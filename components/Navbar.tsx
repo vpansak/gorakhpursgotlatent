@@ -31,14 +31,14 @@ export default function Navbar() {
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-20">
               {/* Logo Brand with Standalone GGL Character Logo */}
-              <Link href="/" className="flex items-center group">
-                <div className="relative w-20 sm:w-24 h-12 sm:h-14 transition-transform duration-300 group-hover:scale-105 shrink-0">
+              <Link href="/" className="flex items-center group shrink-0">
+                <div className="relative w-32 sm:w-40 h-12 sm:h-14 transition-transform duration-300 group-hover:scale-105 shrink-0 overflow-visible">
                   <Image
                     src="/ggl-logo.png"
                     alt="GGL Golden Character Logo"
                     fill
                     priority
-                    className="object-contain object-left filter drop-shadow-[0_0_15px_rgba(255,215,0,0.7)]"
+                    className="object-contain object-left scale-x-[1.22] origin-left filter drop-shadow-[0_0_15px_rgba(255,215,0,0.7)]"
                   />
                 </div>
               </Link>
@@ -78,10 +78,10 @@ export default function Navbar() {
               </div>
 
               {/* Mobile Hamburger Toggle & Primary Action */}
-              <div className="flex items-center lg:hidden gap-2">
+              <div className="flex items-center lg:hidden gap-2 shrink-0">
                 <Link
                   href="/book-ticket"
-                  className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-black font-extrabold text-xs flex items-center gap-1 shadow-md"
+                  className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-black font-extrabold text-xs flex items-center gap-1 shadow-md whitespace-nowrap"
                 >
                   <Ticket className="w-3.5 h-3.5" />
                   BOOK TICKET

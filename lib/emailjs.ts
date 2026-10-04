@@ -220,7 +220,7 @@ Gorakhpur's Got Latent Team`;
       sendNitrosendEmail('alooksingh1@gmail.com', `🎤 Performer Application | ${params.application_id}`, adminBody),
       params.email.toLowerCase() !== 'alooksingh1@gmail.com'
         ? sendNitrosendEmail(params.email, `🎤 GGL Performer Application Received | ${params.application_id}`, userBody)
-        : Promise.resolve({ success: false }),
+        : Promise.resolve({ success: false, message: 'Applicant is admin address' }),
     ]);
 
     return results.some(r => r.success)

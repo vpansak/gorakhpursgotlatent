@@ -230,7 +230,7 @@ export default function CofounderPage() {
               idea behind it.
             </p>
             <p>
-              The journey is still unfinished. And perhaps that is the most interesting
+              The journey is still unfinished. Every new build becomes another page in the story. And perhaps that is the most interesting
               part of the story. From a student moving through different classrooms in
               and around Gorakhpur to becoming a BCA student, developer and Co-Founder,
               the next chapter is still being written — one idea, one problem and one

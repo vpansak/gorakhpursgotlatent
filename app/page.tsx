@@ -73,7 +73,6 @@ export default async function HomePage() {
 
           <div className="mx-auto max-w-4xl">
             <p className="home-hero-eyebrow">REAL TALENT • REAL PEOPLE • NO FILTER</p>
-            <h1 className="home-hero-title mt-2">GORAKHPUR’S<br /><span>GOT LATENT</span></h1>
             <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base font-semibold leading-relaxed text-slate-300">
               Purvanchal ka raw talent, live comedy, music, dance aur unforgettable stage moments.
             </p>

@@ -89,7 +89,7 @@ export async function POST(req: Request) {
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
 
     // Trigger instant EmailJS notification to Admin (alooksingh1@gmail.com)
-    sendPerformerApplicationEmail({
+    const emailResult = await sendPerformerApplicationEmail({
       application_id: appId,
       created_at: new Date().toISOString(),
       full_name: effectiveFullName,
@@ -114,13 +114,12 @@ export async function POST(req: Request) {
       payment_amount: 0,
       payment_verified_at: new Date().toISOString(),
       application_status: 'SUBMITTED',
-    }).then((res: any) => {
-      if (res.success) {
-        db.execute("UPDATE performer_applications SET email_status = 'SENT', admin_email_status = 'SENT' WHERE app_id = ?", [appId]).catch(e => console.error(e));
-      } else {
-        console.warn(`⚠️ Performer application email notice for ${appId}: ${res.message}`);
-      }
-    }).catch(err => console.error('EmailJS notification trigger exception:', err));
+    });
+    if (emailResult.success) {
+      await db.execute("UPDATE performer_applications SET email_status = 'SENT', admin_email_status = 'SENT' WHERE app_id = ?", [appId]).catch(e => console.error(e));
+    } else {
+      console.warn(`⚠️ Performer application email notice for ${appId}: ${emailResult.message}`);
+    }
 
     return NextResponse.json({
       success: true,

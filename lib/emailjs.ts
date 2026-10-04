@@ -184,24 +184,17 @@ export async function sendPerformerApplicationEmail(params: PerformerEmailParams
   if (process.env.NITROSEND_API_KEY) {
     const adminBody = `New Performer Audition Application Received
 
-APPLICATION DETAILS
-------------------
 Application ID: ${params.application_id}
 Application Status: ${params.application_status || 'SUBMITTED'}
 Submitted At: ${params.created_at || 'N/A'}
 
-APPLICANT DETAILS
------------------
 Name: ${params.full_name}
 Email: ${params.email}
 Mobile: ${params.mobile_number}
 WhatsApp: ${params.whatsapp_number}
 Age: ${params.age}
 City / Address: ${params.city || 'N/A'}
-Instagram: ${params.instagram_url || 'N/A'}
 
-PERFORMANCE DETAILS
--------------------
 Category: ${params.performance_category}
 Act Title: ${params.performance_title}
 Act Description: ${params.performance_description || 'N/A'}
@@ -210,8 +203,8 @@ Number of Performers: ${params.performer_count || 1}
 Duration: ${params.performance_duration || 'N/A'}
 Language: ${params.performance_language || 'N/A'}
 
-PAYMENT DETAILS
---------------
+Instagram: ${params.instagram_url || 'N/A'}
+
 Payment Status: ${params.payment_status}
 Amount: ₹${params.payment_amount || 0}
 Order ID: ${params.order_id || 'N/A'}

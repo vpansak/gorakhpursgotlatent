@@ -39,8 +39,11 @@ export default function Footer() {
     pathname.startsWith('/operator') ||
     pathname.startsWith('/judge') ||
     pathname.startsWith('/vote') ||
-    pathname.startsWith('/malik/live') ||
-    pathname.startsWith('/computerji');
+    pathname.startsWith('/malik') ||
+    pathname.startsWith('/computerji') ||
+    pathname.startsWith('/verifyticket') ||
+    pathname.startsWith('/verify') ||
+    pathname.startsWith('/ticket/verify');
 
   if (isLiveRoute || pathname.startsWith('/developer')) return null;
 

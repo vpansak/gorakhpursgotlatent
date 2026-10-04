@@ -231,12 +231,63 @@ WhatsApp: +91 84238 58424
 Regards,
 Gorakhpur's Got Latent Team`;
 
-    const results = await Promise.all([
-      sendNitrosendEmail('alooksingh1@gmail.com', `🎤 Performer Application | ${params.application_id}`, adminBody),
-      params.email.toLowerCase() !== 'alooksingh1@gmail.com'
-        ? sendNitrosendEmail(params.email, `🎤 GGL Performer Application Received | ${params.application_id}`, userBody)
-        : Promise.resolve({ success: false, message: 'Applicant is admin address' }),
-    ]);
+    const adminResult = await sendNitrosendEmail('alooksingh1@gmail.com', `🎤 Performer Application | ${params.application_id}`, adminBody);
+
+    let applicantResult: { success: boolean; message?: string } = { success: false, message: 'Applicant email not attempted' };
+    if (params.email.toLowerCase() !== 'alooksingh1@gmail.com') {
+      applicantResult = await sendNitrosendEmail(params.email, `🎤 GGL Performer Application Received | ${params.application_id}`, userBody);
+
+      // If Nitrosend cannot admit the applicant message, use the existing
+      // EmailJS applicant configuration as a delivery fallback.
+      if (!applicantResult.success) {
+        const serviceId = process.env.EMAILJS_SERVICE_ID;
+        const templateId = process.env.EMAILJS_TEMPLATE_ID;
+        const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+        const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+
+        if (serviceId && templateId && publicKey && privateKey) {
+          try {
+            const fallbackRes = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                service_id: serviceId,
+                template_id: templateId,
+                user_id: publicKey,
+                accessToken: privateKey,
+                template_params: {
+                  to_email: params.email,
+                  email: params.email,
+                  user_email: params.email,
+                  to_name: params.full_name,
+                  full_name: params.full_name,
+                  name: params.full_name,
+                  application_id: params.application_id,
+                  app_id: params.application_id,
+                  application_status: params.application_status || 'SUBMITTED',
+                  status: params.application_status || 'SUBMITTED',
+                  subject: `🎤 GGL Performer Application Received | ${params.application_id}`,
+                  message: userBody,
+                  help_email: 'help.gglatent@gmail.com',
+                  support_email: 'help.gglatent@gmail.com',
+                  help_whatsapp: '+91 84238 58424',
+                  whatsapp: '+91 84238 58424',
+                  instagram_url: 'https://www.instagram.com/gkp_got_latent/',
+                },
+              }),
+            });
+            if (fallbackRes.ok) {
+              applicantResult = { success: true };
+              console.log(`📧 EmailJS fallback: applicant email sent to ${params.email}`);
+            } else {
+              applicantResult = { success: false, message: `EmailJS fallback HTTP ${fallbackRes.status}` };
+            }
+          } catch (err: any) {
+            applicantResult = { success: false, message: err?.message || 'EmailJS fallback failed' };
+          }
+        }
+      }
+    }
 
     return results.some(r => r.success)
       ? { success: true }

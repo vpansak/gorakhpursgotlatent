@@ -46,7 +46,7 @@ export default async function HomePage() {
   return (
     <div className="home-dark relative overflow-hidden">
       {/* PREMIUM HERO */}
-      <section className="home-hero relative min-h-[68vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <section className="home-hero relative min-h-[72vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-5 pb-10 sm:pt-8 sm:pb-14">
         <div className="absolute inset-0 pointer-events-none">
           <div className="home-spot home-spot-left" />
           <div className="home-spot home-spot-right" />
@@ -55,12 +55,12 @@ export default async function HomePage() {
         </div>
 
         <div className="relative z-10 w-full max-w-6xl mx-auto text-center">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-black/35 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-amber-300 backdrop-blur-xl shadow-[0_0_35px_rgba(245,158,11,.10)]">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,.8)] animate-pulse" />
-            EPISODE 2 • AUDITIONS LIVE
+          <div className="home-live-pill mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-black/45 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-amber-200 backdrop-blur-xl">
+            <span className="h-2 w-2 rounded-full bg-red-500 shadow-[0_0_12px_rgba(239,68,68,.9)] animate-pulse" />
+            THE STAGE IS SET • EPISODE 2
           </div>
 
-          <div className="relative mx-auto -mt-5 h-48 w-[310px] sm:h-64 sm:w-[570px] md:h-80 md:w-[760px] lg:h-[360px] lg:w-[900px]">
+          <div className="relative mx-auto h-36 w-[270px] sm:h-52 sm:w-[500px] md:h-64 md:w-[680px] lg:h-[300px] lg:w-[820px]">
             <div className="home-logo-aura" />
             <Image
               src="/logo.png"
@@ -71,16 +71,15 @@ export default async function HomePage() {
             />
           </div>
 
-          <div className="mx-auto -mt-2 max-w-3xl">
-            <p className="font-bebas text-3xl sm:text-5xl md:text-6xl uppercase tracking-[0.13em] text-white drop-shadow-[0_4px_20px_rgba(0,0,0,.8)]">
-              KUCH BHI HO SAKTA HAI
-            </p>
-            <p className="mx-auto mt-3 max-w-2xl text-sm sm:text-base font-semibold leading-relaxed text-slate-300">
-              Purvanchal ka raw talent, live roasts, music, comedy aur unforgettable stage moments.
+          <div className="mx-auto max-w-4xl">
+            <p className="home-hero-eyebrow">REAL TALENT • REAL PEOPLE • NO FILTER</p>
+            <h1 className="home-hero-title mt-2">GORAKHPUR’S<br /><span>GOT LATENT</span></h1>
+            <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base font-semibold leading-relaxed text-slate-300">
+              Purvanchal ka raw talent, live comedy, music, dance aur unforgettable stage moments.
             </p>
           </div>
 
-          <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3">
+          <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3 max-w-xl mx-auto">
             <Link href="/book-ticket" className="home-primary-btn">
               <Ticket className="h-5 w-5" />
               BOOK YOUR TICKET
@@ -92,7 +91,7 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="mx-auto mt-9 max-w-3xl rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5 text-left backdrop-blur-xl shadow-[0_25px_80px_rgba(0,0,0,.45)]">
+          <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-amber-400/20 bg-black/45 p-4 sm:p-5 text-left backdrop-blur-xl shadow-[0_25px_80px_rgba(0,0,0,.55)]">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-red-500">

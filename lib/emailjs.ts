@@ -573,48 +573,13 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
   const apiKey = process.env.NITROSEND_API_KEY;
   if (!apiKey) return { success: false, message: 'NITROSEND_API_KEY not configured' };
 
-  const bodyHtml = escapeEmailHtml(body)
-    .split(/\n\n+/)
-    .map((paragraph) => `<p style="margin:0 0 16px;line-height:1.65;color:#334155;font-size:15px;white-space:pre-line">${paragraph}</p>`)
-    .join('');
-
-  const title = subject.includes(' | ') ? subject.split(' | ').slice(0, -1).join(' | ') : subject;
-
-  const html = `<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
-    <div style="padding:32px 16px">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden">
-        <tr>
-          <td style="background:#111827;padding:24px 28px;border-bottom:4px solid #f4b400">
-            <div style="font-size:21px;font-weight:700;letter-spacing:.2px;color:#ffffff">GORAKHPUR'S GOT LATENT</div>
-            <div style="margin-top:5px;font-size:12px;color:#d1d5db">Official Communication</div>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:30px 28px">
-            <h1 style="margin:0 0 22px;font-size:22px;line-height:1.3;color:#111827;font-weight:700">${escapeEmailHtml(title)}</h1>
-            ${bodyHtml}
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:20px 28px;background:#f8fafc;border-top:1px solid #e5e7eb">
-            <div style="font-size:12px;line-height:1.7;color:#64748b">
-              <strong style="color:#334155">Gorakhpur's Got Latent</strong><br>
-              Official Website: gkpgotlatent.in<br>
-              Support: help.gglatent@gmail.com<br>
-              WhatsApp: +91 84238 58424<br>
-              Instagram: @gkp_got_latent
-            </div>
-          </td>
-        </tr>
-      </table>
-      <div style="max-width:640px;margin:14px auto 0;text-align:center;font-size:11px;color:#94a3b8">
-        This is an automated email. Please keep it for your records.
-      </div>
+  const logoUrl = 'https://www.gkpgotlatent.in/logo-transparent.png';
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#222;text-align:left;max-width:600px;margin:0 auto;padding:16px;">
+    <div style="text-align:center;margin:0 0 18px;">
+      <img src="${logoUrl}" alt="Gorakhpur's Got Latent" width="72" style="display:block;width:72px;height:auto;margin:0 auto;border:0;">
     </div>
-  </body>
-</html>`;
+    <div>${escapeEmailHtml(body).replace(/\\n/g, '<br>')}</div>
+  </div>`;
 
   try {
     const res = await fetch('https://api.nitrosend.com/v1/my/messages', {

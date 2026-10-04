@@ -574,11 +574,20 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
   if (!apiKey) return { success: false, message: 'NITROSEND_API_KEY not configured' };
 
   const logoUrl = 'https://www.gkpgotlatent.in/logo-transparent.png';
-  const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#222;text-align:left;max-width:600px;margin:0 auto;padding:16px;">
-    <div style="text-align:center;margin:0 0 18px;">
-      <img src="${logoUrl}" alt="Gorakhpur's Got Latent" width="72" style="display:block;width:72px;height:auto;margin:0 auto;border:0;">
+  const html = `<div style="margin:0;padding:20px 12px;background:#f6f6f6;font-family:Arial,Helvetica,sans-serif;color:#222;">
+    <div style="width:100%;max-width:560px;margin:0 auto;background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:20px 18px;box-sizing:border-box;text-align:left;">
+      <div style="text-align:center;margin:0 0 14px;">
+        <img src="${logoUrl}" alt="Gorakhpur's Got Latent" width="58" style="display:block;width:58px;height:auto;margin:0 auto;border:0;">
+      </div>
+      <div style="font-size:15px;line-height:1.65;word-break:break-word;overflow-wrap:anywhere;">${escapeEmailHtml(body).replace(/\\n/g, '<br>')}</div>
+      <div style="margin-top:18px;padding-top:12px;border-top:1px solid #eee;text-align:center;font-size:12px;line-height:1.6;color:#666;">
+        <a href="https://www.gkpgotlatent.in/" style="color:#b00000;text-decoration:none;">Website</a>
+        &nbsp;·&nbsp;
+        <a href="mailto:help.gglatent@gmail.com" style="color:#b00000;text-decoration:none;">Email</a>
+        &nbsp;·&nbsp;
+        <a href="https://wa.me/918423858424" style="color:#b00000;text-decoration:none;">WhatsApp</a>
+      </div>
     </div>
-    <div>${escapeEmailHtml(body).replace(/\\n/g, '<br>')}</div>
   </div>`;
 
   try {

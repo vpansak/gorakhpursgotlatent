@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getTicketByTicketId } from '@/lib/ticketsStore';
+import { isVerifyAuthenticated } from '@/lib/verifyAuth';
 
 export async function POST(req: Request) {
   try {
+    if (!(await isVerifyAuthenticated())) {
+      return NextResponse.json({ error: 'Access denied.' }, { status: 403 });
+    }
+
     const body = await req.json();
     const { ticketId } = body;
 

@@ -24,12 +24,31 @@ export async function POST(req: Request) {
       amount = 149
     } = body;
 
-    // Verify signature if signature is provided
-    if (razorpay_order_id && razorpay_payment_id && razorpay_signature) {
-      const isValid = verifyRazorpaySignature(razorpay_order_id, razorpay_payment_id, razorpay_signature);
-      if (!isValid) {
-        console.warn('⚠️ Razorpay Signature Verification Notice: invalid signature format, verifying transaction status...');
-      }
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return NextResponse.json(
+        { success: false, error: 'Payment verification data is incomplete.' },
+        { status: 400 }
+      );
+    }
+
+    if (!process.env.RAZORPAY_KEY_SECRET) {
+      return NextResponse.json(
+        { success: false, error: 'Payment gateway is not configured on the server.' },
+        { status: 503 }
+      );
+    }
+
+    const isValid = verifyRazorpaySignature(
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature
+    );
+
+    if (!isValid) {
+      return NextResponse.json(
+        { success: false, error: 'Payment verification failed.' },
+        { status: 400 }
+      );
     }
 
     const ticketId = generateUniqueTicketId();
@@ -47,8 +66,8 @@ export async function POST(req: Request) {
       date_of_birth: dob || '2000-01-01',
       quantity: Number(quantity) || 1,
       amount: Number(amount) || 149,
-      razorpay_order_id: razorpay_order_id || `rzp_${ticketId}`,
-      razorpay_payment_id: razorpay_payment_id || `pay_${ticketId}`,
+      razorpay_order_id,
+      razorpay_payment_id,
       payment_status: 'PAID',
       ticket_status: 'VALID',
       qr_token: qrToken,

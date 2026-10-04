@@ -16,6 +16,35 @@ export interface BookingEmailParams {
 }
 
 export async function sendBookingConfirmationEmail(params: BookingEmailParams): Promise<{ success: boolean; message?: string }> {
+  if (process.env.NITROSEND_API_KEY) {
+    const body = `Hi ${params.customerName},
+
+Your GGL ticket booking is confirmed successfully.
+
+Ticket ID: ${params.ticketNumber}
+Booking ID: ${params.orderNumber}
+Event: ${params.eventTitle}
+Date: ${params.eventDate}
+Time: ${params.startTime}
+Venue: ${params.venueName}
+Category: ${params.categoryName}
+Quantity: ${params.quantity}
+Amount Paid: ${params.totalAmount} ${params.currency || 'INR'}
+
+Please keep this email for your records. Your ticket/QR can be accessed from the GGL website using your booking details.
+
+Support: help.gglatent@gmail.com
+WhatsApp: +91 84238 58424
+
+Regards,
+Gorakhpur's Got Latent Team`;
+    return sendNitrosendEmail(
+      params.customerEmail,
+      `🎟️ Ticket Confirmed | ${params.ticketNumber} | Gorakhpur's Got Latent`,
+      body
+    );
+  }
+
   const serviceId = process.env.EMAILJS_SERVICE_ID;
   const templateId = process.env.EMAILJS_TEMPLATE_ID;
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;
@@ -152,6 +181,53 @@ export interface PerformerEmailParams {
 }
 
 export async function sendPerformerApplicationEmail(params: PerformerEmailParams): Promise<{ success: boolean; message?: string }> {
+  if (process.env.NITROSEND_API_KEY) {
+    const adminBody = `New performer audition application received.
+
+Application ID: ${params.application_id}
+Name: ${params.full_name}
+Email: ${params.email}
+Mobile: ${params.mobile_number}
+WhatsApp: ${params.whatsapp_number}
+Age: ${params.age}
+City: ${params.city}
+Category: ${params.performance_category}
+Act: ${params.performance_title}
+Description: ${params.performance_description}
+Instagram: ${params.instagram_url}
+Payment Status: ${params.payment_status}
+
+Please review it in the GGL admin panel.`;
+
+    const userBody = `Hi ${params.full_name},
+
+Thank you for applying to Gorakhpur's Got Latent.
+
+Your performer audition application has been received successfully.
+
+Application ID: ${params.application_id}
+Status: ${params.application_status || 'SUBMITTED'}
+
+Please keep your Application ID for future communication. If you are shortlisted, the GGL team will contact you through the details provided.
+
+Support: help.gglatent@gmail.com
+WhatsApp: +91 84238 58424
+
+Regards,
+Gorakhpur's Got Latent Team`;
+
+    const results = await Promise.all([
+      sendNitrosendEmail('alooksingh1@gmail.com', `🎤 Performer Application | ${params.application_id}`, adminBody),
+      params.email.toLowerCase() !== 'alooksingh1@gmail.com'
+        ? sendNitrosendEmail(params.email, `🎤 GGL Performer Application Received | ${params.application_id}`, userBody)
+        : Promise.resolve({ success: false }),
+    ]);
+
+    return results.some(r => r.success)
+      ? { success: true }
+      : { success: false, message: results.map(r => r.message).filter(Boolean).join(' | ') };
+  }
+
   // Credentials for Admin Notification Email (vpansak / template_b3h1egs)
   const adminServiceId = process.env.EMAILJS_PERFORMER_SERVICE_ID;
   const adminTemplateId = process.env.EMAILJS_PERFORMER_TEMPLATE_ID;
@@ -472,4 +548,164 @@ export async function sendAdminLoginOtpEmail(params: AdminOtpEmailParams): Promi
     console.error('❌ EmailJS OTP exception:', err);
     return { success: false, message: err.message || 'Network error sending OTP' };
   }
+}
+
+
+export interface GenericApplicationEmailParams {
+  applicationType: 'GUEST' | 'SPONSOR' | 'TEAM';
+  applicationId: string;
+  name: string;
+  email: string;
+  mobile?: string;
+  summary?: string;
+}
+
+function escapeEmailHtml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+async function sendNitrosendEmail(to: string, subject: string, body: string): Promise<{ success: boolean; message?: string }> {
+  const apiKey = process.env.NITROSEND_API_KEY;
+  if (!apiKey) return { success: false, message: 'NITROSEND_API_KEY not configured' };
+
+  const html = `
+    <div style="margin:0;background:#050505;padding:32px 16px;font-family:Arial,sans-serif;color:#f8fafc">
+      <div style="max-width:680px;margin:auto;background:#0f172a;border:1px solid #6b4a08;border-radius:18px;padding:30px">
+        <div style="font-size:24px;font-weight:800;color:#fbbf24;margin-bottom:20px">GORAKHPUR'S GOT LATENT</div>
+        <div style="font-size:15px;line-height:1.7;white-space:pre-wrap">${escapeEmailHtml(body)}</div>
+        <div style="margin-top:26px;padding-top:18px;border-top:1px solid #334155;color:#94a3b8;font-size:12px">
+          Official Support • gkpgotlatent.in<br>
+          help.gglatent@gmail.com • +91 84238 58424
+        </div>
+      </div>
+    </div>
+  `;
+
+  try {
+    const res = await fetch('https://api.nitrosend.com/v1/my/messages', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        channel: 'email',
+        to,
+        subject,
+        html,
+        body,
+      }),
+    });
+
+    if (res.ok) return { success: true };
+    const errorText = await res.text();
+    console.error('❌ Nitrosend error:', res.status, errorText);
+    return { success: false, message: `Nitrosend HTTP ${res.status}: ${errorText}` };
+  } catch (err: any) {
+    console.error('❌ Nitrosend exception:', err);
+    return { success: false, message: err?.message || 'Nitrosend network error' };
+  }
+}
+
+export async function sendGenericApplicationEmails(params: GenericApplicationEmailParams): Promise<{ success: boolean; message?: string }> {
+  const adminSubject = `GGL ${params.applicationType} Application | ${params.applicationId} | ${params.name}`;
+  const userSubject = `GGL Application Received | ${params.applicationId}`;
+
+  const adminBody = `A new ${params.applicationType.toLowerCase()} application has been submitted.
+
+Application ID: ${params.applicationId}
+Name: ${params.name}
+Email: ${params.email}
+Mobile: ${params.mobile || 'N/A'}
+
+Details:
+${params.summary || 'Submitted through the official GGL website.'}
+
+Please review this application in the GGL admin panel.
+
+Gorakhpur's Got Latent Admin`;
+
+  const userBody = `Hi ${params.name},
+
+Thank you for contacting Gorakhpur's Got Latent.
+
+Your ${params.applicationType.toLowerCase()} application has been received successfully.
+
+Application ID: ${params.applicationId}
+Status: SUBMITTED
+
+Our team will review the information and contact you if further action is required.
+
+For support:
+help.gglatent@gmail.com
+WhatsApp: +91 84238 58424
+
+Regards,
+Gorakhpur's Got Latent Team`;
+
+  if (process.env.NITROSEND_API_KEY) {
+    const results = await Promise.all([
+      sendNitrosendEmail('alooksingh1@gmail.com', adminSubject, adminBody),
+      sendNitrosendEmail(params.email, userSubject, userBody),
+    ]);
+    return results.some(r => r.success)
+      ? { success: true }
+      : { success: false, message: results.map(r => r.message).filter(Boolean).join(' | ') };
+  }
+
+  const serviceId = process.env.EMAILJS_SERVICE_ID;
+  const templateId = process.env.EMAILJS_TEMPLATE_ID;
+  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+
+  if (!serviceId || !templateId || !publicKey || !privateKey) {
+    return { success: false, message: 'No transactional email provider is configured' };
+  }
+
+  const sendEmailJs = async (to: string, subject: string, message: string) => {
+    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_id: serviceId,
+        template_id: templateId,
+        user_id: publicKey,
+        accessToken: privateKey,
+        template_params: {
+          to_email: to,
+          email: to,
+          user_email: to,
+          to_name: params.name,
+          customer_name: params.name,
+          name: params.name,
+          application_id: params.applicationId,
+          app_id: params.applicationId,
+          application_status: 'SUBMITTED',
+          status: 'SUBMITTED',
+          subject,
+          message,
+          help_email: 'help.gglatent@gmail.com',
+          support_email: 'help.gglatent@gmail.com',
+          help_whatsapp: '+91 84238 58424',
+          instagram_handle: '@gkp_got_latent',
+          instagram_url: 'https://www.instagram.com/gkp_got_latent/',
+        },
+      }),
+    });
+    return response.ok;
+  };
+
+  const results = await Promise.all([
+    sendEmailJs('alooksingh1@gmail.com', adminSubject, adminBody),
+    params.email.toLowerCase() !== 'alooksingh1@gmail.com'
+      ? sendEmailJs(params.email, userSubject, userBody)
+      : Promise.resolve(false),
+  ]);
+
+  return results.some(Boolean) ? { success: true } : { success: false, message: 'EmailJS delivery failed' };
 }

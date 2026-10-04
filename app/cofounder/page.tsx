@@ -142,16 +142,40 @@ export default function CofounderPage() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-wrap gap-3">
+        <div className="mt-12 flex flex-wrap items-center gap-3">
+          <a
+            href="https://www.instagram.com/aloksingh_._/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl border border-pink-500/30 bg-pink-500/10 px-5 py-3 text-sm font-bold text-pink-300 transition hover:-translate-y-0.5 hover:border-pink-400 hover:bg-pink-500/20"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+            </svg>
+            INSTAGRAM (@aloksingh_._) ↗
+          </a>
+          <a
+            href="https://x.com/rajpratapsinghh"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 px-5 py-3 text-sm font-bold text-slate-200 transition hover:-translate-y-0.5 hover:border-slate-500 hover:bg-slate-800"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+              <path d="M18.9 2.5h2.9l-6.3 7.2 7.4 9.8h-5.8l-4.5-5.9-5.2 5.9H4.5l6.8-7.8L4.2 2.5h5.9l4.1 5.4 4.7-5.4Zm-1 15.3h1.6L9.1 4.1H7.4l10.5 13.7Z" />
+            </svg>
+            X / TWITTER (@rajpratapsinghh) ↗
+          </a>
           <a
             href="/developer"
-            className="rounded-xl bg-amber-400 px-5 py-3 text-sm font-black text-black hover:bg-amber-300"
+            className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-black text-black transition hover:-translate-y-0.5 hover:bg-amber-300"
           >
             VIEW DEVELOPER PROFILE
           </a>
           <a
             href="/"
-            className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3 text-sm font-bold text-white hover:bg-white/[0.06]"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-white/[0.06]"
           >
             BACK TO GGL
           </a>

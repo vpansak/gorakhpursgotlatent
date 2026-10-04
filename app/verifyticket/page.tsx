@@ -52,12 +52,12 @@ export default function VerifyTicketPage() {
   const animationFrameRef = useRef<number | null>(null);
   const lastScannedIdRef = useRef<string | null>(null);
 
-  // Check session storage
+  // Restore server-side staff session
   useEffect(() => {
-    const authStatus = sessionStorage.getItem('ggl_verify_auth');
-    if (authStatus === 'true') {
-      setIsAuthenticated(true);
-    }
+    fetch('/api/tickets/staff-session', { cache: 'no-store' })
+      .then((res) => res.json())
+      .then((data) => setIsAuthenticated(Boolean(data.authenticated)))
+      .catch(() => setIsAuthenticated(false));
   }, []);
 
   // Auto-start camera when authenticated
@@ -77,22 +77,36 @@ export default function VerifyTicketPage() {
     const cleanId = loginId.trim();
     const cleanPw = loginPassword.trim();
 
-    if (cleanId === '8423858424' && cleanPw === '1122') {
-      sessionStorage.setItem('ggl_verify_auth', 'true');
+    try {
+      const res = await fetch('/api/tickets/staff-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: cleanId, password: cleanPw }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setLoginError(data.error || 'Invalid ID or Password. Access Denied.');
+        return;
+      }
+
       setIsAuthenticated(true);
       setLoginId('');
       setLoginPassword('');
-    } else {
-      setLoginError('Invalid ID or Password. Access Denied.');
+    } catch {
+      setLoginError('Network error. Please try again.');
     }
   };
 
   // Handle Logout
-  const handleLogout = () => {
+  const handleLogout = async () => {
     stopCamera();
-    sessionStorage.removeItem('ggl_verify_auth');
-    setIsAuthenticated(false);
-    setVerificationResult({ status: 'IDLE', message: '' });
+    try {
+      await fetch('/api/tickets/staff-logout', { method: 'POST' });
+    } finally {
+      setIsAuthenticated(false);
+      setVerificationResult({ status: 'IDLE', message: '' });
+    }
   };
 
   // Lookup Ticket Details
@@ -156,12 +170,12 @@ export default function VerifyTicketPage() {
     }
   };
 
-  // Confirm Entry & Expire Ticket when 11 is entered
+  // Confirm Entry & Expire Ticket
   const executeExpireWithCode = async (codeToSubmit: string) => {
     if (!verificationResult.ticket || expiring) return;
 
-    if (codeToSubmit !== '11') {
-      setCodeError('Incorrect Code. Enter 11 to confirm entry.');
+    if (!codeToSubmit) {
+      setCodeError('Enter the staff confirmation code.');
       return;
     }
 
@@ -336,14 +350,10 @@ export default function VerifyTicketPage() {
     }
   };
 
-  // Auto Expire when '11' code is typed in popup
-  const handleCode11Change = (val: string) => {
-    const cleanVal = val.replace(/\D/g, '').slice(0, 2);
+  const handleCodeChange = (val: string) => {
+    const cleanVal = val.replace(/\D/g, '').slice(0, 8);
     setExpireCode(cleanVal);
     setCodeError('');
-    if (cleanVal === '11') {
-      executeExpireWithCode('11');
-    }
   };
 
   // -------------------------------------------------------------
@@ -582,7 +592,7 @@ export default function VerifyTicketPage() {
             <form onSubmit={handleConfirmFormSubmit} className="space-y-3 pt-1">
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-amber-400 uppercase tracking-wider block text-center">
-                  ENTER CODE "11" TO EXPIRE TICKET
+                  ENTER STAFF CODE TO CONFIRM ENTRY
                 </label>
                 <input
                   type="password"
@@ -590,8 +600,8 @@ export default function VerifyTicketPage() {
                   autoFocus
                   required
                   value={expireCode}
-                  onChange={(e) => handleCode11Change(e.target.value)}
-                  placeholder="11"
+                  onChange={(e) => handleCodeChange(e.target.value)}
+                  placeholder="CODE"
                   className="w-full px-4 py-3 rounded-2xl bg-slate-900 border-2 border-amber-500/70 text-amber-300 placeholder-slate-700 font-mono font-black text-center text-3xl tracking-[0.4em] focus:outline-none focus:border-amber-400 shadow-inner"
                 />
               </div>
@@ -614,7 +624,7 @@ export default function VerifyTicketPage() {
                   className="flex-[2] py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg disabled:opacity-50 cursor-pointer"
                 >
                   {expiring ? <RefreshCw className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-                  <span>{expiring ? 'EXPIRING...' : 'CONFIRM (11)'}</span>
+                  <span>{expiring ? 'EXPIRING...' : 'CONFIRM ENTRY'}</span>
                 </button>
               </div>
             </form>

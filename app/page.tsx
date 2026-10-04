@@ -72,10 +72,7 @@ export default async function HomePage() {
           </div>
 
           <div className="mx-auto max-w-4xl">
-            <p className="home-hero-eyebrow">REAL TALENT • REAL PEOPLE • NO FILTER</p>
-            <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base font-semibold leading-relaxed text-slate-300">
-              Purvanchal ka raw talent, live comedy, music, dance aur unforgettable stage moments.
-            </p>
+            <p className="home-hero-eyebrow">KUCH BHI HO SAKTA HAI!</p>
           </div>
 
           <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3 max-w-xl mx-auto">

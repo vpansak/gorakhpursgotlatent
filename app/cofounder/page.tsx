@@ -146,8 +146,7 @@ export default function CofounderPage() {
             </h1>
 
             <p className="mt-5 max-w-2xl text-xl font-bold leading-8 text-slate-200 sm:text-2xl">
-              Co-Founder · Builder · Creator · A boy from Kaudiram with a bigger
-              idea for his city.
+              Co-Founder · Full-Stack Developer · Technology Builder · A journey from Kaudiram to building a stage for Gorakhpur.
             </p>
 
             <div className="mt-7 inline-flex items-center rounded-full border border-amber-300/25 bg-amber-300/10 px-4 py-2 text-sm font-bold text-amber-200">
@@ -169,39 +168,73 @@ export default function CofounderPage() {
 
         <section className="mt-20 max-w-4xl">
           <p className="text-xs font-black uppercase tracking-[0.25em] text-amber-300">
-            THE STORY
+            THE BIOGRAPHY
           </p>
           <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
-            It didn&apos;t start with a stage.
-            <span className="block text-slate-400">It started with a journey.</span>
+            The boy from Kaudiram who kept moving forward.
+            <span className="block text-slate-400">No shortcut. Just one chapter at a time.</span>
           </h2>
 
           <div className="mt-8 space-y-6 text-base font-semibold leading-8 text-slate-300 sm:text-lg">
             <p>
-              Alok Singh&apos;s story starts in <strong className="text-white">Kaudiram, Gorakhpur</strong>.
-              Long before Gorakhpur&apos;s Got Latent had a name, there was a simple
-              habit at the centre of his journey: learn, experiment and try to build
-              something better.
+              Every story that looks big from the outside usually begins somewhere
+              ordinary. For <strong className="text-white">Alok Singh</strong>, it began
+              in <strong className="text-amber-300">Kaudiram, Gorakhpur</strong> — with
+              school, family, changing environments and a curiosity that slowly turned
+              into a desire to build something of his own.
             </p>
             <p>
-              His education took him through different schools and different chapters,
-              but the direction kept becoming clearer. From early schooling at
-              Purvanchal Public School, to Class 3 at KMR, Janipur, and then years at
-              Holy Angel International School in Pali, Bansgaon, every move became a
-              new chapter rather than a full stop.
+              His childhood was not one straight road. From LKG to Class 2 he studied
+              at Purvanchal Public School. Class 3 took him to KMR, Janipur, Gola Road.
+              From Class 4 to 10, he continued his journey at Holy Angel International
+              School, Pali, Bansgaon. Then, for Classes 11 and 12, he returned to
+              Purvanchal Public School.
             </p>
             <p>
-              After returning to Purvanchal for Classes 11 and 12, technology became
-              more than an interest. With BCA at KIPM College, Alok started leaning
-              deeper into web development, software and the idea of creating things
-              instead of only consuming them.
+              Looking back, those changes became part of the story. Different schools,
+              different people and different phases taught him something simple:
+              <strong className="text-white"> you do not need to have everything figured
+              out at the beginning.</strong> You just have to keep learning and keep
+              moving.
             </p>
             <p>
-              Then came <strong className="text-amber-300">Naveen</strong> — and an idea
-              that could become something much bigger than the two of them.
-              Together, they built <strong className="text-white">Gorakhpur&apos;s Got Latent</strong>:
-              a platform created around performers, creators, entertainment and the
-              energy of their own city.
+              After school came <strong className="text-amber-300">BCA at KIPM College</strong>.
+              This was where his interest in technology became a direction. Web
+              development, software, UI/UX, databases, APIs and deployment were no
+              longer just technical words — they became tools through which Alok could
+              turn an idea into something people could actually use.
+            </p>
+            <p>
+              The real challenge was never only learning technology. It was learning
+              how to take an idea from a thought to a working product — figuring things
+              out, fixing what breaks, trying again, and refusing to stop at the first
+              version. That builder mindset became one of the strongest parts of Alok's
+              journey.
+            </p>
+            <p>
+              And then came <strong className="text-amber-300">Naveen</strong>. Two people
+              from the same city looked at the same place and saw a possibility:
+              <strong className="text-white"> Gorakhpur has talent, creators and an
+              audience — it deserves its own stage.</strong>
+            </p>
+            <p>
+              That thought became <strong className="text-white">Gorakhpur's Got Latent</strong>.
+              Alok and Naveen started building GGL not simply as a website, but as an
+              experience — combining entertainment, technology, performers, audiences
+              and the energy of their own city.
+            </p>
+            <p>
+              Today, Alok's role sits at the intersection of <strong className="text-white">
+              technology and vision</strong>. As Co-Founder and Full-Stack Developer, he
+              works on the digital side of the platform while helping shape the bigger
+              idea behind it.
+            </p>
+            <p>
+              The journey is still unfinished. And perhaps that is the most interesting
+              part of the story. From a student moving through different classrooms in
+              and around Gorakhpur to becoming a BCA student, developer and Co-Founder,
+              the next chapter is still being written — one idea, one problem and one
+              build at a time.
             </p>
           </div>
         </section>
@@ -245,7 +278,7 @@ export default function CofounderPage() {
             THE GGL CHAPTER
           </p>
           <h2 className="mt-4 max-w-4xl text-3xl font-black leading-tight sm:text-5xl">
-            Two people. One city. One idea that deserved a stage.
+            Two people. One city. A belief that Gorakhpur could build its own spotlight.
           </h2>
           <p className="mt-6 max-w-4xl text-base font-semibold leading-8 text-slate-300 sm:text-lg">
             Gorakhpur&apos;s Got Latent was built with a belief that great talent does
@@ -255,9 +288,9 @@ export default function CofounderPage() {
             experience and Gorakhpur can have a stage of its own.
           </p>
           <p className="mt-5 max-w-4xl text-base font-bold leading-8 text-white sm:text-lg">
-            For Alok, GGL is not just another website or event. It is one of the
-            biggest chapters of a journey that started in Kaudiram and is still being
-            written.
+            For Alok, GGL is not just another website or event. It is a chapter in a much
+            bigger journey — from learning in classrooms to building with code, and from
+            having ideas to putting those ideas in front of a real audience.
           </p>
         </section>
 

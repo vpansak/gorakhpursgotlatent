@@ -100,7 +100,6 @@ export async function POST(req: Request) {
           mobile: effectiveWhatsapp,
           summary: `Company: ${effectiveCompanyName}\nDesignation: ${(designation || '').toString().trim() || 'N/A'}\nIndustry: ${(industry || '').toString().trim() || 'N/A'}\nLocation: ${(location || '').toString().trim() || 'N/A'}\nSponsorship Type: ${(sponsorshipType || 'General Brand Sponsorship').toString().trim()}`,
         });
-        if (!emailResult.success) console.warn('Sponsor application email warning:', emailResult.message);
 
 
 

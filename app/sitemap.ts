@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '',
     '/aboutaloksingh',
     '/aloksinghalbum',
+    '/aloksinghinstagram',
     '/founder',
     '/developer',
     '/cofounder',

@@ -16,8 +16,11 @@ export interface BookingEmailParams {
 }
 
 export async function sendBookingConfirmationEmail(params: BookingEmailParams): Promise<{ success: boolean; message?: string }> {
-  if (process.env.NITROSEND_API_KEY) {
-    const body = `Hi ${params.customerName},
+  const verifyUrl = `https://www.gkpgotlatent.in/ticket/verify/${encodeURIComponent(params.ticketNumber)}`;
+  const qrImageUrl = `https://quickchart.io/qr?text=${encodeURIComponent(verifyUrl)}&size=260&margin=2&ecLevel=H`;
+  const logoUrl = 'https://www.gkpgotlatent.in/logo-transparent.png';
+
+  const body = `Hi ${params.customerName},
 
 Your GGL ticket booking is confirmed successfully.
 
@@ -31,43 +34,147 @@ Category: ${params.categoryName}
 Quantity: ${params.quantity}
 Amount Paid: ${params.totalAmount} ${params.currency || 'INR'}
 
-Please keep this email for your records. Your ticket/QR can be accessed from the GGL website using your booking details.
+View and download your ticket:
+${verifyUrl}
 
 Support: help.gglatent@gmail.com
 WhatsApp: +91 84238 58424
 
 Regards,
 Gorakhpur's Got Latent Team`;
+
+  const html = `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ticket Confirmed | Gorakhpur's Got Latent</title>
+</head>
+<body style="margin:0;padding:0;background:#08080b;font-family:Arial,Helvetica,sans-serif;color:#fff;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your Gorakhpur's Got Latent ticket is confirmed — ${escapeEmailHtml(params.ticketNumber)}</div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background:#08080b;">
+    <tr>
+      <td align="center" style="padding:24px 10px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px;background:#111217;border:1px solid #3b2a08;border-radius:18px;overflow:hidden;">
+          <tr>
+            <td style="padding:24px 20px;text-align:center;background:linear-gradient(135deg,#120d05,#09090b,#1a0707);">
+              <img src="${logoUrl}" alt="Gorakhpur's Got Latent" width="82" style="display:block;width:82px;height:auto;margin:0 auto 10px;border:0;">
+              <div style="font-size:12px;letter-spacing:2px;font-weight:800;color:#ffd45a;">GORAKHPUR'S GOT LATENT</div>
+              <div style="margin-top:8px;font-size:24px;line-height:30px;font-weight:900;color:#fff;">TICKET CONFIRMED</div>
+              <div style="margin-top:5px;font-size:12px;color:#b7b7bd;">Your official admission pass is ready.</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#090a0e;border:1px solid #d19b25;border-radius:16px;overflow:hidden;">
+                <tr>
+                  <td style="padding:18px 16px 12px;border-bottom:1px dashed #6d531b;">
+                    <div style="font-size:10px;letter-spacing:2px;color:#ffd45a;font-weight:800;">OFFICIAL ADMISSION PASS</div>
+                    <div style="margin-top:5px;font-size:20px;font-weight:900;color:#fff;">GORAKHPUR'S <span style="color:#ffd45a;">GOT LATENT</span></div>
+                    <div style="margin-top:4px;font-size:10px;color:#8f9199;letter-spacing:1px;">TALENT • COMEDY • ROAST • VIBES</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:16px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td valign="top" style="padding-right:12px;">
+                          <div style="font-size:9px;color:#8f9199;letter-spacing:1px;">NAME</div>
+                          <div style="font-size:14px;font-weight:800;color:#fff;margin-top:3px;">${escapeEmailHtml(params.customerName)}</div>
+                          <div style="margin-top:12px;font-size:9px;color:#8f9199;letter-spacing:1px;">TICKET ID</div>
+                          <div style="font-size:14px;font-weight:900;color:#ffd45a;margin-top:3px;font-family:monospace;">${escapeEmailHtml(params.ticketNumber)}</div>
+                          <div style="margin-top:12px;font-size:9px;color:#8f9199;letter-spacing:1px;">BOOKING ID</div>
+                          <div style="font-size:12px;color:#ddd;margin-top:3px;font-family:monospace;word-break:break-all;">${escapeEmailHtml(params.orderNumber)}</div>
+                          <div style="margin-top:12px;font-size:9px;color:#8f9199;letter-spacing:1px;">QUANTITY / PAID</div>
+                          <div style="font-size:13px;font-weight:800;color:#fff;margin-top:3px;">${escapeEmailHtml(String(params.quantity))} Ticket(s) • ₹${escapeEmailHtml(String(params.totalAmount))}</div>
+                        </td>
+                        <td width="150" valign="top" align="center" style="padding-left:8px;">
+                          <div style="background:#fff;border:3px solid #d19b25;border-radius:12px;padding:7px;display:inline-block;">
+                            <img src="${qrImageUrl}" alt="Ticket QR Code" width="130" height="130" style="display:block;width:130px;height:130px;border:0;">
+                          </div>
+                          <div style="font-size:8px;color:#9a9ca4;letter-spacing:1px;margin-top:7px;">SCAN TO VERIFY</div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:13px 16px;background:#101116;border-top:1px dashed #6d531b;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="font-size:10px;color:#8f9199;">STATUS</td>
+                        <td align="right" style="font-size:11px;font-weight:900;color:#55e39b;">PAID • VALID</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <div style="text-align:center;margin:22px 0 8px;">
+                <a href="${verifyUrl}" style="display:inline-block;background:#ffd45a;color:#08080b;text-decoration:none;font-size:13px;font-weight:900;padding:14px 24px;border-radius:10px;">VIEW &amp; DOWNLOAD TICKET</a>
+              </div>
+              <div style="text-align:center;font-size:11px;line-height:18px;color:#8f9199;">
+                Open the button above to view your full ticket and download it as an image.
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 20px;background:#0c0d10;border-top:1px solid #24252a;text-align:center;">
+              <div style="font-size:12px;color:#9b9da5;">Need help?</div>
+              <div style="margin-top:5px;font-size:12px;">
+                <a href="mailto:help.gglatent@gmail.com" style="color:#ffd45a;text-decoration:none;font-weight:800;">help.gglatent@gmail.com</a>
+                &nbsp; • &nbsp;
+                <a href="https://wa.me/918423858424" style="color:#ffd45a;text-decoration:none;font-weight:800;">WhatsApp</a>
+              </div>
+              <div style="margin-top:8px;font-size:10px;color:#666;">© Gorakhpur's Got Latent • Official Ticket Email</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  const adminBody = `New GGL ticket booking confirmed.\n\nTicket ID: ${params.ticketNumber}\nBooking ID: ${params.orderNumber}\nCustomer: ${params.customerName}\nCustomer Email: ${params.customerEmail}\nQuantity: ${params.quantity}\nAmount Paid: ₹${params.totalAmount}\nEvent: ${params.eventTitle}\nDate: ${params.eventDate}\nTime: ${params.startTime}\nVenue: ${params.venueName}\n\nPayment ID: ${params.razorpayPaymentId}\nRazorpay Order ID: ${params.razorpayOrderId}\n\nPlease review this booking in the GGL admin panel.\n\nGorakhpur's Got Latent Admin`;
+
+  const adminResult = await sendPrimitiveAdminEmail(`🎟️ Ticket Booking | ${params.ticketNumber}`, adminBody);
+  if (!adminResult.success) console.warn(`Primitive ticket admin delivery failed for ${params.ticketNumber}: ${adminResult.message}`);
+
+  // Nitro sends the customer-facing ticket confirmation.
+
+  if (process.env.NITROSEND_API_KEY) {
     return sendNitrosendEmail(
       params.customerEmail,
       `🎟️ Ticket Confirmed | ${params.ticketNumber} | Gorakhpur's Got Latent`,
-      body
+      body,
+      html
     );
   }
 
+  // Keep the existing EmailJS path as a fallback when Nitro is unavailable.
   const serviceId = process.env.EMAILJS_SERVICE_ID;
   const templateId = process.env.EMAILJS_TEMPLATE_ID;
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;
   const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
   if (!serviceId || !templateId || !publicKey || !privateKey) {
-    console.warn('⚠️ EmailJS credentials missing on server. Email notification skipped.');
-    return { success: false, message: 'EmailJS credentials not configured' };
+    console.warn('⚠️ No ticket email provider is configured.');
+    return { success: false, message: 'No ticket email provider configured' };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.gkpgotlatent.in';
   const payload = {
     service_id: serviceId,
     template_id: templateId,
     user_id: publicKey,
-    accessToken: privateKey, // Server-side security token for EmailJS REST API
+    accessToken: privateKey,
     template_params: {
       to_name: params.customerName,
       to_email: params.customerEmail,
       email: params.customerEmail,
       user_email: params.customerEmail,
-      reply_to: params.customerEmail,
+      reply_to: 'help.gglatent@gmail.com',
       customer_name: params.customerName,
       customer_email: params.customerEmail,
       order_id: params.orderNumber,
@@ -82,67 +189,26 @@ Gorakhpur's Got Latent Team`;
       quantity: String(params.quantity),
       amount_paid: String(params.totalAmount),
       currency: params.currency || 'INR',
+      ticket_verify_url: verifyUrl,
+      ticket_download_url: verifyUrl,
       website_url: appUrl,
-      subject: `🎟️ Booking Confirmed — Gorakhpur’s Got Latent | ${params.eventTitle}`,
+      subject: `🎟️ Booking Confirmed — Gorakhpur's Got Latent | ${params.eventTitle}`,
       help_email: 'help.gglatent@gmail.com',
-      support_email: 'help.gglatent@gmail.com',
-      contact_email: 'help.gglatent@gmail.com',
-      Email: 'help.gglatent@gmail.com',
       help_whatsapp: '+91 84238 58424',
-      support_whatsapp: '+91 84238 58424',
-      whatsapp: '+91 84238 58424',
-      WhatsApp: '+91 84238 58424',
-      helpline: '+91 84238 58424',
-      instagram_handle: '@gkp_got_latent',
       instagram_url: 'https://www.instagram.com/gkp_got_latent/',
-      official_instagram: 'https://www.instagram.com/gkp_got_latent/',
     },
   };
 
   try {
     const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Origin': 'https://gorakhpursgotlatent.vercel.app',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-
-    if (res.ok) {
-      console.log(`📧 EmailJS: Booking confirmation email sent successfully to ${params.customerEmail}`);
-      return { success: true };
-    }
-
-    const errorText = await res.text();
-    console.warn(`⚠️ Primary EmailJS booking failed (${res.status}): ${errorText}. Trying backup service...`);
-
-    // Backup failover service
-    const backupRes = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Origin': 'https://gorakhpursgotlatent.vercel.app',
-      },
-      body: JSON.stringify({
-        service_id: process.env.EMAILJS_BACKUP_SERVICE_ID,
-        template_id: process.env.EMAILJS_BACKUP_TEMPLATE_ID,
-        user_id: process.env.EMAILJS_BACKUP_PUBLIC_KEY,
-        accessToken: process.env.EMAILJS_BACKUP_PRIVATE_KEY,
-        template_params: payload.template_params,
-      }),
-    });
-
-    if (backupRes.ok) {
-      console.log(`📧 EmailJS (Backup): Booking confirmation email sent successfully to ${params.customerEmail}`);
-      return { success: true };
-    }
-
-    return { success: false, message: `EmailJS HTTP ${res.status}: ${errorText}` };
+    if (res.ok) return { success: true };
+    return { success: false, message: `EmailJS HTTP ${res.status}: ${await res.text()}` };
   } catch (err: any) {
-    console.error('❌ EmailJS Exception:', err);
-    return { success: false, message: err.message || 'Network error sending email' };
+    return { success: false, message: err?.message || 'Network error sending ticket email' };
   }
 }
 
@@ -266,11 +332,8 @@ Gorakhpur's Got Latent Team`;
       }
     };
 
-    let adminResult = await sendNitrosendEmail('alooksingh1@gmail.com', `🎤 Performer Application | ${params.application_id}`, adminBody);
-    if (!adminResult.success) {
-      console.warn(`Nitrosend admin delivery failed for ${params.application_id}; trying EmailJS fallback.`);
-      adminResult = await sendEmailJsFallback('alooksingh1@gmail.com', `🎤 Performer Application | ${params.application_id}`, adminBody);
-    }
+    const adminResult = await sendPrimitiveAdminEmail(`🎤 Performer Application | ${params.application_id}`, adminBody);
+    if (!adminResult.success) console.warn(`Primitive admin delivery failed for ${params.application_id}: ${adminResult.message}`);
 
     let applicantResult: { success: boolean; message?: string } = { success: false, message: 'Applicant email not attempted' };
     if (params.email.toLowerCase() !== 'alooksingh1@gmail.com') {
@@ -674,7 +737,25 @@ function escapeEmailHtml(value: string): string {
     .replaceAll("'", '&#039;');
 }
 
-export async function sendNitrosendEmail(to: string, subject: string, body: string): Promise<{ success: boolean; message?: string }> {
+export async function sendPrimitiveAdminEmail(subject: string, body: string, html?: string): Promise<{ success: boolean; message?: string }> {
+  const apiKey = process.env.PRIMITIVE_API_KEY;
+  const from = process.env.PRIMITIVE_FROM_EMAIL || 'agent@raw-trout.primitive.email';
+  if (!apiKey) return { success: false, message: 'PRIMITIVE_API_KEY not configured' };
+  try {
+    const response = await fetch('https://api.primitive.dev/v1/send-mail', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'Idempotency-Key': `ggl-admin-${Date.now()}-${Math.random().toString(36).slice(2, 10)}` },
+      body: JSON.stringify({ from, to: 'alooksingh1@gmail.com', reply_to: 'help.gglatent@gmail.com', subject, body_text: body, ...(html ? { body_html: html } : {}), wait: true, wait_timeout_ms: 10000, tags: [{ name: 'source', value: 'ggl-website' }, { name: 'recipient', value: 'admin' }] }),
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) return { success: false, message: `Primitive HTTP ${response.status}: ${JSON.stringify(data)}` };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, message: err?.message || 'Primitive admin email failed' };
+  }
+}
+
+async function sendNitrosendEmail(to: string, subject: string, body: string, htmlOverride?: string): Promise<{ success: boolean; message?: string }> {
   const apiKey = process.env.NITROSEND_API_KEY;
   if (!apiKey) return { success: false, message: 'NITROSEND_API_KEY not configured' };
 
@@ -683,7 +764,7 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
   // One consistent, responsive HTML design for every Nitrosend email.
   // The source body stays plain text for deliverability/fallbacks, while the
   // HTML version turns headings and "Label: value" lines into a clean card.
-  const bodyLines = body.split(/\\r?\\n/);
+  const bodyLines = body.split(/\r?\n/);
   const firstNonEmpty = bodyLines.findIndex(line => line.trim().length > 0);
   const heading = firstNonEmpty >= 0 ? bodyLines[firstNonEmpty].trim() : "Gorakhpur's Got Latent";
   const contentLines = firstNonEmpty >= 0 ? bodyLines.slice(firstNonEmpty + 1) : [];
@@ -692,7 +773,7 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
     const trimmed = line.trim();
     if (!trimmed) return '<div style="height:8px;line-height:8px;">&nbsp;</div>';
 
-    const match = trimmed.match(/^([^:]{1,45}):\\s*(.*)$/);
+    const match = trimmed.match(/^([^:]{1,45}):\s*(.*)$/);
     if (match) {
       const label = escapeEmailHtml(match[1]);
       const value = escapeEmailHtml(match[2]);
@@ -707,45 +788,61 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
     return `<p style="margin:0 0 10px;font-size:14px;line-height:22px;color:#333;">${emphasized ? `<strong>${escaped}</strong>` : escaped}</p>`;
   }).join('');
 
-  const html = `<!doctype html>
+  const defaultHtml = `<!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
   <title>${escapeEmailHtml(subject)}</title>
 </head>
-<body style="margin:0;padding:0;background:#f3f3f3;font-family:Arial,Helvetica,sans-serif;color:#222;">
+<body style="margin:0;padding:0;background:#08090d;font-family:Arial,Helvetica,sans-serif;color:#f7f7f7;">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeEmailHtml(subject)}</div>
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f3f3f3;margin:0;padding:0;width:100%;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background:#08090d;">
     <tr>
-      <td align="center" style="padding:24px 10px;">
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px;background:#ffffff;border:1px solid #e2e2e2;border-radius:14px;overflow:hidden;">
+      <td align="center" style="padding:18px 8px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#101116;border:1px solid #30240d;border-radius:18px;overflow:hidden;">
           <tr>
-            <td style="padding:22px 22px 18px;background:#111111;text-align:center;">
-              <img src="${logoUrl}" alt="Gorakhpur's Got Latent" width="76" style="display:block;width:76px;max-width:76px;height:auto;margin:0 auto 10px;border:0;">
-              <div style="font-size:12px;line-height:18px;letter-spacing:1.5px;color:#ffffff;font-weight:700;text-transform:uppercase;">GORAKHPUR'S GOT LATENT</div>
+            <td style="padding:24px 18px 20px;text-align:center;background:#0d0d10;border-bottom:1px solid #3a2b0e;">
+              <img src="${logoUrl}" alt="Gorakhpur's Got Latent logo" width="92" style="display:block;width:92px;max-width:92px;height:auto;margin:0 auto 12px;border:0;">
+              <div style="font-size:11px;line-height:16px;letter-spacing:2px;color:#f2c14e;font-weight:800;">GORAKHPUR'S GOT LATENT</div>
+              <div style="margin-top:8px;font-size:10px;line-height:15px;letter-spacing:1.2px;color:#8e9099;text-transform:uppercase;">RAW TALENT • REAL REACTIONS • ONE BIG STAGE</div>
             </td>
           </tr>
           <tr>
-            <td style="padding:26px 22px 8px;">
-              <div style="font-size:21px;line-height:28px;font-weight:800;color:#171717;">${escapeEmailHtml(heading)}</div>
-              <div style="margin-top:7px;font-size:12px;line-height:18px;color:#888;">Official communication from Gorakhpur's Got Latent</div>
+            <td style="padding:22px 18px 8px;">
+              <div style="display:inline-block;padding:5px 9px;border:1px solid #6e4f10;border-radius:999px;background:#1a1408;color:#f2c14e;font-size:9px;line-height:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;">OFFICIAL COMMUNICATION</div>
+              <div style="margin-top:12px;font-size:23px;line-height:29px;font-weight:900;color:#ffffff;">${escapeEmailHtml(heading)}</div>
+              <div style="margin-top:7px;font-size:13px;line-height:20px;color:#a9abb3;">Gorakhpur's Got Latent • Official Update</div>
             </td>
           </tr>
           <tr>
-            <td style="padding:14px 22px 24px;">${contentHtml}</td>
-          </tr>
-          <tr>
-            <td style="padding:18px 22px;background:#fafafa;border-top:1px solid #eeeeee;text-align:center;">
-              <div style="font-size:12px;line-height:18px;color:#666;">Need help? <a href="mailto:help.gglatent@gmail.com" style="color:#b00000;text-decoration:none;font-weight:700;">help.gglatent@gmail.com</a></div>
-              <div style="margin-top:8px;font-size:12px;line-height:18px;color:#777;">
-                <a href="https://www.gkpgotlatent.in/" style="color:#b00000;text-decoration:none;">Website</a>
-                &nbsp;·&nbsp;
-                <a href="https://www.instagram.com/gkp_got_latent/" style="color:#b00000;text-decoration:none;">Instagram</a>
-                &nbsp;·&nbsp;
-                <a href="https://wa.me/918423858424" style="color:#b00000;text-decoration:none;">WhatsApp</a>
+            <td style="padding:12px 18px 22px;">
+              <div style="background:#0a0b0f;border:1px solid #292b32;border-radius:14px;padding:14px 12px;">
+                ${contentHtml}
               </div>
-              <div style="margin-top:10px;font-size:10px;line-height:16px;color:#999;">© Gorakhpur's Got Latent · Official Email</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 18px 22px;text-align:center;">
+              <a href="https://www.gkpgotlatent.in/" style="display:inline-block;min-width:190px;box-sizing:border-box;background:#f2c14e;color:#090a0d;text-decoration:none;font-size:13px;line-height:18px;font-weight:900;padding:13px 20px;border-radius:10px;">OPEN GGL WEBSITE</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px;background:#0b0c0f;border-top:1px solid #25262c;text-align:center;">
+              <div style="font-size:12px;line-height:19px;color:#9b9da5;">Need help?</div>
+              <div style="margin-top:3px;font-size:12px;line-height:19px;">
+                <a href="mailto:help.gglatent@gmail.com" style="color:#f2c14e;text-decoration:none;font-weight:800;">help.gglatent@gmail.com</a>
+              </div>
+              <div style="margin-top:5px;font-size:12px;line-height:19px;color:#777a83;">WhatsApp: +91 84238 58424</div>
+              <div style="margin-top:8px;font-size:11px;line-height:18px;">
+                <a href="https://www.gkpgotlatent.in/" style="color:#d7d8dc;text-decoration:none;">Website</a>
+                <span style="color:#555;"> &nbsp;•&nbsp; </span>
+                <a href="https://www.instagram.com/gkp_got_latent/" style="color:#d7d8dc;text-decoration:none;">Instagram</a>
+                <span style="color:#555;"> &nbsp;•&nbsp; </span>
+                <a href="https://wa.me/918423858424" style="color:#d7d8dc;text-decoration:none;">WhatsApp</a>
+              </div>
+              <div style="margin-top:10px;font-size:9px;line-height:15px;color:#62646c;">© Gorakhpur's Got Latent • Official Email</div>
             </td>
           </tr>
         </table>
@@ -755,13 +852,16 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
 </body>
 </html>`;
 
+  const html = htmlOverride || defaultHtml;
+
   try {
+    const idempotencyKey = `ggl-${Date.now()}-${crypto.randomUUID()}`;
     const res = await fetch('https://api.nitrosend.com/v1/my/messages', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'Idempotency-Key': `ggl-${to.toLowerCase()}-${subject}`.replace(/[^a-zA-Z0-9._-]/g, '-').slice(0, 240),
+        'Idempotency-Key': idempotencyKey,
       },
       body: JSON.stringify({ channel: 'email', to, subject, html, body }),
     });
@@ -782,11 +882,13 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
         }
       } catch {}
 
-      const delays = [3500, 7000, 12000];
+      // Nitrosend can defer admission for close to a minute while it gathers
+      // delivery evidence. Follow retry_at instead of failing too early.
+      const delays = [8000, 16000, 24000];
       for (let attempt = 0; attempt < delays.length; attempt++) {
         const backoffMs = delays[attempt];
         const hintedWait = retryAtMs ? Math.max(0, retryAtMs - Date.now()) : 0;
-        const waitMs = Math.min(Math.max(backoffMs, hintedWait), 20000);
+        const waitMs = Math.min(Math.max(backoffMs, hintedWait), 45000);
         await new Promise(resolve => setTimeout(resolve, waitMs));
 
         const retry = await fetch('https://api.nitrosend.com/v1/my/messages', {
@@ -794,7 +896,7 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
           headers: {
             Authorization: `Bearer ${apiKey}`,
             'Content-Type': 'application/json',
-            'Idempotency-Key': `ggl-${to.toLowerCase()}-${subject}`.replace(/[^a-zA-Z0-9._-]/g, '-').slice(0, 240),
+            'Idempotency-Key': idempotencyKey,
           },
           body: JSON.stringify({ channel: 'email', to, subject, html, body }),
         });
@@ -904,12 +1006,13 @@ Gorakhpur's Got Latent Team`;
       }
     };
 
-    const results = await Promise.all([
-      sendWithFallback('alooksingh1@gmail.com', adminSubject, adminBody),
-      params.email.toLowerCase() !== 'alooksingh1@gmail.com'
-        ? sendWithFallback(params.email, userSubject, userBody)
-        : Promise.resolve({ success: false, message: 'Applicant is admin address' }),
-    ]);
+    const adminResult = await sendPrimitiveAdminEmail(adminSubject, adminBody);
+    const applicantResult = params.email.toLowerCase() !== 'alooksingh1@gmail.com'
+      ? await sendNitrosendEmail(params.email, userSubject, userBody)
+      : { success: false, message: 'Applicant is admin address' };
+    if (!adminResult.success) console.warn(`Primitive admin delivery failed for ${params.applicationId}: ${adminResult.message}`);
+    if (!applicantResult.success) console.warn(`Nitrosend applicant delivery failed for ${params.applicationId}: ${applicantResult.message}`);
+    const results = [adminResult, applicantResult];
     return results.some(r => r.success)
       ? { success: true }
       : { success: false, message: results.map(r => r.message).filter(Boolean).join(' | ') };

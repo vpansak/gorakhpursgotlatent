@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import AlbumGalleryClient, { PhotoItem } from '@/components/AlbumGalleryClient';
 import {
   Camera,
@@ -10,34 +9,33 @@ import {
   UserCheck,
   ExternalLink,
   Code2,
-  Share2,
-  Heart,
-  Globe,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Alok Singh Photo Album — Official Photo Gallery, Pictures & Portraits',
+  title: 'Alok Singh Album | Official Photos, Gallery & Social Media Profile',
   description:
-    'Explore the official photo album of Alok Singh from Kaudiram, Gorakhpur — featuring official pictures, developer profile portraits, event gallery, and personal photographs.',
+    'Official Alok Singh photo album featuring photo gallery, pictures, developer profile portraits, social media profiles, and GGL co-founder details.',
   keywords: [
-    'Alok Singh photo album',
+    'Alok Singh',
     'Alok Singh photos',
+    'Alok Singh album',
     'Alok Singh gallery',
     'Alok Singh pictures',
     'Alok Singh images',
+    'Alok Singh social media',
+    'Alok Singh Instagram',
+    'Alok Singh developer',
+    'Alok Singh Gorakhpur',
+    'Alok Singh Full Stack Developer',
+    'Alok Singh Kaudiram',
     'Alok Singh official photo',
     'Alok Singh profile photo',
-    'Alok Singh Gorakhpur photos',
-    'Alok Singh Kaudiram photo album',
-    'Alok Singh developer portrait',
-    'Alok Singh GGL photo album',
-    'Alok Singh Gorakhpur Got Latent album',
-    'Alok Singh portfolio images',
-    'Alok Singh picture gallery',
   ],
   alternates: {
     canonical: 'https://www.gkpgotlatent.in/aloksinghalbum',
   },
+  authors: [{ name: 'Alok Singh', url: 'https://www.gkpgotlatent.in/aloksinghalbum' }],
+  creator: 'Alok Singh',
   robots: {
     index: true,
     follow: true,
@@ -49,11 +47,10 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Alok Singh Photo Album — Official Photo Gallery & Pictures',
-    description:
-      'Official photo gallery of Alok Singh from Kaudiram, Gorakhpur — full-stack developer and Co-Founder of Gorakhpur’s Got Latent.',
+    title: 'Alok Singh Album | Official Photos & Social Media',
+    description: 'Official photo album and social profiles of Alok Singh.',
     url: 'https://www.gkpgotlatent.in/aloksinghalbum',
-    siteName: "Gorakhpur's Got Latent",
+    siteName: 'Alok Singh',
     images: [
       {
         url: 'https://www.gkpgotlatent.in/alok-singh-02.jpg',
@@ -67,12 +64,34 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Alok Singh Photo Album — Official Photo Gallery',
-    description:
-      'Explore official photos and gallery of Alok Singh from Kaudiram, Gorakhpur.',
+    title: 'Alok Singh Album | Official Photos & Social Media',
+    description: 'Official photos and social profiles of Alok Singh.',
     images: ['https://www.gkpgotlatent.in/alok-singh-02.jpg'],
   },
 };
+
+const socials = [
+  {
+    name: 'Instagram',
+    handle: '@aloksingh_._',
+    url: 'https://www.instagram.com/aloksingh_._/',
+  },
+  {
+    name: 'X',
+    handle: '@rajpratapsinghh',
+    url: 'https://x.com/rajpratapsinghh',
+  },
+  {
+    name: 'Facebook',
+    handle: '@meadorush',
+    url: 'https://www.facebook.com/meadorush',
+  },
+  {
+    name: 'LinkedIn',
+    handle: 'alok-singh-8102a8414',
+    url: 'https://www.linkedin.com/in/alok-singh-8102a8414/',
+  },
+];
 
 const photosList: PhotoItem[] = [
   {
@@ -165,46 +184,26 @@ const photosList: PhotoItem[] = [
   },
 ];
 
-const profileJsonLd = {
+const personJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
-  '@id': 'https://www.gkpgotlatent.in/aloksinghalbum#profile',
+  '@id': 'https://www.gkpgotlatent.in/aloksinghalbum#webpage',
   url: 'https://www.gkpgotlatent.in/aloksinghalbum',
-  name: 'Alok Singh Official Photo Album & Image Gallery',
-  description:
-    'Official photo gallery and image album of Alok Singh from Kaudiram, Gorakhpur — full-stack developer and Co-Founder of Gorakhpur’s Got Latent.',
+  name: 'Alok Singh — Official Album & Social Media',
+  description: 'Official Alok Singh photo album and social media profile page.',
   mainEntity: {
     '@type': 'Person',
-    '@id': 'https://www.gkpgotlatent.in/aloksinghalbum#person',
+    '@id': 'https://www.gkpgotlatent.in/developer#person',
     name: 'Alok Singh',
-    alternateName: [
-      'Alok Singh Gorakhpur',
-      'Alok Singh Kaudiram',
-      'Alok Singh Developer',
-      'Alok Singh GGL',
-      'Alok Singh Co-Founder',
-    ],
-    description:
-      'Full-stack developer, technology builder and Co-Founder of Gorakhpur’s Got Latent from Kaudiram, Gorakhpur, Uttar Pradesh, India.',
+    jobTitle: 'Full-Stack Developer & Co-Founder',
+    url: 'https://www.gkpgotlatent.in/developer',
     image: photosList.map((p) => `https://www.gkpgotlatent.in${p.src}`),
-    jobTitle: ['Co-Founder', 'Full-Stack Developer', 'Technology Builder'],
-    sameAs: [
-      'https://www.instagram.com/aloksingh_._/',
-      'https://x.com/rajpratapsinghh',
-      'https://www.facebook.com/meadorush',
-      'https://www.linkedin.com/in/alok-singh-8102a8414/',
-    ],
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Kaudiram, Gorakhpur',
-      addressRegion: 'Uttar Pradesh',
-      addressCountry: 'IN',
-    },
-    worksFor: {
-      '@type': 'Organization',
-      name: "Gorakhpur's Got Latent",
-      url: 'https://www.gkpgotlatent.in',
-    },
+    sameAs: socials.map((social) => social.url),
+  },
+  primaryImageOfPage: {
+    '@type': 'ImageObject',
+    contentUrl: 'https://www.gkpgotlatent.in/alok-singh-02.jpg',
+    caption: 'Alok Singh',
   },
 };
 
@@ -229,7 +228,7 @@ export default function AlokSinghAlbumPage() {
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(profileJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
       <script
         type="application/ld+json"
@@ -262,13 +261,13 @@ export default function AlokSinghAlbumPage() {
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-400/10 px-4 py-1.5 text-xs font-black tracking-widest text-amber-300 uppercase">
                 <Camera className="h-4 w-4 text-amber-300" />
-                OFFICIAL PHOTO ALBUM · ALOK SINGH
+                OFFICIAL PROFILE & PHOTO ALBUM
               </div>
 
               <h1 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
                 ALOK <span className="text-amber-300">SINGH</span>
                 <span className="block text-2xl font-bold tracking-normal text-slate-300 sm:text-3xl lg:text-4xl mt-1">
-                  Photo Album & Gallery
+                  Photo Album & Social Media
                 </span>
               </h1>
 
@@ -356,42 +355,46 @@ export default function AlokSinghAlbumPage() {
                 All photos are preserved in full resolution. Click on any picture to view in interactive fullscreen lightbox view.
               </p>
             </div>
-
-            {/* Social Link Chips */}
-            <div className="flex flex-wrap gap-2 text-xs">
-              <a
-                href="https://www.instagram.com/aloksingh_._/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg border border-pink-500/30 bg-pink-500/10 px-3 py-1.5 text-pink-300 hover:bg-pink-500/20"
-              >
-                Instagram @aloksingh_._
-              </a>
-              <a
-                href="https://x.com/rajpratapsinghh"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg border border-slate-700 bg-white/5 px-3 py-1.5 text-slate-300 hover:bg-white/10"
-              >
-                X @rajpratapsinghh
-              </a>
-              <a
-                href="https://www.linkedin.com/in/alok-singh-8102a8414/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 text-sky-300 hover:bg-sky-500/20"
-              >
-                LinkedIn Profile
-              </a>
-            </div>
           </div>
 
           {/* Interactive Album Gallery Client */}
           <AlbumGalleryClient photos={photosList} />
         </section>
 
+        {/* Social Media Section */}
+        <section className="mt-16" aria-labelledby="social-media">
+          <div className="mb-6">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-300">
+              Social Media
+            </p>
+            <h2 id="social-media" className="mt-2 text-2xl font-black sm:text-3xl text-white">
+              Connect with Alok Singh
+            </h2>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {socials.map((social) => (
+              <a
+                key={social.name}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:-translate-y-1 hover:border-amber-400/30 hover:bg-white/[0.05]"
+              >
+                <span className="block text-base font-bold text-white group-hover:text-amber-300">
+                  {social.name}
+                </span>
+                <span className="mt-1 block text-sm text-slate-400">{social.handle}</span>
+                <span className="mt-4 flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-amber-300">
+                  Open profile <ExternalLink className="h-3 w-3" />
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
         {/* Biography & Context Section */}
-        <section className="mt-20 rounded-3xl border border-white/10 bg-white/[0.025] p-6 sm:p-10">
+        <section className="mt-16 rounded-3xl border border-white/10 bg-white/[0.025] p-6 sm:p-10">
           <h2 className="text-2xl font-black text-white sm:text-3xl">
             About Alok Singh & Photo Gallery Context
           </h2>

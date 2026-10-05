@@ -20,7 +20,6 @@ export async function POST(req: Request) {
       mobile,
       email,
       instagramId,
-      dob,
       quantity = 1,
       amount = 149
     } = body;
@@ -64,7 +63,7 @@ export async function POST(req: Request) {
       mobile: mobile || '',
       email: email || '',
       instagram_id: instagramId ? (instagramId.startsWith('@') ? instagramId : `@${instagramId}`) : '@ggl_fan',
-      date_of_birth: dob || '2000-01-01',
+      date_of_birth: '',
       quantity: Number(quantity) || 1,
       amount: Number(amount) || 149,
       razorpay_order_id,

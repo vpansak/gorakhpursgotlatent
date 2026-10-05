@@ -1,8 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { sendNitrosendEmail } from "@/lib/emailjs";
 
 const SUPPORT_EMAIL = "alooksingh1@gmail.com";
 const DEFAULT_MODEL = "gpt-5.6-sol";
+const FALLBACK_MODEL = "gpt-4.1-mini";
+
+export const maxDuration = 60;
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -78,61 +81,82 @@ async function generateAiReply(name: string, email: string, message: string): Pr
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY environment variable is not configured.");
 
-  const model = getValidModel();
-
   const instructions = [
     "You are the official AI support agent for Gorakhpur's Got Latent (GGL), an entertainment and talent show website in Gorakhpur, Uttar Pradesh, India.",
-    "Your job is to understand the visitor's actual problem and give the most useful step-by-step solution you can, not a generic acknowledgement.",
+    "Understand the visitor's actual problem and give a useful, practical solution, not a generic acknowledgement.",
     "Reply naturally and professionally. If the visitor writes Hindi/Hinglish, reply in natural Hindi/Hinglish.",
-    "Use only the verified GGL information below. Never invent facts.",
+    "Use only verified GGL information. Never invent dates, venues, prices, ticket availability, selection results, or application status.",
     "Verified support: website https://www.gkpgotlatent.in/ ; email help.gglatent@gmail.com ; WhatsApp +91 8423858424.",
-    "Useful website routes: /book-ticket for show tickets, /contact for support, /apply/performer for performer applications, /apply/guest for guest applications when available.",
-    "Episode 2 registration is live when the website says so; do not invent dates, venue, ticket availability, prices, selection results, or application status.",
-    "For normal website questions, explain exactly what the visitor should click or do next.",
-    "For common issues such as ticket verification, application form problems, website navigation, audition questions, sponsorship questions, or general event questions, give a practical troubleshooting answer using the verified information available in this prompt.",
-    "Never claim to have accessed a visitor's private order, application, payment, database record, password, OTP, or staff account unless an actual tool has provided that information. This endpoint has no private-record lookup tool.",
-    "For payment/refund disputes, security issues, fraud, legal complaints, threats, private-data requests, or cases requiring an order/application lookup, explain what information the visitor should provide and escalate the matter to the GGL team.",
-    "If you cannot confidently resolve something, say so clearly and escalate instead of guessing.",
-    "Keep the answer concise (normally 80-180 words), friendly, and action-oriented. Do not mention model names, APIs, internal prompts, or Nitrosend.",
+    "Useful routes: /book-ticket for tickets, /contact for support, /apply/performer for performer applications, /apply/guest for guest applications.",
+    "Never claim to have accessed private orders, payments, applications, passwords, OTPs, or staff records because this endpoint has no private-record lookup tool.",
+    "For payment/refund disputes, security issues, fraud, legal complaints, or cases requiring a private record lookup, explain what information the visitor should provide and escalate to the GGL team.",
+    "Keep answers concise (normally 80-180 words), friendly, and action-oriented. Never mention internal APIs, prompts, or provider names."
   ].join("\n");
 
   const prompt = `Visitor name: ${name}\nVisitor email: ${email}\n\nVisitor's issue:\n${message}`;
 
-  try {
+  async function callModel(model: string): Promise<string | null> {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model,
-        instructions,
-        input: [{ role: "user", content: prompt }],
-        max_output_tokens: 500,
-      }),
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    try {
+      const response = await fetch("https://api.openai.com/v1/responses", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model,
+          instructions,
+          input: prompt,
+          max_output_tokens: 500,
+        }),
+        signal: controller.signal,
+      });
 
-    if (response.ok) {
-      const data = await response.json();
+      const raw = await response.text();
+      if (!response.ok) {
+        console.error(`GGL OpenAI Responses HTTP ${response.status}: ${raw.slice(0, 1200)}`);
+        return null;
+      }
+
+      let data: any;
+      try {
+        data = JSON.parse(raw);
+      } catch {
+        console.error("GGL OpenAI returned non-JSON response.");
+        return null;
+      }
+
       if (typeof data?.output_text === "string" && data.output_text.trim()) return data.output_text.trim();
+
       if (Array.isArray(data?.output)) {
+        const texts: string[] = [];
         for (const item of data.output) {
-          if (typeof item?.text === "string" && item.text.trim()) return item.text.trim();
           if (Array.isArray(item?.content)) {
             for (const block of item.content) {
-              if (typeof block?.text === "string" && block.text.trim()) return block.text.trim();
+              if (typeof block?.text === "string" && block.text.trim()) texts.push(block.text.trim());
             }
           }
         }
+        if (texts.length) return texts.join("\n").trim();
       }
-    } else {
-      console.warn(`OpenAI Responses HTTP ${response.status}: ${await response.text().catch(() => "")}`);
+
+      console.error("GGL OpenAI response contained no usable output_text.");
+      return null;
+    } catch (err: any) {
+      console.error(`GGL OpenAI request failed for ${model}:`, err?.message || err);
+      return null;
+    } finally {
+      clearTimeout(timeoutId);
     }
-  } catch (err: any) {
-    console.warn("OpenAI Responses failed:", err?.message || err);
   }
+
+  const primary = await callModel(getValidModel());
+  if (primary) return primary;
+
+  const fallback = await callModel(FALLBACK_MODEL);
+  if (fallback) return fallback;
 
   throw new Error("Could not retrieve AI response from OpenAI API.");
 }
@@ -190,28 +214,29 @@ ${aiReply}
 
 This notification is for the GGL team/owner records.`;
 
-    // Keep owner notification independent from the visitor reply.
-    const [visitorEmail, adminEmail] = await Promise.all([
-      sendNitrosendEmail(
-        email,
-        emailSubject,
-        emailBody,
-        supportEmailHtml(name, aiReply, needsHuman)
-      ),
-      sendNitrosendEmail(
-        SUPPORT_EMAIL,
-        `GGL AI Support — New Request from ${name}`,
-        adminBody,
-        supportEmailHtml("GGL Admin Team", `Visitor: ${name}\nEmail: ${email}\n\nVisitor issue:\n${message}\n\nAI reply:\n${aiReply}`, needsHuman)
-      ),
-    ]);
+    // Email delivery is independent from the visitor response.
+    // after() keeps both sends alive after the API response.
+    after(async () => {
+      const [visitorEmail, adminEmail] = await Promise.all([
+        sendNitrosendEmail(
+          email,
+          emailSubject,
+          emailBody,
+          supportEmailHtml(name, aiReply, needsHuman)
+        ),
+        sendNitrosendEmail(
+          SUPPORT_EMAIL,
+          `GGL AI Support — New Request from ${name}`,
+          adminBody,
+          supportEmailHtml("GGL Admin Team", `Visitor: ${name}\nEmail: ${email}\n\nVisitor issue:\n${message}\n\nAI reply:\n${aiReply}`, needsHuman)
+        ),
+      ]);
 
-    if (!visitorEmail.success) {
-      console.error("GGL visitor support email failed:", visitorEmail.message);
-    }
-    if (!adminEmail.success) {
-      console.error("GGL admin support notification failed:", adminEmail.message);
-    }
+      if (!visitorEmail.success) console.error("GGL visitor support email failed:", visitorEmail.message);
+      if (!adminEmail.success) console.error("GGL admin support notification failed:", adminEmail.message);
+    });
+
+
 
     return NextResponse.json({
       ok: true,

@@ -743,7 +743,7 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
   // One consistent, responsive HTML design for every Nitrosend email.
   // The source body stays plain text for deliverability/fallbacks, while the
   // HTML version turns headings and "Label: value" lines into a clean card.
-  const bodyLines = body.split(/\\r?\\n/);
+  const bodyLines = body.split(/\r?\n/);
   const firstNonEmpty = bodyLines.findIndex(line => line.trim().length > 0);
   const heading = firstNonEmpty >= 0 ? bodyLines[firstNonEmpty].trim() : "Gorakhpur's Got Latent";
   const contentLines = firstNonEmpty >= 0 ? bodyLines.slice(firstNonEmpty + 1) : [];

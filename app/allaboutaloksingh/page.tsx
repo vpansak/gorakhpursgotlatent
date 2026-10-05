@@ -140,7 +140,7 @@ export default function AllAboutAlokSinghPage() {
                 <span className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-bold text-slate-200"><GraduationCap className="mr-1 inline h-3.5 w-3.5 text-amber-300" /> BCA · KIPM College</span>
               </div>
               <div className="mt-8 flex flex-wrap gap-3">
-                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-black text-black hover:bg-amber-300">Instagram <Instagram className="h-4 w-4" /></a>
+                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-black text-black hover:bg-amber-300">Instagram <Camera className="h-4 w-4" /></a>
                 <Link href="/aloksinghalbum" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-black hover:bg-white/10"><Camera className="h-4 w-4" /> Photos</Link>
                 <Link href="/developer" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-black hover:bg-white/10"><Code2 className="h-4 w-4" /> Developer</Link>
               </div>

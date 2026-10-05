@@ -834,12 +834,13 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
   const html = htmlOverride || defaultHtml;
 
   try {
+    const idempotencyKey = `ggl-${Date.now()}-${crypto.randomUUID()}`;
     const res = await fetch('https://api.nitrosend.com/v1/my/messages', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'Idempotency-Key': `ggl-${to.toLowerCase()}-${subject}`.replace(/[^a-zA-Z0-9._-]/g, '-').slice(0, 240),
+        'Idempotency-Key': idempotencyKey,
       },
       body: JSON.stringify({ channel: 'email', to, subject, html, body }),
     });
@@ -872,7 +873,7 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
           headers: {
             Authorization: `Bearer ${apiKey}`,
             'Content-Type': 'application/json',
-            'Idempotency-Key': `ggl-${to.toLowerCase()}-${subject}`.replace(/[^a-zA-Z0-9._-]/g, '-').slice(0, 240),
+            'Idempotency-Key': idempotencyKey,
           },
           body: JSON.stringify({ channel: 'email', to, subject, html, body }),
         });

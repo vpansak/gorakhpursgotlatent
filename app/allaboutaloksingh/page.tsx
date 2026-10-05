@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   UserRound, MapPin, GraduationCap, Code2, BriefcaseBusiness, Globe2,
-  Instagram, Linkedin, ExternalLink, Camera, Users, Rocket, Database,
+  ExternalLink, Camera, Users, Rocket, Database,
   Smartphone, Search, Heart, Sparkles
 } from 'lucide-react';
 

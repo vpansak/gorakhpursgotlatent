@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { db } from '@/lib/db';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
@@ -88,16 +88,26 @@ export async function POST(req: Request) {
 
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
 
-    const emailResult = await sendGenericApplicationEmails({
-      applicationType: 'SPONSOR',
-      applicationId: appId,
-      name: effectiveContactPerson,
-      email: effectiveEmail,
-      mobile: effectiveWhatsapp,
-      summary: `Company: ${effectiveCompanyName}\nDesignation: ${(designation || '').toString().trim() || 'N/A'}\nIndustry: ${(industry || '').toString().trim() || 'N/A'}\nLocation: ${(location || '').toString().trim() || 'N/A'}\nSponsorship Type: ${(sponsorshipType || 'General Brand Sponsorship').toString().trim()}`,
-    });
-    if (!emailResult.success) console.warn('Sponsor application email warning:', emailResult.message);
+    // Email delivery must never keep the applicant waiting. The application is
+    // already saved above; dispatch confirmation/admin emails after the response.
+    after(async () => {
+      try {
+        await sendGenericApplicationEmails({
+          applicationType: 'SPONSOR',
+          applicationId: appId,
+          name: effectiveContactPerson,
+          email: effectiveEmail,
+          mobile: effectiveWhatsapp,
+          summary: `Company: ${effectiveCompanyName}\nDesignation: ${(designation || '').toString().trim() || 'N/A'}\nIndustry: ${(industry || '').toString().trim() || 'N/A'}\nLocation: ${(location || '').toString().trim() || 'N/A'}\nSponsorship Type: ${(sponsorshipType || 'General Brand Sponsorship').toString().trim()}`,
+        });
+        if (!emailResult.success) console.warn('Sponsor application email warning:', emailResult.message);
 
+
+
+      } catch (emailErr) {
+        console.error('sponsor application email dispatch failed:', emailErr);
+      }
+    });
 
     return NextResponse.json({
       success: true,

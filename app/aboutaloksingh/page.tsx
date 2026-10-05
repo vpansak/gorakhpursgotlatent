@@ -75,8 +75,6 @@ export const metadata: Metadata = {
     'Alok Singh Gorakhpur Got Latent',
     'Alok Singh GGL Co-Founder',
     'Alok Singh Purvanchal Public School',
-    'Alok Singh Holy Angel International School',
-    'Alok Singh KMR Janipur',
     'Alok Singh Instagram',
     'Alok Singh X profile',
     'Alok Singh Twitter',
@@ -172,14 +170,6 @@ const profileJsonLd = {
       },
       {
         '@type': 'EducationalOrganization',
-        name: 'KMR, Janipur, Gola Road',
-      },
-      {
-        '@type': 'EducationalOrganization',
-        name: 'Holy Angel International School, Pali, Bansgaon',
-      },
-      {
-        '@type': 'EducationalOrganization',
         name: 'KIPM College',
       },
     ],
@@ -237,12 +227,12 @@ const faqItems = [
   {
     question: 'What is Alok Singh’s educational background?',
     answer:
-      'Alok Singh’s school journey includes early education at Purvanchal Public School (LKG to Class 2), KMR Janipur Gola Road (Class 3), Holy Angel International School in Pali, Bansgaon (Class 4 to Class 10), and Purvanchal Public School (Class 11 & 12). He then pursued a Bachelor of Computer Applications (BCA) degree at KIPM College.',
+      'Alok Singh completed his school education at Purvanchal Public School in Gorakhpur and then pursued a Bachelor of Computer Applications (BCA) degree at KIPM College.',
   },
   {
     question: 'Where did Alok Singh study?',
     answer:
-      'Alok Singh studied at Purvanchal Public School, KMR Janipur (Gola Road), Holy Angel International School (Pali, Bansgaon), and completed his college education at KIPM College in Gorakhpur, specializing in BCA.',
+      'Alok Singh studied at Purvanchal Public School in Gorakhpur and completed his college education at KIPM College in Gorakhpur, specializing in BCA.',
   },
   {
     question: 'What is Alok Singh’s connection with KIPM College?',

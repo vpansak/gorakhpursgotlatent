@@ -79,7 +79,6 @@ export async function POST(req: Request) {
           mobile: effectiveMobile,
           summary: `City/Address: ${effectiveAddress || 'N/A'}\nInstagram: ${effectiveInstagram || 'N/A'}\nAbout: ${effectiveAbout || 'N/A'}`,
         });
-        if (!emailResult.success) console.warn('Team application email warning:', emailResult.message);
 
 
 

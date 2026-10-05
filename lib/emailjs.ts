@@ -1012,6 +1012,7 @@ Gorakhpur's Got Latent Team`;
       : { success: false, message: 'Applicant is admin address' };
     if (!adminResult.success) console.warn(`Primitive admin delivery failed for \${params.applicationId}: \${adminResult.message}`);
     if (!applicantResult.success) console.warn(`Nitrosend applicant delivery failed for \${params.applicationId}: \${applicantResult.message}`);
+    const results = [adminResult, applicantResult];
     return results.some(r => r.success)
       ? { success: true }
       : { success: false, message: results.map(r => r.message).filter(Boolean).join(' | ') };

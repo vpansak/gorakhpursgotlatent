@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Instagram, Facebook, Youtube, MessageCircle } from "lucide-react";
+
+function XIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817-5.964 6.817H1.683l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg>;
+}
 
 function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -73,14 +77,23 @@ export default function ContactPage() {
 
           <div className="pt-4 border-t border-slate-800 space-y-2">
             <span className="text-xs font-bold text-slate-400 uppercase">Official Social Channels</span>
-            <div className="flex items-center gap-3">
-              <a href="https://www.instagram.com/gkp_got_latent/" target="_blank" rel="noreferrer" className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="Instagram" title="Instagram">
-                <InstagramIcon className="w-5 h-5" />
+            <div className="grid grid-cols-2 gap-3">
+              <a href="https://www.instagram.com/gkp_got_latent/" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="Instagram">
+                <Instagram className="w-5 h-5" /><span className="text-xs font-bold">Instagram</span>
               </a>
-              <a href="https://www.facebook.com/profile.php?id=61593154024693" target="_blank" rel="noreferrer" className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="Facebook" title="Facebook">
-                <FacebookIcon className="w-5 h-5" />
+              <a href="https://www.youtube.com/@GkpGotLatent" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="YouTube">
+                <Youtube className="w-5 h-5" /><span className="text-xs font-bold">YouTube</span>
+              </a>
+              <a href="https://www.facebook.com/people/Gorakhpurs-Got-Latent/61593154024693/" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="Facebook">
+                <Facebook className="w-5 h-5" /><span className="text-xs font-bold">Facebook</span>
+              </a>
+              <a href="https://x.com/gkpgotlatent" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="X">
+                <XIcon className="w-5 h-5" /><span className="text-xs font-bold">X</span>
               </a>
             </div>
+            <a href="https://whatsapp.com/channel/0029Vb91ZX43bbUzFYcP220S" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20">
+              <MessageCircle className="w-5 h-5" /><span className="text-xs font-bold">Join Official WhatsApp Channel</span>
+            </a>
           </div>
         </div>
 

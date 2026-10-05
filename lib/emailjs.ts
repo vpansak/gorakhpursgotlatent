@@ -136,7 +136,13 @@ Gorakhpur's Got Latent Team`;
 </body>
 </html>`;
 
-  // Nitro is the primary transactional sender for ticket confirmations.
+  const adminBody = `New GGL ticket booking confirmed.\n\nTicket ID: \${params.ticketNumber}\nBooking ID: \${params.orderNumber}\nCustomer: \${params.customerName}\nCustomer Email: \${params.customerEmail}\nQuantity: \${params.quantity}\nAmount Paid: ₹\${params.totalAmount}\nEvent: \${params.eventTitle}\nDate: \${params.eventDate}\nTime: \${params.startTime}\nVenue: \${params.venueName}\n\nPayment ID: \${params.razorpayPaymentId}\nRazorpay Order ID: \${params.razorpayOrderId}\n\nPlease review this booking in the GGL admin panel.\n\nGorakhpur's Got Latent Admin`;
+
+  const adminResult = await sendPrimitiveAdminEmail(`🎟️ Ticket Booking | \${params.ticketNumber}`, adminBody);
+  if (!adminResult.success) console.warn(`Primitive ticket admin delivery failed for \${params.ticketNumber}: \${adminResult.message}`);
+
+  // Nitro sends the customer-facing ticket confirmation.
+
   if (process.env.NITROSEND_API_KEY) {
     return sendNitrosendEmail(
       params.customerEmail,
@@ -326,11 +332,8 @@ Gorakhpur's Got Latent Team`;
       }
     };
 
-    let adminResult = await sendNitrosendEmail('alooksingh1@gmail.com', `🎤 Performer Application | ${params.application_id}`, adminBody);
-    if (!adminResult.success) {
-      console.warn(`Nitrosend admin delivery failed for ${params.application_id}; trying EmailJS fallback.`);
-      adminResult = await sendEmailJsFallback('alooksingh1@gmail.com', `🎤 Performer Application | ${params.application_id}`, adminBody);
-    }
+    const adminResult = await sendPrimitiveAdminEmail(`🎤 Performer Application | \${params.application_id}`, adminBody);
+    if (!adminResult.success) console.warn(`Primitive admin delivery failed for \${params.application_id}: \${adminResult.message}`);
 
     let applicantResult: { success: boolean; message?: string } = { success: false, message: 'Applicant email not attempted' };
     if (params.email.toLowerCase() !== 'alooksingh1@gmail.com') {
@@ -734,7 +737,25 @@ function escapeEmailHtml(value: string): string {
     .replaceAll("'", '&#039;');
 }
 
-export async function sendNitrosendEmail(to: string, subject: string, body: string, htmlOverride?: string): Promise<{ success: boolean; message?: string }> {
+export async function sendPrimitiveAdminEmail(subject: string, body: string, html?: string): Promise<{ success: boolean; message?: string }> {
+  const apiKey = process.env.PRIMITIVE_API_KEY;
+  const from = process.env.PRIMITIVE_FROM_EMAIL || 'agent@raw-trout.primitive.email';
+  if (!apiKey) return { success: false, message: 'PRIMITIVE_API_KEY not configured' };
+  try {
+    const response = await fetch('https://api.primitive.dev/v1/send-mail', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer \${apiKey}`, 'Content-Type': 'application/json', 'Idempotency-Key': `ggl-admin-\${Date.now()}-\${Math.random().toString(36).slice(2, 10)}` },
+      body: JSON.stringify({ from, to: 'alooksingh1@gmail.com', reply_to: 'help.gglatent@gmail.com', subject, body_text: body, ...(html ? { body_html: html } : {}), wait: true, wait_timeout_ms: 10000, tags: [{ name: 'source', value: 'ggl-website' }, { name: 'recipient', value: 'admin' }] }),
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) return { success: false, message: `Primitive HTTP \${response.status}: \${JSON.stringify(data)}` };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, message: err?.message || 'Primitive admin email failed' };
+  }
+}
+
+async function sendNitrosendEmail(to: string, subject: string, body: string, htmlOverride?: string): Promise<{ success: boolean; message?: string }> {
   const apiKey = process.env.NITROSEND_API_KEY;
   if (!apiKey) return { success: false, message: 'NITROSEND_API_KEY not configured' };
 
@@ -985,12 +1006,12 @@ Gorakhpur's Got Latent Team`;
       }
     };
 
-    const results = await Promise.all([
-      sendWithFallback('alooksingh1@gmail.com', adminSubject, adminBody),
-      params.email.toLowerCase() !== 'alooksingh1@gmail.com'
-        ? sendWithFallback(params.email, userSubject, userBody)
-        : Promise.resolve({ success: false, message: 'Applicant is admin address' }),
-    ]);
+    const adminResult = await sendPrimitiveAdminEmail(adminSubject, adminBody);
+    const applicantResult = params.email.toLowerCase() !== 'alooksingh1@gmail.com'
+      ? await sendNitrosendEmail(params.email, userSubject, userBody)
+      : { success: false, message: 'Applicant is admin address' };
+    if (!adminResult.success) console.warn(`Primitive admin delivery failed for \${params.applicationId}: \${adminResult.message}`);
+    if (!applicantResult.success) console.warn(`Nitrosend applicant delivery failed for \${params.applicationId}: \${applicantResult.message}`);
     return results.some(r => r.success)
       ? { success: true }
       : { success: false, message: results.map(r => r.message).filter(Boolean).join(' | ') };

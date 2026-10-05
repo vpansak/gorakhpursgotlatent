@@ -9,6 +9,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/allaboutaloksingh',
     '/aloksinghalbum',
     '/aloksinghinstagram',
+    '/aloksinghfacebook',
+    '/aloksinghx',
     '/founder',
     '/developer',
     '/cofounder',
@@ -32,13 +34,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency:
-      route === '' || route === '/ep1' || route === '/aboutaloksingh' || route === '/allaboutaloksingh' || route === '/aloksinghalbum'
+      route === '' || route === '/ep1' || route === '/aboutaloksingh' || route === '/allaboutaloksingh' || route === '/aloksinghalbum' || route === '/aloksinghfacebook' || route === '/aloksinghx'
         ? 'daily'
         : 'weekly',
     priority:
       route === ''
         ? 1.0
-        : ['/developer', '/cofounder', '/aboutaloksingh', '/allaboutaloksingh', '/aloksinghalbum', '/aloksinghinstagram', '/ep1'].includes(route)
+        : ['/developer', '/cofounder', '/aboutaloksingh', '/allaboutaloksingh', '/aloksinghalbum', '/aloksinghinstagram', '/aloksinghfacebook', '/aloksinghx', '/ep1'].includes(route)
           ? 0.9
           : 0.8,
   }));

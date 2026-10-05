@@ -12,3 +12,5 @@ export async function GET() {
       : 'Razorpay server configuration is incomplete.',
   }, { status: keyId && keySecret ? 200 : 503 });
 }
+
+// Production envs are read at runtime; this deployment ensures current Razorpay secrets are active.

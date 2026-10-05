@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { db } from '@/lib/db';
 import { generateAppId } from '@/lib/helpers';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
@@ -67,16 +67,26 @@ export async function POST(req: Request) {
     // Trigger instant background sync to Neon S3 sheets/team/team_applications.csv
     syncSheetsToS3().catch(err => console.error('S3 sheet sync warning:', err));
 
-    const emailResult = await sendGenericApplicationEmails({
-      applicationType: 'TEAM',
-      applicationId: appId,
-      name: effectiveName,
-      email: effectiveEmail,
-      mobile: effectiveMobile,
-      summary: `City/Address: ${effectiveAddress || 'N/A'}\nInstagram: ${effectiveInstagram || 'N/A'}\nAbout: ${effectiveAbout || 'N/A'}`,
-    });
-    if (!emailResult.success) console.warn('Team application email warning:', emailResult.message);
+    // Email delivery must never keep the applicant waiting. The application is
+    // already saved above; dispatch confirmation/admin emails after the response.
+    after(async () => {
+      try {
+        await sendGenericApplicationEmails({
+          applicationType: 'TEAM',
+          applicationId: appId,
+          name: effectiveName,
+          email: effectiveEmail,
+          mobile: effectiveMobile,
+          summary: `City/Address: ${effectiveAddress || 'N/A'}\nInstagram: ${effectiveInstagram || 'N/A'}\nAbout: ${effectiveAbout || 'N/A'}`,
+        });
+        if (!emailResult.success) console.warn('Team application email warning:', emailResult.message);
 
+
+
+      } catch (emailErr) {
+        console.error('team application email dispatch failed:', emailErr);
+      }
+    });
 
     return NextResponse.json({
       success: true,

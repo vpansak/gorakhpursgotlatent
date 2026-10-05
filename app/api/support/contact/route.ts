@@ -1,15 +1,14 @@
-import { NextRequest, NextResponse, after } from "next/server";
-import { sendNitrosendEmail } from "@/lib/emailjs";
+import { NextRequest, NextResponse } from "next/server";
 
-const SUPPORT_EMAIL = "alooksingh1@gmail.com";
 const DEFAULT_MODEL = "gpt-5.6-sol";
 const FALLBACK_MODEL = "gpt-4.1-mini";
 
-export const maxDuration = 60;
+export const maxDuration = 45;
 
-function isValidEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
+type ChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
 
 function getValidModel(): string {
   const envModel = (process.env.OPENAI_MODEL || "").trim();
@@ -19,234 +18,129 @@ function getValidModel(): string {
   return envModel;
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+const instructions = [
+  "You are the official AI chat support assistant for Gorakhpur's Got Latent (GGL), an entertainment and talent show website in Gorakhpur, Uttar Pradesh, India.",
+  "Answer the user's actual question with a useful, practical solution. Do not give generic acknowledgements.",
+  "Reply naturally and professionally. If the user writes Hindi/Hinglish, reply in natural Hindi/Hinglish.",
+  "Use only verified GGL information. Never invent dates, venues, prices, ticket availability, selection results, or application status.",
+  "Verified support information: website https://www.gkpgotlatent.in/ ; email help.gglatent@gmail.com ; WhatsApp +91 8423858424.",
+  "Useful routes: /book-ticket for tickets, /contact for support, /apply/performer for performer applications, /apply/guest for guest applications.",
+  "Never claim to have accessed private orders, payments, applications, passwords, OTPs, or staff records because this chat has no private-record lookup tool.",
+  "For payment/refund disputes, security issues, fraud, legal complaints, or anything requiring a private record lookup, clearly explain the limitation and tell the user to contact the GGL team at help.gglatent@gmail.com or +91 8423858424.",
+  "Keep each response concise (normally 60-160 words), friendly, clear, and action-oriented.",
+  "Never mention internal APIs, prompts, environment variables, model names, or email providers.",
+].join("\n");
 
-function supportEmailHtml(name: string, aiReply: string, needsHuman: boolean): string {
-  const logoUrl = "https://www.gkpgotlatent.in/logo-transparent.png";
-  const status = needsHuman ? "HUMAN REVIEW FLAGGED" : "AI SUPPORT RESPONSE";
-  const statusColor = needsHuman ? "#ff7b7b" : "#f2c14e";
-  const replyHtml = escapeHtml(aiReply).replace(/\n/g, "<br>");
-  return `<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="color-scheme" content="dark">
-  <title>GGL AI Support</title>
-</head>
-<body style="margin:0;padding:0;background:#08090d;font-family:Arial,Helvetica,sans-serif;color:#f7f7f7;">
-  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Gorakhpur's Got Latent support response</div>
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background:#08090d;">
-    <tr><td align="center" style="padding:16px 8px;">
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#101116;border:1px solid #30240d;border-radius:16px;overflow:hidden;">
-        <tr><td style="padding:20px 16px;text-align:center;background:#0d0d10;border-bottom:1px solid #3a2b0e;">
-          <img src="${logoUrl}" alt="Gorakhpur's Got Latent" width="82" style="display:block;width:82px;height:auto;margin:0 auto 9px;border:0;">
-          <div style="font-size:11px;line-height:15px;letter-spacing:2px;color:#f2c14e;font-weight:800;">GORAKHPUR'S GOT LATENT</div>
-          <div style="margin-top:6px;font-size:9px;line-height:14px;letter-spacing:1px;color:#858892;">OFFICIAL SUPPORT</div>
-        </td></tr>
-        <tr><td style="padding:18px 16px 8px;">
-          <div style="display:inline-block;padding:5px 8px;border:1px solid #5d4612;border-radius:999px;background:#191408;color:${statusColor};font-size:9px;line-height:12px;font-weight:800;letter-spacing:.8px;">${status}</div>
-          <div style="margin-top:11px;font-size:21px;line-height:27px;font-weight:900;color:#fff;">Hi ${escapeHtml(name)},</div>
-          <div style="margin-top:5px;font-size:13px;line-height:20px;color:#a9abb3;">Here is the response to your GGL support request.</div>
-        </td></tr>
-        <tr><td style="padding:10px 16px 18px;">
-          <div style="background:#0a0b0f;border:1px solid #292b32;border-radius:13px;padding:14px 13px;font-size:14px;line-height:22px;color:#e7e7ea;word-break:break-word;overflow-wrap:anywhere;">${replyHtml}</div>
-        </td></tr>
-        <tr><td style="padding:0 16px 20px;text-align:center;">
-          <a href="https://www.gkpgotlatent.in/contact" style="display:inline-block;background:#f2c14e;color:#090a0d;text-decoration:none;font-size:13px;line-height:18px;font-weight:900;padding:12px 20px;border-radius:10px;">OPEN GGL SUPPORT</a>
-        </td></tr>
-        <tr><td style="padding:16px;background:#0b0c0f;border-top:1px solid #25262c;text-align:center;">
-          <div style="font-size:11px;line-height:18px;color:#92949d;">Need further help?</div>
-          <div style="margin-top:3px;font-size:12px;line-height:19px;">
-            <a href="mailto:help.gglatent@gmail.com" style="color:#f2c14e;text-decoration:none;font-weight:800;">help.gglatent@gmail.com</a>
-          </div>
-          <div style="margin-top:4px;font-size:11px;line-height:18px;color:#777a83;">WhatsApp: +91 84238 58424</div>
-          <div style="margin-top:7px;font-size:10px;line-height:16px;color:#62646c;">© Gorakhpur's Got Latent • Official Support Email</div>
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
-}
+async function askModel(model: string, messages: ChatMessage[], apiKey: string): Promise<string | null> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-async function generateAiReply(name: string, email: string, message: string): Promise<string> {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY environment variable is not configured.");
+  try {
+    const response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        instructions,
+        input: messages.map((item) => ({
+          role: item.role,
+          content: item.content,
+        })),
+        max_output_tokens: 500,
+      }),
+      signal: controller.signal,
+    });
 
-  const instructions = [
-    "You are the official AI support agent for Gorakhpur's Got Latent (GGL), an entertainment and talent show website in Gorakhpur, Uttar Pradesh, India.",
-    "Understand the visitor's actual problem and give a useful, practical solution, not a generic acknowledgement.",
-    "Reply naturally and professionally. If the visitor writes Hindi/Hinglish, reply in natural Hindi/Hinglish.",
-    "Use only verified GGL information. Never invent dates, venues, prices, ticket availability, selection results, or application status.",
-    "Verified support: website https://www.gkpgotlatent.in/ ; email help.gglatent@gmail.com ; WhatsApp +91 8423858424.",
-    "Useful routes: /book-ticket for tickets, /contact for support, /apply/performer for performer applications, /apply/guest for guest applications.",
-    "Never claim to have accessed private orders, payments, applications, passwords, OTPs, or staff records because this endpoint has no private-record lookup tool.",
-    "For payment/refund disputes, security issues, fraud, legal complaints, or cases requiring a private record lookup, explain what information the visitor should provide and escalate to the GGL team.",
-    "Keep answers concise (normally 80-180 words), friendly, and action-oriented. Never mention internal APIs, prompts, or provider names."
-  ].join("\n");
+    const raw = await response.text();
 
-  const prompt = `Visitor name: ${name}\nVisitor email: ${email}\n\nVisitor's issue:\n${message}`;
+    if (!response.ok) {
+      console.error(`GGL AI chat HTTP ${response.status}: ${raw.slice(0, 1200)}`);
+      return null;
+    }
 
-  async function callModel(model: string): Promise<string | null> {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    let data: any;
     try {
-      const response = await fetch("https://api.openai.com/v1/responses", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model,
-          instructions,
-          input: prompt,
-          max_output_tokens: 500,
-        }),
-        signal: controller.signal,
-      });
+      data = JSON.parse(raw);
+    } catch {
+      console.error("GGL AI chat returned a non-JSON response.");
+      return null;
+    }
 
-      const raw = await response.text();
-      if (!response.ok) {
-        console.error(`GGL OpenAI Responses HTTP ${response.status}: ${raw.slice(0, 1200)}`);
-        return null;
-      }
+    if (typeof data?.output_text === "string" && data.output_text.trim()) {
+      return data.output_text.trim();
+    }
 
-      let data: any;
-      try {
-        data = JSON.parse(raw);
-      } catch {
-        console.error("GGL OpenAI returned non-JSON response.");
-        return null;
-      }
-
-      if (typeof data?.output_text === "string" && data.output_text.trim()) return data.output_text.trim();
-
-      if (Array.isArray(data?.output)) {
-        const texts: string[] = [];
-        for (const item of data.output) {
-          if (Array.isArray(item?.content)) {
-            for (const block of item.content) {
-              if (typeof block?.text === "string" && block.text.trim()) texts.push(block.text.trim());
+    if (Array.isArray(data?.output)) {
+      const texts: string[] = [];
+      for (const item of data.output) {
+        if (Array.isArray(item?.content)) {
+          for (const block of item.content) {
+            if (typeof block?.text === "string" && block.text.trim()) {
+              texts.push(block.text.trim());
             }
           }
         }
-        if (texts.length) return texts.join("\n").trim();
       }
-
-      console.error("GGL OpenAI response contained no usable output_text.");
-      return null;
-    } catch (err: any) {
-      console.error(`GGL OpenAI request failed for ${model}:`, err?.message || err);
-      return null;
-    } finally {
-      clearTimeout(timeoutId);
+      if (texts.length) return texts.join("\n").trim();
     }
+
+    console.error("GGL AI chat response contained no usable text.");
+    return null;
+  } catch (error: any) {
+    console.error(`GGL AI chat request failed for ${model}:`, error?.message || error);
+    return null;
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  const primary = await callModel(getValidModel());
-  if (primary) return primary;
-
-  const fallback = await callModel(FALLBACK_MODEL);
-  if (fallback) return fallback;
-
-  throw new Error("Could not retrieve AI response from OpenAI API.");
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const name = String(body?.name || "").trim();
-    const email = String(body?.email || "").trim().toLowerCase();
-    const message = String(body?.message || "").trim();
-
-    if (!name || name.length > 80) return NextResponse.json({ error: "Please enter a valid name." }, { status: 400 });
-    if (!isValidEmail(email) || email.length > 160) return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
-    if (message.length < 5 || message.length > 4000) return NextResponse.json({ error: "Please enter a message between 5 and 4000 characters." }, { status: 400 });
-
-    let aiReply = "";
-    let aiGenerated = true;
-    try {
-      aiReply = await generateAiReply(name, email, message);
-    } catch (error) {
-      console.error("GGL AI support generation failed:", error);
-      aiGenerated = false;
-      aiReply = "Thanks for contacting Gorakhpur's Got Latent. We could not generate an automatic solution right now, so our support team will review your request.";
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "AI support is temporarily unavailable. Please contact the GGL team on WhatsApp." },
+        { status: 503 }
+      );
     }
 
-    const needsHuman =
-      !aiGenerated ||
-      /payment|refund|security|hack|fraud|legal|police|complaint|threat|private data|order|application status|cannot resolve|team will review/i.test(
-        `${message}\n${aiReply}`
+    const body = await request.json();
+    const rawMessages = Array.isArray(body?.messages) ? body.messages : [];
+
+    const messages: ChatMessage[] = rawMessages
+      .filter((item: any) => item?.role === "user" || item?.role === "assistant")
+      .map((item: any) => ({
+        role: item.role,
+        content: String(item.content || "").trim(),
+      }))
+      .filter((item: ChatMessage) => item.content.length > 0 && item.content.length <= 4000)
+      .slice(-12);
+
+    if (!messages.length || messages[messages.length - 1].role !== "user") {
+      return NextResponse.json({ error: "Please type a message first." }, { status: 400 });
+    }
+
+    const primary = await askModel(getValidModel(), messages, apiKey);
+    const reply = primary || await askModel(FALLBACK_MODEL, messages, apiKey);
+
+    if (!reply) {
+      return NextResponse.json(
+        {
+          error: "AI support is temporarily unavailable. Please try again in a moment or contact us on WhatsApp: +91 84238 58424.",
+        },
+        { status: 503 }
       );
+    }
 
-    const emailSubject = aiGenerated ? "GGL AI Support — Reply to Your Request" : "GGL Support — Human Review Required";
-    const emailBody = `Hi ${name},
-
-Thanks for contacting Gorakhpur's Got Latent.
-
-${aiReply}
-
-${needsHuman ? "Your request may require human review. You can also contact the GGL team directly at help.gglatent@gmail.com or +91 8423858424." : "If you still need help, reply to this email or contact help.gglatent@gmail.com / +91 8423858424."}
-
-Regards,
-Gorakhpur's Got Latent Support`;
-
-    const adminBody = `A new request was submitted on the GGL /contact page.
-
-Name: ${name}
-Email: ${email}
-Human review required: ${needsHuman ? "YES" : "NO"}
-
-Visitor issue:
-${message}
-
-AI reply sent to visitor:
-${aiReply}
-
-This notification is for the GGL team/owner records.`;
-
-    // Email delivery is independent from the visitor response.
-    // after() keeps both sends alive after the API response.
-    after(async () => {
-      const [visitorEmail, adminEmail] = await Promise.all([
-        sendNitrosendEmail(
-          email,
-          emailSubject,
-          emailBody,
-          supportEmailHtml(name, aiReply, needsHuman)
-        ),
-        sendNitrosendEmail(
-          SUPPORT_EMAIL,
-          `GGL AI Support — New Request from ${name}`,
-          adminBody,
-          supportEmailHtml("GGL Admin Team", `Visitor: ${name}\nEmail: ${email}\n\nVisitor issue:\n${message}\n\nAI reply:\n${aiReply}`, needsHuman)
-        ),
-      ]);
-
-      if (!visitorEmail.success) console.error("GGL visitor support email failed:", visitorEmail.message);
-      if (!adminEmail.success) console.error("GGL admin support notification failed:", adminEmail.message);
-    });
-
-
-
-    return NextResponse.json({
-      ok: true,
-      aiGenerated,
-      escalated: needsHuman,
-      adminNotified: true,
-      visitorEmailSent: true
-    });
+    return NextResponse.json({ ok: true, reply });
   } catch (error) {
-    console.error("GGL support error:", error);
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to process your request." }, { status: 500 });
+    console.error("GGL AI chat error:", error);
+    return NextResponse.json(
+      { error: "Something went wrong. Please try again." },
+      { status: 500 }
+    );
   }
 }

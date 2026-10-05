@@ -1,8 +1,8 @@
-import { sendNitrosendEmail } from '@/lib/emailjs';
 import { NextRequest, NextResponse } from "next/server";
 
 const SUPPORT_EMAIL = "alooksingh1@gmail.com";
 const DEFAULT_MODEL = "gpt-5.6-sol";
+const PRIMITIVE_FROM_EMAIL = process.env.PRIMITIVE_FROM_EMAIL || "agent@raw-trout.primitive.email";
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -14,6 +14,32 @@ function getValidModel(): string {
     return DEFAULT_MODEL;
   }
   return envModel;
+}
+
+async function sendPrimitiveEmail(to: string, subject: string, bodyText: string): Promise<void> {
+  const apiKey = process.env.PRIMITIVE_API_KEY;
+  if (!apiKey) throw new Error("PRIMITIVE_API_KEY environment variable is not configured.");
+
+  const response = await fetch("https://api.primitive.dev/v1/send-mail", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: PRIMITIVE_FROM_EMAIL,
+      to,
+      subject,
+      body_text: bodyText,
+      reply_to: "help.gglatent@gmail.com",
+      wait: true,
+    }),
+  });
+
+  if (!response.ok) {
+    const details = await response.text().catch(() => "");
+    throw new Error(`Primitive email failed (${response.status}): ${details.slice(0, 500)}`);
+  }
 }
 
 async function generateAiReply(name: string, email: string, message: string): Promise<string> {
@@ -118,15 +144,10 @@ ${needsHuman ? "Your request may require human review. You can also contact the 
 Regards,
 Gorakhpur's Got Latent Support`;
 
-    await Promise.race([
-      sendNitrosendEmail(email, emailSubject, emailBody).then((res) => {
-        if (!res.success) console.error("GGL support email delivery failed:", res.message);
-      }),
-      new Promise((resolve) => setTimeout(resolve, 8000)),
-    ]);
+    await sendPrimitiveEmail(email, emailSubject, emailBody);
 
     if (needsHuman) {
-      sendNitrosendEmail(
+      await sendPrimitiveEmail(
         SUPPORT_EMAIL,
         `GGL AI Support Escalation — ${name}`,
         `A support request needs human review.
@@ -139,7 +160,7 @@ ${message}
 
 AI reply:
 ${aiReply}`
-      ).catch((err) => console.error("GGL AI support escalation email failure:", err));
+      );
     }
 
     return NextResponse.json({ ok: true, aiGenerated, escalated: needsHuman });

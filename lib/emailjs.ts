@@ -16,8 +16,11 @@ export interface BookingEmailParams {
 }
 
 export async function sendBookingConfirmationEmail(params: BookingEmailParams): Promise<{ success: boolean; message?: string }> {
-  if (process.env.NITROSEND_API_KEY) {
-    const body = `Hi ${params.customerName},
+  const verifyUrl = `https://www.gkpgotlatent.in/ticket/verify/${encodeURIComponent(params.ticketNumber)}`;
+  const qrImageUrl = `https://quickchart.io/qr?text=${encodeURIComponent(verifyUrl)}&size=260&margin=2&ecLevel=H`;
+  const logoUrl = 'https://www.gkpgotlatent.in/logo-transparent.png';
+
+  const body = `Hi ${params.customerName},
 
 Your GGL ticket booking is confirmed successfully.
 
@@ -31,43 +34,141 @@ Category: ${params.categoryName}
 Quantity: ${params.quantity}
 Amount Paid: ${params.totalAmount} ${params.currency || 'INR'}
 
-Please keep this email for your records. Your ticket/QR can be accessed from the GGL website using your booking details.
+View and download your ticket:
+${verifyUrl}
 
 Support: help.gglatent@gmail.com
 WhatsApp: +91 84238 58424
 
 Regards,
 Gorakhpur's Got Latent Team`;
+
+  const html = `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ticket Confirmed | Gorakhpur's Got Latent</title>
+</head>
+<body style="margin:0;padding:0;background:#08080b;font-family:Arial,Helvetica,sans-serif;color:#fff;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your Gorakhpur's Got Latent ticket is confirmed — ${escapeEmailHtml(params.ticketNumber)}</div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background:#08080b;">
+    <tr>
+      <td align="center" style="padding:24px 10px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px;background:#111217;border:1px solid #3b2a08;border-radius:18px;overflow:hidden;">
+          <tr>
+            <td style="padding:24px 20px;text-align:center;background:linear-gradient(135deg,#120d05,#09090b,#1a0707);">
+              <img src="${logoUrl}" alt="Gorakhpur's Got Latent" width="82" style="display:block;width:82px;height:auto;margin:0 auto 10px;border:0;">
+              <div style="font-size:12px;letter-spacing:2px;font-weight:800;color:#ffd45a;">GORAKHPUR'S GOT LATENT</div>
+              <div style="margin-top:8px;font-size:24px;line-height:30px;font-weight:900;color:#fff;">TICKET CONFIRMED</div>
+              <div style="margin-top:5px;font-size:12px;color:#b7b7bd;">Your official admission pass is ready.</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#090a0e;border:1px solid #d19b25;border-radius:16px;overflow:hidden;">
+                <tr>
+                  <td style="padding:18px 16px 12px;border-bottom:1px dashed #6d531b;">
+                    <div style="font-size:10px;letter-spacing:2px;color:#ffd45a;font-weight:800;">OFFICIAL ADMISSION PASS</div>
+                    <div style="margin-top:5px;font-size:20px;font-weight:900;color:#fff;">GORAKHPUR'S <span style="color:#ffd45a;">GOT LATENT</span></div>
+                    <div style="margin-top:4px;font-size:10px;color:#8f9199;letter-spacing:1px;">TALENT • COMEDY • ROAST • VIBES</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:16px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td valign="top" style="padding-right:12px;">
+                          <div style="font-size:9px;color:#8f9199;letter-spacing:1px;">NAME</div>
+                          <div style="font-size:14px;font-weight:800;color:#fff;margin-top:3px;">${escapeEmailHtml(params.customerName)}</div>
+                          <div style="margin-top:12px;font-size:9px;color:#8f9199;letter-spacing:1px;">TICKET ID</div>
+                          <div style="font-size:14px;font-weight:900;color:#ffd45a;margin-top:3px;font-family:monospace;">${escapeEmailHtml(params.ticketNumber)}</div>
+                          <div style="margin-top:12px;font-size:9px;color:#8f9199;letter-spacing:1px;">BOOKING ID</div>
+                          <div style="font-size:12px;color:#ddd;margin-top:3px;font-family:monospace;word-break:break-all;">${escapeEmailHtml(params.orderNumber)}</div>
+                          <div style="margin-top:12px;font-size:9px;color:#8f9199;letter-spacing:1px;">QUANTITY / PAID</div>
+                          <div style="font-size:13px;font-weight:800;color:#fff;margin-top:3px;">${escapeEmailHtml(String(params.quantity))} Ticket(s) • ₹${escapeEmailHtml(String(params.totalAmount))}</div>
+                        </td>
+                        <td width="150" valign="top" align="center" style="padding-left:8px;">
+                          <div style="background:#fff;border:3px solid #d19b25;border-radius:12px;padding:7px;display:inline-block;">
+                            <img src="${qrImageUrl}" alt="Ticket QR Code" width="130" height="130" style="display:block;width:130px;height:130px;border:0;">
+                          </div>
+                          <div style="font-size:8px;color:#9a9ca4;letter-spacing:1px;margin-top:7px;">SCAN TO VERIFY</div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:13px 16px;background:#101116;border-top:1px dashed #6d531b;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="font-size:10px;color:#8f9199;">STATUS</td>
+                        <td align="right" style="font-size:11px;font-weight:900;color:#55e39b;">PAID • VALID</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <div style="text-align:center;margin:22px 0 8px;">
+                <a href="${verifyUrl}" style="display:inline-block;background:#ffd45a;color:#08080b;text-decoration:none;font-size:13px;font-weight:900;padding:14px 24px;border-radius:10px;">VIEW &amp; DOWNLOAD TICKET</a>
+              </div>
+              <div style="text-align:center;font-size:11px;line-height:18px;color:#8f9199;">
+                Open the button above to view your full ticket and download it as an image.
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 20px;background:#0c0d10;border-top:1px solid #24252a;text-align:center;">
+              <div style="font-size:12px;color:#9b9da5;">Need help?</div>
+              <div style="margin-top:5px;font-size:12px;">
+                <a href="mailto:help.gglatent@gmail.com" style="color:#ffd45a;text-decoration:none;font-weight:800;">help.gglatent@gmail.com</a>
+                &nbsp; • &nbsp;
+                <a href="https://wa.me/918423858424" style="color:#ffd45a;text-decoration:none;font-weight:800;">WhatsApp</a>
+              </div>
+              <div style="margin-top:8px;font-size:10px;color:#666;">© Gorakhpur's Got Latent • Official Ticket Email</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  // Nitro is the primary transactional sender for ticket confirmations.
+  if (process.env.NITROSEND_API_KEY) {
     return sendNitrosendEmail(
       params.customerEmail,
       `🎟️ Ticket Confirmed | ${params.ticketNumber} | Gorakhpur's Got Latent`,
-      body
+      body,
+      html
     );
   }
 
+  // Keep the existing EmailJS path as a fallback when Nitro is unavailable.
   const serviceId = process.env.EMAILJS_SERVICE_ID;
   const templateId = process.env.EMAILJS_TEMPLATE_ID;
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;
   const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
   if (!serviceId || !templateId || !publicKey || !privateKey) {
-    console.warn('⚠️ EmailJS credentials missing on server. Email notification skipped.');
-    return { success: false, message: 'EmailJS credentials not configured' };
+    console.warn('⚠️ No ticket email provider is configured.');
+    return { success: false, message: 'No ticket email provider configured' };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.gkpgotlatent.in';
   const payload = {
     service_id: serviceId,
     template_id: templateId,
     user_id: publicKey,
-    accessToken: privateKey, // Server-side security token for EmailJS REST API
+    accessToken: privateKey,
     template_params: {
       to_name: params.customerName,
       to_email: params.customerEmail,
       email: params.customerEmail,
       user_email: params.customerEmail,
-      reply_to: params.customerEmail,
+      reply_to: 'help.gglatent@gmail.com',
       customer_name: params.customerName,
       customer_email: params.customerEmail,
       order_id: params.orderNumber,
@@ -82,67 +183,26 @@ Gorakhpur's Got Latent Team`;
       quantity: String(params.quantity),
       amount_paid: String(params.totalAmount),
       currency: params.currency || 'INR',
+      ticket_verify_url: verifyUrl,
+      ticket_download_url: verifyUrl,
       website_url: appUrl,
-      subject: `🎟️ Booking Confirmed — Gorakhpur’s Got Latent | ${params.eventTitle}`,
+      subject: `🎟️ Booking Confirmed — Gorakhpur's Got Latent | ${params.eventTitle}`,
       help_email: 'help.gglatent@gmail.com',
-      support_email: 'help.gglatent@gmail.com',
-      contact_email: 'help.gglatent@gmail.com',
-      Email: 'help.gglatent@gmail.com',
       help_whatsapp: '+91 84238 58424',
-      support_whatsapp: '+91 84238 58424',
-      whatsapp: '+91 84238 58424',
-      WhatsApp: '+91 84238 58424',
-      helpline: '+91 84238 58424',
-      instagram_handle: '@gkp_got_latent',
       instagram_url: 'https://www.instagram.com/gkp_got_latent/',
-      official_instagram: 'https://www.instagram.com/gkp_got_latent/',
     },
   };
 
   try {
     const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Origin': 'https://gorakhpursgotlatent.vercel.app',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-
-    if (res.ok) {
-      console.log(`📧 EmailJS: Booking confirmation email sent successfully to ${params.customerEmail}`);
-      return { success: true };
-    }
-
-    const errorText = await res.text();
-    console.warn(`⚠️ Primary EmailJS booking failed (${res.status}): ${errorText}. Trying backup service...`);
-
-    // Backup failover service
-    const backupRes = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Origin': 'https://gorakhpursgotlatent.vercel.app',
-      },
-      body: JSON.stringify({
-        service_id: process.env.EMAILJS_BACKUP_SERVICE_ID,
-        template_id: process.env.EMAILJS_BACKUP_TEMPLATE_ID,
-        user_id: process.env.EMAILJS_BACKUP_PUBLIC_KEY,
-        accessToken: process.env.EMAILJS_BACKUP_PRIVATE_KEY,
-        template_params: payload.template_params,
-      }),
-    });
-
-    if (backupRes.ok) {
-      console.log(`📧 EmailJS (Backup): Booking confirmation email sent successfully to ${params.customerEmail}`);
-      return { success: true };
-    }
-
-    return { success: false, message: `EmailJS HTTP ${res.status}: ${errorText}` };
+    if (res.ok) return { success: true };
+    return { success: false, message: `EmailJS HTTP ${res.status}: ${await res.text()}` };
   } catch (err: any) {
-    console.error('❌ EmailJS Exception:', err);
-    return { success: false, message: err.message || 'Network error sending email' };
+    return { success: false, message: err?.message || 'Network error sending ticket email' };
   }
 }
 
@@ -674,7 +734,7 @@ function escapeEmailHtml(value: string): string {
     .replaceAll("'", '&#039;');
 }
 
-export async function sendNitrosendEmail(to: string, subject: string, body: string): Promise<{ success: boolean; message?: string }> {
+export async function sendNitrosendEmail(to: string, subject: string, body: string, htmlOverride?: string): Promise<{ success: boolean; message?: string }> {
   const apiKey = process.env.NITROSEND_API_KEY;
   if (!apiKey) return { success: false, message: 'NITROSEND_API_KEY not configured' };
 
@@ -707,7 +767,7 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
     return `<p style="margin:0 0 10px;font-size:14px;line-height:22px;color:#333;">${emphasized ? `<strong>${escaped}</strong>` : escaped}</p>`;
   }).join('');
 
-  const html = `<!doctype html>
+  const defaultHtml = `<!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -754,6 +814,8 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
   </table>
 </body>
 </html>`;
+
+  const html = htmlOverride || defaultHtml;
 
   try {
     const res = await fetch('https://api.nitrosend.com/v1/my/messages', {

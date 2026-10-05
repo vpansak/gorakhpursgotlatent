@@ -38,10 +38,7 @@ export const metadata: Metadata = {
 };
 
 const education = [
-  ['LKG – Class 2', 'Purvanchal Public School', 'Gorakhpur, Uttar Pradesh'],
-  ['Class 3', 'KMR, Janipur — Gola Road', 'Gorakhpur District, Uttar Pradesh'],
-  ['Class 4 – Class 10', 'Holy Angel International School, Pali — Bansgaon', 'Gorakhpur District, Uttar Pradesh'],
-  ['Class 11 – Class 12', 'Purvanchal Public School', 'Gorakhpur, Uttar Pradesh'],
+  ['LKG – Class 12', 'Purvanchal Public School', 'Gorakhpur, Uttar Pradesh'],
   ['BCA', 'KIPM College', 'Gorakhpur, Uttar Pradesh']
 ];
 
@@ -71,7 +68,7 @@ const faqs = [
   ['Who is Alok Singh?', 'Alok Singh is presented on this website as a Full-Stack Developer, Technology Builder and Co-Founder of Gorakhpur’s Got Latent (GGL), from Kaudiram, Gorakhpur, Uttar Pradesh.'],
   ['Where is Alok Singh from?', 'Alok Singh is from Kaudiram in Gorakhpur district, Uttar Pradesh, India.'],
   ['What does Alok Singh do?', 'Alok Singh works across full-stack web development, digital product building, technology projects and the technical side of Gorakhpur’s Got Latent.'],
-  ['What is Alok Singh’s education?', 'His school journey includes Purvanchal Public School, KMR Janipur, Holy Angel International School in Pali/Bansgaon, and senior secondary education at Purvanchal Public School. He pursued BCA at KIPM College.'],
+  ['What is Alok Singh’s education?', 'His school journey was at Purvanchal Public School in Gorakhpur. He pursued BCA at KIPM College.'],
   ['What is Alok Singh’s role in GGL?', 'Alok Singh is a Co-Founder and technology/full-stack development lead associated with Gorakhpur’s Got Latent.'],
   ['What are Alok Singh’s skills?', 'His public technology profile includes HTML, CSS, JavaScript, TypeScript, React, Next.js, Node.js, APIs, databases, cloud deployment, SEO, UI/UX and digital product development.'],
   ['What is Alok Singh Instagram ID?', 'The Instagram profile linked from this page is @aloksingh_._.'],

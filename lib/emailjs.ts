@@ -861,11 +861,13 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
         }
       } catch {}
 
-      const delays = [3500, 7000, 12000];
+      // Nitrosend can defer admission for close to a minute while it gathers
+      // delivery evidence. Follow retry_at instead of failing too early.
+      const delays = [8000, 16000, 24000];
       for (let attempt = 0; attempt < delays.length; attempt++) {
         const backoffMs = delays[attempt];
         const hintedWait = retryAtMs ? Math.max(0, retryAtMs - Date.now()) : 0;
-        const waitMs = Math.min(Math.max(backoffMs, hintedWait), 20000);
+        const waitMs = Math.min(Math.max(backoffMs, hintedWait), 45000);
         await new Promise(resolve => setTimeout(resolve, waitMs));
 
         const retry = await fetch('https://api.nitrosend.com/v1/my/messages', {

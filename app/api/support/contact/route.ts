@@ -176,21 +176,6 @@ ${needsHuman ? "Your request may require human review. You can also contact the 
 Regards,
 Gorakhpur's Got Latent Support`;
 
-    const visitorEmail = await sendNitrosendEmail(
-      email,
-      emailSubject,
-      emailBody,
-      supportEmailHtml(name, aiReply, needsHuman)
-    );
-
-    if (!visitorEmail.success) {
-      console.error("GGL visitor support email failed:", visitorEmail.message);
-      return NextResponse.json(
-        { error: visitorEmail.message || "Support email could not be sent. Please try again or contact help.gglatent@gmail.com." },
-        { status: 503 }
-      );
-    }
-
     const adminBody = `A new request was submitted on the GGL /contact page.
 
 Name: ${name}
@@ -205,19 +190,39 @@ ${aiReply}
 
 This notification is for the GGL team/owner records.`;
 
-    const adminEmail = await sendNitrosendEmail(
-      SUPPORT_EMAIL,
-      `GGL AI Support — New Request from ${name}`,
-      adminBody,
-      supportEmailHtml("GGL Admin Team", `Visitor: ${name}\nEmail: ${email}\n\nVisitor issue:\n${message}\n\nAI reply:\n${aiReply}`, needsHuman)
-    );
+    // Keep owner notification independent from the visitor reply.
+    const [visitorEmail, adminEmail] = await Promise.all([
+      sendNitrosendEmail(
+        email,
+        emailSubject,
+        emailBody,
+        supportEmailHtml(name, aiReply, needsHuman)
+      ),
+      sendNitrosendEmail(
+        SUPPORT_EMAIL,
+        `GGL AI Support — New Request from ${name}`,
+        adminBody,
+        supportEmailHtml("GGL Admin Team", `Visitor: ${name}\nEmail: ${email}\n\nVisitor issue:\n${message}\n\nAI reply:\n${aiReply}`, needsHuman)
+      ),
+    ]);
 
+    if (!visitorEmail.success) {
+      console.error("GGL visitor support email failed:", visitorEmail.message);
+    }
     if (!adminEmail.success) {
       console.error("GGL admin support notification failed:", adminEmail.message);
-      return NextResponse.json({ ok: true, aiGenerated, escalated: needsHuman, adminNotified: false }, { status: 200 });
     }
 
-    return NextResponse.json({ ok: true, aiGenerated, escalated: needsHuman, adminNotified: true });
+    return NextResponse.json({
+      ok: true,
+      aiGenerated,
+      escalated: needsHuman,
+      adminNotified: adminEmail.success,
+      visitorEmailSent: visitorEmail.success,
+      ...(visitorEmail.success ? {} : {
+        error: "Your request was received, but the automatic reply email could not be sent. The GGL team has been notified."
+      })
+    });
   } catch (error) {
     console.error("GGL support error:", error);
     return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to process your request." }, { status: 500 });

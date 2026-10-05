@@ -116,7 +116,7 @@ const faqJsonLd = {
 
 export default function AllAboutAlokSinghPage() {
   return (
-    <main className="min-h-screen bg-[#05070d] px-4 py-8 text-white sm:px-8 sm:py-14 lg:px-16">
+    <main className="min-h-screen bg-[#05070d] px-4 py-8 font-medium text-white sm:px-8 sm:py-14 lg:px-16">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />

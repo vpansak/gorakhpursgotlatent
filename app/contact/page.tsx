@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import { Mail, Phone, MapPin } from 'lucide-react';
-import SupportForm from './SupportForm';
+import Link from "next/link";
+import { Mail, Phone, MapPin } from "lucide-react";
+import SupportForm from "./SupportForm";
 
 function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -25,11 +25,10 @@ export default function ContactPage() {
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-10">
       <div className="text-center space-y-3">
         <h1 className="text-3xl sm:text-5xl font-black text-white">Contact & Event Location</h1>
-        <p className="text-xs sm:text-sm text-slate-300">Got questions about tickets, performer auditions, or sponsorship? Reach out to our team.</p>
+        <p className="text-xs sm:text-sm text-slate-300">Got questions about tickets, performer auditions, or sponsorship? Chat with GGL AI Support instantly.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Left: Contact Info */}
         <div className="glass-panel p-8 rounded-3xl border border-amber-500/30 space-y-6">
           <h3 className="text-xl font-bold text-amber-400 border-b border-slate-800 pb-3">Official Communication Channels</h3>
 
@@ -41,10 +40,10 @@ export default function ContactPage() {
               <div>
                 <strong className="block text-white font-bold">Show Venue Address:</strong>
                 <p className="text-xs text-slate-300">Announce Soon, Gorakhpur, Uttar Pradesh</p>
-                <a 
-                  href="https://maps.google.com/?q=26.828049,83.414894" 
-                  target="_blank" 
-                  rel="noreferrer" 
+                <a
+                  href="https://maps.google.com/?q=26.828049,83.414894"
+                  target="_blank"
+                  rel="noreferrer"
                   className="inline-flex items-center gap-1 text-xs text-amber-400 font-bold mt-1 hover:underline"
                 >
                   View Location on Google Maps ↗
@@ -86,25 +85,22 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* Right: Quick Action Links */}
-        <div className="glass-panel p-8 rounded-3xl border border-amber-500/30 space-y-6 flex flex-col justify-between">
-          <div className="space-y-4">
+        <div className="glass-panel p-5 sm:p-6 rounded-3xl border border-amber-500/30 space-y-5 flex flex-col">
+          <div className="space-y-2">
             <h3 className="text-xl font-bold text-white">Need Immediate Help?</h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Tell us your issue below. Our AI support assistant can reply to your email automatically.
+              No email form. Just chat directly with our AI support assistant below.
             </p>
           </div>
 
           <SupportForm />
 
-          <div className="space-y-3 pt-1">
-            <Link
-              href="/book-ticket"
-              className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg"
-            >
-              BOOK SHOW TICKETS — ₹149
-            </Link>
-          </div>
+          <Link
+            href="/book-ticket"
+            className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg"
+          >
+            BOOK SHOW TICKETS — ₹149
+          </Link>
         </div>
       </div>
     </div>

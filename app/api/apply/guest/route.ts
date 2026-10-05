@@ -85,7 +85,6 @@ export async function POST(req: Request) {
           mobile: effectiveWhatsapp,
           summary: `Profession: ${effectiveProfession}\nCategory: ${effectiveCategory}\nCity: ${effectiveCity}\nStage Name: ${(stageName || '').toString().trim() || 'N/A'}`,
         });
-        if (!emailResult.success) console.warn('Guest application email warning:', emailResult.message);
 
 
 

@@ -752,7 +752,7 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
     const trimmed = line.trim();
     if (!trimmed) return '<div style="height:8px;line-height:8px;">&nbsp;</div>';
 
-    const match = trimmed.match(/^([^:]{1,45}):\\s*(.*)$/);
+    const match = trimmed.match(/^([^:]{1,45}):\s*(.*)$/);
     if (match) {
       const label = escapeEmailHtml(match[1]);
       const value = escapeEmailHtml(match[2]);
@@ -772,40 +772,56 @@ export async function sendNitrosendEmail(to: string, subject: string, body: stri
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
   <title>${escapeEmailHtml(subject)}</title>
 </head>
-<body style="margin:0;padding:0;background:#f3f3f3;font-family:Arial,Helvetica,sans-serif;color:#222;">
+<body style="margin:0;padding:0;background:#08090d;font-family:Arial,Helvetica,sans-serif;color:#f7f7f7;">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeEmailHtml(subject)}</div>
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f3f3f3;margin:0;padding:0;width:100%;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background:#08090d;">
     <tr>
-      <td align="center" style="padding:24px 10px;">
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px;background:#ffffff;border:1px solid #e2e2e2;border-radius:14px;overflow:hidden;">
+      <td align="center" style="padding:18px 8px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#101116;border:1px solid #30240d;border-radius:18px;overflow:hidden;">
           <tr>
-            <td style="padding:22px 22px 18px;background:#111111;text-align:center;">
-              <img src="${logoUrl}" alt="Gorakhpur's Got Latent" width="76" style="display:block;width:76px;max-width:76px;height:auto;margin:0 auto 10px;border:0;">
-              <div style="font-size:12px;line-height:18px;letter-spacing:1.5px;color:#ffffff;font-weight:700;text-transform:uppercase;">GORAKHPUR'S GOT LATENT</div>
+            <td style="padding:24px 18px 20px;text-align:center;background:#0d0d10;border-bottom:1px solid #3a2b0e;">
+              <img src="${logoUrl}" alt="Gorakhpur's Got Latent logo" width="92" style="display:block;width:92px;max-width:92px;height:auto;margin:0 auto 12px;border:0;">
+              <div style="font-size:11px;line-height:16px;letter-spacing:2px;color:#f2c14e;font-weight:800;">GORAKHPUR'S GOT LATENT</div>
+              <div style="margin-top:8px;font-size:10px;line-height:15px;letter-spacing:1.2px;color:#8e9099;text-transform:uppercase;">RAW TALENT • REAL REACTIONS • ONE BIG STAGE</div>
             </td>
           </tr>
           <tr>
-            <td style="padding:26px 22px 8px;">
-              <div style="font-size:21px;line-height:28px;font-weight:800;color:#171717;">${escapeEmailHtml(heading)}</div>
-              <div style="margin-top:7px;font-size:12px;line-height:18px;color:#888;">Official communication from Gorakhpur's Got Latent</div>
+            <td style="padding:22px 18px 8px;">
+              <div style="display:inline-block;padding:5px 9px;border:1px solid #6e4f10;border-radius:999px;background:#1a1408;color:#f2c14e;font-size:9px;line-height:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;">OFFICIAL COMMUNICATION</div>
+              <div style="margin-top:12px;font-size:23px;line-height:29px;font-weight:900;color:#ffffff;">${escapeEmailHtml(heading)}</div>
+              <div style="margin-top:7px;font-size:13px;line-height:20px;color:#a9abb3;">Gorakhpur's Got Latent • Official Update</div>
             </td>
           </tr>
           <tr>
-            <td style="padding:14px 22px 24px;">${contentHtml}</td>
-          </tr>
-          <tr>
-            <td style="padding:18px 22px;background:#fafafa;border-top:1px solid #eeeeee;text-align:center;">
-              <div style="font-size:12px;line-height:18px;color:#666;">Need help? <a href="mailto:help.gglatent@gmail.com" style="color:#b00000;text-decoration:none;font-weight:700;">help.gglatent@gmail.com</a></div>
-              <div style="margin-top:8px;font-size:12px;line-height:18px;color:#777;">
-                <a href="https://www.gkpgotlatent.in/" style="color:#b00000;text-decoration:none;">Website</a>
-                &nbsp;·&nbsp;
-                <a href="https://www.instagram.com/gkp_got_latent/" style="color:#b00000;text-decoration:none;">Instagram</a>
-                &nbsp;·&nbsp;
-                <a href="https://wa.me/918423858424" style="color:#b00000;text-decoration:none;">WhatsApp</a>
+            <td style="padding:12px 18px 22px;">
+              <div style="background:#0a0b0f;border:1px solid #292b32;border-radius:14px;padding:14px 12px;">
+                ${contentHtml}
               </div>
-              <div style="margin-top:10px;font-size:10px;line-height:16px;color:#999;">© Gorakhpur's Got Latent · Official Email</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 18px 22px;text-align:center;">
+              <a href="https://www.gkpgotlatent.in/" style="display:inline-block;min-width:190px;box-sizing:border-box;background:#f2c14e;color:#090a0d;text-decoration:none;font-size:13px;line-height:18px;font-weight:900;padding:13px 20px;border-radius:10px;">OPEN GGL WEBSITE</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px;background:#0b0c0f;border-top:1px solid #25262c;text-align:center;">
+              <div style="font-size:12px;line-height:19px;color:#9b9da5;">Need help?</div>
+              <div style="margin-top:3px;font-size:12px;line-height:19px;">
+                <a href="mailto:help.gglatent@gmail.com" style="color:#f2c14e;text-decoration:none;font-weight:800;">help.gglatent@gmail.com</a>
+              </div>
+              <div style="margin-top:5px;font-size:12px;line-height:19px;color:#777a83;">WhatsApp: +91 84238 58424</div>
+              <div style="margin-top:8px;font-size:11px;line-height:18px;">
+                <a href="https://www.gkpgotlatent.in/" style="color:#d7d8dc;text-decoration:none;">Website</a>
+                <span style="color:#555;"> &nbsp;•&nbsp; </span>
+                <a href="https://www.instagram.com/gkp_got_latent/" style="color:#d7d8dc;text-decoration:none;">Instagram</a>
+                <span style="color:#555;"> &nbsp;•&nbsp; </span>
+                <a href="https://wa.me/918423858424" style="color:#d7d8dc;text-decoration:none;">WhatsApp</a>
+              </div>
+              <div style="margin-top:10px;font-size:9px;line-height:15px;color:#62646c;">© Gorakhpur's Got Latent • Official Email</div>
             </td>
           </tr>
         </table>

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sendNitrosendEmail } from "@/lib/emailjs";
 
 const SUPPORT_EMAIL = "alooksingh1@gmail.com";
 const DEFAULT_MODEL = "gpt-5.6-sol";
-const PRIMITIVE_FROM_EMAIL = process.env.PRIMITIVE_FROM_EMAIL || "agent@raw-trout.primitive.email";
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -16,30 +16,62 @@ function getValidModel(): string {
   return envModel;
 }
 
-async function sendPrimitiveEmail(to: string, subject: string, bodyText: string): Promise<void> {
-  const apiKey = process.env.PRIMITIVE_API_KEY;
-  if (!apiKey) throw new Error("PRIMITIVE_API_KEY environment variable is not configured.");
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
-  const response = await fetch("https://api.primitive.dev/v1/send-mail", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: PRIMITIVE_FROM_EMAIL,
-      to,
-      subject,
-      body_text: bodyText,
-      reply_to: "help.gglatent@gmail.com",
-      wait: true,
-    }),
-  });
-
-  if (!response.ok) {
-    const details = await response.text().catch(() => "");
-    throw new Error(`Primitive email failed (${response.status}): ${details.slice(0, 500)}`);
-  }
+function supportEmailHtml(name: string, aiReply: string, needsHuman: boolean): string {
+  const logoUrl = "https://www.gkpgotlatent.in/logo-transparent.png";
+  const status = needsHuman ? "HUMAN REVIEW FLAGGED" : "AI SUPPORT RESPONSE";
+  const statusColor = needsHuman ? "#ff7b7b" : "#f2c14e";
+  const replyHtml = escapeHtml(aiReply).replace(/\n/g, "<br>");
+  return `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>GGL AI Support</title>
+</head>
+<body style="margin:0;padding:0;background:#08090d;font-family:Arial,Helvetica,sans-serif;color:#f7f7f7;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Gorakhpur's Got Latent support response</div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background:#08090d;">
+    <tr><td align="center" style="padding:16px 8px;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#101116;border:1px solid #30240d;border-radius:16px;overflow:hidden;">
+        <tr><td style="padding:20px 16px;text-align:center;background:#0d0d10;border-bottom:1px solid #3a2b0e;">
+          <img src="${logoUrl}" alt="Gorakhpur's Got Latent" width="82" style="display:block;width:82px;height:auto;margin:0 auto 9px;border:0;">
+          <div style="font-size:11px;line-height:15px;letter-spacing:2px;color:#f2c14e;font-weight:800;">GORAKHPUR'S GOT LATENT</div>
+          <div style="margin-top:6px;font-size:9px;line-height:14px;letter-spacing:1px;color:#858892;">OFFICIAL SUPPORT</div>
+        </td></tr>
+        <tr><td style="padding:18px 16px 8px;">
+          <div style="display:inline-block;padding:5px 8px;border:1px solid #5d4612;border-radius:999px;background:#191408;color:${statusColor};font-size:9px;line-height:12px;font-weight:800;letter-spacing:.8px;">${status}</div>
+          <div style="margin-top:11px;font-size:21px;line-height:27px;font-weight:900;color:#fff;">Hi ${escapeHtml(name)},</div>
+          <div style="margin-top:5px;font-size:13px;line-height:20px;color:#a9abb3;">Here is the response to your GGL support request.</div>
+        </td></tr>
+        <tr><td style="padding:10px 16px 18px;">
+          <div style="background:#0a0b0f;border:1px solid #292b32;border-radius:13px;padding:14px 13px;font-size:14px;line-height:22px;color:#e7e7ea;word-break:break-word;overflow-wrap:anywhere;">${replyHtml}</div>
+        </td></tr>
+        <tr><td style="padding:0 16px 20px;text-align:center;">
+          <a href="https://www.gkpgotlatent.in/contact" style="display:inline-block;background:#f2c14e;color:#090a0d;text-decoration:none;font-size:13px;line-height:18px;font-weight:900;padding:12px 20px;border-radius:10px;">OPEN GGL SUPPORT</a>
+        </td></tr>
+        <tr><td style="padding:16px;background:#0b0c0f;border-top:1px solid #25262c;text-align:center;">
+          <div style="font-size:11px;line-height:18px;color:#92949d;">Need further help?</div>
+          <div style="margin-top:3px;font-size:12px;line-height:19px;">
+            <a href="mailto:help.gglatent@gmail.com" style="color:#f2c14e;text-decoration:none;font-weight:800;">help.gglatent@gmail.com</a>
+          </div>
+          <div style="margin-top:4px;font-size:11px;line-height:18px;color:#777a83;">WhatsApp: +91 84238 58424</div>
+          <div style="margin-top:7px;font-size:10px;line-height:16px;color:#62646c;">© Gorakhpur's Got Latent • Official Support Email</div>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
 }
 
 async function generateAiReply(name: string, email: string, message: string): Promise<string> {
@@ -144,14 +176,22 @@ ${needsHuman ? "Your request may require human review. You can also contact the 
 Regards,
 Gorakhpur's Got Latent Support`;
 
-    await sendPrimitiveEmail(email, emailSubject, emailBody);
+    const visitorEmail = await sendNitrosendEmail(
+      email,
+      emailSubject,
+      emailBody,
+      supportEmailHtml(name, aiReply, needsHuman)
+    );
 
-    // Always notify the GGL owner with the complete request + AI reply.
-    // Human escalation remains additionally flagged by needsHuman, but normal requests are also forwarded.
-    await sendPrimitiveEmail(
-      SUPPORT_EMAIL,
-      `GGL AI Support — New Request from ${name}`,
-      `A new request was submitted on the GGL /contact page.
+    if (!visitorEmail.success) {
+      console.error("GGL visitor support email failed:", visitorEmail.message);
+      return NextResponse.json(
+        { error: visitorEmail.message || "Support email could not be sent. Please try again or contact help.gglatent@gmail.com." },
+        { status: 503 }
+      );
+    }
+
+    const adminBody = `A new request was submitted on the GGL /contact page.
 
 Name: ${name}
 Email: ${email}
@@ -163,10 +203,21 @@ ${message}
 AI reply sent to visitor:
 ${aiReply}
 
-This notification is for the GGL team/owner records. The visitor's AI response was sent through Primitive Email.`
+This notification is for the GGL team/owner records.`;
+
+    const adminEmail = await sendNitrosendEmail(
+      SUPPORT_EMAIL,
+      `GGL AI Support — New Request from ${name}`,
+      adminBody,
+      supportEmailHtml("GGL Admin Team", `Visitor: ${name}\nEmail: ${email}\n\nVisitor issue:\n${message}\n\nAI reply:\n${aiReply}`, needsHuman)
     );
 
-    return NextResponse.json({ ok: true, aiGenerated, escalated: needsHuman });
+    if (!adminEmail.success) {
+      console.error("GGL admin support notification failed:", adminEmail.message);
+      return NextResponse.json({ ok: true, aiGenerated, escalated: needsHuman, adminNotified: false }, { status: 200 });
+    }
+
+    return NextResponse.json({ ok: true, aiGenerated, escalated: needsHuman, adminNotified: true });
   } catch (error) {
     console.error("GGL support error:", error);
     return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to process your request." }, { status: 500 });

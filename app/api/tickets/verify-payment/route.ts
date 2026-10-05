@@ -1,4 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
+
+export const maxDuration = 60;
 import { verifyRazorpaySignature } from '@/lib/razorpay';
 import { sendBookingConfirmationEmail } from '@/lib/emailjs';
 import { 
@@ -80,24 +82,29 @@ export async function POST(req: Request) {
     await saveTicketRecord(ticketRecord);
 
     if (ticketRecord.email) {
-      sendBookingConfirmationEmail({
-        customerName: ticketRecord.customer_name,
-        customerEmail: ticketRecord.email,
-        orderNumber: ticketRecord.booking_id,
-        razorpayOrderId: ticketRecord.razorpay_order_id,
-        razorpayPaymentId: ticketRecord.razorpay_payment_id,
-        ticketNumber: ticketRecord.ticket_id,
-        eventTitle: 'Gorakhpur\'s Got Latent',
-        eventDate: 'As announced on the official website',
-        startTime: 'As announced on the official website',
-        venueName: 'Gorakhpur',
-        categoryName: 'Show Ticket',
-        quantity: ticketRecord.quantity,
-        totalAmount: ticketRecord.amount,
-        currency: 'INR',
-      }).then((res) => {
-        if (!res.success) console.warn('Ticket confirmation email warning:', res.message);
-      }).catch((err) => console.error('Ticket confirmation email error:', err));
+      after(async () => {
+        try {
+          const res = await sendBookingConfirmationEmail({
+            customerName: ticketRecord.customer_name,
+            customerEmail: ticketRecord.email,
+            orderNumber: ticketRecord.booking_id,
+            razorpayOrderId: ticketRecord.razorpay_order_id,
+            razorpayPaymentId: ticketRecord.razorpay_payment_id,
+            ticketNumber: ticketRecord.ticket_id,
+            eventTitle: 'Gorakhpur\'s Got Latent',
+            eventDate: 'As announced on the official website',
+            startTime: 'As announced on the official website',
+            venueName: 'Gorakhpur',
+            categoryName: 'Show Ticket',
+            quantity: ticketRecord.quantity,
+            totalAmount: ticketRecord.amount,
+            currency: 'INR',
+          });
+          if (!res.success) console.warn('Ticket confirmation email warning:', res.message);
+        } catch (err) {
+          console.error('Ticket confirmation email error:', err);
+        }
+      });
     }
 
 

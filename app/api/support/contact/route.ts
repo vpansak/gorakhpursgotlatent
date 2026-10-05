@@ -146,22 +146,25 @@ Gorakhpur's Got Latent Support`;
 
     await sendPrimitiveEmail(email, emailSubject, emailBody);
 
-    if (needsHuman) {
-      await sendPrimitiveEmail(
-        SUPPORT_EMAIL,
-        `GGL AI Support Escalation — ${name}`,
-        `A support request needs human review.
+    // Always notify the GGL owner with the complete request + AI reply.
+    // Human escalation remains additionally flagged by needsHuman, but normal requests are also forwarded.
+    await sendPrimitiveEmail(
+      SUPPORT_EMAIL,
+      `GGL AI Support — New Request from ${name}`,
+      `A new request was submitted on the GGL /contact page.
 
 Name: ${name}
 Email: ${email}
+Human review required: ${needsHuman ? "YES" : "NO"}
 
 Visitor issue:
 ${message}
 
-AI reply:
-${aiReply}`
-      );
-    }
+AI reply sent to visitor:
+${aiReply}
+
+This notification is for the GGL team/owner records. The visitor's AI response was sent through Primitive Email.`
+    );
 
     return NextResponse.json({ ok: true, aiGenerated, escalated: needsHuman });
   } catch (error) {

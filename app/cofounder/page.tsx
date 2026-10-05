@@ -89,22 +89,10 @@ const personJsonLd = {
 
 const milestones = [
   {
-    year: 'EARLY YEARS',
-    title: 'LKG → Class 2',
+    year: 'SCHOOL YEARS',
+    title: 'LKG → Class 12',
     place: 'Purvanchal Public School',
-    text: 'The journey began at Purvanchal Public School, where Alok completed his early schooling from LKG through Class 2.',
-  },
-  {
-    year: 'CLASS 3',
-    title: 'A New School, A New Chapter',
-    place: 'KMR, Janipur — Gola Road',
-    text: 'Class 3 brought a change of environment and another chapter of school life at KMR, Janipur, Gola Road.',
-  },
-  {
-    year: 'CLASS 4 → 10',
-    title: 'Growing Up & Finding His Direction',
-    place: 'Holy Angel International School, Pali — Bansgaon',
-    text: 'From Class 4 to Class 10, Alok studied at Holy Angel International School in Pali, Bansgaon — years that shaped his personality, curiosity and ambition.',
+    text: 'Alok completed his school education from LKG through Class 12 at Purvanchal Public School in Gorakhpur.',
   },
   {
     year: 'CLASS 11 → 12',

@@ -4,6 +4,8 @@ import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
 import { sendGenericApplicationEmails } from '@/lib/emailjs';
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();

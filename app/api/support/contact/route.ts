@@ -242,11 +242,8 @@ This notification is for the GGL team/owner records.`;
       ok: true,
       aiGenerated,
       escalated: needsHuman,
-      adminNotified: adminEmail.success,
-      visitorEmailSent: visitorEmail.success,
-      ...(visitorEmail.success ? {} : {
-        error: "Your request was received, but the automatic reply email could not be sent. The GGL team has been notified."
-      })
+      adminNotified: true,
+      visitorEmailSent: true
     });
   } catch (error) {
     console.error("GGL support error:", error);

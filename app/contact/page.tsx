@@ -1,5 +1,18 @@
 import Link from "next/link";
-import { Mail, Phone, MapPin, Instagram, Facebook, Youtube, MessageCircle } from "lucide-react";
+import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
+
+
+function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>;
+}
+
+function FacebookIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return <svg className={className} fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>;
+}
+
+function YoutubeIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return <svg className={className} fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.7V8.3l6.4 3.7-6.4 3.7Z"/></svg>;
+}
 
 function XIcon({ className = "w-5 h-5" }: { className?: string }) {
   return <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817-5.964 6.817H1.683l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg>;
@@ -79,13 +92,13 @@ export default function ContactPage() {
             <span className="text-xs font-bold text-slate-400 uppercase">Official Social Channels</span>
             <div className="grid grid-cols-2 gap-3">
               <a href="https://www.instagram.com/gkp_got_latent/" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="Instagram">
-                <Instagram className="w-5 h-5" /><span className="text-xs font-bold">Instagram</span>
+                <InstagramIcon className="w-5 h-5" /><span className="text-xs font-bold">Instagram</span>
               </a>
               <a href="https://www.youtube.com/@GkpGotLatent" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="YouTube">
-                <Youtube className="w-5 h-5" /><span className="text-xs font-bold">YouTube</span>
+                <YoutubeIcon className="w-5 h-5" /><span className="text-xs font-bold">YouTube</span>
               </a>
               <a href="https://www.facebook.com/people/Gorakhpurs-Got-Latent/61593154024693/" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="Facebook">
-                <Facebook className="w-5 h-5" /><span className="text-xs font-bold">Facebook</span>
+                <FacebookIcon className="w-5 h-5" /><span className="text-xs font-bold">Facebook</span>
               </a>
               <a href="https://x.com/gkpgotlatent" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:text-white" aria-label="X">
                 <XIcon className="w-5 h-5" /><span className="text-xs font-bold">X</span>

@@ -1,13 +1,31 @@
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 
-const key_id = process.env.RAZORPAY_KEY_ID || '';
-const key_secret = process.env.RAZORPAY_KEY_SECRET || '';
+const DEFAULT_KEY_ID = 'rzp_live_Tk6bjDQFjKC5xq';
+const DEFAULT_KEY_SECRET = '715LdSIifcBz05sRpAlAAfgS';
 
-export const razorpay = key_id && key_secret ? new Razorpay({ key_id, key_secret }) : null;
+export function getRazorpayKeyId(): string {
+  return process.env.RAZORPAY_KEY_ID || DEFAULT_KEY_ID;
+}
+
+export function getRazorpayKeySecret(): string {
+  return process.env.RAZORPAY_KEY_SECRET || DEFAULT_KEY_SECRET;
+}
+
+export function getRazorpayInstance(): Razorpay {
+  return new Razorpay({
+    key_id: getRazorpayKeyId(),
+    key_secret: getRazorpayKeySecret(),
+  });
+}
+
+export const razorpay = new Razorpay({
+  key_id: getRazorpayKeyId(),
+  key_secret: getRazorpayKeySecret(),
+});
 
 export function isRazorpayConfigured(): boolean {
-  return Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET);
+  return Boolean(getRazorpayKeyId() && getRazorpayKeySecret());
 }
 
 export function verifyRazorpaySignature(
@@ -15,10 +33,11 @@ export function verifyRazorpaySignature(
   paymentId: string,
   signature: string
 ): boolean {
-  if (!key_secret) return false;
+  const secret = getRazorpayKeySecret();
+  if (!secret) return false;
   const body = `${orderId}|${paymentId}`;
   const expectedSignature = crypto
-    .createHmac('sha256', key_secret)
+    .createHmac('sha256', secret)
     .update(body.toString())
     .digest('hex');
   return expectedSignature === signature;

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { db } from '@/lib/db';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
@@ -88,15 +88,21 @@ export async function POST(req: Request) {
 
     syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
 
-    const emailResult = await sendGenericApplicationEmails({
-      applicationType: 'SPONSOR',
-      applicationId: appId,
-      name: effectiveContactPerson,
-      email: effectiveEmail,
-      mobile: effectiveWhatsapp,
-      summary: `Company: ${effectiveCompanyName}\nDesignation: ${(designation || '').toString().trim() || 'N/A'}\nIndustry: ${(industry || '').toString().trim() || 'N/A'}\nLocation: ${(location || '').toString().trim() || 'N/A'}\nSponsorship Type: ${(sponsorshipType || 'General Brand Sponsorship').toString().trim()}`,
+    after(async () => {
+      try {
+        const emailResult = await sendGenericApplicationEmails({
+          applicationType: 'SPONSOR',
+          applicationId: appId,
+          name: effectiveContactPerson,
+          email: effectiveEmail,
+          mobile: effectiveWhatsapp,
+          summary: `Company: ${effectiveCompanyName}\nDesignation: ${(designation || '').toString().trim() || 'N/A'}\nIndustry: ${(industry || '').toString().trim() || 'N/A'}\nLocation: ${(location || '').toString().trim() || 'N/A'}\nSponsorship Type: ${(sponsorshipType || 'General Brand Sponsorship').toString().trim()}`,
+        });
+        if (!emailResult.success) console.warn('Sponsor application email warning:', emailResult.message);
+      } catch (err) {
+        console.error('Sponsor application email error:', err);
+      }
     });
-    if (!emailResult.success) console.warn('Sponsor application email warning:', emailResult.message);
 
 
     return NextResponse.json({

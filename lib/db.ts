@@ -27,13 +27,21 @@ export function normalizeSql(sql: string): string {
   return sql.replace(/\?/g, () => `$${index++}`);
 }
 
+function withTimeout<T>(promise: Promise<T>, ms: number = 1800): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`DB query timed out after ${ms}ms`)), ms)
+    ),
+  ]);
+}
+
 /**
  * Executes queries using stateless HTTP client with automatic retry logic for transient errors
  */
-async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], retries = 2): Promise<T[]> {
+async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], retries = 1): Promise<T[]> {
   const client = getSqlClient();
   if (!client) {
-    console.warn('⚠️ DATABASE_URL environment variable is not configured.');
     return [];
   }
 
@@ -41,12 +49,16 @@ async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], re
   let lastErr: any;
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const rows = await client.query(normalized, params);
+      const rows = await withTimeout(client.query(normalized, params), 1800);
       return (rows || []) as T[];
     } catch (err: any) {
       lastErr = err;
+      const msg = (err?.message || String(err)).toLowerCase();
+      if (msg.includes('authentication') || msg.includes('password') || msg.includes('timed out')) {
+        break; // Fail fast on auth error or timeout, avoid hanging
+      }
       if (attempt < retries) {
-        await new Promise((r) => setTimeout(r, 100 * attempt));
+        await new Promise((r) => setTimeout(r, 50));
       }
     }
   }
@@ -86,7 +98,8 @@ export async function ensureDatabaseSchema() {
     if (!client) return;
 
     try {
-      // 1. team_applications
+      await withTimeout((async () => {
+        // 1. team_applications
       await client.query(`
         CREATE TABLE IF NOT EXISTS team_applications (
           id TEXT PRIMARY KEY,
@@ -328,6 +341,7 @@ export async function ensureDatabaseSchema() {
           updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
       `);
+      })(), 2500);
     } catch (err) {
       console.warn('Schema init notice:', err);
     }

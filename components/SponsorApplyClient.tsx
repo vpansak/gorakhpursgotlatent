@@ -89,11 +89,15 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
     let assignedAppId = '';
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
       const res = await fetch('/api/apply/sponsor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
       const data = await parseResponse(res);
       if (data.success && data.appId) {

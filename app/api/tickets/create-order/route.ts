@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { razorpay, isRazorpayConfigured } from '@/lib/razorpay';
+import { getRazorpayKeyId, getRazorpayInstance, isRazorpayConfigured } from '@/lib/razorpay';
 import { validateAgeIs18Plus } from '@/lib/ticketsStore';
 
 export async function POST(req: Request) {
@@ -50,9 +50,10 @@ export async function POST(req: Request) {
     const amountPaise = totalAmount * 100;
 
     const bookingId = `ord-ggl-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
-    const razorpayKeyId = process.env.RAZORPAY_KEY_ID || '';
+    const razorpayKeyId = getRazorpayKeyId();
+    const rzpInstance = getRazorpayInstance();
 
-    if (!isRazorpayConfigured() || !razorpay || !razorpayKeyId) {
+    if (!isRazorpayConfigured() || !rzpInstance || !razorpayKeyId) {
       return NextResponse.json(
         { error: 'Payment gateway is temporarily unavailable. Please try again later.' },
         { status: 503 }
@@ -61,7 +62,7 @@ export async function POST(req: Request) {
 
     let razorpayOrderId = '';
     try {
-        const rzpOrder = await razorpay.orders.create({
+        const rzpOrder = await rzpInstance.orders.create({
           amount: amountPaise,
           currency: 'INR',
           receipt: bookingId,

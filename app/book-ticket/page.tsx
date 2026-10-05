@@ -76,11 +76,15 @@ export default function BookTicketPage() {
         throw new Error('Razorpay SDK failed to load. Please check your internet connection.');
       }
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
       const orderRes = await fetch('/api/tickets/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customerName, mobile, email, instagramId, dob, quantity, termsAgreed }),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
       const orderData = await orderRes.json();
       if (!orderRes.ok || !orderData.success) {
@@ -88,7 +92,7 @@ export default function BookTicketPage() {
       }
 
       const options = {
-        key: orderData.keyId || 'rzp_live_Tfu7PlxOWV6ohp',
+        key: orderData.keyId || 'rzp_live_Tk6bjDQFjKC5xq',
         amount: orderData.amountPaise || totalAmount * 100,
         currency: 'INR',
         name: "Gorakhpur's Got Latent",

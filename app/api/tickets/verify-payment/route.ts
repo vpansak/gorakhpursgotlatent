@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { verifyRazorpaySignature } from '@/lib/razorpay';
+import { verifyRazorpaySignature, getRazorpayKeySecret } from '@/lib/razorpay';
 import { sendBookingConfirmationEmail } from '@/lib/emailjs';
 import { 
   generateUniqueTicketId, 
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!process.env.RAZORPAY_KEY_SECRET) {
+    if (!getRazorpayKeySecret()) {
       return NextResponse.json(
         { success: false, error: 'Payment gateway is not configured on the server.' },
         { status: 503 }

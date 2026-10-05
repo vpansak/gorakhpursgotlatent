@@ -92,11 +92,15 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
     let assignedAppId = '';
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
       const res = await fetch('/api/apply/guest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
       const data = await parseResponse(res);
       if (data.success && data.appId) {

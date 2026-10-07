@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Ticket as TicketIcon, CheckCircle2, AlertCircle, ShieldCheck, Lock } from 'lucide-react';
 import TicketCard from '@/components/TicketCard';
-import { TicketRecord, validateAgeIs18Plus } from '@/lib/ticketTypes';
+import { TicketRecord } from '@/lib/ticketTypes';
 import { useLeadCapture } from '@/lib/leadCapture';
 
 const loadRazorpayScript = () => {
@@ -25,7 +25,6 @@ export default function BookTicketPage() {
   const [mobile, setMobile] = useState('');
   const [email, setEmail] = useState('');
   const [instagramId, setInstagramId] = useState('');
-  const [dob, setDob] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -37,12 +36,11 @@ export default function BookTicketPage() {
   // Real-time abandoned/in-progress lead capture. Saves as soon as any form field is entered.
   useLeadCapture({
     source: 'book-ticket',
-    data: { customerName, mobile, email, instagramId, dob, quantity, termsAgreed },
+    data: { customerName, mobile, email, instagramId, quantity, termsAgreed },
     customerName,
     mobile,
     email,
     instagramId,
-    dob,
     quantity,
   });
 
@@ -60,14 +58,6 @@ export default function BookTicketPage() {
       return;
     }
 
-    if (dob) {
-      const ageCheck = validateAgeIs18Plus(dob);
-      if (!ageCheck.is18Plus) {
-        setErrorMsg('You must be 18 or above to book this ticket.');
-        return;
-      }
-    }
-
     setLoading(true);
 
     try {
@@ -81,7 +71,7 @@ export default function BookTicketPage() {
       const orderRes = await fetch('/api/tickets/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customerName, mobile, email, instagramId, dob, quantity, termsAgreed }),
+        body: JSON.stringify({ customerName, mobile, email, instagramId, quantity, termsAgreed }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
@@ -92,7 +82,7 @@ export default function BookTicketPage() {
       }
 
       const options = {
-        key: orderData.keyId || 'rzp_live_Tk6bjDQFjKC5xq',
+        key: orderData.keyId,
         amount: orderData.amountPaise || totalAmount * 100,
         currency: 'INR',
         name: "Gorakhpur's Got Latent",
@@ -121,7 +111,6 @@ export default function BookTicketPage() {
                 mobile,
                 email,
                 instagramId,
-                dob,
                 quantity,
                 amount: totalAmount,
               }),
@@ -175,7 +164,6 @@ export default function BookTicketPage() {
               setMobile('');
               setEmail('');
               setInstagramId('');
-              setDob('');
               setQuantity(1);
               setTermsAgreed(false);
             }}
@@ -242,22 +230,7 @@ export default function BookTicketPage() {
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Instagram Handle <span className="text-[10px] text-slate-500 font-normal lowercase">(optional)</span></label>
             <input type="text" value={instagramId} onChange={(e) => setInstagramId(e.target.value)} placeholder="@username (optional)" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
           </div>
-
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Date of Birth <span className="text-[10px] text-slate-500 font-normal lowercase">(optional - 18+)</span></label>
-            <input
-              type="date"
-              value={dob}
-              onChange={(e) => {
-                const value = e.target.value;
-                setDob(value);
-                setErrorMsg(value && !validateAgeIs18Plus(value).is18Plus ? 'You must be 18 or above to book this ticket.' : '');
-              }}
-              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500"
-            />
-          </div>
-
-          <div>
+\n          <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Number of Tickets *</label>
             <select value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-300 font-bold outline-none focus:border-amber-500">
               <option value={1}>1 Ticket (₹149)</option>

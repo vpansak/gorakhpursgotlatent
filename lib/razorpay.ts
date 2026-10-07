@@ -1,15 +1,12 @@
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 
-const DEFAULT_KEY_ID = 'rzp_live_Tk6bjDQFjKC5xq';
-const DEFAULT_KEY_SECRET = '715LdSIifcBz05sRpAlAAfgS';
-
 export function getRazorpayKeyId(): string {
-  return process.env.RAZORPAY_KEY_ID || DEFAULT_KEY_ID;
+  return process.env.RAZORPAY_KEY_ID || '';
 }
 
 export function getRazorpayKeySecret(): string {
-  return process.env.RAZORPAY_KEY_SECRET || DEFAULT_KEY_SECRET;
+  return process.env.RAZORPAY_KEY_SECRET || '';
 }
 
 export function getRazorpayInstance(): Razorpay {

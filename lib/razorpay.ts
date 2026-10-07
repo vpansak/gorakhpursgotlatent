@@ -9,17 +9,17 @@ export function getRazorpayKeySecret(): string {
   return process.env.RAZORPAY_KEY_SECRET || '';
 }
 
-export function getRazorpayInstance(): Razorpay {
-  return new Razorpay({
-    key_id: getRazorpayKeyId(),
-    key_secret: getRazorpayKeySecret(),
-  });
+export function getRazorpayInstance(): Razorpay | null {
+  const key_id = getRazorpayKeyId();
+  const key_secret = getRazorpayKeySecret();
+  if (!key_id || !key_secret) return null;
+  try {
+    return new Razorpay({ key_id, key_secret });
+  } catch (err) {
+    console.warn('Razorpay initialization notice:', err);
+    return null;
+  }
 }
-
-export const razorpay = new Razorpay({
-  key_id: getRazorpayKeyId(),
-  key_secret: getRazorpayKeySecret(),
-});
 
 export function isRazorpayConfigured(): boolean {
   return Boolean(getRazorpayKeyId() && getRazorpayKeySecret());
@@ -54,7 +54,8 @@ export async function processRazorpayRefund(
   amountInRupees?: number,
   notes?: string
 ): Promise<{ success: boolean; refundId?: string; error?: string }> {
-  if (!razorpay) {
+  const instance = getRazorpayInstance();
+  if (!instance) {
     return { success: false, error: 'Razorpay API credentials not configured on server' };
   }
 
@@ -67,7 +68,7 @@ export async function processRazorpayRefund(
       refundOptions.notes = { reason: notes };
     }
 
-    const refund = await razorpay.payments.refund(paymentId, refundOptions);
+    const refund = await instance.payments.refund(paymentId, refundOptions);
     return { success: true, refundId: refund.id };
   } catch (err: any) {
     console.error('Razorpay Refund API Error:', err);

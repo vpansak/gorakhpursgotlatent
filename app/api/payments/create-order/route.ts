@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { razorpay, isRazorpayConfigured } from '@/lib/razorpay';
+import { getRazorpayInstance, isRazorpayConfigured } from '@/lib/razorpay';
 import { generateOrderNumber } from '@/lib/helpers';
 
 export async function POST(req: Request) {
@@ -42,9 +42,10 @@ export async function POST(req: Request) {
     let razorpayOrderId = `rzp_mock_${orderNumber}`;
 
     // 4. Call Razorpay if configured
-    if (isRazorpayConfigured() && razorpay) {
+    const rzpInstance = getRazorpayInstance();
+    if (isRazorpayConfigured() && rzpInstance) {
       try {
-        const rzpOrder = await razorpay.orders.create({
+        const rzpOrder = await rzpInstance.orders.create({
           amount: Math.round(totalAmount * 100), // Amount in paise
           currency: 'INR',
           receipt: orderNumber,

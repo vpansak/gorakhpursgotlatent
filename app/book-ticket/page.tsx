@@ -33,7 +33,6 @@ export default function BookTicketPage() {
 
   const totalAmount = quantity * 149;
 
-  // DOB is intentionally not collected for ticket purchases.
   useLeadCapture({
     source: 'book-ticket',
     data: { customerName, mobile, email, instagramId, quantity, termsAgreed },

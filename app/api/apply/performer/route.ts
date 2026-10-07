@@ -16,23 +16,17 @@ export async function POST(req: Request) {
     const effectiveFullName = (fullName || name || '').toString().trim();
     const effectiveEmail = (email || '').toString().trim();
     const effectiveMobile = (mobile || whatsapp || phone || '').toString().trim();
-    const effectiveCategory = (performanceCategory || category || 'Performer Act').toString().trim();
+    const effectiveCategory = (performanceCategory || category || 'Unique Talent').toString().trim();
     const effectiveCity = (city || '').toString().trim();
-    const effectiveInstagram = (instagramUrl || instagram || '').toString().trim();
+    const effectiveInstagram = (instagramUrl || instagram || '').toString().trim().replace(/^@+/, '@');
 
     if (!effectiveFullName || !effectiveEmail || !effectiveMobile || !effectiveInstagram) {
       return NextResponse.json({ error: 'Please complete all required fields (Name, Mobile, Email, Instagram)' }, { status: 400 });
     }
 
-    const isIgUrl = (
-      effectiveInstagram.toLowerCase().includes('instagram.com') ||
-      effectiveInstagram.toLowerCase().includes('instagr.am') ||
-      effectiveInstagram.startsWith('http://') ||
-      effectiveInstagram.startsWith('https://')
-    );
-
-    if (!isIgUrl) {
-      return NextResponse.json({ error: 'Please enter a valid Instagram Profile Link / URL (e.g. https://www.instagram.com/your_handle). Plain names or handles without link are not allowed.' }, { status: 400 });
+    const normalizedInstagram = effectiveInstagram.replace(/^@+/, '');
+    if (!normalizedInstagram || /[^a-zA-Z0-9._]/.test(normalizedInstagram)) {
+      return NextResponse.json({ error: 'Please enter a valid Instagram username, for example @your_handle.' }, { status: 400 });
     }
 
     const appId = generateAppId('PER');
@@ -63,7 +57,7 @@ export async function POST(req: Request) {
       parsedCount,
       (duration || '2 Minutes').toString().trim(),
       (language || 'Hindi').toString().trim(),
-      effectiveInstagram,
+      `@${normalizedInstagram}`,
       effectiveCity,
       parsedAge
     ]);
@@ -111,7 +105,7 @@ export async function POST(req: Request) {
           performance_language: (language || 'Hindi').toString().trim(),
           city: effectiveCity,
           age: parsedAge,
-          instagram_url: effectiveInstagram,
+          instagram_url: `@${normalizedInstagram}`,
           payment_status: 'FREE_AUDITION_SUBMITTED',
           order_id: 'N/A',
           payment_id: 'N/A',

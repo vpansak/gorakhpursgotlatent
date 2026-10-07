@@ -290,6 +290,8 @@ export default function PerformerApplyClient() {
               value={formData.instagramUrl}
               onChange={handleChange}
               placeholder="@username"
+              autoCapitalize="none"
+              autoCorrect="off"
               className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
             />
           </div>

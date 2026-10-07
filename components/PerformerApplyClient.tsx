@@ -38,8 +38,6 @@ export default function PerformerApplyClient() {
     email: '',
     age: '18 Years',
     instagramUrl: '',
-    performanceCategory: 'Singing',
-    performanceTitle: '',
     city: '',
     whyShouldSelectYou: '',
     performanceDescription: '',
@@ -67,11 +65,10 @@ export default function PerformerApplyClient() {
 📱 *Mobile Number:* ${data.mobile.trim()}
 📧 *Email:* ${data.email.trim()}
 🎂 *Age:* ${data.age}
-📸 *Instagram URL:* ${data.instagramUrl.trim() || 'N/A'}
-🎭 *Performance Category:* ${data.performanceCategory}
-🎵 *Act Title:* ${data.performanceTitle.trim() || 'Audition Act'}
+📸 *Instagram Username:* ${data.instagramUrl.trim()}
 📍 *Address / City:* ${data.city.trim() || 'Gorakhpur'}
-📝 *About Performance:* ${data.performanceDescription.trim() || 'N/A'}
+✨ *What is unique about you?:* ${data.whyShouldSelectYou.trim() || 'N/A'}
+📝 *About You / Performance:* ${data.performanceDescription.trim() || 'N/A'}
 ✅ *WhatsApp Clip Confirmation:* Confirmed to send performance clip on WhatsApp!
 
 ------------------------------------
@@ -95,19 +92,8 @@ export default function PerformerApplyClient() {
       setError('Please enter a valid Email address.');
       return;
     }
-    let formattedIgUrl = formData.instagramUrl.trim();
-    if (formattedIgUrl.startsWith('instagram.com/') || formattedIgUrl.startsWith('www.instagram.com/')) {
-      formattedIgUrl = `https://${formattedIgUrl}`;
-    }
-
-    const isIgUrl = (
-      formattedIgUrl.toLowerCase().includes('instagram.com/') ||
-      formattedIgUrl.toLowerCase().includes('instagr.am/') ||
-      (formattedIgUrl.startsWith('http://') || formattedIgUrl.startsWith('https://'))
-    );
-
-    if (!formattedIgUrl || !isIgUrl) {
-      setError('Please enter your valid Instagram Profile URL link (e.g. https://www.instagram.com/your_handle). Simply entering a name or handle without URL link is not allowed.');
+    if (!formData.instagramUrl.trim()) {
+      setError('Please enter your Instagram username.');
       return;
     }
     if (!formData.sendClipConfirmed) {
@@ -295,52 +281,30 @@ export default function PerformerApplyClient() {
             </select>
           </div>
 
-          {/* 4. Instagram Profile URL Link */}
+          {/* 4. Instagram Username (optional) */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Profile URL Link (इन्स्टाग्राम प्रोफाइल लिंक) *</label>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Username (इन्स्टाग्राम यूज़रनेम) <span className="text-[10px] text-slate-500 font-normal lowercase">(optional)</span></label>
             <input
               type="text"
               name="instagramUrl"
-              required
               value={formData.instagramUrl}
               onChange={handleChange}
-              placeholder="e.g. https://www.instagram.com/your_handle"
-              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm font-mono"
+              placeholder="@username"
+              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
             />
           </div>
 
-          {/* 5. What will you perform dropdown */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">What Will You Perform? (क्या परफॉर्म करेंगे?) *</label>
-              <select
-                name="performanceCategory"
-                value={formData.performanceCategory}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold focus:border-amber-400 outline-none text-xs sm:text-sm cursor-pointer"
-              >
-                <option value="Singing">Singing (गायन)</option>
-                <option value="Dancing">Dancing (नृत्य)</option>
-                <option value="Standup Comedy">Standup Comedy (हास्य)</option>
-                <option value="Poetry & Shayari">Poetry & Shayari (कविता)</option>
-                <option value="Mimicry">Mimicry / Acting</option>
-                <option value="Beatboxing & Rap">Beatboxing & Rap</option>
-                <option value="Magic & Illusion">Magic & Illusion (जादू)</option>
-                <option value="Other Talent">Other Unique Talent</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Act Title / Song Name</label>
-              <input
-                type="text"
-                name="performanceTitle"
-                value={formData.performanceTitle}
-                onChange={handleChange}
-                placeholder="e.g. Classical Fusion / Comedy Set"
-                className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs sm:text-sm"
-              />
-            </div>
+          {/* 5. What is unique about you? */}
+          <div>
+            <label className="block text-xs font-bold text-slate-300 mb-1">What is Unique About You? (आपमें क्या खास / यूनिक है?)</label>
+            <textarea
+              name="whyShouldSelectYou"
+              rows={3}
+              value={formData.whyShouldSelectYou}
+              onChange={handleChange}
+              placeholder="Tell us what makes you different, special or unique..."
+              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs leading-relaxed"
+            />
           </div>
 
           {/* 6. Address / Base Location */}
@@ -356,19 +320,6 @@ export default function PerformerApplyClient() {
             />
           </div>
 
-          {/* 7. Why should we select you? */}
-          <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Why Should We Select You? (आपको क्यों चुनें?)</label>
-            <textarea
-              name="whyShouldSelectYou"
-              rows={3}
-              value={formData.whyShouldSelectYou}
-              onChange={handleChange}
-              placeholder="Tell us what makes your talent, personality or performance special..."
-              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs leading-relaxed"
-            />
-          </div>
-
           {/* 8. About yourself / performance details */}
           <div>
             <label className="block text-xs font-bold text-slate-300 mb-1">About Your Performance / Yourself (थोड़ा सा अपने बारे में)</label>
@@ -377,7 +328,7 @@ export default function PerformerApplyClient() {
               rows={3}
               value={formData.performanceDescription}
               onChange={handleChange}
-              placeholder="Describe your act or experience briefly..."
+              placeholder="Tell us briefly about yourself or your talent..."
               className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs leading-relaxed"
             />
           </div>

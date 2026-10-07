@@ -202,32 +202,6 @@ ${data.about.trim()}
         <h1 className="text-2xl sm:text-3xl font-black text-white">Join the Team</h1>
         <p className="text-xs text-slate-400 mt-1">Crew • volunteers • event operations • media & content</p>
       </div>
-          <div>
-            <h4 className="text-xs font-bold text-white uppercase">Live Event Operations</h4>
-            <p className="text-[11px] text-slate-400 mt-0.5">Backstage management, stage control, crowd coordination & VIP assistance.</p>
-          </div>
-        </div>
-
-        <div className="p-4 rounded-2xl bg-slate-900/60 border border-white/5 flex items-start gap-3">
-          <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 shrink-0">
-            <Briefcase className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-white uppercase">Media & Content</h4>
-            <p className="text-[11px] text-slate-400 mt-0.5">Photography, videography, reels creation, editing & social media handle.</p>
-          </div>
-        </div>
-
-        <div className="p-4 rounded-2xl bg-slate-900/60 border border-white/5 flex items-start gap-3">
-          <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 shrink-0">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-white uppercase">Direct VIP Access</h4>
-            <p className="text-[11px] text-slate-400 mt-0.5">Work closely with top influencers, celebrity judges, artists & mentors.</p>
-          </div>
-        </div>
-      </div>
 
       {errorMessage && (
         <div className="p-4 rounded-2xl bg-red-500/20 border border-red-500/40 text-red-300 text-xs sm:text-sm font-semibold flex items-center gap-2">

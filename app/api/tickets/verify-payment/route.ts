@@ -63,7 +63,6 @@ export async function POST(req: Request) {
       mobile: mobile || '',
       email: email || '',
       instagram_id: instagramId ? (instagramId.startsWith('@') ? instagramId : `@${instagramId}`) : '@ggl_fan',
-      date_of_birth: '',
       quantity: Number(quantity) || 1,
       amount: Number(amount) || 149,
       razorpay_order_id,

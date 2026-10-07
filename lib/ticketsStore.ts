@@ -1,5 +1,5 @@
-import { TicketRecord, validateAgeIs18Plus } from './ticketTypes';
-export { type TicketRecord, validateAgeIs18Plus };
+import { TicketRecord } from './ticketTypes';
+export { type TicketRecord };
 import crypto from 'crypto';
 import db from '@/lib/db';
 
@@ -22,7 +22,7 @@ export async function ensureTicketsTable() {
         mobile TEXT NOT NULL,
         email TEXT NOT NULL,
         instagram_id TEXT NOT NULL,
-        date_of_birth TEXT NOT NULL,
+        date_of_birth TEXT DEFAULT '',
         quantity INTEGER DEFAULT 1,
         amount NUMERIC(10,2) DEFAULT 0,
         razorpay_order_id TEXT,
@@ -66,11 +66,6 @@ export function generateQrToken(_ticketId: string): string {
 }
 
 /**
- * Validates age >= 18 from DOB string (e.g. '2000-08-15' or '15 August 2000')
- */
-
-
-/**
  * Normalizes raw database row into clean TicketRecord
  */
 function normalizeTicketRecord(r: any): TicketRecord {
@@ -89,7 +84,6 @@ function normalizeTicketRecord(r: any): TicketRecord {
     mobile: String(r.mobile || ''),
     email: String(r.email || ''),
     instagram_id: String(r.instagram_id || ''),
-    date_of_birth: String(r.date_of_birth || ''),
     quantity: Number(r.quantity || 1),
     amount: Number(r.amount || 0),
     razorpay_order_id: String(r.razorpay_order_id || ''),
@@ -116,7 +110,7 @@ export async function saveTicketRecord(ticket: TicketRecord): Promise<TicketReco
     const queryStr = `
       INSERT INTO %TABLE% (
         id, ticket_id, booking_id, customer_name, mobile, email, instagram_id,
-        date_of_birth, quantity, amount, razorpay_order_id, razorpay_payment_id,
+        quantity, amount, razorpay_order_id, razorpay_payment_id,
         payment_status, ticket_status, qr_token, checked_in, checked_in_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT (ticket_id) DO UPDATE SET
@@ -135,7 +129,6 @@ export async function saveTicketRecord(ticket: TicketRecord): Promise<TicketReco
       norm.mobile,
       norm.email,
       norm.instagram_id,
-      norm.date_of_birth,
       norm.quantity,
       norm.amount,
       norm.razorpay_order_id,

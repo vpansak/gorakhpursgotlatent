@@ -41,6 +41,7 @@ export default function PerformerApplyClient() {
     performanceCategory: 'Singing',
     performanceTitle: '',
     city: '',
+    whyShouldSelectYou: '',
     performanceDescription: '',
     sendClipConfirmed: false,
   });
@@ -355,7 +356,20 @@ export default function PerformerApplyClient() {
             />
           </div>
 
-          {/* 7. About yourself / performance details */}
+          {/* 7. Why should we select you? */}
+          <div>
+            <label className="block text-xs font-bold text-slate-300 mb-1">Why Should We Select You? (आपको क्यों चुनें?)</label>
+            <textarea
+              name="whyShouldSelectYou"
+              rows={3}
+              value={formData.whyShouldSelectYou}
+              onChange={handleChange}
+              placeholder="Tell us what makes your talent, personality or performance special..."
+              className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs leading-relaxed"
+            />
+          </div>
+
+          {/* 8. About yourself / performance details */}
           <div>
             <label className="block text-xs font-bold text-slate-300 mb-1">About Your Performance / Yourself (थोड़ा सा अपने बारे में)</label>
             <textarea

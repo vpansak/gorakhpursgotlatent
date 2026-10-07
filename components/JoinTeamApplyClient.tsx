@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { parseResponse } from '@/lib/client-fetch';
 import { useLeadCapture } from '@/lib/leadCapture';
 import {
@@ -198,27 +197,11 @@ ${data.about.trim()}
   }
 
   return (
-    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-8">
-      <div className="text-center space-y-3">
-        <div className="relative w-44 h-16 mx-auto">
-          <Image src="/logo.png" alt="Gorakhpur's Got Latent" fill className="object-contain" priority />
-        </div>
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 text-amber-400 text-xs font-extrabold uppercase tracking-wider">
-          <Users className="w-4 h-4 text-amber-400" /> CREW & VOLUNTEER RECRUITMENT
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight uppercase">
-          JOIN THE <span className="gold-gradient-text">TEAM</span>
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          Be a part of Purvanchal’s biggest live entertainment sensation! Fill out your details below to save in Admin Portal and connect directly with the organizing team via WhatsApp.
-        </p>
+    <div className="py-5 px-4 sm:px-6 max-w-4xl mx-auto space-y-4">
+      <div className="text-center">
+        <h1 className="text-2xl sm:text-3xl font-black text-white">Join the Team</h1>
+        <p className="text-xs text-slate-400 mt-1">Crew • volunteers • event operations • media & content</p>
       </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="p-4 rounded-2xl bg-slate-900/60 border border-white/5 flex items-start gap-3">
-          <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 shrink-0">
-            <HeartHandshake className="w-5 h-5" />
-          </div>
           <div>
             <h4 className="text-xs font-bold text-white uppercase">Live Event Operations</h4>
             <p className="text-[11px] text-slate-400 mt-0.5">Backstage management, stage control, crowd coordination & VIP assistance.</p>
@@ -252,7 +235,7 @@ ${data.about.trim()}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6 glass-panel p-6 sm:p-10 rounded-3xl border border-amber-500/20 shadow-2xl relative overflow-hidden">
+      <form onSubmit={handleSubmit} className="space-y-5 glass-panel p-4 sm:p-6 rounded-2xl border border-amber-500/20 shadow-xl relative overflow-hidden">
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
           <div>
             <h2 className="text-xl font-black text-white flex items-center gap-2">
@@ -368,7 +351,7 @@ ${data.about.trim()}
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-xs text-emerald-200">
+        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-[11px] text-emerald-200">
           <WhatsAppIcon className="w-6 h-6 text-emerald-400 shrink-0" />
           <div>
             <strong className="text-white block font-bold">Automatic Admin Save & WhatsApp Connect:</strong>

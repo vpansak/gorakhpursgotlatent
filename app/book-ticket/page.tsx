@@ -164,12 +164,12 @@ export default function BookTicketPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#07080e] text-white px-4 py-6 sm:py-10">
-      <div className="max-w-xl mx-auto space-y-6">
+    <main className="min-h-screen bg-[#07080e] text-white px-4 py-4 sm:py-6">
+      <div className="max-w-xl mx-auto space-y-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-black">Book Your GGL Ticket</h1>
+          <h1 className="text-2xl sm:text-3xl font-black">Book GGL Ticket</h1>
           <p className="text-sm text-slate-400 mt-1.5">
-            Official Show Admission Pass • <strong className="text-amber-400">₹149 / Person</strong>
+            <strong className="text-amber-400">₹149 / person</strong>
           </p>
         </div>
 

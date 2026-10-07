@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Star, CheckCircle2, ArrowRight, Loader2, MessageSquare, Mail } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 import { useLeadCapture } from '@/lib/leadCapture';
@@ -178,32 +177,15 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
   }
 
   return (
-    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto space-y-8">
-      <div className="text-center mb-1">
-        <Link href="/" className="inline-block">
-          <div className="relative w-52 sm:w-64 h-20 sm:h-24 mx-auto">
-            <Image src="/logo.png" alt="Gorakhpur's Got Latent Official Logo" fill className="object-contain" priority />
-          </div>
-        </Link>
-      </div>
-
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-bold uppercase tracking-wider">
-          <Star className="w-4 h-4" /> CELEBRITY & GUEST PANEL
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-white">Guest / Influencer Application</h1>
-        <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
-          Express interest in appearing as a guest judge, celebrity performer, or featured content creator.
-        </p>
-      </div>
-
-      <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-xs text-purple-200 text-center">
-        Note: Submitting this form saves your details in the Admin Portal and opens WhatsApp directly to connect with show directors.
+    <div className="py-5 px-4 sm:px-6 max-w-3xl mx-auto space-y-4">
+      <div className="text-center">
+        <h1 className="text-2xl sm:text-3xl font-black text-white">Guest / Influencer Application</h1>
+        <p className="text-xs text-slate-400 mt-1">Guest judge • celebrity performer • creator</p>
       </div>
 
       {error && <div className="p-4 rounded-xl bg-red-500/20 text-red-300 text-sm font-semibold">⚠️ {error}</div>}
 
-      <form onSubmit={handleSubmit} className="space-y-8 glass-panel p-6 sm:p-10 rounded-3xl border border-purple-500/20 shadow-2xl">
+      <form onSubmit={handleSubmit} className="space-y-5 glass-panel p-4 sm:p-6 rounded-2xl border border-purple-500/20 shadow-xl">
         <div className="space-y-4">
           <h3 className="text-lg font-bold text-purple-400 border-b border-purple-500/20 pb-2">1. Guest & Professional Profile</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -253,7 +235,7 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
         </div>
 
         {/* WhatsApp Notice Bar */}
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-xs text-emerald-200">
+        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-[11px] text-emerald-200">
           <WhatsAppIcon className="w-6 h-6 text-emerald-400 shrink-0" />
           <div>
             <strong className="text-white block font-bold">Automatic Admin Save & WhatsApp Connect:</strong>
@@ -279,7 +261,7 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
       </form>
 
       {/* WHATSAPP DRAFT INQUIRY & EMAIL CONTACT CARDS */}
-      <div className="p-6 rounded-3xl bg-slate-900/90 border border-purple-500/30 space-y-4 text-center">
+      <div className="p-4 rounded-2xl bg-slate-900/90 border border-purple-500/30 space-y-3 text-center">
         <div className="space-y-1">
           <h3 className="text-lg font-black text-white">Guest & Creator Panel Direct Inquiry</h3>
           <p className="text-xs text-slate-300">Have questions regarding guest appearance or panel curation? Chat directly on WhatsApp.</p>

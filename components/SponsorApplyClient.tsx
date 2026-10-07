@@ -179,11 +179,6 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
         <h1 className="text-2xl sm:text-3xl font-black text-white">Brand Sponsorship Application</h1>
         <p className="text-xs text-slate-400 mt-1">Share your brand details and sponsorship requirements.</p>
       </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-white">Apply Brands for Sponsor</h1>
-        <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
-          Partner your brand with Purvanchal’s biggest live entertainment show. Share your brand details below to receive custom sponsorship proposals.
-        </p>
-      </div>
 
       {error && <div className="p-4 rounded-xl bg-red-500/20 text-red-300 text-sm font-semibold">⚠️ {error}</div>}
 

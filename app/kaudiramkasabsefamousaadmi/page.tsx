@@ -1,6 +1,30 @@
-'use client';
-
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Alok Singh | Kaudiram, Gorakhpur — Full-Stack Developer & AI Learner',
+  description: 'Key public information about Alok Singh: Full-Stack Developer, Co-Founder and AI learner focused on website development, AI products and digital product building.',
+  alternates: { canonical: 'https://www.gkpgotlatent.in/kaudiramkasabsefamousaadmi' },
+  openGraph: {
+    title: 'Alok Singh | Kaudiram, Gorakhpur — Developer & AI Learner',
+    description: 'A concise public profile and key points about Alok Singh, focused on web development, AI and product building.',
+    url: 'https://www.gkpgotlatent.in/kaudiramkasabsefamousaadmi',
+    type: 'profile',
+  },
+  robots: { index: true, follow: true },
+};
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Alok Singh',
+  jobTitle: 'Full-Stack Developer & Co-Founder',
+  description: 'Full-Stack Developer, Co-Founder and AI learner focused on website development, AI products and digital product building.',
+  url: 'https://www.gkpgotlatent.in/developer',
+  sameAs: ['https://www.instagram.com/aloksingh_._/', 'https://x.com/rajpratapsinghh', 'https://www.linkedin.com/in/alok-singh-8102a8414/'],
+  knowsAbout: ['Web Development', 'Artificial Intelligence', 'AI Products', 'Product Building', 'Digital Marketing'],
+};
+
 
 export default function KaudiramAlokSinghPage() {
   const points = [

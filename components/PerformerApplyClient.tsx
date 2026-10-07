@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Mic2, CheckCircle2, ArrowRight, Loader2, Sparkles, MessageSquare, Mail, AlertCircle, CheckSquare } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 import { useLeadCapture } from '@/lib/leadCapture';
@@ -189,19 +188,11 @@ export default function PerformerApplyClient() {
   }
 
   return (
-    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto space-y-8">
-      <div className="text-center mb-1">
-        <Link href="/" className="inline-block">
-          <div className="relative w-52 sm:w-64 h-20 sm:h-24 mx-auto">
-            <Image src="/logo.png" alt="Gorakhpur's Got Latent Official Logo" fill className="object-contain" priority />
-          </div>
-        </Link>
+    <div className="py-5 px-4 sm:px-6 max-w-2xl mx-auto space-y-4">
+      <div className="text-center">
+        <h1 className="text-2xl sm:text-3xl font-black text-white">Performer Application</h1>
+        <p className="text-xs text-slate-400 mt-1">Episode 2 • Free audition form • 18+ only</p>
       </div>
-
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-black uppercase tracking-wider">
-          <Mic2 className="w-4 h-4 text-emerald-400" /> 🎉 EPISODE 2 PERFORMER REGISTRATION IS LIVE
-        </div>
         <h1 className="text-3xl sm:text-4xl font-black text-white">Performer Application Form</h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
           Performer registrations for Episode 2 auditions are now <strong className="text-emerald-400 font-bold">LIVE</strong>! Fill in your details below to register. Audition form submit kerna FREE hai. Select hone ke baad fee details communicate kiya jayega.
@@ -215,7 +206,7 @@ export default function PerformerApplyClient() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5 glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/20 shadow-2xl">
+      <form onSubmit={handleSubmit} className="space-y-4 glass-panel p-4 sm:p-6 rounded-2xl border border-amber-500/20 shadow-xl">
         <div className="space-y-4">
           {/* 1. Full Name */}
           <div>
@@ -333,7 +324,7 @@ export default function PerformerApplyClient() {
         </div>
 
         {/* MANDATORY WHATSAPP CLIP CONFIRMATION CHECKBOX */}
-        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2">
+        <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1.5">
           <label className="flex items-start gap-3 cursor-pointer text-xs text-amber-200">
             <input
               type="checkbox"

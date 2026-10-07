@@ -20,12 +20,12 @@ export async function POST(req: Request) {
     const effectiveCity = (city || '').toString().trim();
     const effectiveInstagram = (instagramUrl || instagram || '').toString().trim().replace(/^@+/, '@');
 
-    if (!effectiveFullName || !effectiveEmail || !effectiveMobile || !effectiveInstagram) {
-      return NextResponse.json({ error: 'Please complete all required fields (Name, Mobile, Email, Instagram)' }, { status: 400 });
+    if (!effectiveFullName || !effectiveEmail || !effectiveMobile) {
+      return NextResponse.json({ error: 'Please complete all required fields (Name, Mobile, Email)' }, { status: 400 });
     }
 
     const normalizedInstagram = effectiveInstagram.replace(/^@+/, '');
-    if (!normalizedInstagram || /[^a-zA-Z0-9._]/.test(normalizedInstagram)) {
+    if (normalizedInstagram && /[^a-zA-Z0-9._]/.test(normalizedInstagram)) {
       return NextResponse.json({ error: 'Please enter a valid Instagram username, for example @your_handle.' }, { status: 400 });
     }
 

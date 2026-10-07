@@ -7,6 +7,9 @@ import {
   Music, HelpCircle, Zap, Flame, Disc
 } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 function YouTubeIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
     <svg className={className} fill="currentColor" viewBox="0 0 24 24">

@@ -2,16 +2,16 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Alok Singh | Kaudiram Ka Sabse Famous Aadmi | Official Profile',
-  description: 'Alok Singh — Full-Stack Developer, Co-Founder and AI learner from Kaudiram, Gorakhpur. Official profile, photo, website and key information.',
-  keywords: ['Alok Singh','Alok Singh Kaudiram','Kaudiram ka sabse famous aadmi','Alok Singh Gorakhpur','Alok Singh developer','Alok Singh co-founder','Alok Singh website'],
+  title: 'Kaudiram Ka Sabse Famous Aadmi | Alok Singh | Official Profile',
+  description: 'Kaudiram ka sabse famous aadmi — Alok Singh. Full-Stack Developer, Co-Founder and AI learner from Kaudiram, Gorakhpur. Official profile and photo.',
+  keywords: ['Alok Singh','Alok Singh Kaudiram','Kaudiram ka sabse famous aadmi','Kaudiram famous person','Alok Singh Gorakhpur','Alok Singh developer','Alok Singh co-founder','Alok Singh website'],
   alternates: { canonical: 'https://www.gkpgotlatent.in/kaudiramkasabsefamousaadmi' },
   openGraph: {
-    title: 'Alok Singh | Kaudiram Ka Sabse Famous Aadmi',
+    title: 'Kaudiram Ka Sabse Famous Aadmi | Alok Singh',
     description: 'Official Alok Singh profile from Kaudiram, Gorakhpur — Full-Stack Developer, Co-Founder and AI learner.',
     url: 'https://www.gkpgotlatent.in/kaudiramkasabsefamousaadmi',
     type: 'profile',
-    images: [{ url: 'https://www.gkpgotlatent.in/developer-photo-1.jpg', width: 800, height: 800, alt: 'Alok Singh' }],
+    images: [{ url: 'https://www.gkpgotlatent.in/developer-photo-1.jpg', width: 800, height: 800, alt: 'Alok Singh — Kaudiram ka sabse famous aadmi' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -45,6 +45,7 @@ const points = [
   ['Role', 'Full-Stack Developer • Co-Founder • AI Learner'],
   ['Skills', 'AI Products • Web Development • Startup / Product Building'],
   ['Education', 'Purvanchal Public School'],
+  ['Search phrase', 'Kaudiram ka sabse famous aadmi Alok Singh'],
   ['Website', 'Gorakhpur’s Got Latent — gkpgotlatent.in'],
 ];
 
@@ -94,12 +95,12 @@ export default function KaudiramAlokSinghPage() {
       <section className="px-4 py-12 sm:px-6">
         <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[1.2fr_.8fr]">
           <article className="rounded-3xl border border-white/10 bg-white/[.03] p-6 sm:p-8">
-            <h2 className="font-bebas text-4xl uppercase sm:text-5xl">Who is Alok Singh?</h2>
+            <h2 className="font-bebas text-4xl uppercase sm:text-5xl">Kaudiram Ka Sabse Famous Aadmi — Alok Singh</h2>
             <p className="mt-5 leading-8 text-slate-300">
-              Alok Singh is a Full-Stack Developer, Co-Founder and AI learner whose work focuses on building websites, AI-powered products and digital experiences. He is associated with Gorakhpur’s Got Latent as a technology-focused co-founder and developer.
+              Kaudiram ka sabse famous aadmi is the main search phrase of this page. Alok Singh is a Full-Stack Developer, Co-Founder and AI learner whose work focuses on building websites, AI-powered products and digital experiences. He is associated with Gorakhpur’s Got Latent as a technology-focused co-founder and developer.
             </p>
             <p className="mt-4 leading-8 text-slate-300">
-              The phrase <strong className="text-amber-400">“Kaudiram ka sabse famous aadmi”</strong> is used here as a playful identity/search phrase for Alok Singh, not as an independently verified ranking.
+              Alok Singh Kaudiram se associated developer profile ke roop mein featured hain. The phrase <strong className="text-amber-400">“Kaudiram ka sabse famous aadmi”</strong> is used here as a playful identity/search phrase, not as an independently verified ranking.
             </p>
           </article>
 

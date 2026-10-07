@@ -25,12 +25,12 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    { name: 'Guests', href: '/guests' },
-    { name: 'Sponsors', href: '/sponsors' },
-    { name: 'Book Ticket', href: '/book-ticket' },
     { name: 'Apply Now', href: '/apply' },
+    { name: 'Sponsors', href: '/sponsors' },
+    { name: 'Guests', href: '/guests' },
+    { name: 'Book Ticket', href: '/book-ticket' },
     { name: 'Contact', href: '/contact' },
+    { name: 'About', href: '/about' },
   ];
 
   return (

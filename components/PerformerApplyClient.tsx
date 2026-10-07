@@ -193,11 +193,6 @@ export default function PerformerApplyClient() {
         <h1 className="text-2xl sm:text-3xl font-black text-white">Performer Application</h1>
         <p className="text-xs text-slate-400 mt-1">Episode 2 • Free audition form • 18+ only</p>
       </div>
-        <h1 className="text-3xl sm:text-4xl font-black text-white">Performer Application Form</h1>
-        <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-          Performer registrations for Episode 2 auditions are now <strong className="text-emerald-400 font-bold">LIVE</strong>! Fill in your details below to register. Audition form submit kerna FREE hai. Select hone ke baad fee details communicate kiya jayega.
-        </p>
-      </div>
 
       {error && (
         <div className="p-4 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 text-sm font-semibold flex items-center gap-2">

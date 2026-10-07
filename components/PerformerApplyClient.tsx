@@ -92,10 +92,6 @@ export default function PerformerApplyClient() {
       setError('Please enter a valid Email address.');
       return;
     }
-    if (!formData.instagramUrl.trim()) {
-      setError('Please enter your Instagram username.');
-      return;
-    }
     if (!formData.sendClipConfirmed) {
       setError('Please check the box confirming you will send your performance video clip on WhatsApp.');
       return;

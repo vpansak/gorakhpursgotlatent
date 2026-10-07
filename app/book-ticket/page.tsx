@@ -170,7 +170,6 @@ export default function BookTicketPage() {
           <h1 className="text-2xl sm:text-3xl font-black">Book GGL Ticket</h1>
           <p className="text-sm text-slate-400 mt-1.5">
             <strong className="text-amber-400">₹149 / person</strong>
-            <span className="text-slate-500 ml-2">• No DOB required</span>
           </p>
         </div>
 

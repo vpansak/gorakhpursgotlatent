@@ -38,8 +38,14 @@ export async function ensureTicketsTable() {
     `;
     await db.execute(tableSql);
 
+    // Legacy compatibility: older ticket tables had a NOT NULL DOB column.
+    // Ticket purchases no longer collect or store DOB, so keep the old column
+    // only as an empty legacy field while making inserts independent of it.
+    try { await db.execute(`ALTER TABLE tickets ALTER COLUMN date_of_birth SET DEFAULT ''`); } catch {}
+
     const appTableSql = tableSql.replace('CREATE TABLE IF NOT EXISTS tickets', 'CREATE TABLE IF NOT EXISTS ticket_application');
     await db.execute(appTableSql);
+    try { await db.execute(`ALTER TABLE ticket_application ALTER COLUMN date_of_birth SET DEFAULT ''`); } catch {}
   } catch (err) {
     console.warn('ensureTicketsTable notice:', err);
   }

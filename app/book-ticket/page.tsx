@@ -33,9 +33,7 @@ export default function BookTicketPage() {
 
   const totalAmount = quantity * 149;
 
-  // Ticket booking does NOT collect date of birth. Age eligibility is confirmed by the 18+ terms checkbox.
-
-  // Real-time abandoned/in-progress lead capture. Saves as soon as any form field is entered.
+  // DOB is intentionally not collected for ticket purchases.
   useLeadCapture({
     source: 'book-ticket',
     data: { customerName, mobile, email, instagramId, quantity, termsAgreed },
@@ -91,14 +89,8 @@ export default function BookTicketPage() {
         description: `Show Pass (${quantity} Ticket${quantity > 1 ? 's' : ''})`,
         image: '/logo.png',
         order_id: orderData.razorpayOrderId,
-        prefill: {
-          name: customerName,
-          email: email || '',
-          contact: mobile,
-        },
-        theme: {
-          color: '#FFD700',
-        },
+        prefill: { name: customerName, email: email || '', contact: mobile },
+        theme: { color: '#FFD700' },
         handler: async function (response: any) {
           try {
             const verifyRes = await fetch('/api/tickets/verify-payment', {
@@ -130,11 +122,7 @@ export default function BookTicketPage() {
             setLoading(false);
           }
         },
-        modal: {
-          ondismiss: function () {
-            setLoading(false);
-          },
-        },
+        modal: { ondismiss: function () { setLoading(false); } },
       };
 
       const rzp = new (window as any).Razorpay(options);
@@ -159,18 +147,15 @@ export default function BookTicketPage() {
             <p className="text-sm text-emerald-300 mt-2">Your GGL ticket has been booked successfully.</p>
           </div>
           <TicketCard ticket={confirmedTicket} showActions={true} />
-          <button
-            onClick={() => {
-              setConfirmedTicket(null);
-              setCustomerName('');
-              setMobile('');
-              setEmail('');
-              setInstagramId('');
-              setQuantity(1);
-              setTermsAgreed(false);
-            }}
-            className="w-full py-3 rounded-xl border border-amber-500/40 text-amber-300 font-bold"
-          >
+          <button onClick={() => {
+            setConfirmedTicket(null);
+            setCustomerName('');
+            setMobile('');
+            setEmail('');
+            setInstagramId('');
+            setQuantity(1);
+            setTermsAgreed(false);
+          }} className="w-full py-3 rounded-xl border border-amber-500/40 text-amber-300 font-bold">
             Book Another Ticket
           </button>
         </div>
@@ -188,12 +173,9 @@ export default function BookTicketPage() {
           </p>
         </div>
 
-        {/* Pricing Banner */}
         <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-between text-xs sm:text-sm">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400">
-              <TicketIcon className="w-5 h-5" />
-            </div>
+            <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400"><TicketIcon className="w-5 h-5" /></div>
             <div>
               <span className="font-extrabold text-white block">Official Ticket Pass</span>
               <span className="text-slate-300 text-xs">₹149 per ticket</span>
@@ -232,7 +214,8 @@ export default function BookTicketPage() {
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Instagram Handle <span className="text-[10px] text-slate-500 font-normal lowercase">(optional)</span></label>
             <input type="text" value={instagramId} onChange={(e) => setInstagramId(e.target.value)} placeholder="@username (optional)" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
           </div>
-\n          <div>
+
+          <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Number of Tickets *</label>
             <select value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-300 font-bold outline-none focus:border-amber-500">
               <option value={1}>1 Ticket (₹149)</option>
@@ -248,11 +231,7 @@ export default function BookTicketPage() {
             <span>I confirm my details are correct, I am 18+, and agree to the event terms and conditions.</span>
           </label>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-black text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(255,215,0,0.3)] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
-          >
+          <button type="submit" disabled={loading} className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-black text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(255,215,0,0.3)] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer">
             <Lock className="w-4 h-4 text-black" />
             <span>{loading ? 'OPENING RAZORPAY...' : `PAY ₹${totalAmount} & BOOK TICKET VIA RAZORPAY`}</span>
           </button>

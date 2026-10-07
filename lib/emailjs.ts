@@ -263,6 +263,7 @@ City / Address: ${params.city || 'N/A'}
 
 Category: ${params.performance_category}
 Act Title: ${params.performance_title}
+Why Should We Select You?: ${params.additional_message || 'N/A'}
 Act Description: ${params.performance_description || 'N/A'}
 Performance Type: ${params.performance_type || 'N/A'}
 Number of Performers: ${params.performer_count || 1}

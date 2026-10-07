@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     const {
       fullName, name, email, mobile, phone, whatsapp, city, age,
       performanceCategory, category, performanceTitle, performanceDescription,
-      performanceType, performerCount, duration, language, instagramUrl, instagram
+      whyShouldSelectYou, performanceType, performerCount, duration, language, instagramUrl, instagram
     } = body;
 
     const effectiveFullName = (fullName || name || '').toString().trim();
@@ -104,6 +104,7 @@ export async function POST(req: Request) {
           performance_category: effectiveCategory,
           performance_title: (performanceTitle || 'Audition Act').toString().trim(),
           performance_description: (performanceDescription || '').toString().trim(),
+          additional_message: (whyShouldSelectYou || '').toString().trim(),
           performance_type: (performanceType || 'Solo').toString().trim(),
           performer_count: parsedCount,
           performance_duration: (duration || '2 Minutes').toString().trim(),

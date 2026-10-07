@@ -33,7 +33,7 @@ export default function BookTicketPage() {
 
   const totalAmount = quantity * 149;
 
-  // Ticket booking intentionally does NOT collect date of birth. Age eligibility is confirmed by the 18+ terms checkbox.
+  // Ticket booking does NOT collect date of birth. Age eligibility is confirmed by the 18+ terms checkbox.
 
   // Real-time abandoned/in-progress lead capture. Saves as soon as any form field is entered.
   useLeadCapture({

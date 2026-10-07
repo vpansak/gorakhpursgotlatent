@@ -297,7 +297,7 @@ export async function ensureDatabaseSchema() {
       `);
 
       // 10. ticket_application
-      await client.query(`CREATE TABLE IF NOT EXISTS ticket_application (id TEXT PRIMARY KEY, ticket_id TEXT UNIQUE NOT NULL, booking_id TEXT, customer_name TEXT NOT NULL, mobile TEXT NOT NULL, email TEXT NOT NULL, instagram_id TEXT NOT NULL, date_of_birth TEXT NOT NULL, quantity INTEGER DEFAULT 1, amount NUMERIC(10,2) DEFAULT 0, razorpay_order_id TEXT, razorpay_payment_id TEXT, payment_status TEXT DEFAULT 'PAID', ticket_status TEXT DEFAULT 'VALID', qr_token TEXT NOT NULL, checked_in INTEGER DEFAULT 0, checked_in_at TIMESTAMP WITH TIME ZONE, created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP);`);
+      await client.query(`CREATE TABLE IF NOT EXISTS ticket_application (id TEXT PRIMARY KEY, ticket_id TEXT UNIQUE NOT NULL, booking_id TEXT, customer_name TEXT NOT NULL, mobile TEXT NOT NULL, email TEXT NOT NULL, instagram_id TEXT NOT NULL, date_of_birth TEXT DEFAULT '', quantity INTEGER DEFAULT 1, amount NUMERIC(10,2) DEFAULT 0, razorpay_order_id TEXT, razorpay_payment_id TEXT, payment_status TEXT DEFAULT 'PAID', ticket_status TEXT DEFAULT 'VALID', qr_token TEXT NOT NULL, checked_in INTEGER DEFAULT 0, checked_in_at TIMESTAMP WITH TIME ZONE, created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP);`);
 
       // 11. tickets
       await client.query(`
@@ -309,7 +309,7 @@ export async function ensureDatabaseSchema() {
           mobile TEXT NOT NULL,
           email TEXT NOT NULL,
           instagram_id TEXT NOT NULL,
-          date_of_birth TEXT NOT NULL,
+          date_of_birth TEXT DEFAULT '',
           quantity INTEGER DEFAULT 1,
           amount NUMERIC(10,2) DEFAULT 0,
           razorpay_order_id TEXT,

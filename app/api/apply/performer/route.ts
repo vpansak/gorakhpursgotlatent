@@ -18,16 +18,11 @@ export async function POST(req: Request) {
     const effectiveMobile = (mobile || whatsapp || phone || '').toString().trim();
     const effectiveCategory = (performanceCategory || category || 'Unique Talent').toString().trim();
     const effectiveCity = (city || '').toString().trim();
-    const effectiveInstagram = (instagramUrl || instagram || '').toString().trim().replace(/^@+/, '@');
-
-    if (!effectiveFullName || !effectiveEmail || !effectiveMobile) {
-      return NextResponse.json({ error: 'Please complete all required fields (Name, Mobile, Email)' }, { status: 400 });
-    }
-
-    const normalizedInstagram = effectiveInstagram.replace(/^@+/, '');
+    const normalizedInstagram = (instagramUrl || instagram || '').toString().trim().replace(/^@+/, '');
     if (normalizedInstagram && /[^a-zA-Z0-9._]/.test(normalizedInstagram)) {
       return NextResponse.json({ error: 'Please enter a valid Instagram username, for example @your_handle.' }, { status: 400 });
     }
+    const formattedInstagram = normalizedInstagram ? `@${normalizedInstagram}` : '';
 
     const appId = generateAppId('PER');
     const id = `per-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -57,7 +52,7 @@ export async function POST(req: Request) {
       parsedCount,
       (duration || '2 Minutes').toString().trim(),
       (language || 'Hindi').toString().trim(),
-      `@${normalizedInstagram}`,
+      formattedInstagram,
       effectiveCity,
       parsedAge
     ]);
@@ -105,7 +100,7 @@ export async function POST(req: Request) {
           performance_language: (language || 'Hindi').toString().trim(),
           city: effectiveCity,
           age: parsedAge,
-          instagram_url: `@${normalizedInstagram}`,
+          instagram_url: formattedInstagram,
           payment_status: 'FREE_AUDITION_SUBMITTED',
           order_id: 'N/A',
           payment_id: 'N/A',

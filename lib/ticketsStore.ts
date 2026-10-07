@@ -118,7 +118,7 @@ export async function saveTicketRecord(ticket: TicketRecord): Promise<TicketReco
         id, ticket_id, booking_id, customer_name, mobile, email, instagram_id,
         quantity, amount, razorpay_order_id, razorpay_payment_id,
         payment_status, ticket_status, qr_token, checked_in, checked_in_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT (ticket_id) DO UPDATE SET
         payment_status = EXCLUDED.payment_status,
         ticket_status = EXCLUDED.ticket_status,

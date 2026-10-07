@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Building2, CheckCircle2, ArrowRight, Loader2, MessageSquare, Mail } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
 import { useLeadCapture } from '@/lib/leadCapture';
@@ -175,19 +174,11 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
   }
 
   return (
-    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto space-y-8">
-      <div className="text-center mb-1">
-        <Link href="/" className="inline-block">
-          <div className="relative w-52 sm:w-64 h-20 sm:h-24 mx-auto">
-            <Image src="/logo.png" alt="Gorakhpur's Got Latent Official Logo" fill className="object-contain" priority />
-          </div>
-        </Link>
+    <div className="py-5 px-4 sm:px-6 max-w-3xl mx-auto space-y-4">
+      <div className="text-center">
+        <h1 className="text-2xl sm:text-3xl font-black text-white">Brand Sponsorship Application</h1>
+        <p className="text-xs text-slate-400 mt-1">Share your brand details and sponsorship requirements.</p>
       </div>
-
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold uppercase tracking-wider">
-          <Building2 className="w-4 h-4" /> BRAND SPONSORSHIP PORTAL
-        </div>
         <h1 className="text-3xl sm:text-5xl font-black text-white">Apply Brands for Sponsor</h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
           Partner your brand with Purvanchal’s biggest live entertainment show. Share your brand details below to receive custom sponsorship proposals.
@@ -196,7 +187,7 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
 
       {error && <div className="p-4 rounded-xl bg-red-500/20 text-red-300 text-sm font-semibold">⚠️ {error}</div>}
 
-      <form onSubmit={handleSubmit} className="space-y-6 glass-panel p-6 sm:p-10 rounded-3xl border border-blue-500/20 shadow-2xl">
+      <form onSubmit={handleSubmit} className="space-y-5 glass-panel p-4 sm:p-6 rounded-2xl border border-blue-500/20 shadow-xl">
         <div className="space-y-4">
           <h3 className="text-lg font-bold text-blue-400 border-b border-blue-500/20 pb-2">Brand & Contact Details</h3>
           
@@ -304,7 +295,7 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
         </div>
 
         {/* WhatsApp Notice Bar */}
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-xs text-emerald-200">
+        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-[11px] text-emerald-200">
           <WhatsAppIcon className="w-6 h-6 text-emerald-400 shrink-0" />
           <div>
             <strong className="text-white block font-bold">Automatic Admin Save & WhatsApp Connect:</strong>
@@ -330,7 +321,7 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
       </form>
 
       {/* WHATSAPP DRAFT INQUIRY & EMAIL CONTACT CARDS */}
-      <div className="p-6 rounded-3xl bg-slate-900/90 border border-blue-500/30 space-y-4 text-center">
+      <div className="p-4 rounded-2xl bg-slate-900/90 border border-blue-500/30 space-y-3 text-center">
         <div className="space-y-1">
           <h3 className="text-lg font-black text-white">Prefer Direct Inquiry on WhatsApp or Email?</h3>
           <p className="text-xs text-slate-300">Click below to send a pre-drafted sponsorship inquiry directly to our brand relations manager.</p>

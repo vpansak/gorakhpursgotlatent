@@ -634,15 +634,38 @@ export interface AdminOtpEmailParams {
  * Send secure 6-digit OTP to authorized admin email address using EmailJS
  */
 export async function sendAdminLoginOtpEmail(params: AdminOtpEmailParams): Promise<{ success: boolean; message?: string }> {
+  const { toEmail, otp } = params;
+  const otpBody = `GORAKHPUR'S GOT LATENT — ADMIN PORTAL\n\nVerification requested for: ${toEmail}\n\nYOUR 6-DIGIT VERIFICATION CODE:\n${otp}\n\nThis code will expire in 5 minutes. If you did not request this code, please ignore this email.`;
+  const otpHtml = `<div style="background:#08090d;color:#fff;padding:24px;font-family:Arial,sans-serif;border-radius:16px;max-width:500px;border:1px solid #d19b25;">
+    <h2 style="color:#ffd45a;margin-top:0;">GORAKHPUR'S GOT LATENT</h2>
+    <h3 style="color:#fff;">ADMIN PORTAL VERIFICATION CODE</h3>
+    <p style="color:#aaa;font-size:14px;">Verification requested for: <strong>${escapeEmailHtml(toEmail)}</strong></p>
+    <div style="background:#111217;border:2px border #ffd45a;padding:16px;text-align:center;font-size:32px;font-weight:900;letter-spacing:6px;color:#ffd45a;border-radius:12px;margin:20px 0;">${otp}</div>
+    <p style="color:#888;font-size:12px;">This verification code expires in 5 minutes.</p>
+  </div>`;
+
+  // 1. Try Primitive Email Service first if configured
+  if (process.env.PRIMITIVE_API_KEY) {
+    const primitiveRes = await sendPrimitiveAdminEmail(
+      `🔐 GGL Admin Verification Code: ${otp}`,
+      otpBody,
+      otpHtml
+    );
+    if (primitiveRes.success) {
+      console.log(`📧 Primitive Email: Admin OTP sent successfully to ${toEmail}`);
+      return { success: true };
+    }
+    console.warn(`⚠️ Primitive Email for OTP failed: ${primitiveRes.message}. Falling back to EmailJS...`);
+  }
+
   const serviceId = process.env.EMAILJS_OTP_SERVICE_ID;
   const templateId = process.env.EMAILJS_OTP_TEMPLATE_ID;
   const publicKey = process.env.EMAILJS_OTP_PUBLIC_KEY;
   const privateKey = process.env.EMAILJS_OTP_PRIVATE_KEY;
 
-  const { toEmail, otp } = params;
-
   if (!serviceId || !templateId || !publicKey || !privateKey) {
-    console.warn('⚠️ Admin OTP EmailJS credentials are not configured.');
+    // If EmailJS credentials are missing but Primitive tried above or emergency fallback
+    console.warn('⚠️ Admin OTP EmailJS credentials not configured.');
     return { success: false, message: 'EmailJS OTP credentials not configured' };
   }
 
@@ -659,7 +682,7 @@ export async function sendAdminLoginOtpEmail(params: AdminOtpEmailParams): Promi
     title: "GORAKHPUR'S GOT LATENT",
     heading: 'ADMIN PORTAL',
     system_name: "GORAKHPUR'S GOT LATENT ADMIN PORTAL",
-    message: `GORAKHPUR'S GOT LATENT\nADMIN PORTAL\n\nVerification requested for:\n${toEmail}\n\nYOUR ONE-TIME PASSWORD:\n${otp}\n\nOTP validity:\n5 minutes`,
+    message: otpBody,
   };
 
   const payload = {
@@ -687,32 +710,8 @@ export async function sendAdminLoginOtpEmail(params: AdminOtpEmailParams): Promi
     }
 
     const errText = await res.text();
-    console.warn(`⚠️ Primary EmailJS failed (${res.status}): ${errText}. Trying backup service...`);
-
-    // Fallback service
-    const backupRes = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Origin': 'https://gorakhpursgotlatent.vercel.app',
-      },
-      body: JSON.stringify({
-        service_id: process.env.EMAILJS_BACKUP_SERVICE_ID,
-        template_id: process.env.EMAILJS_BACKUP_TEMPLATE_ID,
-        user_id: process.env.EMAILJS_BACKUP_PUBLIC_KEY,
-        accessToken: process.env.EMAILJS_BACKUP_PRIVATE_KEY,
-        template_params: templateParams,
-      }),
-    });
-
-    if (backupRes.ok) {
-      console.log(`📧 EmailJS (Backup): Admin OTP sent successfully to ${toEmail}`);
-      return { success: true };
-    }
-
-    const backupErr = await backupRes.text();
-    console.error(`❌ EmailJS Backup Error: ${backupErr}`);
-    return { success: false, message: backupErr || errText };
+    console.warn(`⚠️ Primary EmailJS failed (${res.status}): ${errText}.`);
+    return { success: false, message: errText };
   } catch (err: any) {
     console.error('❌ EmailJS OTP exception:', err);
     return { success: false, message: err.message || 'Network error sending OTP' };

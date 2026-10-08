@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X, Ticket, Sparkles, UserCheck, ShieldCheck, PhoneCall } from 'lucide-react';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const isLiveRoute =
     pathname.startsWith('/display') ||
@@ -32,6 +33,11 @@ export default function Navbar() {
     { name: 'Contact', href: '/contact' },
     { name: 'About', href: '/about' },
   ];
+
+  useEffect(() => {
+    // Warm the most-used public routes so navigation feels immediate on slow networks.
+    navLinks.forEach((link) => router.prefetch(link.href));
+  }, [router]);
 
   return (
     <>

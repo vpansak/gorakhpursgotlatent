@@ -1,2 +1,3 @@
-Production deployment trigger: Complete DOB removal from ticket booking flow and DB schema fix.
+Production deployment trigger: Database URL environment variable restored and Node 22 LTS enabled.
+
 

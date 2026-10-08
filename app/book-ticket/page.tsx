@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Ticket as TicketIcon, CheckCircle2, AlertCircle, ShieldCheck, Lock } from 'lucide-react';
 import TicketCard from '@/components/TicketCard';
 import { TicketRecord } from '@/lib/ticketTypes';

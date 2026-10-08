@@ -341,6 +341,76 @@ export async function ensureDatabaseSchema() {
           updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
       `);
+
+      // 13. events
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS events (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          slug TEXT UNIQUE NOT NULL,
+          subtitle TEXT,
+          description TEXT,
+          event_date TEXT NOT NULL,
+          start_time TEXT NOT NULL,
+          end_time TEXT,
+          venue_name TEXT NOT NULL,
+          venue_address TEXT,
+          city TEXT NOT NULL,
+          poster_url TEXT,
+          banner_url TEXT,
+          terms TEXT,
+          capacity INTEGER DEFAULT 1000,
+          status TEXT DEFAULT 'PUBLISHED',
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      // 14. ticket_categories
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS ticket_categories (
+          id TEXT PRIMARY KEY,
+          event_id TEXT NOT NULL,
+          name TEXT NOT NULL,
+          price NUMERIC(10,2) NOT NULL,
+          available_qty INTEGER DEFAULT 100,
+          max_per_order INTEGER DEFAULT 5,
+          description TEXT,
+          status TEXT DEFAULT 'ACTIVE',
+          sort_order INTEGER DEFAULT 1,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      // Safe column alterations for existing tables
+      try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS age INTEGER DEFAULT 18;`); } catch {}
+      try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS email_status TEXT DEFAULT 'PENDING';`); } catch {}
+      try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS admin_email_status TEXT DEFAULT 'PENDING';`); } catch {}
+      try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS youtube_url TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS payment_id TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS order_id TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE sponsor_applications ADD COLUMN IF NOT EXISTS logo_url TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE sponsor_applications ADD COLUMN IF NOT EXISTS brand_deck_url TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE guest_applications ADD COLUMN IF NOT EXISTS youtube_url TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE guest_applications ADD COLUMN IF NOT EXISTS profile_photo_url TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE guest_applications ADD COLUMN IF NOT EXISTS press_kit_url TEXT;`); } catch {}
+
+      // Seed default event and ticket categories if empty
+      try {
+        await client.query(`
+          INSERT INTO events (id, title, slug, subtitle, description, event_date, start_time, venue_name, city, status)
+          VALUES ('evt-default', 'Gorakhpur''s Got Latent - Live Talent Show', 'ggl-live-show-2026', 'Purvanchal''s Biggest Talent Showcase', 'Watch Purvanchal''s finest creators, comedians, dancers and musicians live on stage.', '2026-11-15', '05:00 PM', 'Gorakhpur Auditorium', 'Gorakhpur', 'PUBLISHED')
+          ON CONFLICT (id) DO NOTHING;
+        `);
+        await client.query(`
+          INSERT INTO ticket_categories (id, event_id, name, price, available_qty, max_per_order, description, status, sort_order)
+          VALUES 
+            ('cat-gen', 'evt-default', 'General Audience Pass', 149.00, 300, 5, 'General entry to live show arena.', 'ACTIVE', 1),
+            ('cat-vip', 'evt-default', 'VIP Front Row Pass', 499.00, 50, 5, 'Front row seating + exclusive creator meet & greet.', 'ACTIVE', 2)
+          ON CONFLICT (id) DO NOTHING;
+        `);
+      } catch {}
       })(), 2500);
     } catch (err) {
       console.warn('Schema init notice:', err);

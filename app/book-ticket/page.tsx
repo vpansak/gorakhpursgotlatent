@@ -26,7 +26,6 @@ export default function BookTicketPage() {
   const [email, setEmail] = useState('');
   const [instagramId, setInstagramId] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [termsAgreed, setTermsAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [confirmedTicket, setConfirmedTicket] = useState<TicketRecord | null>(null);
@@ -35,7 +34,7 @@ export default function BookTicketPage() {
 
   useLeadCapture({
     source: 'book-ticket',
-    data: { customerName, mobile, email, instagramId, quantity, termsAgreed },
+    data: { customerName, mobile, email, instagramId , quantity },
     customerName,
     mobile,
     email,
@@ -52,11 +51,6 @@ export default function BookTicketPage() {
       return;
     }
 
-    if (!termsAgreed) {
-      setErrorMsg('Please accept the terms and conditions.');
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -70,7 +64,7 @@ export default function BookTicketPage() {
       const orderRes = await fetch('/api/tickets/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customerName, mobile, email, instagramId, quantity, termsAgreed }),
+        body: JSON.stringify({ customerName, mobile, email, instagramId, quantity }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
@@ -153,7 +147,6 @@ export default function BookTicketPage() {
             setEmail('');
             setInstagramId('');
             setQuantity(1);
-            setTermsAgreed(false);
           }} className="w-full py-3 rounded-xl border border-amber-500/40 text-amber-300 font-bold">
             Book Another Ticket
           </button>
@@ -224,11 +217,6 @@ export default function BookTicketPage() {
               <option value={5}>5 Tickets (₹745)</option>
             </select>
           </div>
-
-          <label className="flex items-start gap-3 text-xs text-slate-300 pt-2 cursor-pointer">
-            <input type="checkbox" required checked={termsAgreed} onChange={(e) => setTermsAgreed(e.target.checked)} className="mt-0.5 w-4 h-4 accent-amber-500" />
-            <span>I confirm my details are correct, I am 18+, and agree to the event terms and conditions.</span>
-          </label>
 
           <button type="submit" disabled={loading} className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black font-black text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(255,215,0,0.3)] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer">
             <Lock className="w-4 h-4 text-black" />

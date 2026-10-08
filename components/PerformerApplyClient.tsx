@@ -40,7 +40,6 @@ export default function PerformerApplyClient() {
     city: '',
     whyShouldSelectYou: '',
     performanceDescription: '',
-    sendClipConfirmed: false,
   });
 
   useLeadCapture({ source: 'performer', data: formData, customerName: formData.fullName, mobile: formData.mobile, email: formData.email, instagramId: formData.instagramUrl, quantity: 1 });
@@ -91,11 +90,6 @@ export default function PerformerApplyClient() {
       setError('Please enter a valid Email address.');
       return;
     }
-    if (!formData.sendClipConfirmed) {
-      setError('Please check the box confirming you will send your performance video clip on WhatsApp.');
-      return;
-    }
-
     setLoading(true);
     let assignedAppId = '';
 
@@ -318,22 +312,9 @@ export default function PerformerApplyClient() {
           </div>
         </div>
 
-        {/* MANDATORY WHATSAPP CLIP CONFIRMATION CHECKBOX */}
-        <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1.5">
-          <label className="flex items-start gap-3 cursor-pointer text-xs text-amber-200">
-            <input
-              type="checkbox"
-              name="sendClipConfirmed"
-              checked={formData.sendClipConfirmed}
-              onChange={handleChange}
-              className="mt-0.5 w-4 h-4 rounded text-amber-500 focus:ring-amber-400 bg-slate-900 border-slate-700 cursor-pointer shrink-0"
-            />
-            <span className="font-bold">
-              Send your performance clip on WhatsApp ({DISPLAY_PHONE}) *
-            </span>
-          </label>
-          <p className="text-[11px] text-slate-400 pl-7">
-            Submitting this form will save your audition details and automatically redirect to WhatsApp so you can send your performance video clip.
+        <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center">
+          <p className="text-xs font-bold text-amber-200">
+            After submitting, you’ll be redirected to WhatsApp to send your performance clip to {DISPLAY_PHONE}.
           </p>
         </div>
 

@@ -207,7 +207,6 @@ export function formatTicketRows(items: any[]) {
     'Mobile Number': t.mobile || '',
     'Email Address': t.email || '',
     'Instagram ID': t.instagram_id || '',
-    'Date of Birth': t.date_of_birth || '',
     'Quantity': t.quantity || 1,
     'Amount (INR)': t.amount || 149,
     'Payment Status': t.payment_status || 'PAID',

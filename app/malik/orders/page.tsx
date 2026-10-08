@@ -142,14 +142,13 @@ export default function OrdersLedgerPage() {
   const handleExportCSV = () => {
     if (tickets.length === 0) return alert('No ticket records to export.');
     
-    const headers = ['Ticket ID', 'Customer Name', 'Mobile', 'Email', 'Instagram ID', 'DOB', 'Quantity', 'Amount', 'Razorpay ID', 'Payment Status', 'Entry Status', 'Checked In At', 'Created At'];
+    const headers = ['Ticket ID', 'Customer Name', 'Mobile', 'Email', 'Instagram ID', 'Quantity', 'Amount', 'Razorpay ID', 'Payment Status', 'Entry Status', 'Checked In At', 'Created At'];
     const rows = tickets.map(t => [
       t.ticket_id,
       `"${t.customer_name.replace(/"/g, '""')}"`,
       t.mobile,
       t.email,
       t.instagram_id,
-      t.date_of_birth,
       t.quantity,
       t.amount,
       t.razorpay_payment_id || t.razorpay_order_id || 'N/A',
@@ -298,7 +297,6 @@ export default function OrdersLedgerPage() {
                   <th className="p-4">Customer Name</th>
                   <th className="p-4">Contact</th>
                   <th className="p-4">Instagram</th>
-                  <th className="p-4">DOB</th>
                   <th className="p-4">Amount</th>
                   <th className="p-4">Razorpay ID</th>
                   <th className="p-4">Payment</th>
@@ -329,11 +327,6 @@ export default function OrdersLedgerPage() {
                     {/* Instagram */}
                     <td className="p-4 font-bold text-pink-400">
                       {tck.instagram_id}
-                    </td>
-
-                    {/* DOB */}
-                    <td className="p-4 text-slate-300">
-                      {tck.date_of_birth}
                     </td>
 
                     {/* Amount */}

@@ -4,7 +4,7 @@ import { getRazorpayKeyId, getRazorpayInstance, isRazorpayConfigured } from '@/l
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { customerName, mobile, email, instagramId, quantity = 1, termsAgreed } = body;
+    const { customerName, mobile, email, instagramId, quantity = 1 } = body;
 
     // Validate mandatory fields (Only Full Name and Mobile are required)
     if (!customerName || !customerName.trim() || !mobile || !mobile.trim()) {
@@ -14,12 +14,7 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!termsAgreed) {
-      return NextResponse.json(
-        { error: 'You must agree to the event terms and conditions to proceed.' },
-        { status: 400 }
-      );
-    }
+    // Terms checkbox was removed from the booking UI, so do not require termsAgreed here.
 
     // Optional fields with sensible defaults
     const cleanEmail = (email || '').trim();

@@ -32,6 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/contact',
     '/toppers-classes-gorakhpur',
     '/udaypratapsingh',
+    '/udayseo',
   ];
 
   return routes.map((route) => ({

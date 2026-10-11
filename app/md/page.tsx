@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Award, GraduationCap, Trophy, BookOpen, Star } from 'lucide-react';
+import { ArrowLeft, Award, GraduationCap, Trophy, BookOpen, Star, Instagram } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Uday Pratap Singh | Managing Director & Gold Medalist',
@@ -103,6 +103,18 @@ export default function ManagingDirectorPage() {
               <span className="rounded-full border border-amber-300/20 bg-amber-300/[0.08] px-4 py-2 text-xs font-bold text-amber-100">Gold Medalist</span>
               <span className="rounded-full border border-red-400/20 bg-red-400/[0.08] px-4 py-2 text-xs font-bold text-red-100">State-Level Winner</span>
               <span className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-bold text-slate-200">Educator & Mentor</span>
+            </div>
+            <div className="mt-6 flex justify-center md:justify-start">
+              <a
+                href="https://www.instagram.com/poetry_writer_boy_245/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Uday Pratap Singh on Instagram"
+                className="inline-flex items-center gap-3 rounded-full border border-pink-400/30 bg-gradient-to-r from-pink-500/10 via-red-500/10 to-amber-400/10 px-5 py-3 text-sm font-bold text-white transition hover:border-pink-300/60 hover:bg-pink-500/15"
+              >
+                <Instagram className="h-5 w-5 text-pink-300" />
+                <span>Instagram <span className="ml-1 text-slate-300">@poetry_writer_boy_245</span></span>
+              </a>
             </div>
           </div>
         </section>

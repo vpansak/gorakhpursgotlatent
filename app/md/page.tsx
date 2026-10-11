@@ -169,8 +169,8 @@ export default function ManagingDirectorPage() {
               <GraduationCap className="h-7 w-7 text-amber-300" />
               <h2 className="font-bebas text-3xl tracking-wide">EDUCATION</h2>
             </div>
-            <p className="mt-5 text-lg font-bold text-white">LL.B. — Deen Dayal Upadhyaya Gorakhpur University</p>
-            <p className="mt-2 text-sm leading-6 text-slate-400">Legal education from DDU University, Gorakhpur.</p>
+            <p className="mt-5 text-lg font-bold text-white">DDU University, Gorakhpur</p>
+            <p className="mt-2 text-sm leading-6 text-slate-400">Deen Dayal Upadhyaya Gorakhpur University.</p>
           </article>
           <article className="rounded-2xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
             <div className="flex items-center gap-3">

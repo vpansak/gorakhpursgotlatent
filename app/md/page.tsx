@@ -1,7 +1,17 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Award, GraduationCap, Trophy, BookOpen, Star, Instagram } from 'lucide-react';
+import { ArrowLeft, Award, GraduationCap, Trophy, BookOpen, Star } from 'lucide-react';
+
+function InstagramIcon({ className = 'h-5 w-5' }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
 
 export const metadata: Metadata = {
   title: 'Uday Pratap Singh | Managing Director & Gold Medalist',
@@ -112,7 +122,7 @@ export default function ManagingDirectorPage() {
                 aria-label="Uday Pratap Singh on Instagram"
                 className="inline-flex items-center gap-3 rounded-full border border-pink-400/30 bg-gradient-to-r from-pink-500/10 via-red-500/10 to-amber-400/10 px-5 py-3 text-sm font-bold text-white transition hover:border-pink-300/60 hover:bg-pink-500/15"
               >
-                <Instagram className="h-5 w-5 text-pink-300" />
+                <InstagramIcon className="h-5 w-5 text-pink-300" />
                 <span>Instagram <span className="ml-1 text-slate-300">@poetry_writer_boy_245</span></span>
               </a>
             </div>

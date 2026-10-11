@@ -76,37 +76,38 @@ export default function ToppersClassesPage() {
       <section className="relative isolate overflow-hidden border-b border-amber-400/20">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgba(245,158,11,0.19),transparent_42%),radial-gradient(ellipse_at_bottom_left,rgba(185,28,28,0.18),transparent_40%)]" />
         <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
-          <div className="mb-8 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-            <div
-              aria-label="Topper's Classes logo placeholder"
-              className="flex h-28 w-28 shrink-0 items-center justify-center rounded-2xl border-2 border-dashed border-amber-300/50 bg-black/30 p-3 text-center text-xs font-bold leading-5 text-amber-200 sm:h-32 sm:w-32"
-            >
-              LOGO<br />PLACEHOLDER
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-300">Director · Topper&apos;s Classes</p>
-              <p className="mt-1 text-2xl font-black text-white sm:text-3xl">Uday Pratap Singh</p>
-              <p className="mt-2 text-sm text-slate-400">Rustampur, Azad Nagar, Gorakhpur</p>
-            </div>
-          </div>
           <div className="grid items-center gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:gap-12">
             <div>
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-amber-200">
-            <BookOpen className="h-4 w-4" /> Education · Gorakhpur
-          </p>
-          <h1 className="max-w-4xl text-4xl font-black leading-tight sm:text-6xl">
-            Topper&apos;s Classes <span className="text-amber-300">Gorakhpur</span>
-          </h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300 sm:text-xl">
-            Academic coaching and competitive exam guidance in Rustampur, Azad Nagar, Gorakhpur, Uttar Pradesh.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="tel:+918004655840" className="inline-flex items-center gap-2 rounded-xl bg-amber-300 px-5 py-3 font-extrabold text-black transition hover:bg-amber-200">
-              <Phone className="h-5 w-5" /> Call 080046 55840
-            </a>
-            <a href="https://www.google.com/maps/search/?api=1&query=Topper%27s%20Classes%20Pillar%20No.%2056%20Rustampur%20Gorakhpur" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-3 font-bold text-white transition hover:bg-white/10">
-              <MapPin className="h-5 w-5" /> Get Directions <ExternalLink className="h-4 w-4" />
-            </a>
+              <div className="mb-8 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
+                <div
+                  aria-label="Topper's Classes logo placeholder"
+                  className="flex h-28 w-28 shrink-0 items-center justify-center rounded-2xl border-2 border-dashed border-amber-300/50 bg-black/30 p-3 text-center text-xs font-bold leading-5 text-amber-200 sm:h-32 sm:w-32"
+                >
+                  LOGO<br />PLACEHOLDER
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-300">Director · Topper&apos;s Classes</p>
+                  <p className="mt-1 text-2xl font-black text-white sm:text-3xl">Uday Pratap Singh</p>
+                  <p className="mt-2 text-sm text-slate-400">Rustampur, Azad Nagar, Gorakhpur</p>
+                </div>
+              </div>
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-amber-200">
+                <BookOpen className="h-4 w-4" /> Education · Gorakhpur
+              </p>
+              <h1 className="max-w-4xl text-4xl font-black leading-tight sm:text-6xl">
+                Topper&apos;s Classes <span className="text-amber-300">Gorakhpur</span>
+              </h1>
+              <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300 sm:text-xl">
+                Academic coaching and competitive exam guidance in Rustampur, Azad Nagar, Gorakhpur, Uttar Pradesh.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a href="tel:+918004655840" className="inline-flex items-center gap-2 rounded-xl bg-amber-300 px-5 py-3 font-extrabold text-black transition hover:bg-amber-200">
+                  <Phone className="h-5 w-5" /> Call 080046 55840
+                </a>
+                <a href="https://www.google.com/maps/search/?api=1&query=Topper%27s%20Classes%20Pillar%20No.%2056%20Rustampur%20Gorakhpur" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-3 font-bold text-white transition hover:bg-white/10">
+                  <MapPin className="h-5 w-5" /> Get Directions <ExternalLink className="h-4 w-4" />
+                </a>
+              </div>
             </div>
             <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
               <div className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-amber-400/35 via-red-600/25 to-transparent blur-xl" />

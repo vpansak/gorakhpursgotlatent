@@ -30,6 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/privacy',
     '/refund-policy',
     '/contact',
+    '/toppers-classes-gorakhpur',
   ];
 
   return routes.map((route) => ({

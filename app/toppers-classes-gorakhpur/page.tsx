@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { BookOpen, MapPin, Phone, GraduationCap, Award, Users, Clock, ExternalLink } from 'lucide-react';
 
 const pageUrl = 'https://gkpgotlatent.in/toppers-classes-gorakhpur';
@@ -88,6 +89,8 @@ export default function ToppersClassesPage() {
               <p className="mt-2 text-sm text-slate-400">Rustampur, Azad Nagar, Gorakhpur</p>
             </div>
           </div>
+          <div className="grid items-center gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:gap-12">
+            <div>
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-amber-200">
             <BookOpen className="h-4 w-4" /> Education · Gorakhpur
           </p>
@@ -104,6 +107,25 @@ export default function ToppersClassesPage() {
             <a href="https://www.google.com/maps/search/?api=1&query=Topper%27s%20Classes%20Pillar%20No.%2056%20Rustampur%20Gorakhpur" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-3 font-bold text-white transition hover:bg-white/10">
               <MapPin className="h-5 w-5" /> Get Directions <ExternalLink className="h-4 w-4" />
             </a>
+            </div>
+            <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
+              <div className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-amber-400/35 via-red-600/25 to-transparent blur-xl" />
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[1.7rem] border border-amber-300/30 bg-[#111116] shadow-2xl shadow-black/50">
+                <Image
+                  src="/uday-pratap-singh.jpg"
+                  alt="Uday Pratap Singh, Director of Topper's Classes"
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 85vw, 420px"
+                  className="object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-300">Director</p>
+                  <p className="mt-1 text-2xl font-black text-white">Uday Pratap Singh</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

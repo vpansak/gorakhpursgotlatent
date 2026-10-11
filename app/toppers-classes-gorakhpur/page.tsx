@@ -7,7 +7,7 @@ const fullAddress = 'Floor No. 1, Pillar No. 56, Rustampur Police Station, oppos
 
 export const metadata: Metadata = {
   title: "Topper's Classes Gorakhpur | Coaching in Rustampur, Azad Nagar",
-  description: "Discover Topper's Classes in Rustampur, Azad Nagar, Gorakhpur. Academic coaching and competitive exam guidance. Contact 09845424877. Director: Uday Pratap Singh.",
+  description: "Discover Topper's Classes in Rustampur, Azad Nagar, Gorakhpur. Academic coaching and competitive exam guidance. Contact 080046 55840. Director: Uday Pratap Singh.",
   keywords: [
     "Topper's Classes Gorakhpur",
     "Toppers Classes Rustampur",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: pageUrl,
     title: "Topper's Classes | Coaching in Gorakhpur",
-    description: "Find Topper's Classes in Rustampur, Azad Nagar, Gorakhpur. Call 09845424877 for admission and class information.",
+    description: "Find Topper's Classes in Rustampur, Azad Nagar, Gorakhpur. Call 080046 55840 for admission and class information.",
     siteName: "Gorakhpur's Got Latent",
     locale: 'en_IN',
   },
@@ -35,7 +35,7 @@ const localBusinessJsonLd = {
   '@id': pageUrl + '#organization',
   name: "Topper's Classes",
   url: pageUrl,
-  telephone: '+91-9845424877',
+  telephone: '+91-8004655840',
   description: "Topper's Classes is a coaching and educational institute in Rustampur, Azad Nagar, Gorakhpur, Uttar Pradesh, offering academic coaching and guidance for competitive exam preparation.",
   address: {
     '@type': 'PostalAddress',
@@ -53,7 +53,7 @@ const localBusinessJsonLd = {
   },
   contactPoint: {
     '@type': 'ContactPoint',
-    telephone: '+91-9845424877',
+    telephone: '+91-8004655840',
     contactType: 'admissions and general enquiries',
     areaServed: 'IN',
     availableLanguage: ['Hindi', 'English'],
@@ -101,8 +101,8 @@ export default function ToppersClassesPage() {
             Academic coaching and competitive exam guidance in Rustampur, Azad Nagar, Gorakhpur, Uttar Pradesh.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="tel:+919845424877" className="inline-flex items-center gap-2 rounded-xl bg-amber-300 px-5 py-3 font-extrabold text-black transition hover:bg-amber-200">
-              <Phone className="h-5 w-5" /> Call 09845424877
+            <a href="tel:+918004655840" className="inline-flex items-center gap-2 rounded-xl bg-amber-300 px-5 py-3 font-extrabold text-black transition hover:bg-amber-200">
+              <Phone className="h-5 w-5" /> Call 080046 55840
             </a>
             <a href="https://www.google.com/maps/search/?api=1&query=Topper%27s%20Classes%20Pillar%20No.%2056%20Rustampur%20Gorakhpur" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-3 font-bold text-white transition hover:bg-white/10">
               <MapPin className="h-5 w-5" /> Get Directions <ExternalLink className="h-4 w-4" />
@@ -169,7 +169,7 @@ export default function ToppersClassesPage() {
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-300/10 text-amber-300"><Phone className="h-5 w-5" /></span>
             <div>
               <p className="text-sm text-slate-400">Phone</p>
-              <a href="tel:+919845424877" className="mt-1 block text-lg font-bold text-white hover:text-amber-300">09845424877</a>
+              <a href="tel:+918004655840" className="mt-1 block text-lg font-bold text-white hover:text-amber-300">080046 55840</a>
             </div>
           </div>
           <div className="mt-6 flex gap-4">
@@ -191,7 +191,7 @@ export default function ToppersClassesPage() {
           <h2 className="text-2xl font-black">Frequently Asked Questions</h2>
           <div className="mt-5 grid gap-5 md:grid-cols-2">
             <div><h3 className="font-bold text-white">Where is Topper&apos;s Classes located?</h3><p className="mt-2 leading-7 text-slate-400">It is listed at Pillar No. 56, near Rustampur Police Station, Azad Nagar, Gorakhpur, Uttar Pradesh 273016.</p></div>
-            <div><h3 className="font-bold text-white">How can I contact Topper&apos;s Classes?</h3><p className="mt-2 leading-7 text-slate-400">Call 09845424877 to ask about courses, admissions, and class timings.</p></div>
+            <div><h3 className="font-bold text-white">How can I contact Topper&apos;s Classes?</h3><p className="mt-2 leading-7 text-slate-400">Call 080046 55840 to ask about courses, admissions, and class timings.</p></div>
             <div><h3 className="font-bold text-white">Who is the director of Topper&apos;s Classes?</h3><p className="mt-2 leading-7 text-slate-400">The director is Uday Pratap Singh.</p></div>
             <div><h3 className="font-bold text-white">Does the institute offer competitive exam guidance?</h3><p className="mt-2 leading-7 text-slate-400">The institute listing mentions competitive exam preparation. Contact the institute to confirm the exams and current batches offered.</p></div>
           </div>

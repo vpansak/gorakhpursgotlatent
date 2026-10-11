@@ -79,11 +79,15 @@ export default function ToppersClassesPage() {
           <div className="grid items-center gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:gap-12">
             <div>
               <div className="mb-8 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-                <div
-                  aria-label="Topper's Classes logo placeholder"
-                  className="flex h-28 w-28 shrink-0 items-center justify-center rounded-2xl border-2 border-dashed border-amber-300/50 bg-black/30 p-3 text-center text-xs font-bold leading-5 text-amber-200 sm:h-32 sm:w-32"
-                >
-                  LOGO<br />PLACEHOLDER
+                <div className="relative flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-amber-300/30 bg-black/40 p-2 shadow-lg shadow-black/50 sm:h-32 sm:w-32">
+                  <Image
+                    src="/toppers-classes-logo.png"
+                    alt="Official Topper's Classes logo"
+                    width={128}
+                    height={128}
+                    priority
+                    className="h-full w-full object-contain"
+                  />
                 </div>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-300">Director · Topper&apos;s Classes</p>

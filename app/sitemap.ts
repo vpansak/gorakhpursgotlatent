@@ -31,6 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/refund-policy',
     '/contact',
     '/toppers-classes-gorakhpur',
+    '/udaypratapsingh',
   ];
 
   return routes.map((route) => ({

@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { BookOpen, MapPin, Phone, GraduationCap, Award, Users, Clock, ExternalLink } from 'lucide-react';
 
 const pageUrl = 'https://gkpgotlatent.in/toppers-classes-gorakhpur';
-const businessName = "Topper's Classes";
 const fullAddress = 'Floor No. 1, Pillar No. 56, Rustampur Police Station, opposite Pillar No. 56, Azad Nagar, Gorakhpur, Uttar Pradesh 273016, India';
 
 export const metadata: Metadata = {

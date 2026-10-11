@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Award, BookOpen, GraduationCap, Mic2, Trophy, Users, Instagram } from 'lucide-react';
+import { ArrowLeft, Award, BookOpen, GraduationCap, Mic2, Trophy, Users } from 'lucide-react';
 
 const pageUrl = 'https://gkpgotlatent.in/udaypratapsingh';
 const portrait = '/uday-pratap-singh.jpg';
@@ -93,7 +93,7 @@ export default function UdayPratapSinghPage() {
             <p className="mt-5 text-xl font-bold text-slate-200">Gold Medalist · Director & Founder of Topper’s Classes · Managing Director, Gorakhpur’s Got Latent</p>
             <p className="mt-5 max-w-3xl leading-8 text-slate-300">Uday Pratap Singh is an educator and community leader associated with Gorakhpur, Uttar Pradesh. His work brings together student guidance, public speaking, competitive performance and local talent development.</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <a href="https://www.instagram.com/poetry_writer_boy_245/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-amber-300 px-5 py-3 font-extrabold text-black hover:bg-amber-200"><Instagram className="h-5 w-5" /> Instagram</a>
+              <a href="https://www.instagram.com/poetry_writer_boy_245/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-amber-300 px-5 py-3 font-extrabold text-black hover:bg-amber-200"><span className="inline-flex h-5 w-5 items-center justify-center rounded border border-black/40 text-[10px] font-black">IG</span> Instagram</a>
               <Link href="/toppers-classes-gorakhpur" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-white hover:bg-white/10"><BookOpen className="h-5 w-5" /> Topper’s Classes</Link>
             </div>
           </div>
@@ -144,7 +144,7 @@ export default function UdayPratapSinghPage() {
 
         <footer className="mt-12 border-t border-white/10 pt-6 text-sm text-slate-400">
           <p>Profile page for Uday Pratap Singh, Gorakhpur, Uttar Pradesh. Some biographical details are based on information supplied for this website and should be supported with documents or published coverage where possible.</p>
-          <p className="mt-3"><Link href="/md" className="text-amber-300 hover:underline">GGL leadership profile</Link> · <Link href="/" className="text-amber-300 hover:underline">Gorakhpur’s Got Latent home</Link></p>
+          <p className="mt-3"><Link href="/" className="text-amber-300 hover:underline">Gorakhpur’s Got Latent home</Link></p>
         </footer>
       </div>
     </main>

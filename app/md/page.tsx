@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description:
     'Meet Uday Pratap Singh, Managing Director of Gorakhpur’s Got Latent, a state-level singing and debate competition winner, Gold Medalist, and Founder & Director of Topper’s Classes.',
   alternates: { canonical: '/md' },
+  robots: { index: false, follow: false },
   openGraph: {
     title: 'Uday Pratap Singh | Gorakhpur’s Got Latent',
     description: 'Educator, Gold Medalist, and Managing Director of Gorakhpur’s Got Latent.',

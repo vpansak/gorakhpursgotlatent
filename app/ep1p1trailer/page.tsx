@@ -43,7 +43,6 @@ const videoJsonLd = {
   description:
     "Official trailer for Episode 1 Part 1 of Gorakhpur's Got Latent. Episode 1 Part 1 is scheduled to premiere on 14 October 2026.",
   thumbnailUrl: ['https://img.youtube.com/vi/aJfdcrsqoCQ/maxresdefault.jpg'],
-  uploadDate: '2026-10-12T00:00:00+05:30',
   embedUrl: 'https://www.youtube.com/embed/aJfdcrsqoCQ',
   contentUrl: trailerUrl,
   publisher: {

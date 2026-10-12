@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, Clapperboard, Maximize2, Play, X } from 'lucide-react';
+import { ArrowUpRight, Clapperboard, Maximize2, Play, Share2, X } from 'lucide-react';
 
 type Episode = {
   id: string;
@@ -29,6 +29,33 @@ export default function EpisodesPage() {
   const [expandedPlayer, setExpandedPlayer] = useState(false);
   const selectedEpisode = EPISODES.find((episode) => episode.id === selectedId) ?? EPISODES[0];
   const playerUrl = `https://drive.google.com/file/d/${selectedEpisode.driveFileId}/preview`;
+
+  useEffect(() => {
+    const episodeNumber = Number(new URLSearchParams(window.location.search).get('episode'));
+    const sharedEpisode = EPISODES.find((episode) => episode.number === episodeNumber && episode.status === 'available');
+    if (sharedEpisode) setSelectedId(sharedEpisode.id);
+  }, []);
+
+  const shareEpisode = async (episode: Episode) => {
+    const url = `${window.location.origin}/episodes?episode=${episode.number}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: `GGL — Episode ${episode.number}`, text: episode.title, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        window.alert('Episode link copied!');
+      }
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'AbortError') {
+        try {
+          await navigator.clipboard.writeText(url);
+          window.alert('Episode link copied!');
+        } catch {
+          window.prompt('Copy this episode link:', url);
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     if (!expandedPlayer) return;
@@ -131,23 +158,34 @@ export default function EpisodesPage() {
               {EPISODES.map((episode) => {
                 const active = episode.id === selectedId;
                 return (
-                  <button
-                    type="button"
-                    key={episode.id}
-                    onClick={() => episode.status === 'available' && setSelectedId(episode.id)}
-                    disabled={episode.status !== 'available'}
-                    className={`group flex w-full items-center gap-3 rounded-xl border p-3 text-left transition sm:rounded-2xl sm:p-4 ${active ? 'border-amber-400/50 bg-amber-400/10' : 'border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05]'}`}
-                    aria-current={active ? 'true' : undefined}
-                  >
-                    <span className={`flex h-16 w-24 shrink-0 items-center justify-center rounded-lg border sm:h-[72px] sm:w-28 ${active ? 'border-amber-300/40 bg-amber-400/10 text-amber-300' : 'border-white/10 bg-black/50 text-slate-400'}`}>
-                      {active ? <Play className="h-6 w-6 fill-current" /> : <span className="text-lg font-black">EP {episode.number}</span>}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Episode {episode.number}</span>
-                      <span className={`mt-1 block text-sm font-extrabold leading-snug ${active ? 'text-amber-200' : 'text-white'}`}>Full Episode</span>
-                      <span className="mt-1 block text-[11px] text-slate-400">{episode.status === 'available' ? '▶ Watch now' : 'Coming soon'}</span>
-                    </span>
-                  </button>
+                  <div key={episode.id} className={`flex items-stretch gap-2 rounded-xl border p-2 transition sm:rounded-2xl sm:p-3 ${active ? 'border-amber-400/50 bg-amber-400/10' : 'border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05]'}`}>
+                    <button
+                      type="button"
+                      onClick={() => episode.status === 'available' && setSelectedId(episode.id)}
+                      disabled={episode.status !== 'available'}
+                      className="group flex min-w-0 flex-1 items-center gap-3 p-1 text-left disabled:cursor-not-allowed"
+                      aria-current={active ? 'true' : undefined}
+                    >
+                      <span className={`flex h-16 w-24 shrink-0 items-center justify-center rounded-lg border sm:h-[72px] sm:w-28 ${active ? 'border-amber-300/40 bg-amber-400/10 text-amber-300' : 'border-white/10 bg-black/50 text-slate-400'}`}>
+                        {active ? <Play className="h-6 w-6 fill-current" /> : <span className="text-lg font-black">EP {episode.number}</span>}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Episode {episode.number}</span>
+                        <span className={`mt-1 block text-sm font-extrabold leading-snug ${active ? 'text-amber-200' : 'text-white'}`}>Full Episode</span>
+                        <span className="mt-1 block text-[11px] text-slate-400">{episode.status === 'available' ? '▶ Watch now' : 'Coming soon'}</span>
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => shareEpisode(episode)}
+                      disabled={episode.status !== 'available'}
+                      aria-label={`Share Episode ${episode.number}`}
+                      title="Share episode link"
+                      className="inline-flex w-10 shrink-0 items-center justify-center self-center rounded-lg border border-amber-400/30 text-amber-300 transition hover:bg-amber-400 hover:text-black disabled:opacity-40 sm:w-11"
+                    >
+                      <Share2 className="h-4 w-4" />
+                    </button>
+                  </div>
                 );
               })}
               <div className="rounded-xl border border-dashed border-white/15 p-4 text-center sm:rounded-2xl">

@@ -45,16 +45,20 @@ export default function EpisodesPage() {
   }, [expandedPlayer]);
 
   const videoFrame = (expanded = false) => (
-    <iframe
-      key={`${expanded ? 'expanded-' : ''}${selectedEpisode.driveFileId}`}
-      src={playerUrl}
-      title={selectedEpisode.title}
-      className="absolute inset-0 h-full w-full border-0 bg-black"
-      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-      allowFullScreen
-      loading="eager"
-      referrerPolicy="strict-origin-when-cross-origin"
-    />
+    <div className="absolute inset-0 overflow-hidden bg-black">
+      <iframe
+        key={`${expanded ? 'expanded-' : ''}${selectedEpisode.driveFileId}`}
+        src={playerUrl}
+        title={selectedEpisode.title}
+        className="absolute inset-0 h-full w-full border-0 bg-black"
+        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+        allowFullScreen
+        loading="eager"
+        referrerPolicy="strict-origin-when-cross-origin"
+      />
+      {/* Cover Google Drive's external-open shortcut in the embedded player. */}
+      <div aria-hidden="true" className="pointer-events-none absolute right-0 top-0 z-10 h-14 w-16 bg-black" />
+    </div>
   );
 
   return (

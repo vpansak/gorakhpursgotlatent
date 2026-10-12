@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CalendarDays, Clapperboard, PlayCircle, ArrowRight, Youtube } from 'lucide-react';
+import { CalendarDays, Clapperboard, PlayCircle, ArrowRight } from 'lucide-react';
 
 const pageUrl = 'https://www.gkpgotlatent.in/ep1p1trailer';
 const trailerUrl = 'https://www.youtube.com/watch?v=aJfdcrsqoCQ';
@@ -91,7 +91,7 @@ export default function Episode1Part1TrailerPage() {
               <p className="mt-1 text-xs text-slate-400 sm:text-sm">Gorakhpur’s Got Latent • GGL</p>
             </div>
             <a href={trailerUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-extrabold text-white transition hover:bg-red-500">
-              <Youtube className="h-5 w-5" /> Watch on YouTube
+              <PlayCircle className="h-5 w-5" /> Watch on YouTube
             </a>
           </div>
         </section>

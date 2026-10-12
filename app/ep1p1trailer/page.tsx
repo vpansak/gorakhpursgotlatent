@@ -106,7 +106,7 @@ export default function Episode1Part1TrailerPage() {
             Episode 1 Part 1 is scheduled to premiere on the official Gorakhpur’s Got Latent YouTube channel on 14 October 2026. Subscribe so you don’t miss the release.
           </p>
           <a href="https://www.youtube.com/@gkpgotlatent" target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-6 py-3 font-black text-black transition hover:bg-amber-300">
-            <Youtube className="h-5 w-5" /> Subscribe to GGL <ArrowRight className="h-4 w-4" />
+            <PlayCircle className="h-5 w-5" /> Subscribe to GGL <ArrowRight className="h-4 w-4" />
           </a>
         </section>
 

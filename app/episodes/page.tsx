@@ -27,6 +27,25 @@ const EPISODES: Episode[] = [
 export default function EpisodesPage() {
   const [selectedId, setSelectedId] = useState(EPISODES[0].id);
   const [expandedPlayer, setExpandedPlayer] = useState(false);
+  const unlockAt = new Date('2026-10-14T12:00:00+05:30').getTime();
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (Date.now() >= unlockAt) return;
+    const timer = window.setInterval(() => {
+      const current = Date.now();
+      setNow(current);
+      if (current >= unlockAt) window.clearInterval(timer);
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [unlockAt]);
+
+  const locked = now < unlockAt;
+  const secondsLeft = Math.max(0, Math.floor((unlockAt - now) / 1000));
+  const daysLeft = Math.floor(secondsLeft / 86400);
+  const hoursLeft = Math.floor((secondsLeft % 86400) / 3600);
+  const minutesLeft = Math.floor((secondsLeft % 3600) / 60);
+  const remainingSeconds = secondsLeft % 60;
   const selectedEpisode = EPISODES.find((episode) => episode.id === selectedId) ?? EPISODES[0];
   const playerUrl = `https://drive.google.com/file/d/${selectedEpisode.driveFileId}/preview`;
 
@@ -87,6 +106,46 @@ export default function EpisodesPage() {
       <div aria-hidden="true" className="pointer-events-none absolute right-0 top-0 z-10 h-14 w-16 bg-black" />
     </div>
   );
+
+  if (locked) {
+    const units = [
+      { label: 'Days', value: daysLeft },
+      { label: 'Hours', value: hoursLeft },
+      { label: 'Minutes', value: minutesLeft },
+      { label: 'Seconds', value: remainingSeconds },
+    ];
+
+    return (
+      <main className="relative flex min-h-[calc(100svh-5rem)] items-center justify-center overflow-hidden bg-[#07080e] px-4 py-12 pb-28 text-white">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.19),transparent_52%),radial-gradient(ellipse_at_bottom,rgba(153,27,27,0.14),transparent_48%)]" />
+        <section className="relative z-10 mx-auto w-full max-w-3xl text-center">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-amber-400/30 bg-amber-400/10 text-amber-300 shadow-[0_0_50px_rgba(245,158,11,0.12)]">
+            <Clapperboard className="h-8 w-8" />
+          </div>
+          <p className="text-xs font-black uppercase tracking-[0.28em] text-amber-300 sm:text-sm">GGL WATCH</p>
+          <h1 className="mt-4 text-4xl font-black leading-tight tracking-tight sm:text-6xl">
+            EPISODES <span className="text-amber-400">UNLOCKING SOON</span>
+          </h1>
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
+            The wait is almost over! Episode 1 will be available to watch here when the countdown ends.
+          </p>
+          <div className="mx-auto mt-9 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+            {units.map((unit) => (
+              <div key={unit.label} className="rounded-2xl border border-amber-400/20 bg-[#101119]/90 px-3 py-5 shadow-[0_12px_40px_rgba(0,0,0,0.28)] sm:py-7">
+                <div className="text-4xl font-black tabular-nums text-amber-300 sm:text-5xl">{String(unit.value).padStart(2, '0')}</div>
+                <div className="mt-2 text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">{unit.label}</div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-6 text-xs font-semibold text-slate-400 sm:text-sm">
+            Opens 14 October 2026 · 12:00 PM IST
+          </p>
+          <div className="mx-auto mt-8 h-px max-w-xs bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
+          <p className="mt-5 text-xs text-slate-500">Kuch Bhi Ho Sakta Hai!</p>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#07080e] pb-24 text-white lg:pb-12">

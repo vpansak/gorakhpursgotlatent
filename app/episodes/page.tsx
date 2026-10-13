@@ -34,7 +34,7 @@ const EPISODES: Episode[] = [
 ];
 
 export default function EpisodesPage() {
-  const [selectedId, setSelectedId] = useState(EPISODES[0].id);
+  const [selectedId, setSelectedId] = useState('episode-1');
   const [expandedPlayer, setExpandedPlayer] = useState(false);
   const unlockAt = new Date('2026-10-14T12:00:00+05:30').getTime();
   const [now, setNow] = useState(() => Date.now());

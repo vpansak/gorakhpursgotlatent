@@ -68,7 +68,6 @@ export default function EpisodesPage() {
   const playerUrl = selectedEpisode.youtubeId
     ? `https://www.youtube-nocookie.com/embed/${selectedEpisode.youtubeId}?rel=0`
     : `https://drive.google.com/file/d/${selectedEpisode.driveFileId}/preview`;
-  const selectedEpisodeLocked = selectedEpisode.id === 'episode-1-part-1' && locked;
 
   useEffect(() => {
     const episodeNumber = Number(new URLSearchParams(window.location.search).get('episode'));

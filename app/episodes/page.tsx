@@ -16,11 +16,19 @@ type Episode = {
 
 const EPISODES: Episode[] = [
   {
+    id: 'episode-1-trailer',
+    number: 1,
+    title: 'Episode 1 — Official Trailer',
+    description: 'Watch the official Gorakhpur’s Got Latent Episode 1 trailer.',
+    youtubeId: 'aJfdcrsqoCQ',
+    status: 'available',
+  },
+  {
     id: 'episode-1-part-1',
     number: 1,
-    title: 'Episode 1 — Part 1 (Trailer)',
-    description: 'Official trailer for Gorakhpur’s Got Latent Episode 1. This video unlocks on 14 October 2026 at 12:00 PM IST.',
-    youtubeId: 'aJfdcrsqoCQ',
+    title: 'Episode 1 — Part 1',
+    description: 'Episode 1 Part 1 unlocks on 14 October 2026 at 12:00 PM IST.',
+    driveFileId: '1rIrnu06FKCuKLNfdC9rrRGVv72EnTSsP',
     status: 'locked',
   },
   {
@@ -34,8 +42,9 @@ const EPISODES: Episode[] = [
 ];
 
 export default function EpisodesPage() {
-  const [selectedId, setSelectedId] = useState('episode-1');
+  const [selectedId, setSelectedId] = useState('episode-1-trailer');
   const [expandedPlayer, setExpandedPlayer] = useState(false);
+  const [showCountdownPopup, setShowCountdownPopup] = useState(false);
   const unlockAt = new Date('2026-10-14T12:00:00+05:30').getTime();
   const [now, setNow] = useState(() => Date.now());
 
@@ -105,7 +114,7 @@ export default function EpisodesPage() {
   const videoFrame = (expanded = false) => (
     <div className="absolute inset-0 overflow-hidden bg-black">
       <iframe
-        key={`${expanded ? 'expanded-' : ''}${selectedEpisode.driveFileId}`}
+        key={`${expanded ? 'expanded-' : ''}${selectedEpisode.youtubeId ?? selectedEpisode.driveFileId}`}
         src={playerUrl}
         title={selectedEpisode.title}
         className="absolute inset-0 h-full w-full border-0 bg-black"
@@ -118,46 +127,6 @@ export default function EpisodesPage() {
       <div aria-hidden="true" className="pointer-events-none absolute right-0 top-0 z-10 h-14 w-16 bg-black" />
     </div>
   );
-
-  if (selectedEpisodeLocked) {
-    const units = [
-      { label: 'Days', value: daysLeft },
-      { label: 'Hours', value: hoursLeft },
-      { label: 'Minutes', value: minutesLeft },
-      { label: 'Seconds', value: remainingSeconds },
-    ];
-
-    return (
-      <main className="relative flex min-h-[calc(100svh-5rem)] items-center justify-center overflow-hidden bg-[#07080e] px-4 py-12 pb-28 text-white">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.19),transparent_52%),radial-gradient(ellipse_at_bottom,rgba(153,27,27,0.14),transparent_48%)]" />
-        <section className="relative z-10 mx-auto w-full max-w-3xl text-center">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-amber-400/30 bg-amber-400/10 text-amber-300 shadow-[0_0_50px_rgba(245,158,11,0.12)]">
-            <Clapperboard className="h-8 w-8" />
-          </div>
-          <p className="text-xs font-black uppercase tracking-[0.28em] text-amber-300 sm:text-sm">GGL WATCH</p>
-          <h1 className="mt-4 text-4xl font-black leading-tight tracking-tight sm:text-6xl">
-            EPISODES <span className="text-amber-400">UNLOCKING SOON</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
-            The Episode 1 Part 1 trailer will open here when the countdown ends.
-          </p>
-          <div className="mx-auto mt-9 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            {units.map((unit) => (
-              <div key={unit.label} className="rounded-2xl border border-amber-400/20 bg-[#101119]/90 px-3 py-5 shadow-[0_12px_40px_rgba(0,0,0,0.28)] sm:py-7">
-                <div className="text-4xl font-black tabular-nums text-amber-300 sm:text-5xl">{String(unit.value).padStart(2, '0')}</div>
-                <div className="mt-2 text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">{unit.label}</div>
-              </div>
-            ))}
-          </div>
-          <p className="mt-6 text-xs font-semibold text-slate-400 sm:text-sm">
-            Opens 14 October 2026 · 12:00 PM IST
-          </p>
-          <div className="mx-auto mt-8 h-px max-w-xs bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
-          <p className="mt-5 text-xs text-slate-500">Kuch Bhi Ho Sakta Hai!</p>
-        </section>
-      </main>
-    );
-  }
 
   return (
     <main className="min-h-screen bg-[#07080e] pb-24 text-white lg:pb-12">
@@ -172,12 +141,12 @@ export default function EpisodesPage() {
                 WATCH <span className="text-amber-400">EPISODES</span>
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
-                Every GGL episode in one place. Choose an episode and watch directly on this website.
+                Watch the official Episode 1 trailer below. Episode 1 Part 1 unlocks tomorrow at 12:00 PM IST.
               </p>
             </div>
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-xs font-bold text-emerald-300 sm:text-sm">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              {EPISODES.filter((episode) => episode.status === 'available').length} episode available
+              Official trailer available
             </div>
           </div>
         </div>
@@ -232,7 +201,13 @@ export default function EpisodesPage() {
                   <div key={episode.id} className={`flex items-stretch gap-2 rounded-xl border p-2 transition sm:rounded-2xl sm:p-3 ${active ? 'border-amber-400/50 bg-amber-400/10' : 'border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05]'}`}>
                     <button
                       type="button"
-                      onClick={() => setSelectedId(episode.id)}
+                      onClick={() => {
+                        if (episode.id === 'episode-1-part-1' && locked) {
+                          setShowCountdownPopup(true);
+                          return;
+                        }
+                        setSelectedId(episode.id);
+                      }}
                       disabled={false}
                       className="group flex min-w-0 flex-1 items-center gap-3 p-1 text-left disabled:cursor-not-allowed"
                       aria-current={active ? 'true' : undefined}
@@ -242,8 +217,8 @@ export default function EpisodesPage() {
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Episode {episode.number}</span>
-                        <span className={`mt-1 block text-sm font-extrabold leading-snug ${active ? 'text-amber-200' : 'text-white'}`}>Full Episode</span>
-                        <span className="mt-1 block text-[11px] text-slate-400">{episode.status === 'locked' ? '🔒 Countdown · Unlocks Oct 14' : episode.status === 'available' ? '▶ Watch now' : 'Coming soon'}</span>
+                        <span className={`mt-1 block text-sm font-extrabold leading-snug ${active ? 'text-amber-200' : 'text-white'}`}>{episode.title.replace('Episode 1 — ', '')}</span>
+                        <span className="mt-1 block text-[11px] text-slate-400">{episode.id === 'episode-1-trailer' ? '▶ Official YouTube trailer' : episode.status === 'locked' && locked ? '🔒 Tap to see countdown' : episode.status === 'available' ? '▶ Watch now' : 'Coming soon'}</span>
                       </span>
                     </button>
                     <button
@@ -272,6 +247,34 @@ export default function EpisodesPage() {
           </aside>
         </div>
       </section>
+
+      {showCountdownPopup && locked && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Episode 1 Part 1 countdown">
+          <div className="relative w-full max-w-lg rounded-3xl border border-amber-400/30 bg-[#0b0d14] p-5 text-center shadow-2xl sm:p-8">
+            <button type="button" onClick={() => setShowCountdownPopup(false)} className="absolute right-3 top-3 rounded-lg p-2 text-slate-400 hover:bg-white/10 hover:text-white" aria-label="Close countdown">
+              <X className="h-5 w-5" />
+            </button>
+            <Clapperboard className="mx-auto h-10 w-10 text-amber-300" />
+            <p className="mt-4 text-xs font-black uppercase tracking-[0.22em] text-amber-300">GGL WATCH</p>
+            <h2 className="mt-2 text-2xl font-black sm:text-3xl">EPISODE 1 · PART 1</h2>
+            <p className="mt-2 text-sm text-slate-300">Unlocks tomorrow, 14 October at 12:00 PM IST.</p>
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {[
+                { label: 'Days', value: daysLeft },
+                { label: 'Hours', value: hoursLeft },
+                { label: 'Minutes', value: minutesLeft },
+                { label: 'Seconds', value: remainingSeconds },
+              ].map((unit) => (
+                <div key={unit.label} className="rounded-xl border border-amber-400/20 bg-black/40 px-2 py-4">
+                  <div className="text-3xl font-black tabular-nums text-amber-300">{String(unit.value).padStart(2, '0')}</div>
+                  <div className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">{unit.label}</div>
+                </div>
+              ))}
+            </div>
+            <button type="button" onClick={() => setShowCountdownPopup(false)} className="mt-6 rounded-xl bg-amber-400 px-6 py-3 text-sm font-black text-black transition hover:bg-amber-300">Okay, got it</button>
+          </div>
+        </div>
+      )}
 
       {expandedPlayer && (
         <div className="fixed inset-0 z-[100] flex h-[100dvh] flex-col bg-black p-0" role="dialog" aria-modal="true" aria-label="Full-screen episode player">

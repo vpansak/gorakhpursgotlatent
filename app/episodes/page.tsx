@@ -9,11 +9,20 @@ type Episode = {
   number: number;
   title: string;
   description: string;
-  driveFileId: string;
-  status: 'available' | 'coming-soon';
+  driveFileId?: string;
+  youtubeId?: string;
+  status: 'available' | 'coming-soon' | 'locked';
 };
 
 const EPISODES: Episode[] = [
+  {
+    id: 'episode-1-part-1',
+    number: 1,
+    title: 'Episode 1 — Part 1 (Trailer)',
+    description: 'Official trailer for Gorakhpur’s Got Latent Episode 1. This video unlocks on 14 October 2026 at 12:00 PM IST.',
+    youtubeId: 'aJfdcrsqoCQ',
+    status: 'locked',
+  },
   {
     id: 'episode-1',
     number: 1,
@@ -47,7 +56,10 @@ export default function EpisodesPage() {
   const minutesLeft = Math.floor((secondsLeft % 3600) / 60);
   const remainingSeconds = secondsLeft % 60;
   const selectedEpisode = EPISODES.find((episode) => episode.id === selectedId) ?? EPISODES[0];
-  const playerUrl = `https://drive.google.com/file/d/${selectedEpisode.driveFileId}/preview`;
+  const playerUrl = selectedEpisode.youtubeId
+    ? `https://www.youtube-nocookie.com/embed/${selectedEpisode.youtubeId}?rel=0`
+    : `https://drive.google.com/file/d/${selectedEpisode.driveFileId}/preview`;
+  const selectedEpisodeLocked = selectedEpisode.id === 'episode-1-part-1' && locked;
 
   useEffect(() => {
     const episodeNumber = Number(new URLSearchParams(window.location.search).get('episode'));
@@ -107,7 +119,7 @@ export default function EpisodesPage() {
     </div>
   );
 
-  if (locked) {
+  if (selectedEpisodeLocked) {
     const units = [
       { label: 'Days', value: daysLeft },
       { label: 'Hours', value: hoursLeft },
@@ -127,7 +139,7 @@ export default function EpisodesPage() {
             EPISODES <span className="text-amber-400">UNLOCKING SOON</span>
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
-            The wait is almost over! Episode 1 will be available to watch here when the countdown ends.
+            The Episode 1 Part 1 trailer will open here when the countdown ends.
           </p>
           <div className="mx-auto mt-9 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {units.map((unit) => (
@@ -220,8 +232,8 @@ export default function EpisodesPage() {
                   <div key={episode.id} className={`flex items-stretch gap-2 rounded-xl border p-2 transition sm:rounded-2xl sm:p-3 ${active ? 'border-amber-400/50 bg-amber-400/10' : 'border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05]'}`}>
                     <button
                       type="button"
-                      onClick={() => episode.status === 'available' && setSelectedId(episode.id)}
-                      disabled={episode.status !== 'available'}
+                      onClick={() => setSelectedId(episode.id)}
+                      disabled={false}
                       className="group flex min-w-0 flex-1 items-center gap-3 p-1 text-left disabled:cursor-not-allowed"
                       aria-current={active ? 'true' : undefined}
                     >
@@ -231,13 +243,13 @@ export default function EpisodesPage() {
                       <span className="min-w-0 flex-1">
                         <span className="block text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Episode {episode.number}</span>
                         <span className={`mt-1 block text-sm font-extrabold leading-snug ${active ? 'text-amber-200' : 'text-white'}`}>Full Episode</span>
-                        <span className="mt-1 block text-[11px] text-slate-400">{episode.status === 'available' ? '▶ Watch now' : 'Coming soon'}</span>
+                        <span className="mt-1 block text-[11px] text-slate-400">{episode.status === 'locked' ? '🔒 Countdown · Unlocks Oct 14' : episode.status === 'available' ? '▶ Watch now' : 'Coming soon'}</span>
                       </span>
                     </button>
                     <button
                       type="button"
                       onClick={() => shareEpisode(episode)}
-                      disabled={episode.status !== 'available'}
+                      disabled={false}
                       aria-label={`Share Episode ${episode.number}`}
                       title="Share episode link"
                       className="inline-flex w-10 shrink-0 items-center justify-center self-center rounded-lg border border-amber-400/30 text-amber-300 transition hover:bg-amber-400 hover:text-black disabled:opacity-40 sm:w-11"

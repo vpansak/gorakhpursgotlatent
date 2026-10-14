@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, X, Ticket, Sparkles, UserCheck, ShieldCheck, PhoneCall } from 'lucide-react';
+import { Menu, X, Ticket, Sparkles, UserCheck, PhoneCall } from 'lucide-react';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -30,7 +30,6 @@ export default function Navbar() {
     { name: 'Sponsors', href: '/sponsors' },
     { name: 'Guests', href: '/guests' },
     { name: 'Book Ticket', href: '/book-ticket' },
-    { name: 'Episodes', href: '/episodes' },
     { name: 'Contact', href: '/contact' },
     { name: 'About', href: '/about' },
   ];
@@ -102,7 +101,6 @@ export default function Navbar() {
                   <Ticket className="w-3.5 h-3.5" />
                   BOOK TICKET
                 </Link>
-
 
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

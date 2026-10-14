@@ -103,12 +103,6 @@ export default function Navbar() {
                   BOOK TICKET
                 </Link>
 
-                <Link
-                  href="/episodes"
-                  className="px-3 py-1.5 rounded-lg border border-amber-400/60 bg-[#101119] text-amber-300 font-extrabold text-xs flex items-center gap-1 whitespace-nowrap"
-                >
-                  EPISODES
-                </Link>
 
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

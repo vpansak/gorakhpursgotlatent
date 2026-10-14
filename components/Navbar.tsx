@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, X, Ticket, Sparkles, UserCheck, PhoneCall } from 'lucide-react';
+import { MoreVertical, Menu, X, Ticket, Sparkles, UserCheck, PhoneCall } from 'lucide-react';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -103,19 +103,12 @@ export default function Navbar() {
                   BOOK TICKET
                 </Link>
 
-                <Link
-                  href="/episodes"
-                  className={`px-3 py-1.5 rounded-lg border border-amber-400/50 text-amber-300 font-extrabold text-xs whitespace-nowrap ${pathname.startsWith('/episodes') ? 'bg-amber-400/15' : 'bg-black/40'}`}
-                >
-                  EPISODES
-                </Link>
-
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   className="p-2.5 rounded-xl bg-slate-900 border border-amber-500/30 text-amber-400 focus:outline-none"
-                  aria-label="Toggle Navigation Menu"
+                  aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
                 >
-                  {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                  {mobileMenuOpen ? <X className="w-6 h-6" /> : <MoreVertical className="w-6 h-6" />}
                 </button>
               </div>
             </div>

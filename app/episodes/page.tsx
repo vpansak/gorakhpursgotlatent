@@ -31,14 +31,6 @@ const EPISODES: Episode[] = [
     driveFileId: '1rIrnu06FKCuKLNfdC9rrRGVv72EnTSsP',
     status: 'locked',
   },
-  {
-    id: 'episode-1',
-    number: 1,
-    title: 'Episode 1 — Full Episode',
-    description: 'The first episode of Gorakhpur’s Got Latent. Watch it here on the official GGL website.',
-    driveFileId: '1rIrnu06FKCuKLNfdC9rrRGVv72EnTSsP',
-    status: 'available',
-  },
 ];
 
 export default function EpisodesPage() {
@@ -140,7 +132,7 @@ export default function EpisodesPage() {
                 WATCH <span className="text-amber-400">EPISODES</span>
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
-                Watch the official Episode 1 trailer below. Episode 1 Part 1 unlocks tomorrow at 12:00 PM IST.
+                Watch the official Episode 1 trailer below. Episode 1 Part 1 unlocks today at 12:00 PM IST.
               </p>
             </div>
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-xs font-bold text-emerald-300 sm:text-sm">
@@ -212,7 +204,7 @@ export default function EpisodesPage() {
                       aria-current={active ? 'true' : undefined}
                     >
                       <span className={`flex h-16 w-24 shrink-0 items-center justify-center rounded-lg border sm:h-[72px] sm:w-28 ${active ? 'border-amber-300/40 bg-amber-400/10 text-amber-300' : 'border-white/10 bg-black/50 text-slate-400'}`}>
-                        {active ? <Play className="h-6 w-6 fill-current" /> : <span className="text-lg font-black">EP {episode.number}</span>}
+                        {active ? <Play className="h-6 w-6 fill-current" /> : <span className="px-1 text-center text-xs font-black uppercase tracking-wide">{episode.id === 'episode-1-trailer' ? 'Trailer' : episode.id === 'episode-1-part-1' ? 'Part 1' : `EP ${episode.number}`}</span>}
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Episode {episode.number}</span>
@@ -256,7 +248,7 @@ export default function EpisodesPage() {
             <Clapperboard className="mx-auto h-10 w-10 text-amber-300" />
             <p className="mt-4 text-xs font-black uppercase tracking-[0.22em] text-amber-300">GGL WATCH</p>
             <h2 className="mt-2 text-2xl font-black sm:text-3xl">EPISODE 1 · PART 1</h2>
-            <p className="mt-2 text-sm text-slate-300">Unlocks tomorrow, 14 October at 12:00 PM IST.</p>
+            <p className="mt-2 text-sm text-slate-300">Unlocks today, 14 October at 12:00 PM IST.</p>
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {[
                 { label: 'Days', value: daysLeft },

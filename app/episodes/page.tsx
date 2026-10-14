@@ -27,7 +27,7 @@ const EPISODES: Episode[] = [
     id: 'episode-1-part-1',
     number: 1,
     title: 'Episode 1 — Part 1',
-    description: 'Episode 1 Part 1 unlocks on 14 October 2026 at 12:00 PM IST.',
+    description: 'Episode 1 Part 1 premieres on 14 October 2026 at 5:00 PM IST.',
     driveFileId: '1rIrnu06FKCuKLNfdC9rrRGVv72EnTSsP',
     status: 'locked',
   },
@@ -37,7 +37,7 @@ export default function EpisodesPage() {
   const [selectedId, setSelectedId] = useState('episode-1-trailer');
   const [expandedPlayer, setExpandedPlayer] = useState(false);
   const [showCountdownPopup, setShowCountdownPopup] = useState(false);
-  const unlockAt = new Date('2026-10-14T12:00:00+05:30').getTime();
+  const unlockAt = new Date('2026-10-14T17:00:00+05:30').getTime();
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
@@ -132,7 +132,7 @@ export default function EpisodesPage() {
                 WATCH <span className="text-amber-400">EPISODES</span>
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
-                Watch the official Episode 1 trailer below. Episode 1 Part 1 unlocks today at 12:00 PM IST.
+                Watch the official Episode 1 trailer below. Episode 1 Part 1 premieres today at 5:00 PM IST.
               </p>
             </div>
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-xs font-bold text-emerald-300 sm:text-sm">
@@ -248,7 +248,7 @@ export default function EpisodesPage() {
             <Clapperboard className="mx-auto h-10 w-10 text-amber-300" />
             <p className="mt-4 text-xs font-black uppercase tracking-[0.22em] text-amber-300">GGL WATCH</p>
             <h2 className="mt-2 text-2xl font-black sm:text-3xl">EPISODE 1 · PART 1</h2>
-            <p className="mt-2 text-sm text-slate-300">Unlocks today, 14 October at 12:00 PM IST.</p>
+            <p className="mt-2 text-sm text-slate-300">Premieres today, 14 October at 5:00 PM IST.</p>
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {[
                 { label: 'Days', value: daysLeft },

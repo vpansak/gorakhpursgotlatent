@@ -30,6 +30,7 @@ export default function Navbar() {
     { name: 'Sponsors', href: '/sponsors' },
     { name: 'Guests', href: '/guests' },
     { name: 'Book Ticket', href: '/book-ticket' },
+    { name: 'Episodes', href: '/episodes' },
     { name: 'Contact', href: '/contact' },
     { name: 'About', href: '/about' },
   ];
@@ -100,6 +101,13 @@ export default function Navbar() {
                 >
                   <Ticket className="w-3.5 h-3.5" />
                   BOOK TICKET
+                </Link>
+
+                <Link
+                  href="/episodes"
+                  className={`px-3 py-1.5 rounded-lg border border-amber-400/50 text-amber-300 font-extrabold text-xs whitespace-nowrap ${pathname.startsWith('/episodes') ? 'bg-amber-400/15' : 'bg-black/40'}`}
+                >
+                  EPISODES
                 </Link>
 
                 <button

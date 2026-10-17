@@ -18,6 +18,7 @@ export default function TalentTripClient() {
   const [error, setError] = useState('');
   const [appId, setAppId] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showPolicy, setShowPolicy] = useState(false);
   const update = (key: keyof TripForm, value: any) => setForm(prev => ({...prev, [key]: value}));
   const toggleDestination = (value:string) => update('destinations', form.destinations.includes(value) ? form.destinations.filter(x=>x!==value) : [...form.destinations, value]);
   const message = useMemo(() => `🌍 *GGL TALENT TRIP — INTEREST REGISTRATION*\n\n🆔 Registration ID: ${appId || 'New Interest'}\n👤 Name: ${form.fullName}\n🎂 Age: ${form.age}\n📱 WhatsApp: ${form.whatsapp}\n📍 City: ${form.city}\n📸 Instagram: ${form.instagramId || 'Not provided'}\n🎭 Talent / Interests: ${form.talent}\n🗓️ Preferred Duration: ${form.duration}\n💰 Comfortable Budget: ${form.budget}\n🧭 Preferred Destinations: ${form.destinations.join(', ') || 'Not selected'}${form.otherDestination ? '\nOther destination: '+form.otherDestination : ''}\n\nFirst interest registration is FREE. ₹999 entry fee applies only after verification. Final trip contribution will be decided together after group discussions.\n\nWebsite: https://www.gkpgotlatent.in/ggl_talent_trip`, [appId,form]);
@@ -38,6 +39,38 @@ export default function TalentTripClient() {
   };
 
   return <main className="min-h-screen bg-[#07080e] text-white">
+    <section id="interest-form" className="scroll-mt-24 px-4 py-14 sm:px-6">
+      <div className="mx-auto max-w-4xl">
+        <div className="text-center"><p className="text-xs font-black uppercase tracking-[.25em] text-amber-400">Free Registration</p><h2 className="mt-3 text-3xl font-black sm:text-4xl">I’M INTERESTED</h2><p className="mt-3 text-sm text-slate-400">Share your preferences. Our team will follow up on WhatsApp.</p></div>
+        <form onSubmit={submit} className="mt-8 space-y-6 rounded-3xl border border-white/10 bg-white/[.035] p-5 sm:p-8">
+          {error && <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{error}</p>}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[
+              {key:'fullName',label:'Full Name',placeholder:'Your full name',type:'text'},
+              {key:'age',label:'Age',placeholder:'Your age',type:'number'},
+              {key:'whatsapp',label:'WhatsApp Number',placeholder:'10-digit mobile number',type:'tel'},
+              {key:'city',label:'City',placeholder:'Your city',type:'text'},
+              {key:'instagramId',label:'Instagram ID',placeholder:'@yourusername',type:'text'}
+            ].map(f=><label key={f.key} className="block"><span className="mb-2 block text-sm font-bold text-slate-200">{f.label}{f.key!=='instagramId'?' *':''}</span><input required={f.key!=='instagramId'} min={f.key==='age'?1:undefined} name={f.key} type={f.type} value={(form as any)[f.key]} onChange={e=>update(f.key as keyof TripForm,e.target.value)} placeholder={f.placeholder} className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition focus:border-amber-400"/></label>)}
+            <label className="block sm:col-span-2"><span className="mb-2 block text-sm font-bold text-slate-200">Talent / Creative Interests *</span><textarea required rows={3} value={form.talent} onChange={e=>update('talent',e.target.value)} placeholder="Music, dance, reels, comedy, photography, adventure, etc." className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-amber-400"/></label>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <label><span className="mb-2 block text-sm font-bold">Preferred Trip Duration *</span><select value={form.duration} onChange={e=>update('duration',e.target.value)} className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm">{durations.map(x=><option key={x}>{x}</option>)}</select></label>
+            <label><span className="mb-2 block text-sm font-bold">Comfortable Trip Budget *</span><select value={form.budget} onChange={e=>update('budget',e.target.value)} className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm">{budgets.map(x=><option key={x}>{x}</option>)}</select></label>
+          </div>
+          <fieldset><legend className="mb-3 text-sm font-bold">Preferred Destinations * <span className="font-normal text-slate-400">(select all that apply)</span></legend><div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{destinations.map(d=><label key={d} className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-black/20 p-3 text-sm text-slate-200"><input type="checkbox" checked={form.destinations.includes(d)} onChange={()=>toggleDestination(d)} className="h-4 w-4 accent-amber-400"/>{d}</label>)}</div></fieldset>
+          {form.destinations.includes('Other') && <label className="block"><span className="mb-2 block text-sm font-bold">Other Destination</span><input value={form.otherDestination} onChange={e=>update('otherDestination',e.target.value)} placeholder="Enter destination" className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-amber-400"/></label>}
+          <section className="rounded-2xl border border-amber-400/25 bg-amber-400/[.05] p-4 sm:p-5">
+            <h3 className="text-lg font-black text-amber-300">Terms & Conditions Policy</h3>
+            <p className="mt-1 text-sm text-slate-300">Please read the complete trip policy before applying.</p>
+            <button type="button" onClick={()=>setShowPolicy(true)} className="mt-3 inline-flex items-center gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm font-extrabold text-amber-200 transition hover:bg-amber-400/20">
+              Read Terms & Conditions Policy <ArrowRight className="h-4 w-4"/>
+            </button>
+            <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-amber-400/30 bg-black/30 p-4">
+              <input type="checkbox" required checked={termsAccepted} onChange={e=>setTermsAccepted(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 accent-amber-400"/>
+              <span className="text-sm font-bold text-white">I have read and agree to the Terms & Conditions Policy. <span className="text-red-400">*</span></span>
+            </label>
+          </section>
     <section className="relative isolate overflow-hidden px-4 py-16 sm:px-6 sm:py-24">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgba(245,158,11,.22),transparent_45%),radial-gradient(ellipse_at_bottom_left,rgba(220,38,38,.2),transparent_45%)]" />
       <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.1fr_.9fr]">
@@ -91,56 +124,36 @@ export default function TalentTripClient() {
         <p className="mt-5 text-sm leading-6 text-slate-300">The ₹3,999 example is separate from the ₹999 entry fee. The final contribution may increase or decrease depending on the destination, duration, group decisions and arrangements. No trip destination or date is confirmed yet.</p>
       </div>
     </section>
-    <section id="interest-form" className="scroll-mt-24 px-4 py-14 sm:px-6">
-      <div className="mx-auto max-w-4xl">
-        <div className="text-center"><p className="text-xs font-black uppercase tracking-[.25em] text-amber-400">Free Registration</p><h2 className="mt-3 text-3xl font-black sm:text-4xl">I’M INTERESTED</h2><p className="mt-3 text-sm text-slate-400">Share your preferences. Our team will follow up on WhatsApp.</p></div>
-        <form onSubmit={submit} className="mt-8 space-y-6 rounded-3xl border border-white/10 bg-white/[.035] p-5 sm:p-8">
-          {error && <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{error}</p>}
-          <div className="grid gap-4 sm:grid-cols-2">
-            {[
-              {key:'fullName',label:'Full Name',placeholder:'Your full name',type:'text'},
-              {key:'age',label:'Age',placeholder:'Your age',type:'number'},
-              {key:'whatsapp',label:'WhatsApp Number',placeholder:'10-digit mobile number',type:'tel'},
-              {key:'city',label:'City',placeholder:'Your city',type:'text'},
-              {key:'instagramId',label:'Instagram ID',placeholder:'@yourusername',type:'text'}
-            ].map(f=><label key={f.key} className="block"><span className="mb-2 block text-sm font-bold text-slate-200">{f.label}{f.key!=='instagramId'?' *':''}</span><input required={f.key!=='instagramId'} min={f.key==='age'?1:undefined} name={f.key} type={f.type} value={(form as any)[f.key]} onChange={e=>update(f.key as keyof TripForm,e.target.value)} placeholder={f.placeholder} className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition focus:border-amber-400"/></label>)}
-            <label className="block sm:col-span-2"><span className="mb-2 block text-sm font-bold text-slate-200">Talent / Creative Interests *</span><textarea required rows={3} value={form.talent} onChange={e=>update('talent',e.target.value)} placeholder="Music, dance, reels, comedy, photography, adventure, etc." className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-amber-400"/></label>
-          </div>
-          <div className="grid gap-5 sm:grid-cols-2">
-            <label><span className="mb-2 block text-sm font-bold">Preferred Trip Duration *</span><select value={form.duration} onChange={e=>update('duration',e.target.value)} className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm">{durations.map(x=><option key={x}>{x}</option>)}</select></label>
-            <label><span className="mb-2 block text-sm font-bold">Comfortable Trip Budget *</span><select value={form.budget} onChange={e=>update('budget',e.target.value)} className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm">{budgets.map(x=><option key={x}>{x}</option>)}</select></label>
-          </div>
-          <fieldset><legend className="mb-3 text-sm font-bold">Preferred Destinations * <span className="font-normal text-slate-400">(select all that apply)</span></legend><div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{destinations.map(d=><label key={d} className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-black/20 p-3 text-sm text-slate-200"><input type="checkbox" checked={form.destinations.includes(d)} onChange={()=>toggleDestination(d)} className="h-4 w-4 accent-amber-400"/>{d}</label>)}</div></fieldset>
-          {form.destinations.includes('Other') && <label className="block"><span className="mb-2 block text-sm font-bold">Other Destination</span><input value={form.otherDestination} onChange={e=>update('otherDestination',e.target.value)} placeholder="Enter destination" className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-amber-400"/></label>}
-          <section className="rounded-2xl border border-amber-400/25 bg-amber-400/[.05] p-4 sm:p-5">
-            <h3 className="text-lg font-black text-amber-300">GGL Talent Trip — Terms & Conditions</h3>
-            <p className="mt-1 text-xs text-slate-400">Please read all terms carefully before submitting your interest form.</p>
-            <div className="mt-4 max-h-72 space-y-3 overflow-y-auto pr-2 text-sm leading-6 text-slate-300">
-              <p><strong className="text-white">1. Interest registration is free.</strong> Submitting this form only records your interest and preferences. It does not confirm a seat, selection, booking or a guaranteed trip.</p>
-              <p><strong className="text-white">2. WhatsApp contact.</strong> You agree that GGL’s team may contact you on the WhatsApp number provided to verify your details, discuss preferences and share updates. After successful submission, you will be redirected to WhatsApp with a pre-filled message containing the details you submitted. You must press Send in WhatsApp to send that message to GGL.</p>
-              <p><strong className="text-white">3. Verification and ₹999 entry fee.</strong> The team may conduct basic verification and explain the next steps. The ₹999 entry fee is payable only after verification and further instructions from GGL. Do not pay anyone who is not confirmed through official GGL communication. The fee is separate from the trip contribution; any refund or cancellation terms applicable to this fee will be communicated before payment.</p>
-              <p><strong className="text-white">4. Trip contribution is separate and not fixed yet.</strong> Participants will discuss and finalize destination, dates, duration, activities, accommodation, transport and other arrangements together. The final contribution can be higher or lower depending on the confirmed plan. The example of approximately ₹3,999 for a 3-day trip is illustrative only and is separate from the ₹999 entry fee. No destination, date, duration or final price is guaranteed at this stage.</p>
-              <p><strong className="text-white">5. Preferences are not a booking.</strong> Your selected destination, budget and duration are preferences only. GGL may consider group consensus, availability, logistics, safety and feasibility when finalizing the itinerary. “Anywhere, I’m Flexible” and “Other” selections do not guarantee a destination.</p>
-              <p><strong className="text-white">6. Group participation and conduct.</strong> Participants must follow reasonable instructions, respect other participants, staff, local communities and accommodation rules, and avoid harassment, violence, illegal activity or unsafe conduct. GGL may remove a participant from a group or activity for serious misconduct, subject to applicable law and communicated payment terms.</p>
-              <p><strong className="text-white">7. Travel, documents and personal responsibility.</strong> Participants are responsible for providing accurate details, carrying valid identification and any travel documents required for the final destination, and following applicable laws and local rules. Nepal or other cross-border travel, if selected, may require additional documents and eligibility checks. Do not assume such travel is confirmed.</p>
-              <p><strong className="text-white">8. Safety and health.</strong> Travel and adventure activities can involve ordinary and unforeseen risks. Follow safety instructions and disclose any essential support needs directly to the team before confirming participation. Activities may be changed or cancelled if unsafe or impractical.</p>
-              <p><strong className="text-white">9. Changes, cancellation and refunds.</strong> The destination, itinerary, dates, duration, transport, accommodation and activities may change before final confirmation because of availability, weather, safety, cost or group decisions. No specific refund or cancellation promise is made by this interest form. Before paying any fee or contribution, review the specific written payment, cancellation and refund terms provided for that payment. Applicable consumer rights and laws remain unaffected.</p>
-              <p><strong className="text-white">10. Privacy and information accuracy.</strong> Your information will be used to manage this trip interest, verification, communication and planning. Do not submit another person’s information without permission. Keep your WhatsApp number and contact details accurate. Access to submitted information should be limited to the team members who need it for these purposes.</p>
-              <p><strong className="text-white">11. Photos, videos and reels.</strong> The trip may involve content creation. Participation in travel content does not automatically mean you grant unlimited rights to use your image or performance. Any specific promotional filming or use of identifiable content should be explained separately and consent obtained where required.</p>
-              <p><strong className="text-white">12. No guaranteed outcome.</strong> Submitting the form does not guarantee acceptance, a place in the final group, a particular activity, influencer collaboration, destination or travel date. Final participation depends on verification, disclosed fees, availability and confirmed arrangements.</p>
-              <p><strong className="text-white">13. Contact and updates.</strong> Follow only official GGL instructions and contact the team if you have questions. The team will share further details on WhatsApp after reviewing your interest.</p>
-            </div>
-            <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-amber-400/30 bg-black/30 p-4">
-              <input type="checkbox" required checked={termsAccepted} onChange={e=>setTermsAccepted(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 accent-amber-400"/>
-              <span className="text-sm font-bold text-white">I have read and agree to all GGL Talent Trip Terms & Conditions above. <span className="text-red-400">*</span></span>
-            </label>
-          </section>
-          <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/5 p-4 text-sm leading-6 text-emerald-100"><strong>First interest registration is FREE.</strong> The ₹999 entry fee is payable only after verification. The final trip contribution is decided separately after group discussions.</div>
+
+          <div className="rounded-2xl border border-amber-400/20 bg-amber-400/5 p-4 text-sm leading-6 text-amber-100"><strong>First interest registration is FREE.</strong> If selected by the GGL team, you will be asked to pay the ₹999 entry fee. The final trip contribution is separate and will be discussed in the planning group.</div>
           <button disabled={loading} type="submit" className="flex min-h-14 w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-4 font-black uppercase tracking-wide text-black transition hover:brightness-110 disabled:opacity-60">{loading?<Loader2 className="h-5 w-5 animate-spin"/>:<><MessageCircle className="h-5 w-5"/>I’m Interested <ArrowRight className="h-4 w-4"/></>}</button>
           <p className="text-center text-xs text-slate-500">By submitting, you agree that GGL may contact you about this trip interest.</p>
         </form>
         <div className="mt-6 text-center"><Link href="/" className="text-sm font-semibold text-amber-300 hover:text-amber-200">← Back to GGL Homepage</Link></div>
       </div>
     </section>
+    {showPolicy && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-3 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="trip-policy-title">
+      <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-amber-400/40 bg-[#0b0b10] shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b border-amber-400/20 p-5">
+          <div><p className="text-xs font-black uppercase tracking-widest text-amber-400">Please read before applying</p><h2 id="trip-policy-title" className="mt-1 text-xl font-black text-white sm:text-2xl">GGL Talent Trip — Terms & Conditions Policy</h2></div>
+          <button type="button" onClick={()=>setShowPolicy(false)} aria-label="Close policy" className="rounded-lg border border-white/15 px-3 py-2 text-lg text-white hover:bg-white/10">✕</button>
+        </div>
+        <div className="space-y-4 overflow-y-auto p-5 text-sm leading-6 text-slate-300">
+          <p><strong className="text-white">1. Free interest form, not confirmation.</strong> Filling this form is free and only expresses your interest. It does not guarantee selection, a seat, destination, date or trip booking. Please provide accurate details.</p>
+          <p><strong className="text-white">2. Selection and ₹999 entry fee.</strong> The GGL team will review applications and contact selected applicants through the WhatsApp number provided. If you are selected and choose to proceed, you will be asked to pay a ₹999 entry fee through the official payment instructions shared by the team. Do not pay personal or unverified accounts. This entry fee is separate from the trip contribution.</p>
+          <p><strong className="text-white">3. WhatsApp planning group and voting.</strong> After the ₹999 payment is confirmed, the team will add you to the official WhatsApp planning group. The team will ask participants for their opinions through polls and discussions about how many days to travel, possible destinations, dates, budget, transport, stay and activities. Please participate respectfully and cast your vote in relevant polls. Preferences and votes help planning but do not individually guarantee a particular choice; the final plan depends on group consensus, availability, safety and feasibility.</p>
+          <p><strong className="text-white">4. Separate trip contribution.</strong> The actual trip contribution is separate from ₹999 and will be discussed after the group shares preferences and a workable plan is prepared. The earlier example of approximately ₹3,999 for a 3-day trip is illustrative only, not a confirmed price. Review the final itinerary and written cost breakdown before paying any trip contribution.</p>
+          <p><strong className="text-white">5. If you cancel or withdraw.</strong> Please decide carefully before making a payment. If you voluntarily cancel, withdraw or stop participating after paying, the amount paid is generally non-refundable under this policy, except where a refund is required by applicable law or the specific written payment terms say otherwise. Any third-party bookings, deductions or commitments should be disclosed before you pay.</p>
+          <p><strong className="text-white">6. If GGL cancels the trip.</strong> If GGL/the organizing team cancels the overall trip or the plan cannot proceed due to an issue on the organizing side, you may claim a refund of the amounts you paid to GGL for that cancelled trip/plan. The team will communicate the refund process and timeline. This does not automatically cover payments made directly to third parties unless the applicable booking terms provide for it.</p>
+          <p><strong className="text-white">7. Changes and unforeseen circumstances.</strong> Dates, destinations, duration and activities may change because of weather, safety, availability, legal restrictions or other unforeseen issues. GGL will communicate material changes and any options available before asking you to confirm additional costs.</p>
+          <p><strong className="text-white">8. Conduct and safety.</strong> Respect other participants, local communities, staff and accommodation rules. Harassment, violence, illegal activity or unsafe conduct is not allowed. Follow safety instructions and take personal responsibility for your belongings, health needs and travel documents.</p>
+          <p><strong className="text-white">9. Documents and travel eligibility.</strong> You are responsible for carrying valid identification and any documents required by the final destination. If Nepal or other cross-border travel is selected, additional document and eligibility requirements may apply; no cross-border trip is confirmed until announced by the team.</p>
+          <p><strong className="text-white">10. Privacy and communication.</strong> Submitted details will be used for application review, verification, trip planning and relevant GGL communication. Do not share another person's information without permission. Contact the official GGL team if you need clarification.</p>
+          <p><strong className="text-white">11. Photos, videos and reels.</strong> The trip may include content creation. Any specific promotional use of identifiable photos/videos should be explained separately and consent obtained where required. Participation does not mean unlimited consent to use your image.</p>
+          <p><strong className="text-white">12. Applicable law.</strong> This policy is subject to applicable law and consumer rights. If any payment has separate written terms, review them before paying; those terms should clearly identify the amount, purpose, cancellation and refund conditions.</p>
+        </div>
+        <div className="border-t border-amber-400/20 p-4"><button type="button" onClick={()=>{setTermsAccepted(true);setShowPolicy(false);}} className="w-full rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-3 font-black uppercase text-black hover:brightness-110">I’ve read the policy</button></div>
+      </div>
+    </div>}
   </main>;
 }

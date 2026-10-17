@@ -10,6 +10,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const fullName = String(body.fullName || '').trim();
     const age = Number.parseInt(String(body.age || ''), 10);
+    const email = String(body.email || '').trim();
     const whatsapp = String(body.whatsapp || '').replace(/\D/g, '').slice(-10);
     const city = String(body.city || '').trim();
     const instagramId = String(body.instagramId || '').trim();
@@ -28,9 +29,9 @@ export async function POST(req: Request) {
     const id = `trip-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
     await db.execute(`
       INSERT INTO ggl_talent_trip_registrations
-      (id, app_id, full_name, age, whatsapp, city, instagram_id, talent, preferred_duration, preferred_budget, destinations, other_destination, terms_accepted, verification_status, entry_fee_status, participant_status, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', 'UNPAID', 'INTERESTED', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-    `, [id, appId, fullName, age, whatsapp, city, instagramId, talent, duration, budget, JSON.stringify(destinations), otherDestination, termsAccepted]);
+      (id, app_id, full_name, age, email, whatsapp, city, instagram_id, talent, preferred_duration, preferred_budget, destinations, other_destination, terms_accepted, verification_status, entry_fee_status, participant_status, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', 'UNPAID', 'INTERESTED', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    `, [id, appId, fullName, age, email || null, whatsapp, city, instagramId, talent, duration, budget, JSON.stringify(destinations), otherDestination, termsAccepted]);
     return NextResponse.json({ success: true, appId });
   } catch (error: any) {
     console.error('GGL Talent Trip registration failed:', error);

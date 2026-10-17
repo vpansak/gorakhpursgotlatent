@@ -55,7 +55,7 @@ export default function ApplyPage() {
       badge: 'HIRING / CREW',
       color: 'from-emerald-500/20 via-emerald-500/10 to-transparent',
       borderColor: 'border-emerald-500/40',
-      btnBg: 'bg-emerald-500 text-black hover:bg-emerald-400',
+      btnBg: 'bg-orange-500 text-black hover:bg-orange-400',
     },
   ];
 

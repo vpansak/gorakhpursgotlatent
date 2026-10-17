@@ -151,6 +151,21 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* GGL TALENT TRIP */}
+      <section className="home-section px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto grid max-w-6xl items-center gap-7 overflow-hidden rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-500/15 via-[#100d0b] to-red-950/30 p-6 sm:p-9 lg:grid-cols-[1.2fr_.8fr]">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-red-400/40 bg-red-500/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-red-300">NEW GGL INITIATIVE</div>
+            <h2 className="mt-4 text-3xl font-black uppercase text-white sm:text-5xl">GGL <span className="text-amber-400">Talent Trip</span></h2>
+            <p className="mt-3 text-xl font-extrabold text-amber-200">ये सफर है, यहाँ कुछ भी हो सकता है!</p>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">Meet talented strangers, explore new destinations, enjoy music and dance, create reels, perform together and make unforgettable memories.</p>
+            <p className="mt-3 text-xs font-bold text-amber-300">Travel • Music • Dance • Reels • Performances • Adventures</p>
+            <div className="mt-6 flex flex-wrap items-center gap-3"><Link href="/ggl_talent_trip" className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-3.5 text-sm font-black uppercase text-black transition hover:scale-[1.02]">I’m Interested <ChevronRight className="h-4 w-4"/></Link><span className="text-xs font-bold text-emerald-300">First registration is FREE</span></div>
+          </div>
+          <div className="relative overflow-hidden rounded-2xl border border-white/10"><Image src="/logo.png" alt="GGL Talent Trip" width={640} height={360} className="h-52 w-full object-contain bg-black/50 p-5 sm:h-64"/><div className="absolute bottom-3 left-3 rounded-full bg-black/75 px-3 py-1.5 text-xs font-bold text-amber-200">Your next story starts here</div></div>
+        </div>
+      </section>
+
       {/* TICKET */}
       <section className="home-section px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
         <div className="mx-auto max-w-6xl">

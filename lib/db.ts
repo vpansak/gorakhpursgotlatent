@@ -397,6 +397,16 @@ export async function ensureDatabaseSchema() {
       `);
 
       try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS terms_accepted BOOLEAN NOT NULL DEFAULT FALSE;`); } catch {}
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS payment_amount NUMERIC(10,2);`); } catch {}
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS razorpay_payment_link_id TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS payment_link_url TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS razorpay_payment_id TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS payment_status TEXT DEFAULT 'UNPAID';`); } catch {}
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS paid_at TIMESTAMP WITH TIME ZONE;`); } catch {}
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS aadhaar_front_key TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS aadhaar_back_key TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS passport_photo_key TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS documents_uploaded_at TIMESTAMP WITH TIME ZONE;`); } catch {}
             // Safe column alterations for existing tables
       try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS age INTEGER DEFAULT 18;`); } catch {}
       try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS interested_in_talent_trip TEXT DEFAULT 'No';`); } catch {}

@@ -40,6 +40,7 @@ export default function PerformerApplyClient() {
     city: '',
     whyShouldSelectYou: '',
     performanceDescription: '',
+    interestedInTalentTrip: 'No',
   });
 
   useLeadCapture({ source: 'performer', data: formData, customerName: formData.fullName, mobile: formData.mobile, email: formData.email, instagramId: formData.instagramUrl, quantity: 1 });
@@ -66,6 +67,7 @@ export default function PerformerApplyClient() {
 📸 *Instagram Username:* ${data.instagramUrl.trim()}
 📍 *Address / City:* ${data.city.trim() || 'Gorakhpur'}
 ✨ *What is unique about you?:* ${data.whyShouldSelectYou.trim() || 'N/A'}
+🧳 *Interested in GGL Talent Trip?:* ${data.interestedInTalentTrip}
 📝 *About You / Performance:* ${data.performanceDescription.trim() || 'N/A'}
 ✅ *WhatsApp Clip Confirmation:* Confirmed to send performance clip on WhatsApp!
 
@@ -310,6 +312,15 @@ export default function PerformerApplyClient() {
               className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 outline-none text-xs leading-relaxed"
             />
           </div>
+        </div>
+
+        <div className="rounded-xl border border-amber-500/25 bg-amber-500/5 p-4">
+          <label className="mb-2 block text-xs font-bold text-amber-200">Are you interested in GGL Talent Trip?</label>
+          <select name="interestedInTalentTrip" value={formData.interestedInTalentTrip} onChange={handleChange} className="w-full rounded-xl bg-slate-900 border border-slate-700 px-4 py-3 text-sm text-white focus:border-amber-400 outline-none">
+            <option value="No">No</option><option value="Yes">Yes</option>
+          </select>
+          <p className="mt-2 text-xs text-slate-400">Travel • Music • Dance • Reels • Performances • Adventures</p>
+          <Link href="/ggl_talent_trip" className="mt-2 inline-flex text-xs font-bold text-amber-300 hover:text-amber-200">View GGL Talent Trip details →</Link>
         </div>
 
         <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center">

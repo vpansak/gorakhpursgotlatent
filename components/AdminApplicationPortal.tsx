@@ -23,6 +23,7 @@ interface AdminApplicationPortalProps {
     sponsors: any[];
     team: any[];
     guests: any[];
+    talentTripCount?: number;
   };
 }
 
@@ -631,6 +632,16 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
           <div className="text-xl sm:text-2xl font-black text-white">{data.guests?.length || 0}</div>
           <p className="text-[10px] text-slate-400 mt-1">Guest & Panel Nominations</p>
         </button>
+
+        {/* GGL Talent Trip Registrations */}
+        <Link href="/malik/talent-trip" className="p-4 rounded-2xl text-left transition-all cursor-pointer border bg-amber-500/10 border-amber-400/40 hover:border-amber-300 hover:bg-amber-500/15 shadow-lg group flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">7. GGL TALENT TRIP</span>
+            <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 group-hover:scale-110 transition-transform">🧳</div>
+          </div>
+          <div className="text-xl sm:text-2xl font-black text-white">{initialData.talentTripCount || 0}</div>
+          <p className="text-[10px] text-slate-300 font-semibold mt-1">Interest Registrations · Manage ↗</p>
+        </Link>
 
         {/* Computer Ji Live Scores */}
         <button

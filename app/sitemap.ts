@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '',
     '/aboutggltowr',
     '/gkptilenttower',
+    '/linkdin',
     '/aboutaloksingh',
     '/allaboutaloksingh',
     '/aloksinghalbum',

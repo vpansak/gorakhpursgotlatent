@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getSession } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { ShieldCheck, LogOut, Sparkles } from 'lucide-react';

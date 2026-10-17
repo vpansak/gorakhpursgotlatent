@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useLeadCapture } from '@/lib/leadCapture';
 import Link from 'next/link';
 import { ArrowRight, MapPin, MessageCircle, Sparkles, Loader2 } from 'lucide-react';
 
@@ -19,6 +20,25 @@ export default function TalentTripClient() {
   const [appId, setAppId] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
+  useLeadCapture({
+    source: 'ggl_talent_trip',
+    customerName: form.fullName,
+    mobile: form.whatsapp,
+    instagramId: form.instagramId,
+    data: {
+      fullName: form.fullName,
+      age: form.age,
+      whatsapp: form.whatsapp,
+      city: form.city,
+      instagramId: form.instagramId,
+      talent: form.talent,
+      duration: form.duration,
+      budget: form.budget,
+      destinations: form.destinations,
+      otherDestination: form.otherDestination,
+      termsAccepted,
+    },
+  });
   const update = (key: keyof TripForm, value: any) => setForm(prev => ({...prev, [key]: value}));
   const toggleDestination = (value:string) => update('destinations', form.destinations.includes(value) ? form.destinations.filter(x=>x!==value) : [...form.destinations, value]);
   const message = useMemo(() => `🌍 *GGL TALENT TRIP — INTEREST REGISTRATION*\n\n🆔 Registration ID: ${appId || 'New Interest'}\n👤 Name: ${form.fullName}\n🎂 Age: ${form.age}\n📱 WhatsApp: ${form.whatsapp}\n📍 City: ${form.city}\n📸 Instagram: ${form.instagramId || 'Not provided'}\n🎭 Talent / Interests: ${form.talent}\n🗓️ Preferred Duration: ${form.duration}\n💰 Comfortable Budget: ${form.budget}\n🧭 Preferred Destinations: ${form.destinations.join(', ') || 'Not selected'}${form.otherDestination ? '\nOther destination: '+form.otherDestination : ''}\n\nFirst interest registration is FREE. ₹999 entry fee applies only after verification. Final trip contribution will be decided together after group discussions.\n\nWebsite: https://www.gkpgotlatent.in/ggl_talent_trip`, [appId,form]);

@@ -8,7 +8,7 @@ type Participant = { appId:string; name:string; age:number; whatsapp:string; cit
 
 const confirmations = [
   'I confirm that the participant details shown above are correct.',
-  'I understand the ₹999 amount shown is the GGL Talent Trip entry fee set by the team, and is separate from the final trip contribution.',
+  'I understand the amount shown is the GGL Talent Trip entry fee set by the team, and is separate from the final trip contribution.',
   'I understand that once I pay, the entry fee is non-refundable if I personally cancel or withdraw.',
   'I understand that if GGL/the organising team cancels the trip, I may claim a full refund of the amount paid under this stated policy.'
 ];

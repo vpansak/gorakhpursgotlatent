@@ -42,7 +42,7 @@ export async function GET() {
     const session = await getSession();
     if (!session || !ADMIN_ROLES.includes(session.role)) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
     const registrations = await db.query('SELECT * FROM ggl_talent_trip_registrations ORDER BY created_at DESC');
-    const sponsorships = await db.query("SELECT * FROM sponsor_applications WHERE sponsorship_type ILIKE '%talent trip%' OR message ILIKE '%talent trip%' OR requirements ILIKE '%talent trip%' ORDER BY created_at DESC");
+    const sponsorships = await db.query("SELECT * FROM sponsor_applications WHERE sponsorship_type ILIKE '%talent trip%' OR message ILIKE '%talent trip%' ORDER BY created_at DESC");
     return NextResponse.json({ success: true, registrations, sponsorships });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message || 'Could not load registrations' }, { status: 500 });

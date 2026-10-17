@@ -33,6 +33,7 @@ export default function Navbar() {
     { name: 'Episodes', href: '/episodes' },
     { name: 'Contact', href: '/contact' },
     { name: 'About', href: '/about' },
+    { name: 'GGL Talent Trip', href: '/ggl_talent_trip', isNew: true },
   ];
 
   useEffect(() => {
@@ -74,6 +75,7 @@ export default function Navbar() {
                         }`}
                     >
                       {link.name}
+                      {'isNew' in link && link.isNew && <span className="ml-1 rounded-full bg-red-600 px-1.5 py-0.5 text-[9px] font-black tracking-wide text-white">NEW</span>}
                     </Link>
                   );
                 })}
@@ -125,6 +127,7 @@ export default function Navbar() {
                   className="block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20 transition-all"
                 >
                   {link.name}
+                  {'isNew' in link && link.isNew && <span className="ml-2 rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-black text-white">NEW</span>}
                 </Link>
               ))}
             </div>

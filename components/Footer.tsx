@@ -83,8 +83,8 @@ export default function Footer() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-amber-500/10 blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6">
-        {/* GLOBAL COMPACT QUICK SUPPORT BAR WITH PAGE-SPECIFIC WHATSAPP REASON DRAFT */}
-        <div className="bg-gradient-to-r from-slate-900/90 via-slate-900 to-amber-950/40 border border-amber-500/30 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+        {/* Hide the global support bar on the GGL Talent Trip page */}
+        {!pathname.startsWith('/ggl_talent_trip') && <div className="bg-gradient-to-r from-slate-900/90 via-slate-900 to-amber-950/40 border border-amber-500/30 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
           <div className="flex items-center gap-3 text-center md:text-left">
             <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0">
               <MessageSquare className="w-6 h-6" />
@@ -122,7 +122,7 @@ export default function Footer() {
               <span>help.gglatent@gmail.com</span>
             </a>
           </div>
-        </div>
+        </div>}
 
         {/* FOOTER MAIN GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-6 border-b border-slate-800/80">

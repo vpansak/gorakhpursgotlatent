@@ -19,8 +19,8 @@ export async function POST(req: Request) {
     const destinations = Array.isArray(body.destinations) ? body.destinations.map((x: unknown) => String(x).trim()).filter(Boolean) : [];
     const otherDestination = String(body.otherDestination || '').trim();
 
-    if (!fullName || !Number.isFinite(age) || age < 18 || !/^[6-9]\d{9}$/.test(whatsapp) || !city || !talent || !duration || !budget || destinations.length === 0) {
-      return NextResponse.json({ success: false, error: 'Please complete all required fields. Participants must be 18 or older and provide a valid Indian mobile number.' }, { status: 400 });
+    if (!fullName || !Number.isFinite(age) || age < 1 || !/^[6-9]\d{9}$/.test(whatsapp) || !city || !talent || !duration || !budget || destinations.length === 0) {
+      return NextResponse.json({ success: false, error: 'Please complete all required fields. Please provide a valid age and Indian mobile number.' }, { status: 400 });
     }
 
     const appId = generateAppId('TRP');

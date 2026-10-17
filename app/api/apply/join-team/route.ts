@@ -7,12 +7,12 @@ import { sendGenericApplicationEmails } from '@/lib/emailjs';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, fullName, mobile, phone, whatsapp, email, dob, address, city, instagram, instagramUrl, about, shortIntro } = body;
+    const { name, fullName, mobile, phone, whatsapp, email, age, dob, address, city, instagram, instagramUrl, about, shortIntro } = body;
     const effectiveName = (name || fullName || '').toString().trim();
     const effectiveMobile = (mobile || phone || whatsapp || '').toString().trim();
     const effectiveEmail = (email || '').toString().trim();
     const effectiveAddress = (address || city || '').toString().trim();
-    const effectiveDob = (dob || '').toString().trim();
+    const effectiveDob = (age || dob || '').toString().trim();
     const effectiveInstagram = (instagramUrl || instagram || '').toString().trim();
     const effectiveAbout = (about || shortIntro || '').toString().trim();
 

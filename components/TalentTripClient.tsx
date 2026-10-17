@@ -51,8 +51,7 @@ export default function TalentTripClient() {
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not submit registration. Please try again.');
       setAppId(data.appId);
-      const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message.replace('New Interest',data.appId))}`;
-      window.location.href = url;
+
     } catch (err:any) { setError(err.message || 'Something went wrong. Please try again.'); }
     finally { setLoading(false); }
   };
@@ -61,7 +60,7 @@ export default function TalentTripClient() {
     <section id="interest-form" className="scroll-mt-24 px-4 py-10 sm:px-6">
       <div className="mx-auto max-w-4xl">
         <div className="mb-6 text-center"><p className="text-xs font-black uppercase tracking-[.25em] text-amber-400">GGL Talent Trip • Free Interest Registration</p><h1 className="mt-3 text-3xl font-black sm:text-4xl">I’M INTERESTED</h1><p className="mt-3 text-sm text-slate-400">Fill out this simple form. If selected, our team will contact you on WhatsApp.</p></div>
-        <form onSubmit={submit} className="space-y-6 rounded-3xl border border-white/10 bg-white/[.035] p-5 sm:p-8">
+        <form onSubmit={submit} className={appId ? "hidden" : "space-y-6 rounded-3xl border border-white/10 bg-white/[.035] p-5 sm:p-8"}>
           {error && <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{error}</p>}
           <div className="grid gap-4 sm:grid-cols-2">
             {[
@@ -83,9 +82,18 @@ export default function TalentTripClient() {
             <input type="checkbox" required checked={termsAccepted} onChange={e=>setTermsAccepted(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 accent-amber-400"/>
             <span className="text-sm font-bold text-white">I have read and agree to the <Link href="/ggl_talent_trip/terms-and-conditions" className="text-amber-300 underline">Terms & Conditions</Link> and <Link href="/ggl_talent_trip/policy" className="text-amber-300 underline">Trip Policy</Link>. <span className="text-red-400">*</span></span>
           </label>
-          <button disabled={loading} type="submit" className="flex min-h-14 w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-4 font-black uppercase tracking-wide text-black transition hover:brightness-110 disabled:opacity-60">{loading?<Loader2 className="h-5 w-5 animate-spin"/>:<><MessageCircle className="h-5 w-5"/>I’m Interested <ArrowRight className="h-4 w-4"/></>}</button>
+          <button disabled={loading} type="submit" className="flex min-h-14 w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-4 font-black uppercase tracking-wide text-black transition hover:brightness-110 disabled:opacity-60">{loading?<Loader2 className="h-5 w-5 animate-spin"/>:<><MessageCircle className="h-5 w-5"/>Submit <ArrowRight className="h-4 w-4"/></>}</button>
           <p className="text-center text-xs text-slate-500">By submitting, you agree that GGL may contact you about this trip interest.</p>
-        </form> 
+        </form>
+        {appId && <section className="rounded-3xl border border-emerald-400/30 bg-emerald-400/[.07] p-6 text-center sm:p-10">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-400/15 text-3xl font-black text-emerald-300">✓</div>
+          <h2 className="mt-4 text-2xl font-black text-emerald-300">Registration Successful!</h2>
+          <p className="mt-2 text-sm text-slate-300">Your GGL Talent Trip interest registration has been submitted successfully.</p>
+          <p className="mt-5 text-xs font-bold uppercase tracking-widest text-slate-400">Your Application Number</p>
+          <p className="mt-2 break-all rounded-xl border border-white/10 bg-black/30 px-4 py-4 text-xl font-black text-amber-300">{appId}</p>
+          <p className="mt-4 text-sm text-slate-300">Please save your application number. You can send your details to the GGL team on WhatsApp.</p>
+          <a href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`} target="_blank" rel="noreferrer" className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-bold text-white hover:bg-emerald-400"><MessageCircle className="h-5 w-5"/>Send Details on WhatsApp</a>
+        </section>}
           <div className="mt-2 text-center"><Link href="/" className="text-sm font-semibold text-amber-300 hover:text-amber-200">← Back to GGL Homepage</Link></div>
         </div>
       </section>

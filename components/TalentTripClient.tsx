@@ -10,8 +10,8 @@ const durations = ['1 Day','2 Days','3 Days','4 Days','5 Days','6 Days','7 Days'
 const budgets = ['₹799','₹999','₹1,499','₹1,999','₹2,999','₹3,999','₹4,999','₹5,999'];
 const WA_NUMBER = '918423858424';
 
-type TripForm = { fullName:string; age:string; whatsapp:string; city:string; instagramId:string; talent:string; duration:string; budget:string; destinations:string[]; otherDestination:string };
-const initialForm: TripForm = { fullName:'', age:'', whatsapp:'', city:'', instagramId:'', talent:'', duration:'3 Days', budget:'₹3,999', destinations:[], otherDestination:'' };
+type TripForm = { fullName:string; age:string; email:string; whatsapp:string; city:string; instagramId:string; talent:string; duration:string; budget:string; destinations:string[]; otherDestination:string };
+const initialForm: TripForm = { fullName:'', age:'', email:'', whatsapp:'', city:'', instagramId:'', talent:'', duration:'3 Days', budget:'₹3,999', destinations:[], otherDestination:'' };
 
 export default function TalentTripClient() {
   const [form, setForm] = useState<TripForm>(initialForm);
@@ -27,6 +27,7 @@ export default function TalentTripClient() {
     data: {
       fullName: form.fullName,
       age: form.age,
+      email: form.email,
       whatsapp: form.whatsapp,
       city: form.city,
       instagramId: form.instagramId,
@@ -40,7 +41,7 @@ export default function TalentTripClient() {
   });
   const update = (key: keyof TripForm, value: any) => setForm(prev => ({...prev, [key]: value}));
   const toggleDestination = (value:string) => update('destinations', form.destinations.includes(value) ? form.destinations.filter(x=>x!==value) : [...form.destinations, value]);
-  const message = useMemo(() => `🌍 *GGL TALENT TRIP — INTEREST REGISTRATION*\n\n🆔 Registration ID: ${appId || 'New Interest'}\n👤 Name: ${form.fullName}\n🎂 Age: ${form.age}\n📱 WhatsApp: ${form.whatsapp}\n📍 City: ${form.city}\n📸 Instagram: ${form.instagramId || 'Not provided'}\n🎭 Talent / Interests: ${form.talent}\n🗓️ Preferred Duration: ${form.duration}\n💰 Comfortable Budget: ${form.budget}\n🧭 Preferred Destinations: ${form.destinations.join(', ') || 'Not selected'}${form.otherDestination ? '\nOther destination: '+form.otherDestination : ''}\n\nFirst interest registration is FREE. ₹999 entry fee applies only after verification. Final trip contribution will be decided together after group discussions.\n\nWebsite: https://www.gkpgotlatent.in/ggl_talent_trip`, [appId,form]);
+  const message = useMemo(() => `🌍 *GGL TALENT TRIP — INTEREST REGISTRATION*\n\n🆔 Registration ID: ${appId || 'New Interest'}\n👤 Name: ${form.fullName}\n🎂 Age: ${form.age}\n📱 WhatsApp: ${form.whatsapp}\n✉️ Email: ${form.email || 'Not provided'}\n📍 City: ${form.city}\n📸 Instagram: ${form.instagramId || 'Not provided'}\n🎭 Talent / Interests: ${form.talent}\n🗓️ Preferred Duration: ${form.duration}\n💰 Comfortable Budget: ${form.budget}\n🧭 Preferred Destinations: ${form.destinations.join(', ') || 'Not selected'}${form.otherDestination ? '\nOther destination: '+form.otherDestination : ''}\n\nFirst interest registration is FREE. ₹999 entry fee applies only after verification. Final trip contribution will be decided together after group discussions.\n\nWebsite: https://www.gkpgotlatent.in/ggl_talent_trip`, [appId,form]);
   const submit = async (e:React.FormEvent) => {
     e.preventDefault(); setError('');
     if (!form.fullName.trim() || !form.age.trim() || !form.whatsapp.trim() || !form.city.trim() || !form.talent.trim() || form.destinations.length===0) { setError('Please complete all required fields and select at least one destination.'); return; }
@@ -67,6 +68,7 @@ export default function TalentTripClient() {
               {key:'fullName',label:'Full Name',placeholder:'Your full name',type:'text'},
               {key:'age',label:'Age',placeholder:'Your age',type:'number'},
               {key:'whatsapp',label:'WhatsApp Number',placeholder:'10-digit mobile number',type:'tel'},
+              {key:'email',label:'Email (Optional)',placeholder:'you@example.com',type:'email'},
               {key:'city',label:'City',placeholder:'Your city',type:'text'},
               {key:'instagramId',label:'Instagram ID *',placeholder:'Enter your Instagram ID (@username)',type:'text'}
             ].map(f=><label key={f.key} className="block"><span className="mb-2 block text-sm font-bold text-slate-200">{f.label}</span><input required min={f.key==='age'?1:undefined} name={f.key} type={f.type} value={(form as any)[f.key]} onChange={e=>update(f.key as keyof TripForm,e.target.value)} placeholder={f.placeholder} className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition focus:border-amber-400"/></label>)}

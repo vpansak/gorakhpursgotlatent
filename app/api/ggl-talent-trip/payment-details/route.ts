@@ -6,12 +6,12 @@ export async function GET(req: Request) {
   if (!token || token.length > 200) return NextResponse.json({ success:false, error:'Invalid payment invitation.' }, { status:400 });
   try {
     const rows = await db.query<any>(
-      `SELECT app_id, full_name, age, whatsapp, city, instagram_id, talent, preferred_duration, preferred_budget, destinations, other_destination, verification_status, payment_amount, payment_status, payment_link_url, razorpay_payment_link_id
-       FROM ggl_talent_trip_registrations WHERE razorpay_payment_link_id = ?`,
+      `SELECT app_id, full_name, age, whatsapp, city, instagram_id, talent, preferred_duration, preferred_budget, destinations, other_destination, verification_status, payment_amount, payment_status, payment_link_url, razorpay_payment_link_id, payment_token
+       FROM ggl_talent_trip_registrations WHERE payment_token = ?`,
       [token]
     );
     const p = rows[0];
-    if (!p || p.verification_status !== 'VERIFIED' || !p.payment_link_url) return NextResponse.json({ success:false, error:'This payment invitation is invalid or expired. Contact GGL.' }, { status:404 });
+    if (!p || p.verification_status !== 'VERIFIED' || !p.payment_link_url || !p.razorpay_payment_link_id) return NextResponse.json({ success:false, error:'This payment invitation is invalid or expired. Contact GGL.' }, { status:404 });
     if (p.payment_status === 'PAID') return NextResponse.json({ success:false, error:'This registration is already marked paid.' }, { status:409 });
     let destinations: string[] = [];
     try { destinations = Array.isArray(p.destinations) ? p.destinations : JSON.parse(p.destinations || '[]'); } catch {}

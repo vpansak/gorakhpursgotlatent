@@ -188,6 +188,7 @@ export default function Footer() {
               <li><Link href="/apply/guest" className="hover:text-amber-400 transition-colors">Guest / Influencer Application</Link></li>
               <li><Link href="/apply/sponsor" className="hover:text-amber-400 transition-colors">Brand Sponsor Application</Link></li>
               <li><Link href="/apply/join-team" className="hover:text-amber-400 transition-colors">Join Team</Link></li>
+              <li><Link href="/ggl_talent_trip" className="font-bold text-amber-300 hover:text-amber-200 transition-colors">GGL Talent Trip <span className="ml-1 rounded bg-red-600 px-1.5 py-0.5 text-[9px] font-black text-white">NEW</span></Link></li>
             </ul>
           </div>
 

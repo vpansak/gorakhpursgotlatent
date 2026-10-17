@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     const {
       fullName, name, email, mobile, phone, whatsapp, city, age,
       performanceCategory, category, performanceTitle, performanceDescription,
-      whyShouldSelectYou, performanceType, performerCount, duration, language, instagramUrl, instagram
+      whyShouldSelectYou, performanceType, performerCount, duration, language, instagramUrl, instagram, interestedInTalentTrip
     } = body;
 
     const effectiveFullName = (fullName || name || '').toString().trim();
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
         performance_category, performance_title, performance_description, performance_type,
         performer_count, performance_duration, performance_language, instagram_url,
         city, age, payment_status, payment_amount, application_status, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'FREE_AUDITION_SUBMITTED', '0.00', 'SUBMITTED', 'SUBMITTED')
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'FREE_AUDITION_SUBMITTED', '0.00', 'SUBMITTED', 'SUBMITTED')
     `, [
       id,
       appId,
@@ -54,7 +54,8 @@ export async function POST(req: Request) {
       (language || 'Hindi').toString().trim(),
       formattedInstagram,
       effectiveCity,
-      parsedAge
+      parsedAge,
+      (interestedInTalentTrip || 'No').toString().trim() === 'Yes' ? 'Yes' : 'No'
     ]);
 
     try {

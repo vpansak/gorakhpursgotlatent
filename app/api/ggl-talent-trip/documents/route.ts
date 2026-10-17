@@ -1,12 +1,39 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSession } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { getS3Client } from '@/lib/storage';
 
 export const runtime = 'nodejs';
 const MAX_SIZE = 5 * 1024 * 1024;
 const TYPES = new Set(['image/jpeg','image/png','image/webp']);
+
+export async function GET(req: Request) {
+  const session = await getSession();
+  if (!session || !['SUPER_ADMIN','ADMIN','STAFF'].includes(session.role)) return NextResponse.json({success:false,error:'Unauthorized'},{status:403});
+  const url = new URL(req.url);
+  const appId = (url.searchParams.get('appId') || '').trim();
+  const type = url.searchParams.get('type') || '';
+  const columns: Record<string,string> = {front:'aadhaar_front_key',back:'aadhaar_back_key',photo:'passport_photo_key'};
+  if (!appId || !columns[type]) return NextResponse.json({success:false,error:'Invalid document request.'},{status:400});
+  const bucket = process.env.GGL_PRIVATE_S3_BUCKET;
+  const s3 = getS3Client();
+  if (!bucket || !s3) return NextResponse.json({success:false,error:'Private document storage is not configured.'},{status:503});
+  try {
+    const rows = await db.query<any>('SELECT app_id, aadhaar_front_key, aadhaar_back_key, passport_photo_key FROM ggl_talent_trip_registrations WHERE app_id = ?', [appId]);
+    const key = rows[0]?.[columns[type]];
+    if (!key || !String(key).startsWith(`ggl-talent-trip-private/${appId}/`)) return NextResponse.json({success:false,error:'Document not found.'},{status:404});
+    const object = await s3.send(new GetObjectCommand({Bucket:bucket,Key:key}));
+    if (!object.Body) return NextResponse.json({success:false,error:'Document is empty.'},{status:404});
+    const bytes = await object.Body.transformToByteArray();
+    const contentType = object.ContentType || 'application/octet-stream';
+    return new Response(bytes, {headers:{'Content-Type':contentType,'Content-Disposition':`inline; filename="${type}-${appId}.img"`,'Cache-Control':'no-store, private','X-Content-Type-Options':'nosniff'}});
+  } catch (e) {
+    console.error('Private GGL trip document read failed:',e);
+    return NextResponse.json({success:false,error:'Could not retrieve document.'},{status:500});
+  }
+}
 
 export async function POST(req: Request) {
   try {

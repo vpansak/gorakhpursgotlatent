@@ -146,11 +146,16 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
 
   useEffect(() => {
     fetchComputerJiScores();
-    fetchLeads();
     fetchTicketStats();
-    const timer = window.setInterval(fetchLeads, 3000);
-    return () => window.clearInterval(timer);
   }, []);
+
+  // Keep background traffic low: only poll leads while the Leads tab is open.
+  useEffect(() => {
+    if (activeTab !== 'leads') return;
+    fetchLeads();
+    const timer = window.setInterval(fetchLeads, 15000);
+    return () => window.clearInterval(timer);
+  }, [activeTab]);
 
   // Fetch updated data from API
   const refreshAllData = async () => {

@@ -28,7 +28,7 @@ export async function GET(req: Request) {
     if (!object.Body) return NextResponse.json({success:false,error:'Document is empty.'},{status:404});
     const bytes = await object.Body.transformToByteArray();
     const contentType = object.ContentType || 'application/octet-stream';
-    return new Response(bytes, {headers:{'Content-Type':contentType,'Content-Disposition':`inline; filename="${type}-${appId}.img"`,'Cache-Control':'no-store, private','X-Content-Type-Options':'nosniff'}});
+    return new Response(Buffer.from(bytes), {headers:{'Content-Type':contentType,'Content-Disposition':`inline; filename="${type}-${appId}.img"`,'Cache-Control':'no-store, private','X-Content-Type-Options':'nosniff'}});
   } catch (e) {
     console.error('Private GGL trip document read failed:',e);
     return NextResponse.json({success:false,error:'Could not retrieve document.'},{status:500});

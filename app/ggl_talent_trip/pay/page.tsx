@@ -20,7 +20,9 @@ export default function TalentTripPayPage() {
   const [loading,setLoading] = useState(true);
   const [paying,setPaying] = useState(false);
   useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get('token') || '';
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const pathToken = pathParts[0] === 'ggl_talent_trip' && pathParts[1] && pathParts[1] !== 'pay' ? pathParts[1] : '';
+    const token = pathToken || new URLSearchParams(window.location.search).get('token') || '';
     fetch('/api/ggl-talent-trip/payment-details?token='+encodeURIComponent(token),{cache:'no-store'})
       .then(async r => { const j=await r.json(); if(!r.ok||!j.success) throw new Error(j.error||'Could not load payment invitation'); setPerson(j.participant); })
       .catch(e => setError(e.message||'Could not load payment details.'))

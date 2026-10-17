@@ -90,6 +90,13 @@ export default async function HomePage() {
             </Link>
           </div>
 
+          <Link href="/ggl_talent_trip" className="mx-auto mt-3 flex min-h-[62px] w-full max-w-xl items-center justify-center gap-3 rounded-2xl border border-amber-400/40 bg-gradient-to-r from-amber-500/15 via-red-950/60 to-amber-500/15 px-6 py-4 text-base font-black uppercase tracking-wide text-amber-200 shadow-[0_12px_35px_rgba(245,158,11,.12)] transition hover:border-amber-300 hover:brightness-125 sm:text-lg">
+            <span className="text-xl">🧳</span>
+            GGL TALENT TRIP
+            <span className="rounded-full bg-red-600 px-2 py-1 text-[9px] font-black text-white">NEW</span>
+            <ChevronRight className="h-5 w-5"/>
+          </Link>
+
           <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-amber-400/20 bg-black/45 p-4 sm:p-5 text-left backdrop-blur-xl shadow-[0_25px_80px_rgba(0,0,0,.55)]">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-3">

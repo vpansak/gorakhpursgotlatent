@@ -47,9 +47,9 @@ export default function JoinTeamApplyClient() {
   const [loading, setLoading] = useState(false);
   const [submittedAppId, setSubmittedAppId] = useState('');
 
-  useLeadCapture({ source: 'team', data: formData, customerName: formData.name, mobile: formData.mobile, email: formData.email, instagramId: formData.instagram, age: formData.age });
+  useLeadCapture({ source: 'team', data: formData, customerName: formData.name, mobile: formData.mobile, email: formData.email, instagramId: formData.instagram });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };

@@ -18,8 +18,9 @@ export async function POST(req: Request) {
     const budget = String(body.budget || '').trim();
     const destinations = Array.isArray(body.destinations) ? body.destinations.map((x: unknown) => String(x).trim()).filter(Boolean) : [];
     const otherDestination = String(body.otherDestination || '').trim();
+    const termsAccepted = body.termsAccepted === true;
 
-    if (!fullName || !Number.isFinite(age) || age < 1 || !/^[6-9]\d{9}$/.test(whatsapp) || !city || !talent || !duration || !budget || destinations.length === 0) {
+    if (!fullName || !Number.isFinite(age) || age < 1 || !/^[6-9]\d{9}$/.test(whatsapp) || !city || !talent || !duration || !budget || destinations.length === 0 || !termsAccepted) {
       return NextResponse.json({ success: false, error: 'Please complete all required fields. Please provide a valid age and Indian mobile number.' }, { status: 400 });
     }
 
@@ -27,9 +28,9 @@ export async function POST(req: Request) {
     const id = `trip-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
     await db.execute(`
       INSERT INTO ggl_talent_trip_registrations
-      (id, app_id, full_name, age, whatsapp, city, instagram_id, talent, preferred_duration, preferred_budget, destinations, other_destination, verification_status, entry_fee_status, participant_status, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', 'UNPAID', 'INTERESTED', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-    `, [id, appId, fullName, age, whatsapp, city, instagramId, talent, duration, budget, JSON.stringify(destinations), otherDestination]);
+      (id, app_id, full_name, age, whatsapp, city, instagram_id, talent, preferred_duration, preferred_budget, destinations, other_destination, terms_accepted, verification_status, entry_fee_status, participant_status, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', 'UNPAID', 'INTERESTED', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    `, [id, appId, fullName, age, whatsapp, city, instagramId, talent, duration, budget, JSON.stringify(destinations), otherDestination, termsAccepted]);
     return NextResponse.json({ success: true, appId });
   } catch (error: any) {
     console.error('GGL Talent Trip registration failed:', error);

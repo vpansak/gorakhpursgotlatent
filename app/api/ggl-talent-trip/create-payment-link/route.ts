@@ -40,7 +40,8 @@ export async function POST(req: Request) {
       `UPDATE ggl_talent_trip_registrations SET payment_amount = ?, razorpay_payment_link_id = ?, payment_link_url = ?, payment_status = 'LINK_CREATED', entry_fee_status = 'UNPAID', updated_at = CURRENT_TIMESTAMP WHERE app_id = ?`,
       [amount, link.id, link.short_url, appId]
     );
-    return NextResponse.json({ success:true, url:link.short_url, amount, linkId:link.id, appId, whatsapp:person.whatsapp, name:person.full_name });
+    const paymentPageUrl = `${origin}/ggl_talent_trip/pay?token=${encodeURIComponent(link.id)}`;
+    return NextResponse.json({ success:true, url:paymentPageUrl, paymentUrl:link.short_url, amount, linkId:link.id, appId, whatsapp:person.whatsapp, name:person.full_name });
   } catch (error:any) {
     console.error('GGL Talent Trip payment link creation failed:', error);
     return NextResponse.json({ success:false, error:'Could not create payment link. Check Razorpay configuration and try again.' }, { status:500 });

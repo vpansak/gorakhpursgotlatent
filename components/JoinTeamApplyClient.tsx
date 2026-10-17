@@ -180,7 +180,7 @@ ${data.about.trim()}
             href={generatedWhatsAppUrl}
             target="_blank"
             rel="noreferrer"
-            className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 hover:from-emerald-400 hover:to-green-400 text-black font-extrabold text-base flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all transform hover:scale-[1.02]"
+            className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-500 to-orange-600 hover:from-amber-200 hover:to-orange-400 text-black font-extrabold text-base flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all transform hover:scale-[1.02]"
           >
             <WhatsAppIcon className="w-6 h-6 fill-current" />
             CLICK HERE IF NOT REDIRECTED TO WHATSAPP
@@ -336,7 +336,7 @@ ${data.about.trim()}
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 hover:from-emerald-400 hover:to-green-400 text-black font-extrabold text-base flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(16,185,129,0.35)] transition-all transform hover:scale-[1.01] cursor-pointer"
+          className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-500 to-orange-600 hover:from-amber-200 hover:to-orange-400 text-black font-extrabold text-base flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(16,185,129,0.35)] transition-all transform hover:scale-[1.01] cursor-pointer"
         >
           {loading ? (
             <Loader2 className="w-5 h-5 animate-spin" />

@@ -27,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/apply/sponsor',
     '/apply/join-team',
     '/apply/event-booking',
+    '/ggl_talent_trip',
     '/sponsors',
     '/terms',
     '/privacy',

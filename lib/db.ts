@@ -398,6 +398,7 @@ export async function ensureDatabaseSchema() {
 
       // Safe column alterations for existing tables
       try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS age INTEGER DEFAULT 18;`); } catch {}
+      try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS interested_in_talent_trip TEXT DEFAULT 'No';`); } catch {}
       try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS email_status TEXT DEFAULT 'PENDING';`); } catch {}
       try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS admin_email_status TEXT DEFAULT 'PENDING';`); } catch {}
       try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS youtube_url TEXT;`); } catch {}

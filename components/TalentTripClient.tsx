@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Compass, MapPin, Music2, Instagram, Users, Wallet, MessageCircle, Sparkles, Loader2 } from 'lucide-react';
+import { ArrowRight, MapPin, MessageCircle, Sparkles, Loader2 } from 'lucide-react';
 
 const destinations = ['Nepal','Pokhara','Kathmandu','Varanasi','Ayodhya','Rajasthan','Goa','Nainital','Rishikesh','Manali','Himachal Pradesh','Shillong, Meghalaya','Anywhere, I’m Flexible','Other'];
 const durations = ['1 Day','2 Days','3 Days','4 Days','5 Days','6 Days','7 Days'];
@@ -17,7 +17,6 @@ export default function TalentTripClient() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [appId, setAppId] = useState('');
-  const [waUrl, setWaUrl] = useState('');
   const update = (key: keyof TripForm, value: any) => setForm(prev => ({...prev, [key]: value}));
   const toggleDestination = (value:string) => update('destinations', form.destinations.includes(value) ? form.destinations.filter(x=>x!==value) : [...form.destinations, value]);
   const message = useMemo(() => `🌍 *GGL TALENT TRIP — INTEREST REGISTRATION*\n\n🆔 Registration ID: ${appId || 'New Interest'}\n👤 Name: ${form.fullName}\n🎂 Age: ${form.age}\n📱 WhatsApp: ${form.whatsapp}\n📍 City: ${form.city}\n📸 Instagram: ${form.instagramId || 'Not provided'}\n🎭 Talent / Interests: ${form.talent}\n🗓️ Preferred Duration: ${form.duration}\n💰 Comfortable Budget: ${form.budget}\n🧭 Preferred Destinations: ${form.destinations.join(', ') || 'Not selected'}${form.otherDestination ? '\nOther destination: '+form.otherDestination : ''}\n\nFirst interest registration is FREE. ₹999 entry fee applies only after verification. Final trip contribution will be decided together after group discussions.\n\nWebsite: https://www.gkpgotlatent.in/ggl_talent_trip`, [appId,form]);
@@ -31,7 +30,6 @@ export default function TalentTripClient() {
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not submit registration. Please try again.');
       setAppId(data.appId);
       const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message.replace('New Interest',data.appId))}`;
-      setWaUrl(url);
       window.location.href = url;
     } catch (err:any) { setError(err.message || 'Something went wrong. Please try again.'); }
     finally { setLoading(false); }

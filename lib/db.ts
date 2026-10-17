@@ -399,6 +399,7 @@ export async function ensureDatabaseSchema() {
       try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS terms_accepted BOOLEAN NOT NULL DEFAULT FALSE;`); } catch {}
       try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS payment_amount NUMERIC(10,2);`); } catch {}
       try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS razorpay_payment_link_id TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS payment_token TEXT UNIQUE;`); } catch {}
       try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS payment_link_url TEXT;`); } catch {}
       try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS razorpay_payment_id TEXT;`); } catch {}
       try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS payment_status TEXT DEFAULT 'UNPAID';`); } catch {}

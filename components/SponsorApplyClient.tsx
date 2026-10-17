@@ -179,7 +179,7 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
         <span className="inline-flex rounded-full bg-red-600 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-white">New Initiative</span>
         <h2 className="mt-3 text-2xl font-black text-white">Sponsor GGL Talent Trip</h2>
         <p className="mt-2 text-sm leading-6 text-slate-300">Showcase your brand through travel videos, reels, performances, creator collaborations and trip content. Sponsorship options can be discussed around your goals and budget.</p>
-        <a href="https://wa.me/918423858424?text=Hi%20GGL%20Team%2C%20I%E2%80%99m%20interested%20in%20sponsoring%20GGL%20Talent%20Trip.%20Please%20share%20branding%20opportunities%20through%20travel%20videos%2C%20reels%2C%20performances%20and%20collaborations." target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-3 text-sm font-black text-black">Enquire About Trip Sponsorship <ArrowRight className="h-4 w-4"/></a>
+        <button type="button" onClick={() => { setFormData(prev => ({ ...prev, message: "GGL Talent Trip sponsorship enquiry: Please share branding opportunities through travel videos, reels, performances and collaborations." })); document.getElementById("sponsor-application-form")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-3 text-sm font-black text-black">Enquire About Trip Sponsorship <ArrowRight className="h-4 w-4"/></button>
       </section>
       <div className="text-center">
         <h1 className="text-2xl sm:text-3xl font-black text-white">Brand Sponsorship Application</h1>
@@ -188,7 +188,7 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
 
       {error && <div className="p-4 rounded-xl bg-red-500/20 text-red-300 text-sm font-semibold">⚠️ {error}</div>}
 
-      <form onSubmit={handleSubmit} className="space-y-5 glass-panel p-4 sm:p-6 rounded-2xl border border-blue-500/20 shadow-xl">
+      <form id="sponsor-application-form" onSubmit={handleSubmit} className="space-y-5 glass-panel p-4 sm:p-6 rounded-2xl border border-blue-500/20 shadow-xl">
         <div className="space-y-4">
           <h3 className="text-lg font-bold text-blue-400 border-b border-blue-500/20 pb-2">Brand & Contact Details</h3>
           

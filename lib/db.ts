@@ -383,6 +383,19 @@ export async function ensureDatabaseSchema() {
         );
       `);
 
+      // GGL Talent Trip interest registrations and planning/payment tracking
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS ggl_talent_trip_registrations (
+          id TEXT PRIMARY KEY, app_id TEXT UNIQUE NOT NULL, full_name TEXT NOT NULL, age INTEGER NOT NULL,
+          whatsapp TEXT NOT NULL, city TEXT NOT NULL, instagram_id TEXT, talent TEXT NOT NULL,
+          preferred_duration TEXT NOT NULL, preferred_budget TEXT NOT NULL, destinations TEXT NOT NULL DEFAULT '[]',
+          other_destination TEXT, verification_status TEXT DEFAULT 'PENDING', entry_fee_status TEXT DEFAULT 'UNPAID',
+          participant_status TEXT DEFAULT 'INTERESTED', final_contribution TEXT, final_destination TEXT,
+          final_dates TEXT, final_duration TEXT, created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
       // Safe column alterations for existing tables
       try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS age INTEGER DEFAULT 18;`); } catch {}
       try { await client.query(`ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS email_status TEXT DEFAULT 'PENDING';`); } catch {}

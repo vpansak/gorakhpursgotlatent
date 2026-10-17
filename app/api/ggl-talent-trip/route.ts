@@ -66,3 +66,34 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ success: false, error: error.message || 'Could not update registration' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const session = await getSession();
+    if (!session || !ADMIN_ROLES.includes(session.role)) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
+    }
+
+    const body = await req.json().catch(() => null);
+    const appId = String(body?.appId || '').trim();
+    const confirmation = String(body?.confirmation || '').trim();
+
+    if (!appId || confirmation !== '11') {
+      return NextResponse.json({ success: false, error: 'Registration ID and confirmation code 11 are required.' }, { status: 400 });
+    }
+
+    const existing = await db.query(
+      'SELECT app_id FROM ggl_talent_trip_registrations WHERE app_id = ? LIMIT 1',
+      [appId]
+    );
+    if (!existing || existing.length === 0) {
+      return NextResponse.json({ success: false, error: 'Registration not found. Refresh the list and try again.' }, { status: 404 });
+    }
+
+    await db.execute('DELETE FROM ggl_talent_trip_registrations WHERE app_id = ?', [appId]);
+    return NextResponse.json({ success: true, appId });
+  } catch (error: any) {
+    console.error('GGL Talent Trip registration delete failed:', error);
+    return NextResponse.json({ success: false, error: error.message || 'Could not delete registration' }, { status: 500 });
+  }
+}

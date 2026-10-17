@@ -386,7 +386,7 @@ export async function ensureDatabaseSchema() {
       // GGL Talent Trip interest registrations and planning/payment tracking
       await client.query(`
         CREATE TABLE IF NOT EXISTS ggl_talent_trip_registrations (
-          id TEXT PRIMARY KEY, app_id TEXT UNIQUE NOT NULL, full_name TEXT NOT NULL, age INTEGER NOT NULL,
+          id TEXT PRIMARY KEY, app_id TEXT UNIQUE NOT NULL, full_name TEXT NOT NULL, age INTEGER NOT NULL, email TEXT,
           whatsapp TEXT NOT NULL, city TEXT NOT NULL, instagram_id TEXT, talent TEXT NOT NULL,
           preferred_duration TEXT NOT NULL, preferred_budget TEXT NOT NULL, destinations TEXT NOT NULL DEFAULT '[]',
           other_destination TEXT, terms_accepted BOOLEAN NOT NULL DEFAULT FALSE, verification_status TEXT DEFAULT 'PENDING', entry_fee_status TEXT DEFAULT 'UNPAID',
@@ -396,6 +396,7 @@ export async function ensureDatabaseSchema() {
         );
       `);
 
+      try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS email TEXT;`); } catch {}
       try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS terms_accepted BOOLEAN NOT NULL DEFAULT FALSE;`); } catch {}
       try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS payment_amount NUMERIC(10,2);`); } catch {}
       try { await client.query(`ALTER TABLE ggl_talent_trip_registrations ADD COLUMN IF NOT EXISTS razorpay_payment_link_id TEXT;`); } catch {}

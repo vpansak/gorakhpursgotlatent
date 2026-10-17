@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import { getRazorpayInstance, getRazorpayKeyId } from '@/lib/razorpay';
+import crypto from 'crypto';
 
 const ADMIN_ROLES = ['SUPER_ADMIN', 'ADMIN', 'STAFF'];
 
@@ -23,6 +24,7 @@ export async function POST(req: Request) {
     const keyId = getRazorpayKeyId();
     if (!razorpay || !keyId) return NextResponse.json({ success:false, error:'Razorpay is not configured. Add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in Vercel.' }, { status:503 });
     const origin = new URL(req.url).origin;
+    const paymentToken = `GGL-2026-${crypto.randomBytes(12).toString('hex')}`;
     const link = await razorpay.paymentLink.create({
       amount: Math.round(amount * 100),
       currency: 'INR',
@@ -37,10 +39,10 @@ export async function POST(req: Request) {
       notes: { app_id: appId, participant_name: String(person.full_name || '').slice(0, 200), fee_type: 'GGL_TALENT_TRIP_ENTRY_FEE' }
     });
     await db.execute(
-      `UPDATE ggl_talent_trip_registrations SET payment_amount = ?, razorpay_payment_link_id = ?, payment_link_url = ?, payment_status = 'LINK_CREATED', entry_fee_status = 'UNPAID', updated_at = CURRENT_TIMESTAMP WHERE app_id = ?`,
-      [amount, link.id, link.short_url, appId]
+      `UPDATE ggl_talent_trip_registrations SET payment_amount = ?, razorpay_payment_link_id = ?, payment_link_url = ?, payment_token = ?, payment_status = 'LINK_CREATED', entry_fee_status = 'UNPAID', updated_at = CURRENT_TIMESTAMP WHERE app_id = ?`,
+      [amount, link.id, link.short_url, paymentToken, appId]
     );
-    const paymentPageUrl = `${origin}/ggl_talent_trip/pay?token=${encodeURIComponent(link.id)}`;
+    const paymentPageUrl = `${origin}/ggl_talent_trip/${paymentToken}`;
     return NextResponse.json({ success:true, url:paymentPageUrl, paymentUrl:link.short_url, amount, linkId:link.id, appId, whatsapp:person.whatsapp, name:person.full_name });
   } catch (error:any) {
     console.error('GGL Talent Trip payment link creation failed:', error);

@@ -47,9 +47,6 @@ export default function Footer() {
 
   if (isLiveRoute || pathname.startsWith('/developer')) return null;
 
-  // Application pages place the official logo above the form itself; no footer on form pages.
-  if (pathname.startsWith('/apply/')) return null;
-
   // Compute Page-Specific Pre-Drafted WhatsApp Message & Reason
   let whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI have a general inquiry regarding the show.";
   let emailSubject = "General Inquiry - Gorakhpur's Got Latent";

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-export function generateAppId(prefix: 'PER' | 'GST' | 'SPN' | 'EVT'): string {
+export function generateAppId(prefix: 'PER' | 'GST' | 'SPN' | 'EVT' | 'TRP'): string {
   const year = new Date().getFullYear();
   const randomNum = Math.floor(100000 + Math.random() * 900000);
   return `GGL-${year}-${randomNum}`;

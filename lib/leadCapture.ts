@@ -14,9 +14,18 @@ type LeadCaptureOptions = {
 };
 
 function hasMeaningfulValue(value: any): boolean {
-  if (typeof value === 'boolean') return value;
-  if (typeof value === 'number') return true;
-  return value !== null && value !== undefined && String(value).trim().length > 0;
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'boolean') return false;
+  if (typeof value === 'number') return false;
+  if (Array.isArray(value)) return value.some(hasMeaningfulValue);
+  if (typeof value === 'object') return Object.values(value).some(hasMeaningfulValue);
+  return String(value).trim().length > 0;
+}
+
+function hasUserEnteredData(data: Record<string, any>): boolean {
+  // Ignore form defaults and consent toggles; only capture when a visitor has typed/selectively entered details.
+  const ignored = new Set(['duration', 'budget', 'termsAccepted']);
+  return Object.entries(data).some(([key, value]) => !ignored.has(key) && hasMeaningfulValue(value));
 }
 
 export function useLeadCapture(options: LeadCaptureOptions) {
@@ -34,7 +43,7 @@ export function useLeadCapture(options: LeadCaptureOptions) {
 
   useEffect(() => {
     const data = options.data || {};
-    const hasInput = Object.values(data).some(hasMeaningfulValue);
+    const hasInput = hasUserEnteredData(data);
     if (!hasInput) return;
 
     const timer = window.setTimeout(() => {
@@ -74,7 +83,7 @@ export function useLeadCapture(options: LeadCaptureOptions) {
   useEffect(() => {
     const flush = () => {
       const data = options.data || {};
-      if (!Object.values(data).some(hasMeaningfulValue)) return;
+      if (!hasUserEnteredData(data)) return;
       fetch('/api/leads/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

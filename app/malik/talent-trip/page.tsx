@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/auth';
 import AdminOtpLogin from '@/components/AdminOtpLogin';
 import TalentTripAdminClient from '@/components/TalentTripAdminClient';

@@ -35,7 +35,7 @@ export default function JoinTeamApplyClient() {
     name: '',
     mobile: '',
     email: '',
-    dob: '',
+    age: '',
     address: '',
     instagram: '',
     about: '',
@@ -47,7 +47,7 @@ export default function JoinTeamApplyClient() {
   const [loading, setLoading] = useState(false);
   const [submittedAppId, setSubmittedAppId] = useState('');
 
-  useLeadCapture({ source: 'team', data: formData, customerName: formData.name, mobile: formData.mobile, email: formData.email, instagramId: formData.instagram, dob: formData.dob });
+  useLeadCapture({ source: 'team', data: formData, customerName: formData.name, mobile: formData.mobile, email: formData.email, instagramId: formData.instagram, age: formData.age });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -62,7 +62,7 @@ export default function JoinTeamApplyClient() {
 👤 *Full Name:* ${data.name.trim()}
 📱 *Mobile Number:* ${data.mobile.trim()}
 📧 *Email Address:* ${data.email.trim()}
-🎂 *Date of Birth:* ${data.dob}
+🎂 *Age:* ${data.age}
 📍 *Address / Location:* ${data.address.trim()}
 📸 *Instagram Profile:* ${data.instagram.trim()}
 
@@ -91,8 +91,8 @@ ${data.about.trim()}
       setErrorMessage('Please enter a valid email address.');
       return;
     }
-    if (!formData.dob) {
-      setErrorMessage('Please provide your Date of Birth.');
+    if (!formData.age) {
+      setErrorMessage('Please select your age.');
       return;
     }
     if (!formData.address.trim()) {
@@ -267,16 +267,20 @@ ${data.about.trim()}
 
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-amber-400" /> Date of Birth (जन्म तिथि) *
+              <Calendar className="w-3.5 h-3.5 text-amber-400" /> Age (उम्र) *
             </label>
-            <input
-              type="date"
-              name="dob"
+            <select
+              name="age"
               required
-              value={formData.dob}
+              value={formData.age}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:border-amber-400 focus:outline-none transition-all"
-            />
+              className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white text-xs sm:text-sm focus:border-amber-400 focus:outline-none transition-all"
+            >
+              <option value="">Select your age</option>
+              {Array.from({ length: 63 }, (_, i) => i + 16).map(age => (
+                <option key={age} value={String(age)}>{age} years</option>
+              ))}
+            </select>
           </div>
 
           <div className="space-y-1.5 sm:col-span-2">

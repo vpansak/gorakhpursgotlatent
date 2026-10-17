@@ -27,7 +27,7 @@ export default function TalentTripClient() {
     if (!termsAccepted) { setError('Please read and accept the Terms & Conditions before submitting.'); return; }
     setLoading(true);
     try {
-      const res = await fetch('/api/ggl-talent-trip', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(form) });
+      const res = await fetch('/api/ggl-talent-trip', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({...form, termsAccepted}) });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not submit registration. Please try again.');
       setAppId(data.appId);

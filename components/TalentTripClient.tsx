@@ -79,19 +79,10 @@ export default function TalentTripClient() {
           </div>
           <fieldset><legend className="mb-3 text-sm font-bold">Preferred Destinations * <span className="font-normal text-slate-400">(select all that apply)</span></legend><div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{destinations.map(d=><label key={d} className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-black/20 p-3 text-sm text-slate-200"><input type="checkbox" checked={form.destinations.includes(d)} onChange={()=>toggleDestination(d)} className="h-4 w-4 accent-amber-400"/>{d}</label>)}</div></fieldset>
           {form.destinations.includes('Other') && <label className="block"><span className="mb-2 block text-sm font-bold">Other Destination</span><input value={form.otherDestination} onChange={e=>update('otherDestination',e.target.value)} placeholder="Enter destination" className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-amber-400"/></label>}
-          <section className="rounded-2xl border border-amber-400/25 bg-amber-400/[.05] p-4 sm:p-5">
-            <h3 className="text-lg font-black text-amber-300">Read Before Applying</h3>
-            <p className="mt-1 text-sm text-slate-300">Terms & Conditions and Trip Policy are available as separate full pages.</p>
-            <div className="mt-3 flex flex-wrap gap-3">
-              <Link href="/ggl_talent_trip/terms-and-conditions" className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm font-extrabold text-amber-200 hover:bg-amber-400/20">Terms & Conditions <ArrowRight className="inline h-4 w-4"/></Link>
-              <Link href="/ggl_talent_trip/policy" className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm font-extrabold text-amber-200 hover:bg-amber-400/20">Trip Policy — More <ArrowRight className="inline h-4 w-4"/></Link>
-            </div>
-            <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-amber-400/30 bg-black/30 p-4">
-              <input type="checkbox" required checked={termsAccepted} onChange={e=>setTermsAccepted(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 accent-amber-400"/>
-              <span className="text-sm font-bold text-white">I have read and agree to the <Link href="/ggl_talent_trip/terms-and-conditions" className="text-amber-300 underline">Terms & Conditions</Link> and <Link href="/ggl_talent_trip/policy" className="text-amber-300 underline">Trip Policy</Link>. <span className="text-red-400">*</span></span>
-            </label>
-          </section>
-          <div className="rounded-2xl border border-amber-400/20 bg-amber-400/5 p-4 text-sm leading-6 text-amber-100"><strong>First interest registration is FREE.</strong> If selected by the GGL team, you will be asked to pay the ₹999 entry fee. The final trip contribution is separate and will be discussed in the planning group.</div>
+          <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-black/20 p-3">
+            <input type="checkbox" required checked={termsAccepted} onChange={e=>setTermsAccepted(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 accent-amber-400"/>
+            <span className="text-sm font-bold text-white">I have read and agree to the <Link href="/ggl_talent_trip/terms-and-conditions" className="text-amber-300 underline">Terms & Conditions</Link> and <Link href="/ggl_talent_trip/policy" className="text-amber-300 underline">Trip Policy</Link>. <span className="text-red-400">*</span></span>
+          </label>
           <button disabled={loading} type="submit" className="flex min-h-14 w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-4 font-black uppercase tracking-wide text-black transition hover:brightness-110 disabled:opacity-60">{loading?<Loader2 className="h-5 w-5 animate-spin"/>:<><MessageCircle className="h-5 w-5"/>I’m Interested <ArrowRight className="h-4 w-4"/></>}</button>
           <p className="text-center text-xs text-slate-500">By submitting, you agree that GGL may contact you about this trip interest.</p>
         </form> 

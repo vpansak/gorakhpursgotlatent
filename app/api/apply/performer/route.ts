@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         id, app_id, full_name, email, mobile_number, whatsapp_number, call_number,
         performance_category, performance_title, performance_description, performance_type,
         performer_count, performance_duration, performance_language, instagram_url,
-        city, age, payment_status, payment_amount, application_status, status
+        city, age, interested_in_talent_trip, payment_status, payment_amount, application_status, status
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'FREE_AUDITION_SUBMITTED', '0.00', 'SUBMITTED', 'SUBMITTED')
     `, [
       id,

@@ -19,19 +19,32 @@ function YouTubeIcon({ className = "w-5 h-5" }: { className?: string }) {
 }
 
 async function getHomepageData() {
+  const fallback = { activeEvent: null, categories: [], performers: [], guests: [], sponsors: [] };
   try {
-    const activeEvent = await db.queryOne<any>("SELECT * FROM events WHERE status = 'PUBLISHED' ORDER BY event_date ASC LIMIT 1");
-    let categories: any[] = [];
-    if (activeEvent) {
-      categories = await db.query("SELECT * FROM ticket_categories WHERE event_id = ? AND status = 'ACTIVE' ORDER BY sort_order ASC", [activeEvent.id]);
-    }
-    const performers = await db.query("SELECT * FROM performer_applications WHERE status = 'APPROVED' AND is_featured = 1");
-    const guests = await db.query("SELECT * FROM guest_applications WHERE status = 'APPROVED' AND is_featured = 1");
-    const sponsors = await db.query("SELECT * FROM sponsor_applications WHERE status = 'APPROVED' AND is_featured = 1");
-    return { activeEvent, categories, performers, guests, sponsors };
+    // Homepage content should never wait on optional database-backed sections.
+    const dataPromise = (async () => {
+      const activeEvent = await db.queryOne<any>("SELECT * FROM events WHERE status = 'PUBLISHED' ORDER BY event_date ASC LIMIT 1");
+      const [categories, performers, guests, sponsors] = await Promise.all([
+        activeEvent
+          ? db.query("SELECT * FROM ticket_categories WHERE event_id = ? AND status = 'ACTIVE' ORDER BY sort_order ASC", [activeEvent.id])
+          : Promise.resolve([]),
+        db.query("SELECT * FROM performer_applications WHERE status = 'APPROVED' AND is_featured = 1"),
+        db.query("SELECT * FROM guest_applications WHERE status = 'APPROVED' AND is_featured = 1"),
+        db.query("SELECT * FROM sponsor_applications WHERE status = 'APPROVED' AND is_featured = 1"),
+      ]);
+      return { activeEvent, categories, performers, guests, sponsors };
+    })();
+
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const timeout = new Promise<typeof fallback>((resolve) => {
+      timeoutId = setTimeout(() => resolve(fallback), 900);
+    });
+    const result = await Promise.race([dataPromise, timeout]);
+    if (timeoutId) clearTimeout(timeoutId);
+    return result;
   } catch (err) {
     console.error('getHomepageData error:', err);
-    return { activeEvent: null, categories: [], performers: [], guests: [], sponsors: [] };
+    return fallback;
   }
 }
 

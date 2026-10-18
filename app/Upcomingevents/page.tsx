@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { CalendarDays, MapPin, Sparkles, ExternalLink } from 'lucide-react';
+import { CalendarDays, MapPin, Sparkles } from 'lucide-react';
 
 declare global {
   interface Window {
@@ -85,15 +85,21 @@ export default function UpcomingEventsPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
+        <style jsx global>{`
+          #ae-city-events-widget a[href*="allevents.in"] img,
+          #ae-city-events-widget img[src*="ae-logo"],
+          #ae-city-events-widget img[alt*="AllEvents" i],
+          #ae-city-events-widget a[aria-label*="AllEvents" i],
+          #ae-city-events-widget [class*="branding" i] {
+            display: none !important;
+          }
+        `}</style>
         <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.2em] text-amber-300">Explore listings</p>
             <h2 className="mt-2 text-2xl font-extrabold sm:text-3xl">Events near you</h2>
-            <p className="mt-2 text-sm leading-6 text-white/55">Event listings are supplied by AllEvents.in. Availability and details may change.</p>
+            <p className="mt-2 text-sm leading-6 text-white/55">Comedy shows and local event listings around Gorakhpur. Availability and details may change.</p>
           </div>
-          <a href="https://allevents.in/gorakhpur" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-xl border border-amber-300/30 px-4 py-3 text-sm font-bold text-amber-200 transition hover:bg-amber-300/10 sm:self-auto">
-            Browse AllEvents.in <ExternalLink className="h-4 w-4" />
-          </a>
         </div>
 
         <div className="min-h-[360px] rounded-2xl border border-white/10 bg-[#0c0c10] p-3 shadow-[0_25px_80px_rgba(0,0,0,.35)] sm:p-5">

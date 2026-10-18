@@ -25,6 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/ep1',
     '/ep1p1trailer',
     '/episodes',
+    '/Upcomingevents',
     '/tickets',
     '/apply',
     '/apply/performer',

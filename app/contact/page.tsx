@@ -68,6 +68,21 @@ export default function ContactPage() {
                 <a href="tel:+918423858424" className="text-xs text-amber-300 font-mono hover:underline">+91 8423858424</a>
               </div>
             </div>
+            <Link
+              href="/developercontect"
+              className="group flex items-center justify-between gap-3 rounded-xl border border-amber-500/30 bg-slate-950/50 p-4 hover:border-amber-500/60 hover:bg-slate-900/80 transition-all"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-bold text-white">Contact the Developer</h2>
+                  <p className="text-xs text-slate-400 mt-1">Website issues, technical support, or suggestions</p>
+                </div>
+              </div>
+              <span className="text-amber-400 text-lg" aria-hidden="true">↗</span>
+            </Link>
           </div>
 
           <div className="pt-4 border-t border-slate-800 space-y-2">
@@ -126,23 +141,6 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <div className="pt-2">
-        <Link
-          href="/developercontect"
-          className="group flex items-center justify-between gap-4 rounded-2xl border border-slate-700 bg-slate-950/50 p-5 sm:p-6 hover:border-amber-500/60 hover:bg-slate-900/80 transition-all"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
-              <Mail className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-white">Contact the Developer</h2>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">Website issues, technical support, or suggestions</p>
-            </div>
-          </div>
-          <span className="text-amber-400 text-xl group-hover:translate-x-1 transition-transform" aria-hidden="true">↗</span>
-        </Link>
-      </div>
     </div>
   );
 }

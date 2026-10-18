@@ -31,7 +31,6 @@ export default function Navbar() {
     { name: 'Guests', href: '/guests' },
     { name: 'Book Ticket', href: '/book-ticket' },
     { name: 'Episodes', href: '/episodes' },
-    { name: 'Upcoming Events', href: '/Upcomingevents' },
     { name: 'Contact', href: '/contact' },
     { name: 'About', href: '/about' },
     { name: 'GGL Talent Trip', href: '/ggl_talent_trip', isNew: true },

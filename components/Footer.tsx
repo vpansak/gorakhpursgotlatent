@@ -31,6 +31,22 @@ function XIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
+function YouTubeIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z" />
+    </svg>
+  );
+}
+
+function LinkedInIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M20.45 2H3.55C2.69 2 2 2.68 2 3.52v16.96c0 .84.69 1.52 1.55 1.52h16.9c.86 0 1.55-.68 1.55-1.52V3.52c0-.84-.69-1.52-1.55-1.52ZM7.93 18.7H4.96V9.15h2.97v9.55ZM6.45 7.85a1.72 1.72 0 1 1 0-3.44 1.72 1.72 0 0 1 0 3.44ZM19.04 18.7h-2.96v-4.65c0-1.11-.02-2.54-1.55-2.54-1.55 0-1.79 1.21-1.79 2.46v4.73H9.78V9.15h2.84v1.3h.04c.4-.75 1.36-1.55 2.8-1.55 3 0 3.58 1.98 3.58 4.56v5.24Z" />
+    </svg>
+  );
+}
+
 export default function Footer() {
   const pathname = usePathname();
   const isLiveRoute =
@@ -171,6 +187,26 @@ export default function Footer() {
                 title="X (Twitter)"
               >
                 <XIcon className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.youtube.com/@GkpGotLatent"
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-xl bg-slate-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:text-black hover:bg-amber-400 transition-all shadow-[0_0_10px_rgba(255,215,0,0.2)]"
+                aria-label="YouTube"
+                title="YouTube"
+              >
+                <YouTubeIcon className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/gglgkp"
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-xl bg-slate-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:text-black hover:bg-amber-400 transition-all shadow-[0_0_10px_rgba(255,215,0,0.2)]"
+                aria-label="LinkedIn"
+                title="LinkedIn"
+              >
+                <LinkedInIcon className="w-5 h-5" />
               </a>
             </div>
           </div>

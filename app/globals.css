@@ -893,3 +893,69 @@
     letter-spacing:.13em;
   }
 }
+
+
+/* ===== DEVICE-FIT RESPONSIVE LAYOUT =====
+   Let content use wide displays thoughtfully while keeping readable line lengths.
+   Keep mobile layouts fluid and prevent fixed-width elements from causing horizontal scroll. */
+.ggl-site,
+.ggl-site body,
+.ggl-site main,
+.ggl-site main > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.ggl-site img,
+.ggl-site video,
+.ggl-site canvas,
+.ggl-site iframe {
+  max-width: 100%;
+}
+
+.ggl-site main :where(input, select, textarea, button) {
+  max-width: 100%;
+}
+
+@media (min-width: 1536px) {
+  .ggl-site .max-w-7xl { max-width: min(94vw, 144rem); }
+  .ggl-site .max-w-6xl { max-width: min(92vw, 132rem); }
+  .ggl-site .max-w-5xl { max-width: min(88vw, 112rem); }
+  .ggl-site .max-w-4xl { max-width: min(84vw, 82rem); }
+  .ggl-site .max-w-3xl { max-width: min(80vw, 68rem); }
+  .ggl-site .max-w-2xl { max-width: min(76vw, 58rem); }
+
+  .ggl-site > header > div,
+  .ggl-site footer > div {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1920px) {
+  .ggl-site main .text-xs { font-size: clamp(.75rem, .52vw, .9rem); }
+  .ggl-site main .text-sm { font-size: clamp(.875rem, .62vw, 1.05rem); }
+  .ggl-site main .text-base { font-size: clamp(1rem, .72vw, 1.2rem); }
+  .ggl-site main .text-lg { font-size: clamp(1.125rem, .88vw, 1.4rem); }
+  .ggl-site main .text-xl { font-size: clamp(1.25rem, 1vw, 1.6rem); }
+}
+
+@media (max-width: 390px) {
+  .home-dark .home-hero [class~="w-[330px]"] {
+    width: min(330px, 90vw) !important;
+  }
+
+  .ggl-site > header .max-w-7xl {
+    padding-left: .625rem;
+    padding-right: .625rem;
+  }
+
+  .ggl-site main {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .ggl-site main .grid {
+    min-width: 0;
+  }
+}

@@ -265,13 +265,12 @@ export default function Footer() {
                 <a href={encodedWhatsappUrl} target="_blank" rel="noreferrer" className="hover:text-amber-400">+91 84238 58424</a>
               </li>
             </ul>
-            <Link
-              href="/developercontect"
-              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-xs font-bold text-amber-300 transition-all hover:border-amber-400 hover:bg-amber-500/20 hover:text-white"
-            >
-              <Mail className="h-4 w-4" />
-              Contact Developer
-            </Link>
+            <div className="mt-2 flex items-start gap-2 text-sm text-slate-300">
+              <Mail className="w-4 h-4 text-amber-400 shrink-0 mt-1" />
+              <Link href="/developercontect" className="hover:text-amber-400 transition-colors">
+                Contact Developer
+              </Link>
+            </div>
           </div>
         </div>
 

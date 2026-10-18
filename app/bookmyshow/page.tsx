@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { ExternalLink, Ticket, Sparkles, ArrowLeft } from 'lucide-react';
+import { ExternalLink, Ticket, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -40,22 +40,7 @@ export default function BookMyShowPage() {
         </div>
       </div>
 
-      <section className="relative overflow-hidden border-b border-white/10 bg-gradient-to-br from-[#29202a] via-[#17171d] to-[#101014]">
-        <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-[#f84464]/15 blur-3xl" />
-        <div className="relative mx-auto max-w-6xl px-5 py-16 sm:py-24">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#f84464]/40 bg-[#f84464]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#ff8297]">
-            <Sparkles className="h-4 w-4" /> Official Event Links
-          </div>
-          <h1 className="max-w-3xl text-4xl font-black leading-tight tracking-tight sm:text-6xl">
-            Your next experience<br /><span className="text-[#f84464]">starts here.</span>
-          </h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/65 sm:text-lg">
-            Choose your Gorakhpur’s Got Latent event below. Each button opens the event’s listing on BookMyShow in a new tab.
-          </p>
-        </div>
-      </section>
-
-      <section className="mx-auto grid max-w-6xl gap-5 px-5 py-10 sm:grid-cols-2 sm:py-14">
+      <section className="mx-auto grid max-w-6xl gap-5 px-5 py-8 sm:grid-cols-2 sm:py-10">
         {events.map((event) => (
           <article key={event.href} className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#1b1b22] transition duration-200 hover:-translate-y-1 hover:border-[#f84464]/60">
             <div className="flex min-h-40 items-end bg-gradient-to-br from-[#f84464]/25 via-[#5a2638]/20 to-[#24242c] p-6">

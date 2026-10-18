@@ -1,4 +1,5 @@
-import { Mail, MessageCircle, Instagram, Facebook, Linkedin } from "lucide-react";
+import { ArrowLeft, Mail, MessageCircle } from "lucide-react";
+import Link from "next/link";
 
 export const metadata = {
   title: "Contact the Developer | Gorakhpur's Got Latent",
@@ -10,10 +11,10 @@ function XIcon({ className = "w-5 h-5" }: { className?: string }) {
 }
 
 const contactLinks = [
-  { label: "Instagram", href: "https://www.instagram.com/aloksingh_._/", icon: Instagram, style: "hover:border-pink-500/50 hover:text-pink-300" },
-  { label: "X", href: "https://x.com/rajpratapsinghh", icon: null, style: "hover:border-slate-500 hover:text-white" },
-  { label: "Facebook", href: "https://www.facebook.com/meadorush", icon: Facebook, style: "hover:border-blue-500/50 hover:text-blue-300" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/alok-singh-8102a8414/", icon: Linkedin, style: "hover:border-sky-500/50 hover:text-sky-300" },
+  { label: "Instagram", href: "https://www.instagram.com/aloksingh_._/", icon: "IG", style: "hover:border-pink-500/50 hover:text-pink-300" },
+  { label: "X", href: "https://x.com/rajpratapsinghh", icon: "𝕏", style: "hover:border-slate-500 hover:text-white" },
+  { label: "Facebook", href: "https://www.facebook.com/meadorush", icon: "f", style: "hover:border-blue-500/50 hover:text-blue-300" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/alok-singh-8102a8414/", icon: "in", style: "hover:border-sky-500/50 hover:text-sky-300" },
 ];
 
 export default function DeveloperContactPage() {
@@ -44,7 +45,7 @@ export default function DeveloperContactPage() {
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {contactLinks.map((item) => (
                 <a key={item.label} href={item.href} target="_blank" rel="noreferrer" className={`flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-3 text-sm font-semibold text-slate-200 transition ${item.style}`}>
-                  {item.icon ? <item.icon className="h-4 w-4" /> : <XIcon className="h-4 w-4" />}
+                  {<span className="text-xs font-black">{item.icon}</span>}
                   {item.label}
                 </a>
               ))}

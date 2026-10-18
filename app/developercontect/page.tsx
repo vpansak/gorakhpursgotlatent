@@ -1,5 +1,4 @@
-import { ArrowLeft, Mail, MessageCircle } from "lucide-react";
-import Link from "next/link";
+import { Mail, MessageCircle } from "lucide-react";
 
 export const metadata = {
   title: "Contact the Developer | Gorakhpur's Got Latent",

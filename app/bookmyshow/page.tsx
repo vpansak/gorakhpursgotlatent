@@ -3,9 +3,46 @@ import { ExternalLink, Ticket, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: "Book Tickets | Gorakhpur's Got Latent",
-  description: "Official event ticket links for Gorakhpur's Got Latent Episode 2 and GGL Talent Tour.",
-  robots: { index: false, follow: false },
+  title: "Gorakhpur's Got Latent Tickets on BookMyShow | Episode 2 & Talent Tour",
+  description:
+    "Find the official BookMyShow ticket listings for Gorakhpur's Got Latent Episode 2 and the GGL Talent Tour. View event details and continue to the relevant BookMyShow listing.",
+  keywords: [
+    "Gorakhpur's Got Latent tickets",
+    "Gorakhpur Got Latent BookMyShow",
+    "GGL Episode 2 tickets",
+    "GGL Talent Tour tickets",
+    "Gorakhpur live show tickets",
+    "Gorakhpur entertainment events",
+    "GKP Talent Tower",
+  ],
+  alternates: {
+    canonical: "https://www.gkpgotlatent.in/bookmyshow",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+    },
+  },
+  openGraph: {
+    type: "website",
+    url: "https://www.gkpgotlatent.in/bookmyshow",
+    siteName: "Gorakhpur's Got Latent",
+    title: "Gorakhpur's Got Latent Tickets on BookMyShow",
+    description:
+      "Official links to the Gorakhpur's Got Latent Episode 2 and GGL Talent Tour event listings on BookMyShow.",
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary",
+    title: "Gorakhpur's Got Latent Tickets | BookMyShow",
+    description:
+      "Find the official BookMyShow event listings for GGL Episode 2 and the GGL Talent Tour.",
+  },
 };
 
 const events = [
@@ -39,6 +76,18 @@ export default function BookMyShowPage() {
           </div>
         </div>
       </div>
+
+      <section className="border-b border-white/10 bg-[#101014]">
+        <div className="mx-auto max-w-6xl px-5 pb-2 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+          <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#ff8297]">Official GGL Event Links</p>
+          <h1 className="mt-3 max-w-4xl text-3xl font-black leading-tight text-white sm:text-5xl">
+            Gorakhpur&apos;s Got Latent Tickets on BookMyShow
+          </h1>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-white/70 sm:text-lg">
+            Browse the official event listings for Gorakhpur&apos;s Got Latent Episode 2 and the GGL Talent Tour. Select an event below to view the listing, event information and ticket options on BookMyShow.
+          </p>
+        </div>
+      </section>
 
       <section className="mx-auto grid max-w-6xl gap-5 px-5 py-8 sm:grid-cols-2 sm:py-10">
         {events.map((event) => (

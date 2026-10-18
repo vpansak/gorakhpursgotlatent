@@ -169,6 +169,23 @@ export default function QuickInfoPage() {
         </div>
       </div>
 
+      {/* Official BookMyShow Event Links */}
+      <section className="rounded-3xl border border-[#f84464]/30 bg-gradient-to-r from-[#241820] via-[#19171d] to-[#17171c] p-6 sm:p-8">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-2xl space-y-2">
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#ff8297]">Official ticket links</p>
+            <h2 className="font-bebas text-3xl uppercase tracking-wide text-white sm:text-4xl">BookMyShow Events</h2>
+            <p className="text-sm leading-relaxed text-slate-300">Episode 2 tickets aur GGL Talent Tour ke official BookMyShow event links ek hi jagah dekhein.</p>
+          </div>
+          <Link
+            href="/bookmyshow"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#f84464] px-6 py-3.5 text-xs font-black uppercase tracking-wider text-white transition hover:bg-[#e63758]"
+          >
+            View Event Links <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* Footer Return Button */}
       <div className="text-center pt-4">
         <Link

@@ -9,12 +9,12 @@ export default function UpcomingEventsPage() {
       <section className="relative border-b border-amber-400/15 bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.14),transparent_55%),radial-gradient(ellipse_at_30%_50%,rgba(185,28,28,0.10),transparent_50%)] px-4 py-14 sm:px-6 sm:py-20">
         <div className="pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px)] [background-size:42px_42px]" />
         <div className="relative mx-auto max-w-6xl">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/[0.07] px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300"><Sparkles className="h-4 w-4" /> Discover what&apos;s happening</div>
-          <h1 className="max-w-4xl text-4xl font-black leading-[1.05] sm:text-6xl">Upcoming Events <span className="bg-gradient-to-r from-amber-200 via-yellow-400 to-orange-400 bg-clip-text text-transparent">in Gorakhpur</span></h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/65 sm:text-lg">Discover upcoming Gorakhpur&apos;s Got Latent shows, auditions, and community activities. Official announcements will be shared here.</p>
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/[0.07] px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300"><Sparkles className="h-4 w-4" /> GGL Special Experience</div>
+          <h1 className="max-w-4xl text-4xl font-black leading-[1.05] sm:text-6xl">GGL Talent <span className="bg-gradient-to-r from-amber-200 via-yellow-400 to-orange-400 bg-clip-text text-transparent">Tour</span></h1>
+          <p className="mt-5 max-w-2xl text-base leading-7 text-white/65 sm:text-lg">A creative journey for artists and creators to connect, collaborate, make reels, enjoy music jamming and mashups, and work together on a short film.</p>
           <div className="mt-7 flex flex-wrap gap-3 text-sm font-semibold text-white/75">
             <span className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3"><MapPin className="h-4 w-4 text-amber-300" /> Gorakhpur, Uttar Pradesh</span>
-            <span className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3"><CalendarDays className="h-4 w-4 text-amber-300" /> Official GGL updates</span>
+            <span className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3"><CalendarDays className="h-4 w-4 text-amber-300" /> Tentatively late December 2026</span>
           </div>
         </div>
       </section>

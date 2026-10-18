@@ -28,9 +28,13 @@ export default function DeveloperContactPage() {
 
         <div className="space-y-6 p-6 sm:p-10">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <a href="mailto:infoo.alok@gmail.com?subject=GGL%20Website%20Technical%20Support" className="group flex items-center gap-4 rounded-2xl border border-slate-700 bg-slate-950/50 p-5 transition hover:border-amber-500/50">
+            <a href="mailto:infoo.alok@gmail.com?subject=GGL%20Website%20Technical%20Support" className="group flex items-center gap-4 rounded-2xl border border-emerald-500/30 bg-slate-950/50 p-5 transition hover:border-emerald-500/60">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400"><Mail className="h-5 w-5" /></span>
-              <span className="min-w-0"><span className="block text-xs text-slate-400">Email</span><span className="mt-1 block break-all text-sm font-semibold text-white">infoo.alok@gmail.com</span></span>
+              <span className="min-w-0">
+                <span className="mb-1 inline-flex rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-300">Recommended</span>
+                <span className="block text-xs text-slate-400">Email</span>
+                <span className="mt-1 block break-all text-sm font-semibold text-white">infoo.alok@gmail.com</span>
+              </span>
             </a>
             <a href="https://wa.me/917380869635?text=Hi%20Alok%2C%20I%20need%20help%20with%20the%20GGL%20website." target="_blank" rel="noreferrer" className="group flex items-center gap-4 rounded-2xl border border-slate-700 bg-slate-950/50 p-5 transition hover:border-emerald-500/50">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400"><MessageCircle className="h-5 w-5" /></span>

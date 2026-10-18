@@ -54,6 +54,7 @@ export default function ContactPage() {
                 <Mail className="w-5 h-5" />
               </div>
               <div>
+                <span className="inline-flex mb-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-300">Recommended</span>
                 <strong className="block text-white font-bold">Email Support:</strong>
                 <a href="mailto:help.gglatent@gmail.com" className="text-xs text-amber-300 font-mono hover:underline">help.gglatent@gmail.com</a>
               </div>

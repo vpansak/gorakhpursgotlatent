@@ -40,8 +40,6 @@ const inter = Inter({
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: 'cover',
   themeColor: '#07080e',
 };
@@ -197,7 +195,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${bebas.variable} ${barlow.variable} ${anton.variable} ${outfit.variable} ${inter.variable} scroll-smooth`}>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#07080e" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -209,15 +206,6 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
         />
         <script src="https://checkout.razorpay.com/v1/checkout.js" async />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
-              document.addEventListener('gesturechange', function(e) { e.preventDefault(); });
-              document.addEventListener('gestureend', function(e) { e.preventDefault(); });
-            `,
-          }}
-        />
       </head>
       <body className="ggl-site bg-[#07080e] text-slate-100 antialiased selection:bg-amber-500 selection:text-black min-h-screen flex flex-col justify-between">
         <div>

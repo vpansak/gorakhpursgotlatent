@@ -24,14 +24,24 @@ export async function GET(req: Request) {
     return NextResponse.redirect(new URL('/ggl_talent_trip/payment-status?status=verification_failed', url.origin));
   }
   try {
-    const rows = await db.query<any>('SELECT app_id, razorpay_payment_link_id, payment_amount FROM ggl_talent_trip_registrations WHERE app_id = ?', [appId]);
+    const rows = await db.query<any>(
+      'SELECT app_id, talent, razorpay_payment_link_id, payment_amount FROM ggl_talent_trip_registrations WHERE app_id = ?',
+      [appId]
+    );
     const record = rows[0];
     if (!record || record.razorpay_payment_link_id !== linkId) {
       return NextResponse.redirect(new URL('/ggl_talent_trip/payment-status?status=link_mismatch', url.origin));
     }
+
+    const directTalentTour = String(record.talent || '') === 'GGL Talent Tour registration';
     await db.execute(
-      `UPDATE ggl_talent_trip_registrations SET payment_status = 'PAID', entry_fee_status = 'PAID', razorpay_payment_id = ?, paid_at = CURRENT_TIMESTAMP, participant_status = 'DOCUMENTS_PENDING', updated_at = CURRENT_TIMESTAMP WHERE app_id = ? AND razorpay_payment_link_id = ?`,
-      [paymentId, appId, linkId]
+      `UPDATE ggl_talent_trip_registrations
+       SET payment_status = 'PAID', entry_fee_status = 'PAID', razorpay_payment_id = ?,
+           paid_at = CURRENT_TIMESTAMP,
+           participant_status = ?,
+           updated_at = CURRENT_TIMESTAMP
+       WHERE app_id = ? AND razorpay_payment_link_id = ?`,
+      [paymentId, directTalentTour ? 'REGISTERED' : 'DOCUMENTS_PENDING', appId, linkId]
     );
     return NextResponse.redirect(new URL(`/ggl_talent_trip/complete?appId=${encodeURIComponent(appId)}&paymentId=${encodeURIComponent(paymentId)}`, url.origin));
   } catch (error) {

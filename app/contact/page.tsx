@@ -125,6 +125,41 @@ export default function ContactPage() {
           </Link>
         </div>
       </div>
+
+      {/* Developer Contact */}
+      <section className="glass-panel rounded-3xl border border-slate-700/80 p-6 sm:p-8 space-y-5">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center text-amber-400 shrink-0">
+            <Mail className="w-6 h-6" />
+          </div>
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-amber-400">Website & Technical Support</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-white">Contact the Developer</h2>
+            <p className="text-sm text-slate-400 leading-relaxed">For website bugs, technical issues, or website-related suggestions, contact the developer directly.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <a href="mailto:infoo.alok@gmail.com?subject=GGL%20Website%20Technical%20Support" className="flex items-center gap-3 rounded-2xl border border-slate-700 bg-slate-950/60 p-4 hover:border-amber-500/50 transition-colors">
+            <Mail className="w-5 h-5 text-amber-400 shrink-0" />
+            <span className="min-w-0"><span className="block text-xs text-slate-400">Email</span><span className="block text-sm font-semibold text-white break-all">infoo.alok@gmail.com</span></span>
+          </a>
+          <a href="https://wa.me/917380869635?text=Hi%20Alok%2C%20I%20need%20help%20with%20the%20GGL%20website." target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-2xl border border-slate-700 bg-slate-950/60 p-4 hover:border-emerald-500/50 transition-colors">
+            <MessageCircle className="w-5 h-5 text-emerald-400 shrink-0" />
+            <span><span className="block text-xs text-slate-400">WhatsApp</span><span className="block text-sm font-semibold text-white">+91 73808 69635</span></span>
+          </a>
+        </div>
+
+        <div className="border-t border-slate-800 pt-4 space-y-3">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Developer Social Profiles</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <a href="https://www.instagram.com/aloksingh_._/" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 p-3 text-sm font-semibold text-slate-200 hover:border-pink-500/50 hover:text-white transition-colors"><InstagramIcon className="w-4 h-4" /> Instagram</a>
+            <a href="https://x.com/rajpratapsinghh" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 p-3 text-sm font-semibold text-slate-200 hover:border-slate-500 hover:text-white transition-colors"><XIcon className="w-4 h-4" /> X</a>
+            <a href="https://www.facebook.com/meadorush" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 p-3 text-sm font-semibold text-slate-200 hover:border-blue-500/50 hover:text-white transition-colors"><FacebookIcon className="w-4 h-4" /> Facebook</a>
+            <a href="https://www.linkedin.com/in/alok-singh-8102a8414/" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 p-3 text-sm font-semibold text-slate-200 hover:border-sky-500/50 hover:text-white transition-colors"><span className="inline-flex h-4 w-4 items-center justify-center rounded-sm bg-current text-[10px] font-black text-slate-950">in</span> LinkedIn</a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

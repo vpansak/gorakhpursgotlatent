@@ -37,14 +37,14 @@ export default function ContactPage() {
               </div>
               <div>
                 <strong className="block text-white font-bold">Show Venue Address:</strong>
-                <p className="text-xs text-slate-300">Announce Soon, Gorakhpur, Uttar Pradesh</p>
+                <p className="text-xs font-semibold text-slate-200">Marsorbit Entertainment, Gorakhpur, Uttar Pradesh</p>
                 <a
-                  href="https://maps.google.com/?q=26.828049,83.414894"
+                  href="https://maps.app.goo.gl/QWm9P4nPyzKHDAiX9?g_st=ac"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-xs text-amber-400 font-bold mt-1 hover:underline"
                 >
-                  View Location on Google Maps ↗
+                  Get Directions on Google Maps ↗
                 </a>
               </div>
             </div>

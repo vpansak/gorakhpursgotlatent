@@ -398,7 +398,7 @@ export default function VerifyTicketPage() {
                 required
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                placeholder="Enter password (1100)"
+                placeholder="Enter access password"
                 className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-all text-sm font-mono"
               />
             </div>

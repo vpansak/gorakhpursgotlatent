@@ -79,7 +79,7 @@ export default function VerifyTicketPage() {
     e.preventDefault();
     setLoginError('');
 
-    const cleanId = loginId.trim();
+    const cleanId = 'PASSCODE';
     const cleanPw = loginPassword.trim();
 
     try {
@@ -377,7 +377,7 @@ export default function VerifyTicketPage() {
               GATE VERIFICATION LOGIN
             </h1>
             <p className="text-xs text-slate-400">
-              Gorakhpur's Got Latent — Staff Access Only
+              Gorakhpur's Got Latent — Enter access password
             </p>
           </div>
 
@@ -391,20 +391,6 @@ export default function VerifyTicketPage() {
 
             <div className="space-y-1">
               <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-amber-400" /> Staff ID / Mobile
-              </label>
-              <input
-                type="text"
-                required
-                value={loginId}
-                onChange={(e) => setLoginId(e.target.value)}
-                placeholder="Enter Staff ID"
-                className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-all font-mono text-sm"
-              />
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                 <Lock className="w-3.5 h-3.5 text-amber-400" /> Password
               </label>
               <input
@@ -412,7 +398,7 @@ export default function VerifyTicketPage() {
                 required
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                placeholder="Enter password"
+                placeholder="Enter password (1100)"
                 className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-all text-sm font-mono"
               />
             </div>

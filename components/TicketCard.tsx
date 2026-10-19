@@ -160,7 +160,7 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
             <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs sm:text-sm my-0.5">
               <div>
                 <div className="text-[9px] uppercase tracking-widest text-slate-400 font-bold">NAME</div>
-                <div className="font-extrabold text-white text-xs sm:text-sm truncate leading-tight">{ticket.customer_name}</div>
+                <div className="min-w-0 whitespace-normal break-words [overflow-wrap:anywhere] font-extrabold text-white text-xs sm:text-sm leading-snug">{ticket.customer_name}</div>
               </div>
               <div>
                 <div className="text-[9px] uppercase tracking-widest text-slate-400 font-bold">TICKET ID</div>

@@ -426,11 +426,15 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
 
     // CRITICAL SORT: Unread (is_read=0 or null) on TOP, Read (is_read=1) on BOTTOM, then newest created_at
     return [...list].sort((a, b) => {
+      // Performers who completed payment always appear first.
+      if (activeTab === 'performer') {
+        const aPaid = a.payment_status === 'PAID' || a.payment_status === 'PAYMENT_VERIFIED';
+        const bPaid = b.payment_status === 'PAID' || b.payment_status === 'PAYMENT_VERIFIED';
+        if (aPaid !== bPaid) return aPaid ? -1 : 1;
+      }
       const aRead = a.is_read ? 1 : 0;
       const bRead = b.is_read ? 1 : 0;
-      if (aRead !== bRead) {
-        return aRead - bRead; // 0 before 1
-      }
+      if (aRead !== bRead) return aRead - bRead;
       const aTime = new Date(a.created_at || 0).getTime();
       const bTime = new Date(b.created_at || 0).getTime();
       return bTime - aTime;
@@ -1183,9 +1187,11 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                     <tr
                       key={appId}
                       className={`transition-colors border-l-4 ${
-                        isUnread
-                          ? 'border-l-blue-400 bg-blue-500/[0.04] hover:bg-blue-500/[0.08]'
-                          : 'border-l-transparent hover:bg-slate-900/60 opacity-80 hover:opacity-100'
+                        isPaid
+                          ? 'border-l-emerald-400 bg-emerald-500/[0.12] hover:bg-emerald-500/[0.18]'
+                          : isUnread
+                            ? 'border-l-blue-400 bg-blue-500/[0.04] hover:bg-blue-500/[0.08]'
+                            : 'border-l-transparent hover:bg-slate-900/60 opacity-80 hover:opacity-100'
                       }`}
                     >
                       {/* S.No */}

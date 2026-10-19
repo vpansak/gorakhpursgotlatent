@@ -959,3 +959,77 @@
     min-width: 0;
   }
 }
+
+
+/* ===== GGL SITE-WIDE VISUAL POLISH (safe, layout-preserving) =====
+   Shared brand palette: cinematic black, restrained red, warm gold.
+   These rules enhance surfaces and accessibility without changing component layout. */
+:root {
+  color-scheme: dark;
+  --ggl-gold: #f5c452;
+  --ggl-red: #b91c1c;
+  --ggl-surface: #0b0b10;
+  --ggl-border: rgba(245, 196, 82, 0.16);
+}
+
+html {
+  background: #050506;
+  scroll-padding-top: 5rem;
+}
+
+body.ggl-site {
+  background:
+    radial-gradient(ellipse at 50% -12rem, rgba(185, 28, 28, 0.10), transparent 42rem),
+    radial-gradient(ellipse at 100% 45%, rgba(245, 158, 11, 0.035), transparent 34rem),
+    #050506;
+}
+
+.ggl-site main {
+  isolation: isolate;
+}
+
+.ggl-site main :where(a, button, input, select, textarea, summary, [role="button"]):focus-visible {
+  outline: 2px solid var(--ggl-gold);
+  outline-offset: 3px;
+}
+
+.ggl-site main :where(input, select, textarea) {
+  color-scheme: dark;
+  accent-color: var(--ggl-gold);
+}
+
+.ggl-site main :where(input, select, textarea):not([type="checkbox"]):not([type="radio"]) {
+  border-radius: 0.75rem;
+}
+
+.ggl-site main :where(img, video) {
+  height: auto;
+}
+
+.ggl-site main :where(.rounded-xl.border, .rounded-2xl.border, .rounded-3xl.border) {
+  border-color: rgba(255, 255, 255, 0.10);
+}
+
+.ggl-site main :where(button, a[class*="bg-amber"], a[class*="bg-yellow"]) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgba(245, 196, 82, 0.85);
+  color: #090909;
+}
+
+@media (max-width: 640px) {
+  body.ggl-site {
+    background:
+      radial-gradient(ellipse at 50% -8rem, rgba(185, 28, 28, 0.09), transparent 24rem),
+      #050506;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .ggl-site :where(.backdrop-blur, .backdrop-blur-sm, .backdrop-blur-md, .backdrop-blur-lg, .backdrop-blur-xl, .backdrop-blur-2xl) {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}

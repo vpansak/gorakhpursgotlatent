@@ -300,6 +300,29 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* GGL PHOTO GALLERY */}
+      <section className="home-section px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center mb-8">
+            <div className="home-kicker justify-center"><Sparkles className="h-4 w-4" /> GGL MOMENTS</div>
+            <h2 className="home-title mt-3">PHOTO <span>GALLERY</span></h2>
+            <p className="mt-3 text-sm sm:text-base text-slate-300">Behind the scenes, performances and unforgettable GGL memories.</p>
+          </div>
+          <div className="overflow-hidden rounded-3xl border border-amber-400/30 bg-black/60 p-2 sm:p-3 shadow-[0_20px_70px_rgba(0,0,0,.45)]">
+            <iframe
+              src="https://drive.google.com/embeddedfolderview?id=1bppOTTCLdVva8neSXbS4cMd-naOBw49t#grid"
+              title="Gorakhpur's Got Latent photo gallery"
+              className="h-[360px] sm:h-[440px] w-full rounded-2xl bg-black"
+              loading="lazy"
+              allow="autoplay"
+            />
+          </div>
+          <div className="mt-6 text-center">
+            <Link href="/gallery" className="home-primary-btn">VIEW FULL GALLERY <ChevronRight className="h-4 w-4" /></Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

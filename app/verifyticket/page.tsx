@@ -24,6 +24,11 @@ import TicketCard from '@/components/TicketCard';
 import { TicketRecord } from '@/lib/ticketTypes';
 
 export default function VerifyTicketPage() {
+  // Shared event access passcode gate
+  const [accessGranted, setAccessGranted] = useState(false);
+  const [accessPassword, setAccessPassword] = useState('');
+  const [accessError, setAccessError] = useState('');
+
   // Auth State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loginId, setLoginId] = useState('');
@@ -435,6 +440,7 @@ export default function VerifyTicketPage() {
   // FULLSCREEN TICKET SCANNER PAGE (ZERO SCROLL, CLEAN & FAST)
   // -------------------------------------------------------------
   return (
+    {!accessGranted ? <main className="min-h-screen bg-[#07080d] text-white flex items-center justify-center p-5"><section className="w-full max-w-md rounded-3xl border border-amber-400/30 bg-slate-900/90 p-7"><div className="text-center"><Lock className="mx-auto text-amber-300" size={36}/><h1 className="text-2xl font-black mt-3">Ticket Verification Access</h1><p className="text-slate-400 text-sm mt-2">Enter the event access password to continue.</p></div><form onSubmit={(e)=>{e.preventDefault();if(accessPassword==='1100'){setAccessGranted(true);setAccessError('');}else{setAccessError('Incorrect password');}}} className="mt-5 space-y-4"><input type="password" value={accessPassword} onChange={e=>setAccessPassword(e.target.value)} placeholder="Enter password" required className="w-full rounded-xl bg-black/40 border border-white/15 px-4 py-3"/>{accessError&&<p className="text-red-300 text-sm">{accessError}</p>}<button className="w-full rounded-xl bg-amber-400 text-black font-black py-3">Unlock Verification</button></form></section></main> : <>
     <div className="fixed inset-0 z-[9999] bg-[#07080e] text-slate-100 flex flex-col justify-between p-3 sm:p-4 overflow-hidden select-none h-[100dvh] w-full">
       
       {/* 1. TOP HEADER BAR — ONLY LOGOUT BUTTON & BRANDING */}
@@ -781,5 +787,6 @@ export default function VerifyTicketPage() {
       )}
 
     </div>
+    </>
   );
 }

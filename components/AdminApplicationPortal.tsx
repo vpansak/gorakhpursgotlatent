@@ -1285,6 +1285,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                               )}
                               {activeTab === 'performer' && item.payment_status !== 'PAID' && item.payment_status !== 'PAYMENT_VERIFIED' && (
                                 <button onClick={async () => { const raw = window.prompt('Enter payment amount for ' + (item.full_name || 'performer') + ' (INR):'); if (raw === null) return; const amount = Number(raw); if (!Number.isFinite(amount) || amount <= 0) { window.alert('Please enter a valid amount.'); return; } try { const res = await fetch('/api/malik/performer-payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: item.app_id || item.id, amount }) }); const json = await res.json(); if (!res.ok || !json.success) throw new Error(json.error || 'Could not create payment link'); window.open(json.whatsappUrl, '_blank', 'noopener,noreferrer'); } catch (e: any) { window.alert(e.message || 'Could not create payment link'); } }} className="mt-2 px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-[10px] font-extrabold inline-flex items-center gap-1.5" title="Create personal payment link and send on WhatsApp"><CreditCard className="w-3 h-3" /> Get Paid</button>
+                              )}
                             </div>
                           </td>
                         </>

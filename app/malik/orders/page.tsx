@@ -188,6 +188,13 @@ export default function OrdersLedgerPage() {
 
         <div className="flex flex-wrap items-center gap-3">
           <Link
+            href="/invitebyus"
+            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-barlow font-black text-xs uppercase flex items-center gap-1.5"
+          >
+            <Plus className="w-4 h-4" />
+            <span>INVITE BY US</span>
+          </Link>
+          <Link
             href="/book-ticket"
             className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-black font-barlow font-black text-xs uppercase flex items-center gap-1.5 shadow-[0_0_20px_rgba(255,215,0,0.3)]"
           >

@@ -18,7 +18,8 @@ export default function InviteByUsPage() {
 
   async function createTicket(e: React.FormEvent) {
     e.preventDefault(); setError(''); setTicket(null);
-    if (!name.trim() || !/^\\+?[0-9\\s()-]{10,16}$/.test(mobile.trim())) { setError('Naam aur valid mobile number bhariye.'); return; }
+    const normalizedMobile = mobile.trim();
+    if (!name.trim() || !/^\+?[0-9\s()-]{10,16}$/.test(normalizedMobile) || normalizedMobile.replace(/\D/g, '').length < 10 || normalizedMobile.replace(/\D/g, '').length > 15) { setError('Naam aur valid mobile number bhariye.'); return; }
     setLoading(true);
     try {
       const res = await fetch('/api/malik/invite-ticket',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name.trim(),mobile:mobile.trim()})});

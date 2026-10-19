@@ -157,6 +157,22 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     return () => window.clearInterval(timer);
   }, [activeTab]);
 
+  // Keep performer payment badges current after a payer completes checkout.
+  useEffect(() => {
+    if (activeTab !== 'performer') return;
+    const pollPayments = async () => {
+      try {
+        const res = await fetch('/api/malik/applications?type=performer');
+        const json = await res.json();
+        if (json.success && Array.isArray(json.items)) {
+          setData((prev) => ({ ...prev, performers: json.items }));
+        }
+      } catch (err) { console.error('Failed to refresh performer payment status:', err); }
+    };
+    const timer = window.setInterval(pollPayments, 10000);
+    return () => window.clearInterval(timer);
+  }, [activeTab]);
+
   // Fetch updated data from API
   const refreshAllData = async () => {
     setLoading(true);

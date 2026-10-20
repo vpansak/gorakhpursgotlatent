@@ -1,4 +1,5 @@
 import { NextResponse, after } from 'next/server';
+import crypto from 'crypto';
 import { db } from '@/lib/db';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
@@ -58,6 +59,11 @@ export async function POST(req: Request) {
       (interestedInTalentTrip || 'No').toString().trim() === 'Yes' ? 'Yes' : 'No'
     ]);
 
+    // Create a pending ₹10 performer application payment link. The application remains a lead until Razorpay confirms payment.
+    const paymentToken = crypto.randomBytes(24).toString('hex');
+    await db.execute("CREATE TABLE IF NOT EXISTS performer_payment_links (token TEXT PRIMARY KEY, app_id TEXT NOT NULL, amount NUMERIC(10,2) NOT NULL, status TEXT NOT NULL DEFAULT 'PENDING', razorpay_order_id TEXT, razorpay_payment_id TEXT, created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, paid_at TIMESTAMPTZ)");
+    await db.execute("INSERT INTO performer_payment_links (token, app_id, amount, status) VALUES (?, ?, 10.00, 'PENDING')", [paymentToken, appId]);
+
     try {
       await db.execute(`
         INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
@@ -102,7 +108,7 @@ export async function POST(req: Request) {
           city: effectiveCity,
           age: parsedAge,
           instagram_url: formattedInstagram,
-          payment_status: 'FREE_AUDITION_SUBMITTED',
+          payment_status: 'PAYMENT_PENDING',
           order_id: 'N/A',
           payment_id: 'N/A',
           payment_amount: 0,
@@ -123,7 +129,9 @@ export async function POST(req: Request) {
       success: true,
       message: 'Performer Audition Application submitted successfully!',
       appId,
-      status: 'SUBMITTED',
+      status: 'LEAD',
+      paymentUrl: new URL('/performer-payment/' + paymentToken, req.url).toString(),
+      amount: 10,
     });
   } catch (err: any) {
     console.error('Error submitting performer application:', err);

@@ -15,15 +15,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Ticket ID is required for check-in.' }, { status: 400 });
     }
 
-    const cleanCode = String(code || '').trim();
-    const expectedCode = String(process.env.GGL_CHECKIN_CODE || '1122').trim();
-    if (cleanCode !== expectedCode && cleanCode !== '11' && cleanCode !== '1122') {
-      return NextResponse.json({
-        success: false,
-        invalidCode: true,
-        message: '✕ INCORRECT CONFIRMATION CODE.',
-      }, { status: 200 });
-    }
+    // Staff session authentication above is required; no separate confirmation code is needed at the gate.
 
     const result = await checkInTicket(ticketId);
 

@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         performance_category, performance_title, performance_description, performance_type,
         performer_count, performance_duration, performance_language, instagram_url,
         city, age, interested_in_talent_trip, payment_status, payment_amount, application_status, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'FREE_AUDITION_SUBMITTED', '0.00', 'SUBMITTED', 'SUBMITTED')
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'FREE_AUDITION_SUBMITTED', '0.00', 'LEAD', 'LEAD')
     `, [
       id,
       appId,
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     try {
       await db.execute(`
         INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
-        VALUES (?, 'PERFORMER', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Performer Audition Form Submission')
+        VALUES (?, 'PERFORMER', ?, NULL, 'LEAD', 'SYSTEM', 'Performer application submitted; awaiting ₹10 fee')
       `, [`his-${Date.now()}`, appId]);
     } catch (e) {}
 
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       email: effectiveEmail,
       mobile_number: effectiveMobile,
       performance_category: effectiveCategory,
-      status: 'SUBMITTED',
+      status: 'LEAD',
       created_at: new Date().toISOString()
     }).catch((err: any) => console.error('S3 individual performer save error:', err));
 

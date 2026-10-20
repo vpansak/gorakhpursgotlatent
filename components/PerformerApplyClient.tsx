@@ -110,8 +110,9 @@ export default function PerformerApplyClient() {
       if (data.success && data.appId) {
         assignedAppId = data.appId;
         setSubmittedAppId(data.appId);
+      } else {
+        throw new Error(data.error || 'Unable to save application. Please try again.');
       }
-      throw new Error(data.error || 'Unable to save application. Please try again.');
     } catch (err: any) {
       console.error('Performer application submit failed:', err);
       setError(err?.message || 'Application could not be saved. Please try again.');

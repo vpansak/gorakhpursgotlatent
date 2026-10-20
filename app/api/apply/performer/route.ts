@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         performance_category, performance_title, performance_description, performance_type,
         performer_count, performance_duration, performance_language, instagram_url,
         city, age, interested_in_talent_trip, payment_status, payment_amount, application_status, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'FREE_AUDITION_SUBMITTED', '0.00', 'LEAD', 'LEAD')
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PAYMENT_PENDING', '0.00', 'LEAD', 'LEAD')
     `, [
       id,
       appId,
@@ -113,7 +113,7 @@ export async function POST(req: Request) {
           payment_id: 'N/A',
           payment_amount: 0,
           payment_verified_at: new Date().toISOString(),
-          application_status: 'SUBMITTED',
+          application_status: 'LEAD',
         });
         if (emailResult.success) {
           await db.execute("UPDATE performer_applications SET email_status = 'SENT', admin_email_status = 'SENT' WHERE app_id = ?", [appId]).catch(e => console.error(e));

@@ -107,11 +107,9 @@ export default function PerformerApplyClient() {
       clearTimeout(timeoutId);
 
       const data = await parseResponse(res);
-      if (data.success && data.appId && data.paymentUrl) {
+      if (data.success && data.appId) {
         assignedAppId = data.appId;
         setSubmittedAppId(data.appId);
-        window.location.href = data.paymentUrl;
-        return;
       }
       throw new Error(data.error || 'Unable to save application. Please try again.');
     } catch (err: any) {
@@ -190,7 +188,7 @@ export default function PerformerApplyClient() {
     <div className="py-5 px-4 sm:px-6 max-w-2xl mx-auto space-y-4">
       <div className="text-center">
         <h1 className="text-2xl sm:text-3xl font-black text-white">Performer Application</h1>
-        <p className="text-xs text-slate-400 mt-1">Episode 2 • ₹10 application fee • 18+ only</p>
+        <p className="text-xs text-slate-400 mt-1">Episode 2 • Free audition form • 18+ only</p>
       </div>
 
       {error && (
@@ -328,7 +326,7 @@ export default function PerformerApplyClient() {
 
         <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center">
           <p className="text-xs font-bold text-amber-200">
-            After submitting, pay the ₹10 application fee to confirm your performer registration. You’ll then be able to continue with the WhatsApp performance clip step.
+            After submitting, you’ll be redirected to WhatsApp to send your performance clip to {DISPLAY_PHONE}.
           </p>
         </div>
 
@@ -342,7 +340,7 @@ export default function PerformerApplyClient() {
           ) : (
             <>
               <WhatsAppIcon className="w-6 h-6 fill-current" />
-              SUBMIT & PAY ₹10
+              SUBMIT & SEND PERFORMANCE CLIP ON WHATSAPP
               <ArrowRight className="w-5 h-5" />
             </>
           )}

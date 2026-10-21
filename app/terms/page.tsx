@@ -176,13 +176,19 @@ export default function TermsPage() {
 
           <div className="space-y-3 pl-1 text-slate-300">
             <p>
-              5.1 <strong className="text-white">Non-Refundable Ticket Sales:</strong> All confirmed audience ticket purchases and performer registration fees (where applicable) are strictly final, non-transferable, and non-refundable once Razorpay payment processing is completed.
+              5.1 <strong className="text-white">Performer Registration Fees & Voluntary Withdrawal:</strong> Performer registration or participation fees, once successfully paid, are generally non-refundable if an applicant voluntarily withdraws, is unable to attend, or changes their plans. Any refund request will be reviewed on its facts and handled in accordance with applicable Indian law. Nothing in this policy limits any rights or remedies that cannot lawfully be excluded under applicable consumer protection laws.
             </p>
             <p>
-              5.2 <strong className="text-white">Event Rescheduling & Force Majeure:</strong> In the event of show rescheduling due to extreme weather, civil administrative orders, natural disasters, technical emergencies, or force majeure conditions, existing ticket passes will automatically remain valid for the newly rescheduled event date.
+              5.2 <strong className="text-white">Event Rescheduling:</strong> If a show is rescheduled because of weather, administrative directions, technical emergencies, or circumstances beyond GGL’s reasonable control, existing tickets or registrations may be carried forward to the revised date. GGL will communicate material changes through its available official channels.
             </p>
             <p>
-              5.3 <strong className="text-white">Cancellation Refund Processing:</strong> If an event is permanently cancelled by management without a rescheduled date, original ticket holders will receive a 100% refund initiated back to their original payment source within 7–10 business days.
+              5.3 <strong className="text-white">Event Cancellation by GGL:</strong> If GGL cancels an event and does not offer a replacement date or equivalent arrangement, eligible payments for that cancelled event will be refunded to the original payment source. Refunds will normally be initiated within 7–10 business days after confirmation, subject to payment-provider and banking timelines.
+            </p>
+            <p>
+              5.4 <strong className="text-white">Payment Errors, Duplicate Debits & Verification:</strong> If an amount is debited but the payment or registration is not confirmed, or if a duplicate debit occurs, please contact GGL with the transaction/UTR ID, payment date and time, amount, and screenshot. After verifying the transaction with the payment provider, GGL will take appropriate steps to resolve the issue and arrange any refund due. Bank or payment-provider processing times may vary.
+            </p>
+            <p>
+              5.5 <strong className="text-white">Applicable Law:</strong> Refunds and cancellations are subject to applicable Indian law, including any mandatory consumer rights. This policy is not intended to exclude or restrict a legal right to a refund or remedy where such exclusion or restriction is not permitted by law.
             </p>
           </div>
         </section>

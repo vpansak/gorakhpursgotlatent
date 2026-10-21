@@ -30,7 +30,7 @@ export default function AlokGGLSpotlightPage() {
           },
           "url": "https://www.gkpgotlatent.in/qpqpqpqp",
           "description": "Official GGL profile for Alok Singh, the Show Creator and Co-Founder of Gorakhpur's Got Latent, also searched as GGL creator.",
-          "mainEntity": {
+          "about": {
             "@type": "Organization",
             "name": "Gorakhpur's Got Latent",
             "alternateName": ["GGL", "Gorakhpur Got Latent"],

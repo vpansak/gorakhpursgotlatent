@@ -6,7 +6,7 @@ import {
 
 export const metadata = {
   title: "Terms & Conditions | Gorakhpur's Got Latent",
-  description: "Official legal terms, entry policies, performer declarations, media recording rights, and event governance rules for Gorakhpur's Got Latent.",
+  description: "Official GGL terms covering performer fees, minimum ₹100 partial deposits, full-payment requirements, performance eligibility, cancellations, and refunds.",
 };
 
 export default function TermsPage() {

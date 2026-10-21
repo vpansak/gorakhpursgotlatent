@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Images } from 'lucide-react';
 
 const DRIVE_FOLDER_ID = '1TKvwPKNaS5C9s5bI_EKhIGBV_1LzqWVF';
-const DRIVE_FOLDER_URL = 'https://drive.google.com/drive/folders/1bppOTTCLdVva8neSXbS4cMd-naOBw49t';
+const DRIVE_FOLDER_URL = 'https://drive.google.com/drive/folders/1TKvwPKNaS5C9s5bI_EKhIGBV_1LzqWVF';
 
 export const metadata: Metadata = {
   title: "GGL Photo Gallery | Gorakhpur's Got Latent",

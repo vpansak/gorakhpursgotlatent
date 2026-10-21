@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/aboutaloksingh',
     '/allaboutaloksingh',
     '/allaboutggl',
+    '/qpqpqpqp',
     '/allaboutggl123',
     '/aloksinghalbum',
     '/aloksinghinstagram',
@@ -49,13 +50,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency:
-      route === '' || route === '/ep1' || route === '/ep1p1trailer' || route === '/episodes' || route === '/kaudiramkasabsefamousaadmi' || route === '/aboutaloksingh' || route === '/allaboutaloksingh' || route === '/allaboutggl' || route === '/allaboutggl123' || route === '/aloksinghalbum' || route === '/aloksinghfacebook' || route === '/aloksinghx' || route === '/gglaloksingh'
+      route === '' || route === '/ep1' || route === '/ep1p1trailer' || route === '/episodes' || route === '/kaudiramkasabsefamousaadmi' || route === '/aboutaloksingh' || route === '/allaboutaloksingh' || route === '/allaboutggl' || route === '/qpqpqpqp' || route === '/allaboutggl123' || route === '/aloksinghalbum' || route === '/aloksinghfacebook' || route === '/aloksinghx' || route === '/gglaloksingh'
         ? 'daily'
         : 'weekly',
     priority:
       route === ''
         ? 1.0
-        : ['/developer', '/cofounder', '/kaudiramkasabsefamousaadmi', '/aboutaloksingh', '/allaboutaloksingh', '/allaboutggl', '/allaboutggl123', '/aloksinghalbum', '/aloksinghinstagram', '/aloksinghfacebook', '/aloksinghx', '/gglaloksingh', '/ep1', '/ep1p1trailer', '/episodes'].includes(route)
+        : ['/developer', '/cofounder', '/kaudiramkasabsefamousaadmi', '/aboutaloksingh', '/allaboutaloksingh', '/allaboutggl', '/qpqpqpqp', '/allaboutggl123', '/aloksinghalbum', '/aloksinghinstagram', '/aloksinghfacebook', '/aloksinghx', '/gglaloksingh', '/ep1', '/ep1p1trailer', '/episodes'].includes(route)
           ? 0.9
           : 0.8,
   }));

@@ -6,20 +6,30 @@ export default function AlokGGLSpotlightPage() {
   return (
     <>
       <Head>
-        <title>Alok Singh | Show Creator & Co-Founder of Gorakhpur’s Got Latent</title>
-        <meta name="description" content="Discover Alok Singh, Show Creator and Co-Founder of Gorakhpur’s Got Latent (GGL), his creative vision, digital work and role in building the Gorakhpur talent platform." />
-        <meta name="keywords" content="Alok Singh, Alok Singh GGL, Alok Singh Show Creator, GGL Co-Founder Alok Singh, Gorakhpur's Got Latent, GGL website, Gorakhpur talent platform, Naveen Varma" />
+        <title>Alok Singh – Creator of GGL | Gorakhpur’s Got Latent Show Creator</title>
+        <meta name="description" content="Alok Singh is the Show Creator and Co-Founder of Gorakhpur’s Got Latent (GGL), Gorakhpur, Uttar Pradesh. Learn about the creator’s vision, show concept, website and digital work." />
+        <meta name="keywords" content="Alok Singh, GGL creator, GGL show creator, creator of Gorakhpur's Got Latent, Gorakhpur's Got Latent creator Alok Singh, GGL founder, GGL co-founder, Gorakhpur talent show, Alok Singh GGL, Naveen Varma" />
         <link rel="canonical" href="https://www.gkpgotlatent.in/qpqpqpqp" />
-        <meta property="og:title" content="Alok Singh — Show Creator & Co-Founder | GGL" />
-        <meta property="og:description" content="Meet Alok Singh, the Show Creator and Co-Founder of Gorakhpur’s Got Latent, and learn about his creative, digital and technology contributions." />
+        <meta property="og:title" content="Alok Singh – Creator of GGL | Gorakhpur’s Got Latent" />
+        <meta property="og:description" content="Looking for the creator of GGL? Read about Alok Singh, Show Creator and Co-Founder of Gorakhpur’s Got Latent, and his creative, digital and technology contributions." />
         <meta property="og:url" content="https://www.gkpgotlatent.in/qpqpqpqp" />
         <meta property="og:type" content="article" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "AboutPage",
-          "name": "Alok Singh — Show Creator & Co-Founder of GGL",
+          "@type": "ProfilePage",
+          "name": "Alok Singh – Creator of GGL | Gorakhpur’s Got Latent",
+          "mainEntity": {
+            "@type": "Person",
+            "name": "Alok Singh",
+            "alternateName": ["Alok Singh GGL", "GGL Creator", "Gorakhpur's Got Latent Show Creator"],
+            "jobTitle": ["Show Creator", "Co-Founder"],
+            "description": "Alok Singh is the Show Creator and Co-Founder of Gorakhpur's Got Latent (GGL), with contributions to the show's creative concept, website and digital technology.",
+            "url": "https://www.gkpgotlatent.in/qpqpqpqp",
+            "worksFor": {"@type": "Organization", "name": "Gorakhpur's Got Latent", "url": "https://www.gkpgotlatent.in"},
+            "sameAs": ["https://www.instagram.com/gkp_got_latent/", "https://www.youtube.com/@GkpGotLatent", "https://x.com/gkpgotlatent", "https://www.linkedin.com/in/gglgkp"]
+          },
           "url": "https://www.gkpgotlatent.in/qpqpqpqp",
-          "description": "Official profile highlighting Alok Singh's role as Show Creator and Co-Founder of Gorakhpur's Got Latent.",
+          "description": "Official GGL profile for Alok Singh, the Show Creator and Co-Founder of Gorakhpur's Got Latent, also searched as GGL creator.",
           "mainEntity": {
             "@type": "Organization",
             "name": "Gorakhpur's Got Latent",
@@ -58,6 +68,8 @@ export default function AlokGGLSpotlightPage() {
 
           <section className="founders">
             <div className="section-label">02 / LEADERSHIP</div>
+            <h2>Who is the creator of Gorakhpur’s Got Latent (GGL)?</h2>
+            <p><strong>Alok Singh is the Show Creator and Co-Founder of Gorakhpur’s Got Latent (GGL).</strong> When people search for “GGL creator,” “GGL show creator,” or “creator of Gorakhpur’s Got Latent,” this page provides official information about Alok’s stated role. GGL is jointly led by its co-founders, Alok Singh and Naveen Varma, with equal 50–50 ownership as stated by the organization.</p>
             <h2>Alok Singh’s Role in Building GGL</h2>
             <p className="muted">Alok Singh is GGL’s Show Creator and Co-Founder. According to the organization’s stated ownership structure, Alok Singh and Naveen Varma hold equal 50–50 ownership; this profile highlights Alok’s creative and digital responsibilities without erasing the shared co-founder role.</p>
             <div className="founder-grid">

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import CountdownTimer from '@/components/CountdownTimer';
+import DrivePhotoSlider from '@/components/DrivePhotoSlider';
 import { db } from '@/lib/db';
 import {
   Ticket, Sparkles, UserCheck, CheckCircle2, ShieldCheck, ChevronRight,
@@ -309,15 +310,7 @@ export default async function HomePage() {
             <h2 className="home-title mt-3">PHOTO <span>GALLERY</span></h2>
             <p className="mt-3 text-sm sm:text-base text-slate-300">Behind the scenes, performances and unforgettable GGL memories.</p>
           </div>
-          <div className="overflow-hidden rounded-3xl border border-amber-400/30 bg-black/60 p-2 sm:p-3 shadow-[0_20px_70px_rgba(0,0,0,.45)]">
-            <iframe
-              src="https://drive.google.com/embeddedfolderview?id=1TKvwPKNaS5C9s5bI_EKhIGBV_1LzqWVF#grid"
-              title="Gorakhpur's Got Latent photo gallery"
-              className="h-[360px] sm:h-[440px] w-full rounded-2xl bg-black"
-              loading="lazy"
-              allow="autoplay"
-            />
-          </div>
+          <DrivePhotoSlider />
           <div className="mt-6 text-center">
             <Link href="/gallery" className="home-primary-btn">VIEW FULL GALLERY <ChevronRight className="h-4 w-4" /></Link>
           </div>

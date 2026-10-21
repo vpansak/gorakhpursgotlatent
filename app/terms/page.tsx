@@ -106,6 +106,9 @@ export default function TermsPage() {
             <p>
               2.5 <strong className="text-white">Performance Video Submission:</strong> Performers agree to submit authentic performance clips via our official WhatsApp audition helpline (+91 8423858424) or designated upload links for evaluation by the production team.
             </p>
+            <p>
+              2.6 <strong className="text-white">Payment & Performance Eligibility:</strong> Where a performer fee applies, the performer must pay the complete applicable fee and have the payment verified before taking the stage. If GGL expressly permits a partial deposit, the minimum deposit is ₹100; any deposit or partial payment alone does not confirm final participation. Outstanding balances, non-refundability of partial payments, and applicable exceptions are explained in Clause 5.0 below.
+            </p>
           </div>
         </section>
 
@@ -170,7 +173,7 @@ export default function TermsPage() {
             </div>
             <div>
               <span className="text-[10px] font-black uppercase text-amber-400 tracking-widest block">Clause 5.0</span>
-              <h2 className="text-lg sm:text-xl font-black text-white">Ticketing, Cancellation & Refund Policy</h2>
+              <h2 className="text-lg sm:text-xl font-black text-white">Performer Payment, Ticketing, Cancellation & Refund Policy</h2>
             </div>
           </div>
 

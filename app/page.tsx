@@ -311,7 +311,7 @@ export default async function HomePage() {
           </div>
           <div className="overflow-hidden rounded-3xl border border-amber-400/30 bg-black/60 p-2 sm:p-3 shadow-[0_20px_70px_rgba(0,0,0,.45)]">
             <iframe
-              src="https://drive.google.com/embeddedfolderview?id=1bppOTTCLdVva8neSXbS4cMd-naOBw49t#grid"
+              src="https://drive.google.com/embeddedfolderview?id=1TKvwPKNaS5C9s5bI_EKhIGBV_1LzqWVF#grid"
               title="Gorakhpur's Got Latent photo gallery"
               className="h-[360px] sm:h-[440px] w-full rounded-2xl bg-black"
               loading="lazy"

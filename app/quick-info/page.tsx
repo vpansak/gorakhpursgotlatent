@@ -62,7 +62,7 @@ export default function QuickInfoPage() {
               Book Show Tickets 🎟️
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Official entry passes for live audience arena, front-row stage seating, live performance roasts, and voting experience.
+              Episode 2 has been postponed. The new event date will be announced later; please check official updates before making plans.
             </p>
           </div>
           <Link
@@ -83,7 +83,7 @@ export default function QuickInfoPage() {
               Episode 2 Auditions 🎤
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Audition registrations for Episode 2 are FREE! Submit your talent profile (singing, comedy, dance, magic, shayari, unique acts).
+              Episode 2 date has been postponed. Submit your talent profile and follow official channels for the revised date announcement.
             </p>
           </div>
           <Link
@@ -134,7 +134,7 @@ export default function QuickInfoPage() {
               Venue & Support 📍
             </h3>
             <div className="space-y-1 text-xs text-slate-300">
-              <p className="font-semibold text-white">Location: Announce Soon, Gorakhpur, UP</p>
+              <p className="font-semibold text-white">Event date &amp; venue: To be announced</p>
               <p>Email: <a href="mailto:help.gglatent@gmail.com" className="text-amber-400 underline">help.gglatent@gmail.com</a></p>
               <p>WhatsApp: <a href="https://wa.me/918423858424" target="_blank" rel="noreferrer" className="text-emerald-400 underline">+91 84238 58424</a></p>
             </div>

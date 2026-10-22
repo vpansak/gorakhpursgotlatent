@@ -182,10 +182,7 @@ export default function AboutPage() {
           <section>
             <h2 className="text-3xl font-black text-white">GGL Episode 2</h2>
             <p className="mt-4">
-              The official GGL website currently features Episode 2 auditions and
-              public ticket information. Visitors should use the official website for
-              the latest publicly released application, ticket and event information,
-              because dates, venue details and other event arrangements can change.
+              Episode 2 has been postponed. The revised date will be revealed later through official GGL channels. Visitors should check the official website and social media for the latest application, ticket and event updates.
             </p>
             <p className="mt-4">
               Episode 2 is part of the ongoing GGL entertainment series, continuing

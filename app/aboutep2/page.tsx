@@ -24,34 +24,8 @@ export const metadata: Metadata = {
 const updatedAt = "22 October 2026";
 
 export default function AboutEpisode2Page() {
-  const updateSchema = {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    name: "Gorakhpur's Got Latent – Episode 2",
-    eventStatus: "https://schema.org/EventPostponed",
-    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    description: "Gorakhpur's Got Latent Episode 2. The previously announced date has been postponed. The revised date will be announced later by the organisers.",
-    organizer: {
-      "@type": "Organization",
-      name: "Gorakhpur's Got Latent",
-      url: "https://www.gkpgotlatent.in/",
-      email: "help.gglatent@gmail.com",
-    },
-    location: {
-      "@type": "Place",
-      name: "Gorakhpur, Uttar Pradesh, India",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Gorakhpur",
-        addressRegion: "Uttar Pradesh",
-        addressCountry: "IN",
-      },
-    },
-  };
-
   return (
     <main className="min-h-screen bg-[#08090d] px-4 py-10 text-slate-200 sm:px-6 sm:py-16">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(updateSchema) }} />
       <article className="mx-auto max-w-4xl">
         <header className="border-b border-amber-500/20 pb-8">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-400">Official Event Information & Updates</p>

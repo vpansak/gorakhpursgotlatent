@@ -49,7 +49,7 @@ const events = [
   {
     label: 'EPISODE 2 TICKET',
     title: "Gorakhpur's Got Latent",
-    description: 'Book your ticket for the Gorakhpur’s Got Latent live show on BookMyShow.',
+    description: 'Episode 2 has been postponed. The revised date will be announced later; check the listing for current ticket status.',
     href: 'https://in.bookmyshow.com/events/gorakhpurs-got-latent/ET00522955',
     tag: 'LIVE SHOW',
   },
@@ -109,7 +109,7 @@ export default function BookMyShowPage() {
       </section>
 
       <footer className="border-t border-white/10 px-5 py-7 text-center text-xs text-white/40">
-        Ticketing and event details are provided on the respective BookMyShow event pages.
+        Episode 2 date has been postponed. The new date will be announced later through official GGL channels. Check BookMyShow for current listing and ticket status.
       </footer>
     </main>
   );

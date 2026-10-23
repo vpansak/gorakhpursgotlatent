@@ -25,8 +25,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Naveen Varma | Founder & Show Creator - Gorakhpur's Got Latent",
-  description: "Official profile, vision, and creator spotlight of Naveen Varma — Founder, Show Creator & Host of Gorakhpur's Got Latent digital entertainment ecosystem.",
+  title: "Founders & Creators | Alok Singh & Naveen Varma - Gorakhpur's Got Latent",
+  description: "Meet Alok Singh and Naveen Varma, the co-founders and creators behind Gorakhpur's Got Latent, their roles, vision, technology, and entertainment platform.",
   authors: [{ name: "Naveen Varma", url: "https://gkpgotlatent.in/founder" }],
   creator: "Naveen Varma",
   publisher: "Gorakhpur's Got Latent",
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Naveen Varma | Founder & Creator - Gorakhpur's Got Latent",
-    description: "Discover the vision, origins, and story behind Gorakhpur's Got Latent by Founder & Show Creator Naveen Varma (@nvn_unfiltered).",
+    title: "Founders & Creators | Gorakhpur's Got Latent",
+    description: "Meet the people behind Gorakhpur's Got Latent: Alok Singh and Naveen Varma, their creative vision and technical contributions.",
     url: 'https://gkpgotlatent.in/founder',
     siteName: "Gorakhpur's Got Latent",
     images: [
@@ -161,6 +161,40 @@ export default function FounderPage() {
             Official Founder Profile
           </div>
         </div>
+
+        <section className="mx-auto mb-8 max-w-6xl">
+          <div className="mb-6 text-center">
+            <p className="text-[10px] font-black uppercase tracking-[0.35em] text-red-400">GORAKHPUR'S GOT LATENT</p>
+            <h1 className="mt-2 font-bebas text-5xl tracking-wide sm:text-7xl">FOUNDERS <span className="bg-gradient-to-r from-amber-200 to-orange-500 bg-clip-text text-transparent">&amp; CREATORS</span></h1>
+            <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-slate-400">Meet the people behind GGL's creative vision and digital platform.</p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2">
+            <article className="rounded-3xl border border-amber-400/25 bg-[#09090c] p-6 sm:p-8">
+              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-300">CO-FOUNDER &amp; TECHNICAL CREATOR</p>
+              <h2 className="mt-3 font-bebas text-4xl sm:text-5xl">ALOK SINGH</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-300">Alok Singh contributes to Gorakhpur's Got Latent through its digital platform and technical infrastructure. His work focuses on website development, performer application flows, digital ticketing, and technology systems supporting show operations.</p>
+              <ul className="mt-5 space-y-2 text-sm leading-6 text-slate-400">
+                <li>• Website architecture and technical infrastructure</li>
+                <li>• Digital ticketing and performer application systems</li>
+                <li>• Technology integration and online operations</li>
+                <li>• Digital platform development and improvement</li>
+              </ul>
+              <a href="https://www.instagram.com/aloksingh_._/" target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-xl border border-white/10 px-4 py-3 text-xs font-black uppercase tracking-wider text-white hover:border-amber-400/40">Connect with Alok</a>
+            </article>
+            <article className="rounded-3xl border border-red-500/25 bg-[#09090c] p-6 sm:p-8">
+              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-red-300">FOUNDER &amp; SHOW CREATOR</p>
+              <h2 className="mt-3 font-bebas text-4xl sm:text-5xl">NAVEEN VARMA</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-300">Naveen Varma leads GGL's show concept and creative direction, including its entertainment format, hosting, and talent showcase. His work helps shape the experience for performers and audiences.</p>
+              <ul className="mt-5 space-y-2 text-sm leading-6 text-slate-400">
+                <li>• Show concept and creative vision</li>
+                <li>• Hosting and entertainment format</li>
+                <li>• Creative planning and show development</li>
+                <li>• Audience engagement and talent showcase</li>
+              </ul>
+              <a href="https://www.instagram.com/nvn_unfiltered/" target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-xl border border-white/10 px-4 py-3 text-xs font-black uppercase tracking-wider text-white hover:border-red-400/40">Connect with Naveen</a>
+            </article>
+          </div>
+        </section>
 
         <section className="mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-red-500/20 bg-[#09090c] shadow-[0_30px_120px_rgba(0,0,0,.7)]">
           <div className="relative grid lg:grid-cols-12">

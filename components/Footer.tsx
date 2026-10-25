@@ -61,7 +61,7 @@ export default function Footer() {
     pathname.startsWith('/verify') ||
     pathname.startsWith('/ticket/verify');
 
-  if (isLiveRoute || pathname.startsWith('/developer')) return null;
+  if (pathname.startsWith('/yt') || isLiveRoute || pathname.startsWith('/developer')) return null;
 
   // Compute Page-Specific Pre-Drafted WhatsApp Message & Reason
   let whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI have a general inquiry regarding the show.";

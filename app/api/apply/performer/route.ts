@@ -1,8 +1,8 @@
+import crypto from 'crypto';
 import { NextResponse, after } from 'next/server';
 import { db } from '@/lib/db';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
-import { sendPerformerApplicationEmail } from '@/lib/emailjs';
 
 export async function POST(req: Request) {
   try {
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
         performance_category, performance_title, performance_description, performance_type,
         performer_count, performance_duration, performance_language, instagram_url,
         city, age, interested_in_talent_trip, payment_status, payment_amount, application_status, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'FREE_AUDITION_SUBMITTED', '0.00', 'SUBMITTED', 'SUBMITTED')
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', '29.00', 'PAYMENT_PENDING', 'PAYMENT_PENDING')
     `, [
       id,
       appId,
@@ -66,65 +66,20 @@ export async function POST(req: Request) {
       `, [`his-${Date.now()}`, appId]);
     } catch (e) {}
 
-    saveIndividualEntryToS3('performers/all', appId, {
-      id,
-      app_id: appId,
-      full_name: effectiveFullName,
-      email: effectiveEmail,
-      mobile_number: effectiveMobile,
-      performance_category: effectiveCategory,
-      status: 'SUBMITTED',
-      created_at: new Date().toISOString()
-    }).catch((err: any) => console.error('S3 individual performer save error:', err));
-
-    syncSheetsToS3().catch(err => console.error('S3 sync error:', err));
-
-    // Dispatch email after the application response so the applicant never gets
-    // stuck on the form while the email provider is retrying.
-    after(async () => {
-      try {
-        const emailResult = await sendPerformerApplicationEmail({
-          application_id: appId,
-          created_at: new Date().toISOString(),
-          full_name: effectiveFullName,
-          email: effectiveEmail,
-          mobile_number: effectiveMobile,
-          whatsapp_number: effectiveMobile,
-          call_number: effectiveMobile,
-          alternate_contact: effectiveMobile,
-          performance_category: effectiveCategory,
-          performance_title: (performanceTitle || 'Audition Act').toString().trim(),
-          performance_description: (performanceDescription || '').toString().trim(),
-          additional_message: (whyShouldSelectYou || '').toString().trim(),
-          performance_type: (performanceType || 'Solo').toString().trim(),
-          performer_count: parsedCount,
-          performance_duration: (duration || '2 Minutes').toString().trim(),
-          performance_language: (language || 'Hindi').toString().trim(),
-          city: effectiveCity,
-          age: parsedAge,
-          instagram_url: formattedInstagram,
-          payment_status: 'FREE_AUDITION_SUBMITTED',
-          order_id: 'N/A',
-          payment_id: 'N/A',
-          payment_amount: 0,
-          payment_verified_at: new Date().toISOString(),
-          application_status: 'SUBMITTED',
-        });
-        if (emailResult.success) {
-          await db.execute("UPDATE performer_applications SET email_status = 'SENT', admin_email_status = 'SENT' WHERE app_id = ?", [appId]).catch(e => console.error(e));
-        } else {
-          console.warn(`⚠️ Performer application email notice for ${appId}: ${emailResult.message}`);
-        }
-      } catch (emailErr) {
-        console.error(`❌ Performer application email dispatch failed for ${appId}:`, emailErr);
-      }
-    });
+    // Create a unique payment link for the fixed ₹29 performer application fee.
+    const token = `per-${Date.now().toString(36)}-${crypto.randomBytes(18).toString('hex')}`;
+    await db.execute("CREATE TABLE IF NOT EXISTS performer_payment_links (token TEXT PRIMARY KEY, app_id TEXT NOT NULL, amount NUMERIC(10,2) NOT NULL, status TEXT NOT NULL DEFAULT 'PENDING', razorpay_order_id TEXT, razorpay_payment_id TEXT, created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, paid_at TIMESTAMPTZ)");
+    await db.execute(
+      "INSERT INTO performer_payment_links (token, app_id, amount, status) VALUES (?, ?, 29.00, 'PENDING')",
+      [token, appId]
+    );
 
     return NextResponse.json({
       success: true,
-      message: 'Performer Audition Application submitted successfully!',
+      message: 'Application details saved. Complete the ₹29 payment to submit your application.',
       appId,
-      status: 'SUBMITTED',
+      status: 'PAYMENT_PENDING',
+      paymentUrl: `/performer-payment/${token}`,
     });
   } catch (err: any) {
     console.error('Error submitting performer application:', err);

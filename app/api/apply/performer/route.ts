@@ -1,7 +1,6 @@
 import crypto from 'crypto';
-import { NextResponse, after } from 'next/server';
+import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
 
 export async function POST(req: Request) {
@@ -23,6 +22,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Please enter a valid Instagram username, for example @your_handle.' }, { status: 400 });
     }
     const formattedInstagram = normalizedInstagram ? `@${normalizedInstagram}` : '';
+    if (!effectiveFullName || !effectiveEmail || !effectiveMobile || !effectiveEmail.includes('@')) {
+      return NextResponse.json({ error: 'Full name, valid email, and mobile number are required.' }, { status: 400 });
+    }
 
     const appId = generateAppId('PER');
     const id = `per-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -62,7 +64,7 @@ export async function POST(req: Request) {
     try {
       await db.execute(`
         INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
-        VALUES (?, 'PERFORMER', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Performer Audition Form Submission')
+        VALUES (?, 'PERFORMER', ?, NULL, 'PAYMENT_PENDING', 'SYSTEM', 'Performer application awaiting ₹29 payment')
       `, [`his-${Date.now()}`, appId]);
     } catch (e) {}
 

@@ -102,28 +102,16 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
       clearTimeout(timeoutId);
 
       const data = await parseResponse(res);
-      if (data.success && data.appId) {
-        assignedAppId = data.appId;
-        setSubmittedAppId(data.appId);
+      if (data.success && data.appId && data.paymentUrl) {
+        window.location.href = data.paymentUrl;
+        return;
       }
+      throw new Error(data.error || 'Unable to start guest application payment. Please try again.');
     } catch (err: any) {
-      console.warn('DB save warning (proceeding to WhatsApp):', err);
-      assignedAppId = `GST-${Date.now().toString().slice(-6)}`;
-      setSubmittedAppId(assignedAppId);
+      setError(err?.message || 'Unable to save application. Please try again.');
     } finally {
       setLoading(false);
     }
-
-    const messageText = constructWhatsAppMessage(formData, assignedAppId);
-    const waUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(messageText)}`;
-
-    setGeneratedWhatsAppUrl(waUrl);
-    setSubmitted(true);
-
-    // Auto-redirect to WhatsApp
-    setTimeout(() => {
-      window.location.href = waUrl;
-    }, 1200);
   };
 
   if (submitted) {
@@ -180,7 +168,7 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
     <div className="py-5 px-4 sm:px-6 max-w-3xl mx-auto space-y-4">
       <div className="text-center">
         <h1 className="text-2xl sm:text-3xl font-black text-white">Guest / Influencer Application</h1>
-        <p className="text-xs text-slate-400 mt-1">Guest judge • celebrity performer • creator</p>
+        <p className="text-xs text-slate-400 mt-1">Guest judge • celebrity performer • creator • ₹100 application fee</p>
       </div>
 
       {error && <div className="p-4 rounded-xl bg-red-500/20 text-red-300 text-sm font-semibold">⚠️ {error}</div>}
@@ -238,8 +226,8 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
         <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-[11px] text-emerald-200">
           <WhatsAppIcon className="w-6 h-6 text-emerald-400 shrink-0" />
           <div>
-            <strong className="text-white block font-bold">Automatic Admin Save & WhatsApp Connect:</strong>
-            Submitting this form will automatically save your details in the Admin Portal with an Application ID and redirect to WhatsApp ({DISPLAY_PHONE}).
+            <strong className="text-white block font-bold">₹100 Guest Application Fee:</strong>
+            Pay ₹100 securely through Razorpay. Your guest application is submitted only after payment verification; then you can connect with the team on WhatsApp ({DISPLAY_PHONE}).
           </div>
         </div>
 
@@ -253,7 +241,7 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
           ) : (
             <>
               <WhatsAppIcon className="w-6 h-6 fill-current" />
-              SUBMIT GUEST DETAILS & CONNECT ON WHATSAPP
+              CONTINUE TO PAY ₹100 & APPLY
               <ArrowRight className="w-5 h-5" />
             </>
           )}

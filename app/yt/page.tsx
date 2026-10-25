@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Youtube, Play, Sparkles, ExternalLink, Zap, Heart, Radio } from "lucide-react";
+import { PlayCircle, Play, Sparkles, ExternalLink, Zap, Heart, Radio } from "lucide-react";
 
 const CHANNEL_URL = "https://www.youtube.com/@gkpgotlatent";
 const ANDROID_INTENT = "intent://www.youtube.com/@gkpgotlatent#Intent;scheme=https;package=com.google.android.youtube;S.browser_fallback_url=https%3A%2F%2Fwww.youtube.com%2F%40gkpgotlatent;end";
 const messages = [
   { title: "Gorakhpur, ready ho?", subtitle: "Talent ka asli stage aa gaya hai!", icon: Sparkles },
   { title: "Real talent. Real reactions.", subtitle: "Comedy • Performances • Unforgettable moments", icon: Zap },
-  { title: "YouTube par milte hain!", subtitle: "Official GGL videos aur latest updates ke liye", icon: Youtube },
+  { title: "YouTube par milte hain!", subtitle: "Official GGL videos aur latest updates ke liye", icon: PlayCircle },
   { title: "Subscribe karna mat bhoolna ❤️", subtitle: "Aapka support, apne shehar ke talent ke naam!", icon: Heart },
   { title: "Almost there!", subtitle: "YouTube khul raha hai… bas ek second!", icon: Play },
 ];
@@ -56,7 +56,7 @@ export default function YouTubeRedirectPage() {
         <div className="mb-7 flex justify-center">
           <div className="relative flex h-28 w-28 items-center justify-center rounded-[2rem] border border-red-400/40 bg-gradient-to-br from-red-600/25 to-amber-500/10 shadow-[0_0_65px_rgba(239,68,68,.18)]">
             <div className="absolute inset-2 rounded-[1.5rem] border border-white/10 animate-pulse" />
-            <Youtube className="h-14 w-14 text-red-500 drop-shadow-[0_0_18px_rgba(239,68,68,.65)]" />
+            <PlayCircle className="h-14 w-14 text-red-500 drop-shadow-[0_0_18px_rgba(239,68,68,.65)]" />
             <span className="absolute -right-2 -top-2 flex h-8 w-8 animate-bounce items-center justify-center rounded-full bg-amber-400 text-black"><Sparkles className="h-4 w-4" /></span>
           </div>
         </div>

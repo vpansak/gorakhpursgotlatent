@@ -92,7 +92,7 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
       const res = await fetch('/api/apply/guest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -102,11 +102,17 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
       clearTimeout(timeoutId);
 
       const data = await parseResponse(res);
-      if (data.success && data.appId && data.paymentUrl) {
-        window.location.href = data.paymentUrl;
-        return;
+      if (data.success && data.appId) {
+        assignedAppId = data.appId;
+        setSubmittedAppId(data.appId);
+        const messageText = constructWhatsAppMessage(formData, assignedAppId);
+        const waUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(messageText)}`;
+        setGeneratedWhatsAppUrl(waUrl);
+        setSubmitted(true);
+        setTimeout(() => { window.location.href = waUrl; }, 1200);
+      } else {
+        throw new Error(data.error || 'Unable to submit guest application. Please try again.');
       }
-      throw new Error(data.error || 'Unable to start guest application payment. Please try again.');
     } catch (err: any) {
       setError(err?.message || 'Unable to save application. Please try again.');
     } finally {
@@ -226,8 +232,8 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
         <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-[11px] text-emerald-200">
           <WhatsAppIcon className="w-6 h-6 text-emerald-400 shrink-0" />
           <div>
-            <strong className="text-white block font-bold">₹100 Guest Application Fee:</strong>
-            Pay ₹100 securely through Razorpay. Your guest application is submitted only after payment verification; then you can connect with the team on WhatsApp ({DISPLAY_PHONE}).
+            <strong className="text-white block font-bold">Free Guest Application:</strong>
+            Guest applications are free. After submitting, you can connect with the team on WhatsApp ({DISPLAY_PHONE}).
           </div>
         </div>
 
@@ -241,7 +247,7 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
           ) : (
             <>
               <WhatsAppIcon className="w-6 h-6 fill-current" />
-              CONTINUE TO PAY ₹100 & APPLY
+              SUBMIT GUEST APPLICATION
               <ArrowRight className="w-5 h-5" />
             </>
           )}

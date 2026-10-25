@@ -95,16 +95,17 @@ export default function PerformerApplyClient() {
     setLoading(true);
     let assignedAppId = '';
 
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      // Allow enough time for the database write on slower mobile connections.
+      timeoutId = setTimeout(() => controller.abort(), 20000);
       const res = await fetch('/api/apply/performer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
         signal: controller.signal,
       });
-      clearTimeout(timeoutId);
 
       const data = await parseResponse(res);
       if (data.success && data.appId) {
@@ -115,9 +116,16 @@ export default function PerformerApplyClient() {
       }
     } catch (err: any) {
       console.error('Performer application submit failed:', err);
-      setError(err?.message || 'Application could not be saved. Please try again.');
+      if (err?.name === 'AbortError') {
+        setError('Submission is taking too long. Please check your internet connection and try again.');
+      } else if (err instanceof TypeError) {
+        setError('Network connection issue. Please check your internet and try again.');
+      } else {
+        setError(err?.message || 'Application could not be saved. Please try again.');
+      }
       return;
     } finally {
+      if (timeoutId) clearTimeout(timeoutId);
       setLoading(false);
     }
 

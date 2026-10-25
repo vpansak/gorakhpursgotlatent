@@ -22,7 +22,7 @@ export default function Navbar() {
     pathname.startsWith('/verifyticket') ||
     pathname.startsWith('/verify') ||
     pathname.startsWith('/ticket/verify');
-  if (isLiveRoute) return null;
+  if (pathname.startsWith('/yt') || isLiveRoute) return null;
 
   const navLinks = [
     { name: 'Home', href: '/' },

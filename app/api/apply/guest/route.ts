@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { generateAppId } from '@/lib/helpers';
@@ -34,7 +33,7 @@ export async function POST(req: Request) {
         why_ggl, previous_shows, social_info, management_name, manager_contact,
         availability, preferred_date, travel_req, accommodation_req, special_req,
         important_info, profile_photo_url, press_kit_url, doc_url, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PAYMENT_PENDING')
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'SUBMITTED')
     `, [
       id, appId, effectiveFullName, (stageName || '').toString().trim(), (dob || '').toString().trim(),
       effectiveEmail, effectiveWhatsapp, (phone || '').toString().trim(),
@@ -50,19 +49,14 @@ export async function POST(req: Request) {
 
     await db.execute(`
       INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
-      VALUES (?, 'GUEST', ?, NULL, 'PAYMENT_PENDING', 'SYSTEM', 'Guest application awaiting ₹100 payment')
+      VALUES (?, 'GUEST', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Guest application submitted (free)')
     `, [`his-${Date.now()}`, appId]);
-
-    await db.execute("CREATE TABLE IF NOT EXISTS guest_payment_links (token TEXT PRIMARY KEY, app_id TEXT NOT NULL, amount NUMERIC(10,2) NOT NULL, status TEXT NOT NULL DEFAULT 'PENDING', razorpay_order_id TEXT, razorpay_payment_id TEXT, created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, paid_at TIMESTAMPTZ)");
-    const token = `gstpay-${Date.now().toString(36)}-${crypto.randomBytes(18).toString('hex')}`;
-    await db.execute("INSERT INTO guest_payment_links (token, app_id, amount, status) VALUES (?, ?, 100.00, 'PENDING')", [token, appId]);
 
     return NextResponse.json({
       success: true,
-      message: 'Guest application details saved. Pay ₹100 to submit your application.',
+      message: 'Guest application submitted successfully.',
       appId,
-      status: 'PAYMENT_PENDING',
-      paymentUrl: `/guest-payment/${token}`,
+      status: 'SUBMITTED',
     });
   } catch (err: any) {
     console.error('Error submitting guest application:', err);

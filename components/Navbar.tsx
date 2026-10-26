@@ -56,7 +56,7 @@ export default function Navbar() {
                     alt="GGL Golden Character Logo"
                     fill
                     priority
-                    className="object-contain object-left scale-x-[1.22] origin-left filter drop-shadow-[0_0_15px_rgba(255,215,0,0.7)]"
+                    className="object-contain object-left scale-x-[1.22] origin-left"
                   />
                 </div>
               </Link>

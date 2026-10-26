@@ -62,11 +62,11 @@ export async function GET(req: Request) {
       let q = 'SELECT * FROM performer_applications WHERE 1=1';
       const params: any[] = [];
       if (status) {
-        q += ' AND (status = ? OR application_status = ? OR payment_status = ?)';
+        q += ' AND (p.status = ? OR p.application_status = ? OR p.payment_status = ?)';
         params.push(status, status, status);
       }
       if (search) {
-        q += ' AND (full_name ILIKE ? OR email ILIKE ? OR app_id ILIKE ? OR city ILIKE ? OR mobile_number ILIKE ? OR whatsapp_number ILIKE ? OR performance_category ILIKE ? OR payment_id ILIKE ? OR order_id ILIKE ?)';
+        q += ' AND (p.full_name ILIKE ? OR p.email ILIKE ? OR p.app_id ILIKE ? OR p.city ILIKE ? OR p.mobile_number ILIKE ? OR p.whatsapp_number ILIKE ? OR p.performance_category ILIKE ? OR p.payment_id ILIKE ? OR p.order_id ILIKE ?)';
         const term = `%${search}%`;
         params.push(term, term, term, term, term, term, term, term, term);
       }
@@ -76,11 +76,11 @@ export async function GET(req: Request) {
       let q = 'SELECT * FROM guest_applications WHERE 1=1';
       const params: any[] = [];
       if (status) {
-        q += ' AND status = ?';
+        q += ' AND g.status = ?';
         params.push(status);
       }
       if (search) {
-        q += ' AND (full_name ILIKE ? OR stage_name ILIKE ? OR email ILIKE ? OR app_id ILIKE ? OR phone ILIKE ? OR whatsapp ILIKE ? OR city ILIKE ? OR category ILIKE ?)';
+        q += ' AND (g.full_name ILIKE ? OR g.stage_name ILIKE ? OR g.email ILIKE ? OR g.app_id ILIKE ? OR g.phone ILIKE ? OR g.whatsapp ILIKE ? OR g.city ILIKE ? OR g.category ILIKE ?)';
         const term = `%${search}%`;
         params.push(term, term, term, term, term, term, term, term);
       }

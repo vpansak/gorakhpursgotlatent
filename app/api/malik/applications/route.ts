@@ -37,7 +37,7 @@ export async function GET(req: Request) {
       const performers = await db.query("SELECT p.*, CASE WHEN l.razorpay_payment_id IS NOT NULL AND l.status='PAID' AND l.amount=29 AND p.payment_status='PAID' AND p.payment_id=l.razorpay_payment_id AND p.payment_amount=29 THEN l.razorpay_payment_id ELSE NULL END AS verified_payment_id FROM performer_applications p LEFT JOIN performer_payment_links l ON l.app_id=p.app_id WHERE (p.created_at < TIMESTAMPTZ '2026-10-26 04:20:27+00' OR (l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=29 AND p.payment_status='PAID' AND p.payment_id=l.razorpay_payment_id AND p.payment_amount=29)) ORDER BY COALESCE(p.is_read, 0) ASC, p.created_at DESC");
       const sponsors = await db.query('SELECT * FROM sponsor_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC');
       const team = await db.query('SELECT * FROM team_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC');
-      const guests = await db.query("SELECT g.*, l.razorpay_payment_id AS payment_id, l.amount AS payment_amount, CASE WHEN l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49 THEN 'PAID' ELSE NULL END AS verified_payment_status FROM guest_applications g LEFT JOIN guest_payment_links l ON l.app_id=g.app_id WHERE (g.created_at < TIMESTAMPTZ '2026-10-26 04:20:27+00' OR (l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49)) ORDER BY COALESCE(g.is_read, 0) ASC, g.created_at DESC");
+      const guests = await db.query("SELECT g.*, l.razorpay_payment_id AS payment_id, l.amount AS payment_amount, CASE WHEN l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49 THEN 'PAID' ELSE NULL END AS payment_status FROM guest_applications g LEFT JOIN guest_payment_links l ON l.app_id=g.app_id WHERE (g.created_at < TIMESTAMPTZ '2026-10-26 04:20:27+00' OR (l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49)) ORDER BY COALESCE(g.is_read, 0) ASC, g.created_at DESC");
 
       return NextResponse.json({
         success: true,
@@ -73,7 +73,7 @@ export async function GET(req: Request) {
       q += ' ORDER BY COALESCE(p.is_read, 0) ASC, p.created_at DESC';
       items = await db.query(q, params);
     } else if (type === 'guest') {
-      let q = "SELECT g.*, l.razorpay_payment_id AS payment_id, l.amount AS payment_amount, CASE WHEN l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49 THEN 'PAID' ELSE NULL END AS verified_payment_status FROM guest_applications g LEFT JOIN guest_payment_links l ON l.app_id=g.app_id WHERE (g.created_at < TIMESTAMPTZ '2026-10-26 04:20:27+00' OR (l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49)) WHERE 1=1";
+      let q = "SELECT g.*, l.razorpay_payment_id AS payment_id, l.amount AS payment_amount, CASE WHEN l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49 THEN 'PAID' ELSE NULL END AS payment_status FROM guest_applications g LEFT JOIN guest_payment_links l ON l.app_id=g.app_id WHERE (g.created_at < TIMESTAMPTZ '2026-10-26 04:20:27+00' OR (l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49)) WHERE 1=1";
       const params: any[] = [];
       if (status) {
         q += ' AND g.status = ?';

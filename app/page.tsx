@@ -136,15 +136,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-3xl rounded-2xl border border-amber-400/30 bg-black/80 p-6 text-center shadow-2xl backdrop-blur-xl">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-300">Official Announcement</p>
           <h2 className="mt-2 text-2xl font-black uppercase text-white sm:text-3xl">Episode 2 Date Postponed</h2>
-          <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">Gorakhpur’s Got Latent Episode 2 event date has been postponed. The revised date will be announced through our official website and social media channels.</p>
-          <div className="mt-5 rounded-xl border border-emerald-400/25 bg-emerald-400/5 p-4">
-            <p className="text-lg font-black uppercase text-emerald-300">🎉 Performer Registration Is Live Now</p>
-            <p className="mt-2 text-sm leading-6 text-slate-200">Episode 2 auditions are open. Performer applications are completely FREE (₹0). Apply online, then send your performance clip on WhatsApp to <strong className="text-white">+91 8423858424</strong>.</p>
-            <div className="mt-4 flex flex-col sm:flex-row justify-center gap-3">
-              <Link href="/apply/performer" className="home-primary-btn">REGISTER AS PERFORMER <ChevronRight className="h-4 w-4" /></Link>
-              <a href="https://wa.me/918423858424" target="_blank" rel="noreferrer" className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-emerald-400/40 px-5 py-3 text-sm font-black text-emerald-300 transition hover:bg-emerald-400/10">SEND CLIP ON WHATSAPP</a>
-            </div>
-          </div>
+          <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">Gorakhpur’s Got Latent Episode 2 has been postponed. The revised date will be revealed later through our official website and social media channels. Please stay tuned for updates.</p>
         </div>
       </section>
 

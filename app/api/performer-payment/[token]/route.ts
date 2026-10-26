@@ -3,10 +3,10 @@ import { db } from '@/lib/db';
 import { sendPerformerApplicationEmail } from '@/lib/emailjs';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import {
-  getApplicationRazorpayKeyId,
-  getApplicationRazorpayInstance,
-  isApplicationRazorpayConfigured,
-  verifyApplicationRazorpaySignature
+  getRazorpayKeyId,
+  getRazorpayInstance,
+  isRazorpayConfigured,
+  verifyRazorpaySignature
 } from '@/lib/razorpay';
 
 async function ensureTable() {
@@ -73,7 +73,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ token: string 
     return NextResponse.json({
       success: true,
       payment,
-      keyId: getApplicationRazorpayKeyId()
+      keyId: getRazorpayKeyId()
     });
   } catch (e: any) {
     console.error('Error loading performer payment details:', e);
@@ -96,10 +96,10 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
       return NextResponse.json({ success: true, status: 'PAID' });
     }
 
-    const rzp = getApplicationRazorpayInstance();
+    const rzp = getRazorpayInstance();
 
     if (b.action === 'create-order') {
-      if (!rzp || !isApplicationRazorpayConfigured()) {
+      if (!rzp || !isRazorpayConfigured()) {
         console.error('Application Razorpay not configured for performer payment.');
         return NextResponse.json(
           { error: 'Online payment is temporarily unavailable. Please contact GGL support.' },
@@ -123,7 +123,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
         orderId: order.id,
         amount: orderAmountPaise,
         currency: 'INR',
-        keyId: getApplicationRazorpayKeyId(),
+        keyId: getRazorpayKeyId(),
         name: p?.full_name || 'GGL Performer',
         email: p?.email || '',
         phone: p?.mobile_number || ''
@@ -135,7 +135,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
       const pid = b.razorpay_payment_id;
       const sig = b.razorpay_signature;
 
-      if (!rzp || !isApplicationRazorpayConfigured() || !o || !pid || !sig || o !== link.razorpay_order_id || !verifyApplicationRazorpaySignature(o, pid, sig)) {
+      if (!rzp || !isRazorpayConfigured() || !o || !pid || !sig || o !== link.razorpay_order_id || !verifyRazorpaySignature(o, pid, sig)) {
         console.error('Performer payment signature verification failed for token:', token, 'orderId:', o);
         return NextResponse.json({ error: 'Payment verification failed' }, { status: 400 });
       }

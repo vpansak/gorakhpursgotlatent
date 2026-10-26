@@ -62,7 +62,7 @@ export default function QuickInfoPage() {
               Book Show Tickets 🎟️
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Episode 2 has been postponed. The new event date will be announced later; please check official updates before making plans.
+              Episode 2 recording starts on Tuesday, 3 November 2026 at 1:00 PM IST at Mars Orbit Entertainment, Gorakhpur.
             </p>
           </div>
           <Link
@@ -83,7 +83,7 @@ export default function QuickInfoPage() {
               Episode 2 Auditions 🎤
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Episode 2 date has been postponed. Submit your talent profile and follow official channels for the revised date announcement.
+              Episode 2 recording starts on Tuesday, 3 November 2026 at 1:00 PM IST at Mars Orbit Entertainment, Gorakhpur. Submit your talent profile through the performer form.
             </p>
           </div>
           <Link
@@ -134,7 +134,7 @@ export default function QuickInfoPage() {
               Venue & Support 📍
             </h3>
             <div className="space-y-1 text-xs text-slate-300">
-              <p className="font-semibold text-white">Event date &amp; venue: To be announced</p>
+              <p className="font-semibold text-white">Recording: Tuesday, 3 November 2026 · 1:00 PM IST · Mars Orbit Entertainment, Gorakhpur</p>
               <p>Email: <a href="mailto:help.gglatent@gmail.com" className="text-amber-400 underline">help.gglatent@gmail.com</a></p>
               <p>WhatsApp: <a href="https://wa.me/918423858424" target="_blank" rel="noreferrer" className="text-emerald-400 underline">+91 84238 58424</a></p>
             </div>

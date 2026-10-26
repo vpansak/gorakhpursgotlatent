@@ -14,6 +14,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { TicketRecord } from '@/lib/ticketTypes';
+import { EPISODE_2 } from '@/lib/episode2';
 
 const GGL_MASCOT_DATA = "/ggl-mascot.jpg";
 
@@ -184,6 +185,10 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
               </div>
             </div>
 
+            <div className="border-t border-amber-400/20 pt-2 text-[10px] leading-4 text-slate-200">
+              <p className="font-bold text-amber-200">EPISODE 2 · {EPISODE_2.date} · {EPISODE_2.time}</p>
+              <p>Recording at {EPISODE_2.venue}, Gorakhpur</p>
+            </div>
             {/* Footer Status Badges */}
             <div className="flex flex-wrap items-center gap-2 border-t border-amber-400/20 pt-2">
               <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[9px] font-black uppercase font-barlow">

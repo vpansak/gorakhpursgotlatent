@@ -33,6 +33,7 @@ export default function Navbar() {
     { name: 'Episodes', href: '/episodes' },
     { name: 'Contact', href: '/contact' },
     { name: 'About', href: '/about' },
+    { name: 'Episode 2', href: '/ep2' },
     { name: 'GGL Talent Trip', href: '/ggl_talent_trip', isNew: true },
   ];
 

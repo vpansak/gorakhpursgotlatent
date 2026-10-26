@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import CountdownTimer from '@/components/CountdownTimer';
+import { EPISODE_2 } from '@/lib/episode2';
 import DrivePhotoSlider from '@/components/DrivePhotoSlider';
 import { db } from '@/lib/db';
 import {
@@ -10,6 +11,18 @@ import {
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+export const metadata = {
+  title: "Gorakhpur's Got Latent | Episode 2 · 3 November 2026, 1 PM",
+  description: "GGL Episode 2 recording starts Tuesday, 3 November 2026 at 1:00 PM IST at Mars Orbit Entertainment, Gorakhpur. View official details, book tickets and apply as a performer.",
+  alternates: { canonical: 'https://www.gkpgotlatent.in/' },
+  openGraph: {
+    title: "GGL Episode 2 · 3 November 2026, 1 PM IST",
+    description: EPISODE_2.summary,
+    url: 'https://www.gkpgotlatent.in/',
+  },
+  twitter: { card: 'summary_large_image', title: 'GGL Episode 2 · 3 November 2026', description: EPISODE_2.summary },
+};
 
 function YouTubeIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -54,7 +67,7 @@ export default async function HomePage() {
 
   const faqs = [
     { q: "What is Gorakhpur's Got Latent?", a: "Gorakhpur's Got Latent is Purvanchal's flagship live talent hunt show and entertainment phenomenon. It showcases musicians, beatboxers, stand-up comedians, dancers, magicians, and raw unique performers live on stage." },
-    { q: "When is Gorakhpur’s Got Latent Episode 2?", a: "Episode 2 has been postponed. The new date will be revealed later through our official channels." },
+    { q: "When is Gorakhpur’s Got Latent Episode 2?", a: "Episode 2 recording starts on Tuesday, 3 November 2026 at 1:00 PM IST at Mars Orbit Entertainment, Gorakhpur." },
     { q: "How can I apply as a performer for Episode 2?", a: "You can submit your performer application online and send your performance clip on WhatsApp. Please follow official channels for event-date updates." },
     { q: "How do I receive my ticket after payment?", a: "As soon as your payment is verified via Razorpay, your official Digital E-Ticket with a unique QR code is generated instantly." },
     { q: "Can my brand sponsor the show?", a: "Yes! Go to Apply Now → Brand Sponsor and submit your company details, budget estimate, and brand deck." },
@@ -75,7 +88,7 @@ export default async function HomePage() {
         <div className="relative z-10 w-full max-w-6xl mx-auto text-center">
           <div className="home-live-pill mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-black/45 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-amber-200 backdrop-blur-xl">
             <span className="h-2 w-2 rounded-full bg-red-500 shadow-[0_0_12px_rgba(239,68,68,.9)] animate-pulse" />
-            EPISODE 2 — DATE TO BE ANNOUNCED
+            EPISODE 2 — 3 NOVEMBER 2026 · 1 PM IST
           </div>
 
           <div className="relative mx-auto h-36 w-[330px] sm:h-52 sm:w-[560px] md:h-64 md:w-[720px] lg:h-[300px] lg:w-[820px]">
@@ -135,8 +148,10 @@ export default async function HomePage() {
       <section className="px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-12 relative z-20">
         <div className="mx-auto max-w-3xl rounded-2xl border border-amber-400/30 bg-black/80 p-6 text-center shadow-2xl backdrop-blur-xl">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-300">Official Announcement</p>
-          <h2 className="mt-2 text-2xl font-black uppercase text-white sm:text-3xl">Episode 2 Date Postponed</h2>
-          <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">Gorakhpur’s Got Latent Episode 2 has been postponed. The revised date will be revealed later through our official website and social media channels. Please stay tuned for updates.</p>
+          <h2 className="mt-2 text-2xl font-black uppercase text-white sm:text-3xl">Episode 2 · Date Confirmed</h2>
+          <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">{EPISODE_2.summary}</p>
+          <CountdownTimer />
+          <Link href="/ep2" className="font-bold text-amber-300 underline underline-offset-4">View Episode 2 details →</Link>
         </div>
       </section>
 

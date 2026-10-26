@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Episode2Schedule from './Episode2Schedule';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Mail, Phone, MessageSquare, CalendarDays, Code2 } from 'lucide-react';
@@ -95,6 +96,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#05060a] border-t border-amber-500/20 text-slate-300 pt-8 pb-8 lg:pb-8 relative overflow-hidden">
+      <div className="relative mx-auto mb-8 max-w-6xl px-4 sm:px-6"><Episode2Schedule /></div>
       {/* Ambient background light glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-amber-500/10 blur-[100px] pointer-events-none" />
 

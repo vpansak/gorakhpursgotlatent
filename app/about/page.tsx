@@ -182,7 +182,7 @@ export default function AboutPage() {
           <section>
             <h2 className="text-3xl font-black text-white">GGL Episode 2</h2>
             <p className="mt-4">
-              Episode 2 has been postponed. The revised date will be revealed later through official GGL channels. Visitors should check the official website and social media for the latest application, ticket and event updates.
+              Episode 2 recording starts on Tuesday, 3 November 2026 at 1:00 PM IST at Mars Orbit Entertainment, Gorakhpur.
             </p>
             <p className="mt-4">
               Episode 2 is part of the ongoing GGL entertainment series, continuing

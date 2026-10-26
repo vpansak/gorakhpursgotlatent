@@ -49,7 +49,7 @@ const events = [
   {
     label: 'EPISODE 2 TICKET',
     title: "Gorakhpur's Got Latent",
-    description: 'Episode 2 has been postponed. The revised date will be announced later; check the listing for current ticket status.',
+    description: 'Episode 2 recording starts on Tuesday, 3 November 2026 at 1:00 PM IST at Mars Orbit Entertainment, Gorakhpur.',
     href: 'https://in.bookmyshow.com/events/gorakhpurs-got-latent/ET00522955',
     tag: 'LIVE SHOW',
   },
@@ -109,7 +109,7 @@ export default function BookMyShowPage() {
       </section>
 
       <footer className="border-t border-white/10 px-5 py-7 text-center text-xs text-white/40">
-        Episode 2 date has been postponed. The new date will be announced later through official GGL channels. Check BookMyShow for current listing and ticket status.
+        Episode 2 recording starts on Tuesday, 3 November 2026 at 1:00 PM IST at Mars Orbit Entertainment, Gorakhpur. Check BookMyShow for current listing and ticket status.
       </footer>
     </main>
   );

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { EPISODE_2 } from '@/lib/episode2';
 import { verifyRazorpaySignature, getRazorpayKeySecret } from '@/lib/razorpay';
 import { sendBookingConfirmationEmail } from '@/lib/emailjs';
 import { 
@@ -87,9 +88,9 @@ export async function POST(req: Request) {
         razorpayPaymentId: ticketRecord.razorpay_payment_id,
         ticketNumber: ticketRecord.ticket_id,
         eventTitle: 'Gorakhpur\'s Got Latent',
-        eventDate: 'As announced on the official website',
-        startTime: 'As announced on the official website',
-        venueName: 'Gorakhpur',
+        eventDate: `${EPISODE_2.weekday}, ${EPISODE_2.date}`,
+        startTime: EPISODE_2.time,
+        venueName: `${EPISODE_2.venue}, Gorakhpur`,
         categoryName: 'Show Ticket',
         quantity: ticketRecord.quantity,
         totalAmount: ticketRecord.amount,

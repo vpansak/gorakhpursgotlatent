@@ -1,3 +1,4 @@
+import Episode2Schedule from '@/components/Episode2Schedule';
 import Link from "next/link";
 import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 
@@ -26,6 +27,7 @@ export default function ContactPage() {
         <p className="text-xs sm:text-sm text-slate-300">Got questions about tickets, performer auditions, or sponsorship? Contact the GGL team directly.</p>
       </div>
 
+      <Episode2Schedule />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="glass-panel p-8 rounded-3xl border border-amber-500/30 space-y-6">
           <h3 className="text-xl font-bold text-amber-400 border-b border-slate-800 pb-3">Official Communication Channels</h3>
@@ -37,7 +39,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <strong className="block text-white font-bold">Show Venue Address:</strong>
-                <p className="text-xs font-semibold text-slate-200">Marsorbit Entertainment, Gorakhpur, Uttar Pradesh</p>
+                <p className="text-xs font-semibold text-slate-200">Mars Orbit Entertainment, Gorakhpur, Uttar Pradesh</p>
                 <a
                   href="https://maps.app.goo.gl/QWm9P4nPyzKHDAiX9?g_st=ac"
                   target="_blank"

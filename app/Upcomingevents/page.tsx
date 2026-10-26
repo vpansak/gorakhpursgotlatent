@@ -1,11 +1,13 @@
 'use client';
 
 import Link from 'next/link';
+import Episode2Schedule from '@/components/Episode2Schedule';
 import { CalendarDays, MapPin, Sparkles, Ticket, Compass } from 'lucide-react';
 
 export default function UpcomingEventsPage() {
   return (
     <main className="min-h-[70vh] overflow-hidden bg-[#050506] text-white">
+      <div className="mx-auto max-w-5xl px-4 pt-8"><Episode2Schedule /></div>
       <section className="relative border-b border-amber-400/15 bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.14),transparent_55%),radial-gradient(ellipse_at_30%_50%,rgba(185,28,28,0.10),transparent_50%)] px-4 py-14 sm:px-6 sm:py-20">
         <div className="pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px)] [background-size:42px_42px]" />
         <div className="relative mx-auto max-w-6xl">

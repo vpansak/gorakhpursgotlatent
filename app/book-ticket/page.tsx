@@ -1,4 +1,5 @@
 'use client';
+import Episode2Schedule from '@/components/Episode2Schedule';
 
 import React, { useState } from 'react';
 import { Ticket as TicketIcon, CheckCircle2, AlertCircle, ShieldCheck, Lock } from 'lucide-react';
@@ -185,6 +186,8 @@ export default function BookTicketPage() {
             <span>{errorMsg}</span>
           </div>
         )}
+
+        <Episode2Schedule />
 
         <form onSubmit={handleBookingSubmit} className="space-y-4">
           <div>

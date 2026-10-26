@@ -26,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/bookmyshow',
     '/printerest',
     '/ep1',
+    '/ep2',
     '/ep1p1trailer',
     '/episodes',
     '/Upcomingevents',

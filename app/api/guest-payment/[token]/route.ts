@@ -4,21 +4,23 @@ import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { sendGenericApplicationEmails } from '@/lib/emailjs';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
-
-function getGuestRazorpay() {
+function getApplicationRazorpay() {
   const key_id = process.env.RAZORPAY_KEY_ID1 || '';
   const key_secret = process.env.RAZORPAY_KEY_SECRET1 || '';
   if (!key_id || !key_secret) return null;
   try { return new Razorpay({ key_id, key_secret }); } catch { return null; }
 }
-function verifyGuestSignature(orderId: string, paymentId: string, signature: string): boolean {
+function isApplicationRazorpayConfigured(): boolean {
+  return Boolean(process.env.RAZORPAY_KEY_ID1 && process.env.RAZORPAY_KEY_SECRET1);
+}
+function verifyApplicationSignature(orderId: string, paymentId: string, signature: string): boolean {
   const secret = process.env.RAZORPAY_KEY_SECRET1 || '';
-  if (!secret) return false;
-  const expected = crypto.createHmac('sha256', secret).update(`${orderId}|${paymentId}`).digest('hex');
-  const a = Buffer.from(expected, 'hex');
-  const b = Buffer.from(signature || '', 'hex');
+  if (!secret || !signature) return false;
+  const expected = crypto.createHmac('sha256', secret).update(orderId + '|' + paymentId).digest('hex');
+  const a = Buffer.from(expected, 'hex'); const b = Buffer.from(signature, 'hex');
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
+
 
 async function ensureTable() {
   await db.execute("CREATE TABLE IF NOT EXISTS guest_payment_links (token TEXT PRIMARY KEY, app_id TEXT NOT NULL, amount NUMERIC(10,2) NOT NULL, status TEXT NOT NULL DEFAULT 'PENDING', razorpay_order_id TEXT, razorpay_payment_id TEXT, created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, paid_at TIMESTAMPTZ)");
@@ -45,9 +47,9 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
     const link = await db.queryOne('SELECT * FROM guest_payment_links WHERE token=?', [token]);
     if (!link) return NextResponse.json({ error: 'Guest payment link not found' }, { status: 404 });
     if (link.status === 'PAID') return NextResponse.json({ success: true, status: 'PAID' });
-    const rzp = getGuestRazorpay();
+    const rzp = getApplicationRazorpay();
     if (b.action === 'create-order') {
-      if (!rzp || !isRazorpayConfigured()) return NextResponse.json({ error: 'Online payment is temporarily unavailable. Please contact GGL support.' }, { status: 503 });
+      if (!rzp || !isApplicationRazorpayConfigured()) return NextResponse.json({ error: 'Online payment is temporarily unavailable. Please contact GGL support.' }, { status: 503 });
       const order = await rzp.orders.create({
         amount: Math.round(Number(link.amount) * 100), currency: 'INR',
         receipt: ('gglguest' + token).slice(0, 40),
@@ -55,11 +57,11 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
       });
       await db.execute('UPDATE guest_payment_links SET razorpay_order_id=? WHERE token=?', [order.id, token]);
       const p = await db.queryOne('SELECT full_name,email,whatsapp FROM guest_applications WHERE app_id=?', [link.app_id]);
-      return NextResponse.json({ success: true, orderId: order.id, amount: Math.round(Number(link.amount) * 100), currency: 'INR', keyId: process.env.RAZORPAY_KEY_ID, name: p?.full_name || 'GGL Guest', email: p?.email || '', phone: p?.whatsapp || '' });
+      return NextResponse.json({ success: true, orderId: order.id, amount: Math.round(Number(link.amount) * 100), currency: 'INR', keyId: process.env.RAZORPAY_KEY_ID1, name: p?.full_name || 'GGL Guest', email: p?.email || '', phone: p?.whatsapp || '' });
     }
     if (b.action === 'verify') {
       const o = b.razorpay_order_id, pid = b.razorpay_payment_id, sig = b.razorpay_signature;
-      if (!rzp || !process.env.RAZORPAY_KEY_ID1 || !process.env.RAZORPAY_KEY_SECRET1 || !o || !pid || !sig || o !== link.razorpay_order_id || !verifyGuestSignature(o, pid, sig)) return NextResponse.json({ error: 'Payment verification failed' }, { status: 400 });
+      if (!rzp || !process.env.RAZORPAY_KEY_ID1 || !process.env.RAZORPAY_KEY_SECRET1 || !o || !pid || !sig || o !== link.razorpay_order_id || !verifyApplicationSignature(o, pid, sig)) return NextResponse.json({ error: 'Payment verification failed' }, { status: 400 });
       const payment = await rzp.payments.fetch(pid);
       if (payment.status !== 'captured' || Number(payment.amount) !== Math.round(Number(link.amount) * 100)) return NextResponse.json({ error: 'Payment is not captured or amount mismatch' }, { status: 400 });
       await db.execute("UPDATE guest_payment_links SET status='PAID',razorpay_payment_id=?,paid_at=CURRENT_TIMESTAMP WHERE token=?", [pid, token]);

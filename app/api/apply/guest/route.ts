@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { db } from '@/lib/db';
 import { generateAppId } from '@/lib/helpers';
 
@@ -20,7 +21,11 @@ export async function POST(req: Request) {
     const effectiveCategory = (category || 'Special Guest').toString().trim();
 
     if (!effectiveFullName || !effectiveEmail || !effectiveWhatsapp || !effectiveCity) {
-      return NextResponse.json({ error: 'Please complete all required fields' }, { status: 400 });
+      await db.execute("CREATE TABLE IF NOT EXISTS guest_payment_links (token TEXT PRIMARY KEY, app_id TEXT NOT NULL, amount NUMERIC(10,2) NOT NULL, status TEXT NOT NULL DEFAULT 'PENDING', razorpay_order_id TEXT, razorpay_payment_id TEXT, created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, paid_at TIMESTAMPTZ)");
+    const token = `gstpay-${Date.now().toString(36)}-${crypto.randomBytes(18).toString('hex')}`;
+    await db.execute("INSERT INTO guest_payment_links (token, app_id, amount, status) VALUES (?, ?, 49.00, 'PENDING')", [token, appId]);
+
+    return NextResponse.json({ error: 'Please complete all required fields' }, { status: 400 });
     }
 
     const appId = generateAppId('GST');
@@ -33,7 +38,7 @@ export async function POST(req: Request) {
         why_ggl, previous_shows, social_info, management_name, manager_contact,
         availability, preferred_date, travel_req, accommodation_req, special_req,
         important_info, profile_photo_url, press_kit_url, doc_url, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'SUBMITTED')
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PAYMENT_PENDING')
     `, [
       id, appId, effectiveFullName, (stageName || '').toString().trim(), (dob || '').toString().trim(),
       effectiveEmail, effectiveWhatsapp, (phone || '').toString().trim(),
@@ -54,9 +59,10 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Guest application submitted successfully.',
+      message: 'Guest application details saved. Pay ₹49 to submit your application.',
       appId,
-      status: 'SUBMITTED',
+      status: 'PAYMENT_PENDING',
+      paymentUrl: `/guest-payment/${token}`,
     });
   } catch (err: any) {
     console.error('Error submitting guest application:', err);

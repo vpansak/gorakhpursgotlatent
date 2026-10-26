@@ -108,12 +108,17 @@ export default function PerformerApplyClient() {
       });
 
       const data = await parseResponse(res);
-      if (data.success && data.paymentUrl) {
-        // Continue to Razorpay; the application is only finalized after payment verification.
-        window.location.href = data.paymentUrl + (data.paymentUrl.includes('?') ? '&' : '?') + 'autopay=1';
+      if (data.success && data.appId) {
+        assignedAppId = data.appId;
+        const messageText = constructWhatsAppMessage(formData, assignedAppId);
+        const waUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(messageText)}`;
+        setSubmittedAppId(assignedAppId);
+        setGeneratedWhatsAppUrl(waUrl);
+        setSubmitted(true);
+        window.location.href = waUrl;
         return;
       } else {
-        throw new Error(data.error || 'Unable to start the application payment. Please try again.');
+        throw new Error(data.error || 'Unable to submit the application. Please try again.');
       }
     } catch (err: any) {
       console.error('Performer application submit failed:', err);
@@ -198,7 +203,7 @@ export default function PerformerApplyClient() {
     <div className="py-5 px-4 sm:px-6 max-w-2xl mx-auto space-y-4">
       <div className="text-center">
         <h1 className="text-2xl sm:text-3xl font-black text-white">Performer Application</h1>
-        <p className="text-xs text-slate-400 mt-1">Episode 2 • ₹29 application fee • 18+ only</p>
+        <p className="text-xs text-slate-400 mt-1">Episode 2 • FREE APPLICATION • 18+ only</p>
       </div>
 
       {error && (
@@ -350,7 +355,7 @@ export default function PerformerApplyClient() {
           ) : (
             <>
               <WhatsAppIcon className="w-6 h-6 fill-current" />
-              CONTINUE TO PAY ₹29 & APPLY
+              SUBMIT FREE APPLICATION
               <ArrowRight className="w-5 h-5" />
             </>
           )}

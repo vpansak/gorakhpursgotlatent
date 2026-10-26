@@ -143,6 +143,7 @@ export default async function HomePage() {
             <div className="mt-4 flex flex-col sm:flex-row justify-center gap-3">
               <Link href="/apply/performer" className="home-primary-btn">REGISTER AS PERFORMER <ChevronRight className="h-4 w-4" /></Link>
               <a href="https://wa.me/918423858424" target="_blank" rel="noreferrer" className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-emerald-400/40 px-5 py-3 text-sm font-black text-emerald-300 transition hover:bg-emerald-400/10">SEND CLIP ON WHATSAPP</a>
+              <Link href="/performer-policy" className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-amber-400/50 bg-amber-400/10 px-5 py-3 text-sm font-black text-amber-200 transition hover:bg-amber-400/20">READ POLICY</Link>
             </div>
           </div>
         </div>

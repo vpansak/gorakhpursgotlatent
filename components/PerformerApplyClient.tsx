@@ -110,7 +110,7 @@ export default function PerformerApplyClient() {
       const data = await parseResponse(res);
       if (data.success && data.paymentUrl) {
         // Continue to Razorpay; the application is only finalized after payment verification.
-        window.location.href = data.paymentUrl;
+        window.location.href = data.paymentUrl + (data.paymentUrl.includes('?') ? '&' : '?') + 'autopay=1';
         return;
       } else {
         throw new Error(data.error || 'Unable to start the application payment. Please try again.');

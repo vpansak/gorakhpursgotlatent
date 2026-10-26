@@ -341,7 +341,7 @@ export default function PerformerApplyClient() {
 
         <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center">
           <p className="text-xs font-bold text-amber-200">
-            Pay the one-time ₹29 application fee securely through Razorpay. After payment verification, you can continue to WhatsApp to send your performance clip to {DISPLAY_PHONE}.
+            Application is completely free (₹0). After submitting the form, continue to WhatsApp to send your performance clip to {DISPLAY_PHONE}.
           </p>
         </div>
 

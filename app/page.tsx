@@ -3,6 +3,9 @@ import Link from 'next/link';
 import CountdownTimer from '@/components/CountdownTimer';
 import { EPISODE_2 } from '@/lib/episode2';
 import DrivePhotoSlider from '@/components/DrivePhotoSlider';
+import InstagramShowcase from '@/components/InstagramShowcase';
+import instagramSnapshot from '@/data/instagram-snapshot.json';
+import type { InstagramFeed } from '@/lib/instagram-types';
 import { db } from '@/lib/db';
 import {
   Ticket, Sparkles, UserCheck, CheckCircle2, ShieldCheck, ChevronRight,
@@ -319,6 +322,7 @@ export default async function HomePage() {
       </section>
 
       {/* GGL PHOTO GALLERY */}
+      <InstagramShowcase initialFeed={instagramSnapshot as InstagramFeed} />
       <section className="home-section px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-8">

@@ -36,19 +36,37 @@ export async function GET(_req: Request, ctx: { params: Promise<{ token: string 
 
     const payment = rows[0];
 
-    // If already marked paid in performer_applications, sync link status
-    if (payment.status !== 'PAID' && payment.app_id) {
+    // Reconcile both directions so a partially completed verification cannot
+    // leave the payment link PAID while the application remains PAYMENT_PENDING.
+    if (payment.app_id) {
       const app = await db.queryOne(
-        'SELECT payment_status, payment_id FROM performer_applications WHERE app_id = ?',
+        'SELECT payment_status, payment_id, order_id FROM performer_applications WHERE app_id = ?',
         [payment.app_id]
       );
-      if (app?.payment_status === 'PAID') {
+
+      if (payment.status !== 'PAID' && app?.payment_status === 'PAID') {
         await db.execute(
           "UPDATE performer_payment_links SET status = 'PAID', razorpay_payment_id = COALESCE(razorpay_payment_id, ?) WHERE token = ?",
           [app.payment_id || null, token]
         );
         payment.status = 'PAID';
         payment.razorpay_payment_id = payment.razorpay_payment_id || app.payment_id || null;
+      } else if (payment.status === 'PAID' && app?.payment_status !== 'PAID') {
+        // Only trust the server-side payment link's PAID state; never use
+        // browser-provided payment details for this repair.
+        await db.execute(
+          `UPDATE performer_applications
+           SET payment_status = 'PAID',
+               payment_amount = ?,
+               payment_id = COALESCE(?, payment_id),
+               order_id = COALESCE(?, order_id),
+               payment_verified_at = COALESCE(payment_verified_at, CURRENT_TIMESTAMP),
+               application_status = 'SUBMITTED',
+               status = 'SUBMITTED',
+               updated_at = CURRENT_TIMESTAMP
+           WHERE app_id = ?`,
+          [payment.amount, payment.razorpay_payment_id || null, app.order_id || null, payment.app_id]
+        );
       }
     }
 

@@ -14,61 +14,62 @@ type LeadCaptureOptions = {
 };
 
 function hasMeaningfulValue(value: any): boolean {
-  if (value === null || value === undefined) return false;
-  if (typeof value === 'boolean') return false;
-  if (typeof value === 'number') return false;
+  if (value === null || value === undefined || typeof value === 'boolean' || typeof value === 'number') return false;
   if (Array.isArray(value)) return value.some(hasMeaningfulValue);
   if (typeof value === 'object') return Object.values(value).some(hasMeaningfulValue);
   return String(value).trim().length > 0;
 }
 
 function hasUserEnteredData(data: Record<string, any>): boolean {
-  // Ignore form defaults and consent toggles; only capture when a visitor has typed/selectively entered details.
   const ignored = new Set(['duration', 'budget', 'termsAccepted']);
   return Object.entries(data).some(([key, value]) => !ignored.has(key) && hasMeaningfulValue(value));
 }
 
 export function useLeadCapture(options: LeadCaptureOptions) {
+  // A unique ID per mounted application form prevents different applicants in the same tab
+  // from overwriting each other's leads.
   const leadIdRef = useRef<string>('');
+  if (!leadIdRef.current && typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    leadIdRef.current = `lead_session_${crypto.randomUUID()}`;
+  }
+
+  const latestRef = useRef(options);
+  latestRef.current = options;
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    let id = sessionStorage.getItem(`ggl_lead_session_${options.source}`);
-    if (!id) {
-      id = `lead_session_${crypto.randomUUID()}`;
-      sessionStorage.setItem(`ggl_lead_session_${options.source}`, id);
-    }
-    leadIdRef.current = id;
-  }, []);
-
-  useEffect(() => {
-    const data = options.data || {};
-    const hasInput = hasUserEnteredData(data);
-    if (!hasInput) return;
-
-    const timer = window.setTimeout(() => {
+    const saveLead = (status: 'IN_PROGRESS' | 'ABANDONED') => {
+      const current = latestRef.current;
+      const data = current.data || {};
+      if (!hasUserEnteredData(data)) return;
       const payload = {
         leadId: leadIdRef.current || undefined,
-        customerName: options.customerName || '',
-        mobile: options.mobile || '',
-        email: options.email || '',
-        instagramId: options.instagramId || '',
-        dob: options.dob || '',
-        quantity: options.quantity || 1,
-        source: options.source,
-        status: 'IN_PROGRESS',
+        customerName: current.customerName || '',
+        mobile: current.mobile || '',
+        email: current.email || '',
+        instagramId: current.instagramId || '',
+        dob: current.dob || '',
+        quantity: current.quantity || 1,
+        source: current.source,
+        status,
         data,
       };
-
-      fetch('/api/leads/track', {
+      return fetch('/api/leads/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
         keepalive: true,
-      }).catch(() => {});
-    }, 700);
+      }).catch((error) => {
+        console.error('Could not save application lead:', error);
+      });
+    };
 
-    return () => window.clearTimeout(timer);
+    const timer = window.setTimeout(() => { void saveLead('IN_PROGRESS'); }, 350);
+    const flush = () => { void saveLead('ABANDONED'); };
+    window.addEventListener('pagehide', flush);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener('pagehide', flush);
+    };
   }, [
     options.source,
     options.customerName,
@@ -79,30 +80,4 @@ export function useLeadCapture(options: LeadCaptureOptions) {
     options.quantity,
     JSON.stringify(options.data),
   ]);
-
-  useEffect(() => {
-    const flush = () => {
-      const data = options.data || {};
-      if (!hasUserEnteredData(data)) return;
-      fetch('/api/leads/track', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          leadId: leadIdRef.current || undefined,
-          customerName: options.customerName || '',
-          mobile: options.mobile || '',
-          email: options.email || '',
-          instagramId: options.instagramId || '',
-          dob: options.dob || '',
-          quantity: options.quantity || 1,
-          source: options.source,
-          status: 'ABANDONED',
-          data,
-        }),
-        keepalive: true,
-      }).catch(() => {});
-    };
-    window.addEventListener('pagehide', flush);
-    return () => window.removeEventListener('pagehide', flush);
-  }, [options.source, JSON.stringify(options.data), options.customerName, options.mobile, options.email, options.instagramId, options.dob, options.quantity]);
 }

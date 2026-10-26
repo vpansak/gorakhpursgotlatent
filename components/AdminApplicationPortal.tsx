@@ -1267,27 +1267,35 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                                   <span className="text-[9px] text-slate-400 font-mono block">Direct Entry (No Payment)</span>
                                 </>
                               ) : (
-                                <>
-                                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 inline-flex items-center gap-1">
-                                    <CheckCircle2 className="w-3 h-3 text-emerald-400" /> ₹{item.payment_amount} PAID
-                                  </span>
-                                  {item.payment_id ? (
-                                    <div className="flex items-center gap-1">
-                                      <span className="text-[10px] font-mono text-amber-300 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800 truncate max-w-[130px]" title={item.payment_id}>
-                                        {item.payment_id}
-                                      </span>
-                                      <button
-                                        onClick={() => copyToClipboard(item.payment_id)}
-                                        className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
-                                        title="Copy Payment ID"
-                                      >
-                                        {copiedId === item.payment_id ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                                      </button>
-                                    </div>
-                                  ) : (
-                                    <span className="text-[9px] text-slate-500 font-mono block">Order: {item.order_id || 'N/A'}</span>
-                                  )}
-                                </>
+                                (() => {
+                                  // ₹29 is shown as PAID only when server-side verification matched a PAID payment link and Razorpay Payment ID.
+                                  // Preserve the legacy ₹799 PAID records as they are.
+                                  const isVerified29 = Number(item.payment_amount) === 29 && Boolean(item.verified_payment_id);
+                                  const isLegacy799Paid = Number(item.payment_amount) === 799 && (item.payment_status === 'PAID' || item.payment_status === 'PAYMENT_VERIFIED') && Boolean(item.payment_id);
+                                  if (isVerified29 || isLegacy799Paid) {
+                                    const displayPaymentId = isVerified29 ? item.verified_payment_id : item.payment_id;
+                                    return (
+                                      <>
+                                        <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 inline-flex items-center gap-1">
+                                          <CheckCircle2 className="w-3 h-3 text-emerald-400" /> ₹{item.payment_amount} PAID
+                                        </span>
+                                        <div className="flex items-center gap-1">
+                                          <span className="text-[10px] font-mono text-amber-300 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800 truncate max-w-[130px]" title={displayPaymentId}>
+                                            {displayPaymentId}
+                                          </span>
+                                          <button
+                                            onClick={() => copyToClipboard(displayPaymentId)}
+                                            className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                                            title="Copy Payment ID"
+                                          >
+                                            {copiedId === displayPaymentId ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                                          </button>
+                                        </div>
+                                      </>
+                                    );
+                                  }
+                                  return <span className="text-[10px] text-amber-300/80 font-semibold">PAYMENT PENDING</span>;
+                                })()
                               )}
                               {activeTab === 'performer' && item.payment_status !== 'PAID' && item.payment_status !== 'PAYMENT_VERIFIED' && (
                                 <button onClick={async () => { const waTab = window.open('about:blank', '_blank'); if (!waTab) { window.alert('Please allow pop-ups for this site, then click Get Paid again.'); return; } waTab.document.title = 'Opening WhatsApp…'; waTab.document.body.innerHTML = '<p style="font-family:system-ui;padding:24px">Generating payment link and opening WhatsApp…</p>'; try { const res = await fetch('/api/malik/performer-payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: item.app_id || item.id, amount: 799 }) }); const json = await res.json(); if (!res.ok || !json.success || !json.whatsappUrl) throw new Error(json.error || 'Could not create payment link'); waTab.location.href = json.whatsappUrl; } catch (e: any) { waTab.close(); window.alert(e.message || 'Could not create payment link'); } }} className="mt-2 px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-[10px] font-extrabold inline-flex items-center gap-1.5" title="Create ₹799 payment link and immediately open WhatsApp"><CreditCard className="w-3 h-3" /> Get Paid ₹799</button>

@@ -139,11 +139,10 @@ export default async function HomePage() {
           <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">Gorakhpur’s Got Latent Episode 2 event date has been postponed. The revised date will be announced through our official website and social media channels.</p>
           <div className="mt-5 rounded-xl border border-emerald-400/25 bg-emerald-400/5 p-4">
             <p className="text-lg font-black uppercase text-emerald-300">🎉 Performer Registration Is Live Now</p>
-            <p className="mt-2 text-sm leading-6 text-slate-200">Episode 2 auditions are open. A one-time ₹29 application fee applies. Apply online, then send your performance clip on WhatsApp to <strong className="text-white">+91 8423858424</strong>.</p>
+            <p className="mt-2 text-sm leading-6 text-slate-200">Episode 2 auditions are open. Performer applications are completely FREE (₹0). Apply online, then send your performance clip on WhatsApp to <strong className="text-white">+91 8423858424</strong>.</p>
             <div className="mt-4 flex flex-col sm:flex-row justify-center gap-3">
               <Link href="/apply/performer" className="home-primary-btn">REGISTER AS PERFORMER <ChevronRight className="h-4 w-4" /></Link>
               <a href="https://wa.me/918423858424" target="_blank" rel="noreferrer" className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-emerald-400/40 px-5 py-3 text-sm font-black text-emerald-300 transition hover:bg-emerald-400/10">SEND CLIP ON WHATSAPP</a>
-              <Link href="/performer-policy" className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-amber-400/50 bg-amber-400/10 px-5 py-3 text-sm font-black text-amber-200 transition hover:bg-amber-400/20">READ POLICY</Link>
             </div>
           </div>
         </div>

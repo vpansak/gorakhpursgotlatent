@@ -15,13 +15,6 @@ export async function GET(_req: Request, ctx: { params: Promise<{ token: string 
     const rows = await db.query(`SELECT l.token,l.amount,l.status,l.razorpay_payment_id,g.app_id,g.full_name,g.stage_name,g.email,g.whatsapp,g.city,g.profession,g.category,g.instagram_url,g.youtube_url,g.why_ggl FROM guest_payment_links l JOIN guest_applications g ON g.app_id=l.app_id WHERE l.token=? LIMIT 1`, [token]);
     if (!rows[0]) return NextResponse.json({ error: 'Guest payment link not found' }, { status: 404 });
     const payment = rows[0];
-    if (payment.status !== 'PAID') {
-      const app = await db.queryOne("SELECT status FROM guest_applications WHERE app_id=?", [payment.app_id]);
-      if (app?.status === 'SUBMITTED') {
-        await db.execute("UPDATE guest_payment_links SET status='PAID' WHERE token=?", [token]);
-        payment.status = 'PAID';
-      }
-    }
     return NextResponse.json({ success: true, payment, keyId: process.env.RAZORPAY_KEY_ID || '' });
   } catch (e: any) {
     return NextResponse.json({ error: e.message || 'Unable to load guest payment details' }, { status: 500 });

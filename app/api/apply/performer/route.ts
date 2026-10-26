@@ -1,5 +1,7 @@
-import { NextResponse } from 'next/server';
+import crypto from 'crypto';
+import { NextResponse, after } from 'next/server';
 import { db } from '@/lib/db';
+import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
 
 export async function POST(req: Request) {
@@ -21,9 +23,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Please enter a valid Instagram username, for example @your_handle.' }, { status: 400 });
     }
     const formattedInstagram = normalizedInstagram ? `@${normalizedInstagram}` : '';
-    if (!effectiveFullName || !effectiveEmail || !effectiveMobile || !effectiveEmail.includes('@')) {
-      return NextResponse.json({ error: 'Full name, valid email, and mobile number are required.' }, { status: 400 });
-    }
 
     const appId = generateAppId('PER');
     const id = `per-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -37,7 +36,7 @@ export async function POST(req: Request) {
         performance_category, performance_title, performance_description, performance_type,
         performer_count, performance_duration, performance_language, instagram_url,
         city, age, interested_in_talent_trip, payment_status, payment_amount, application_status, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'NOT_REQUIRED', '0.00', 'SUBMITTED', 'SUBMITTED')
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', '29.00', 'PAYMENT_PENDING', 'PAYMENT_PENDING')
     `, [
       id,
       appId,
@@ -63,16 +62,24 @@ export async function POST(req: Request) {
     try {
       await db.execute(`
         INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
-        VALUES (?, 'PERFORMER', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Performer application submitted for free')
+        VALUES (?, 'PERFORMER', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Performer Audition Form Submission')
       `, [`his-${Date.now()}`, appId]);
     } catch (e) {}
 
+    // Create a unique payment link for the fixed ₹29 performer application fee.
+    const token = `per-${Date.now().toString(36)}-${crypto.randomBytes(18).toString('hex')}`;
+    await db.execute("CREATE TABLE IF NOT EXISTS performer_payment_links (token TEXT PRIMARY KEY, app_id TEXT NOT NULL, amount NUMERIC(10,2) NOT NULL, status TEXT NOT NULL DEFAULT 'PENDING', razorpay_order_id TEXT, razorpay_payment_id TEXT, created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, paid_at TIMESTAMPTZ)");
+    await db.execute(
+      "INSERT INTO performer_payment_links (token, app_id, amount, status) VALUES (?, ?, 29.00, 'PENDING')",
+      [token, appId]
+    );
+
     return NextResponse.json({
       success: true,
-      message: 'Your performer application has been submitted successfully. No application fee is required.',
+      message: 'Application details saved. Complete the ₹29 payment to submit your application.',
       appId,
-      status: 'SUBMITTED',
-      paymentAmount: 0,
+      status: 'PAYMENT_PENDING',
+      paymentUrl: `/performer-payment/${token}`,
     });
   } catch (err: any) {
     console.error('Error submitting performer application:', err);

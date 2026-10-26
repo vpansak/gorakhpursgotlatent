@@ -2,39 +2,62 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { sendGenericApplicationEmails } from '@/lib/emailjs';
-import Razorpay from 'razorpay';
-import crypto from 'crypto';
-function getApplicationRazorpay() {
-  const key_id = process.env.RAZORPAY_KEY_ID1 || '';
-  const key_secret = process.env.RAZORPAY_KEY_SECRET1 || '';
-  if (!key_id || !key_secret) return null;
-  try { return new Razorpay({ key_id, key_secret }); } catch { return null; }
-}
-function isApplicationRazorpayConfigured(): boolean {
-  return Boolean(process.env.RAZORPAY_KEY_ID1 && process.env.RAZORPAY_KEY_SECRET1);
-}
-function verifyApplicationSignature(orderId: string, paymentId: string, signature: string): boolean {
-  const secret = process.env.RAZORPAY_KEY_SECRET1 || '';
-  if (!secret || !signature) return false;
-  const expected = crypto.createHmac('sha256', secret).update(orderId + '|' + paymentId).digest('hex');
-  const a = Buffer.from(expected, 'hex'); const b = Buffer.from(signature, 'hex');
-  return a.length === b.length && crypto.timingSafeEqual(a, b);
-}
-
+import {
+  getApplicationRazorpayKeyId,
+  getApplicationRazorpayInstance,
+  isApplicationRazorpayConfigured,
+  verifyApplicationRazorpaySignature
+} from '@/lib/razorpay';
 
 async function ensureTable() {
-  await db.execute("CREATE TABLE IF NOT EXISTS guest_payment_links (token TEXT PRIMARY KEY, app_id TEXT NOT NULL, amount NUMERIC(10,2) NOT NULL, status TEXT NOT NULL DEFAULT 'PENDING', razorpay_order_id TEXT, razorpay_payment_id TEXT, created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, paid_at TIMESTAMPTZ)");
+  await db.execute(
+    "CREATE TABLE IF NOT EXISTS guest_payment_links (token TEXT PRIMARY KEY, app_id TEXT NOT NULL, amount NUMERIC(10,2) NOT NULL, status TEXT NOT NULL DEFAULT 'PENDING', razorpay_order_id TEXT, razorpay_payment_id TEXT, created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, paid_at TIMESTAMPTZ)"
+  );
 }
 
 export async function GET(_req: Request, ctx: { params: Promise<{ token: string }> }) {
   try {
     await ensureTable();
     const { token } = await ctx.params;
-    const rows = await db.query(`SELECT l.token,l.amount,l.status,l.razorpay_payment_id,g.app_id,g.full_name,g.stage_name,g.email,g.whatsapp,g.city,g.profession,g.category,g.instagram_url,g.youtube_url,g.why_ggl FROM guest_payment_links l JOIN guest_applications g ON g.app_id=l.app_id WHERE l.token=? LIMIT 1`, [token]);
-    if (!rows[0]) return NextResponse.json({ error: 'Guest payment link not found' }, { status: 404 });
+    const rows = await db.query(
+      `SELECT l.token, l.amount, l.status, l.razorpay_payment_id,
+              g.app_id, g.full_name, g.stage_name, g.email, g.whatsapp,
+              g.city, g.profession, g.category, g.instagram_url, g.youtube_url, g.why_ggl
+       FROM guest_payment_links l
+       JOIN guest_applications g ON g.app_id = l.app_id
+       WHERE l.token = ? LIMIT 1`,
+      [token]
+    );
+
+    if (!rows[0]) {
+      return NextResponse.json({ error: 'Guest payment link not found' }, { status: 404 });
+    }
+
     const payment = rows[0];
-    return NextResponse.json({ success: true, payment, keyId: process.env.RAZORPAY_KEY_ID1 || '' });
+
+    // If already marked paid in guest_applications, sync link status
+    if (payment.status !== 'PAID' && payment.app_id) {
+      const app = await db.queryOne(
+        'SELECT payment_status, payment_id FROM guest_applications WHERE app_id = ?',
+        [payment.app_id]
+      );
+      if (app?.payment_status === 'PAID') {
+        await db.execute(
+          "UPDATE guest_payment_links SET status = 'PAID', razorpay_payment_id = COALESCE(razorpay_payment_id, ?) WHERE token = ?",
+          [app.payment_id || null, token]
+        );
+        payment.status = 'PAID';
+        payment.razorpay_payment_id = payment.razorpay_payment_id || app.payment_id || null;
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      payment,
+      keyId: getApplicationRazorpayKeyId()
+    });
   } catch (e: any) {
+    console.error('Error loading guest payment details:', e);
     return NextResponse.json({ error: e.message || 'Unable to load guest payment details' }, { status: 500 });
   }
 }
@@ -44,43 +67,129 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
     await ensureTable();
     const { token } = await ctx.params;
     const b = await req.json();
-    const link = await db.queryOne('SELECT * FROM guest_payment_links WHERE token=?', [token]);
-    if (!link) return NextResponse.json({ error: 'Guest payment link not found' }, { status: 404 });
-    if (link.status === 'PAID') return NextResponse.json({ success: true, status: 'PAID' });
-    const rzp = getApplicationRazorpay();
+
+    const link = await db.queryOne('SELECT * FROM guest_payment_links WHERE token = ?', [token]);
+    if (!link) {
+      return NextResponse.json({ error: 'Guest payment link not found' }, { status: 404 });
+    }
+
+    if (link.status === 'PAID') {
+      return NextResponse.json({ success: true, status: 'PAID' });
+    }
+
+    const rzp = getApplicationRazorpayInstance();
+
     if (b.action === 'create-order') {
-      if (!rzp || !isApplicationRazorpayConfigured()) return NextResponse.json({ error: 'Online payment is temporarily unavailable. Please contact GGL support.' }, { status: 503 });
+      if (!rzp || !isApplicationRazorpayConfigured()) {
+        console.error('Application Razorpay not configured for guest payment.');
+        return NextResponse.json(
+          { error: 'Online payment is temporarily unavailable. Please contact GGL support.' },
+          { status: 503 }
+        );
+      }
+
+      const orderAmountPaise = Math.round(Number(link.amount) * 100);
       const order = await rzp.orders.create({
-        amount: Math.round(Number(link.amount) * 100), currency: 'INR',
+        amount: orderAmountPaise,
+        currency: 'INR',
         receipt: ('gglguest' + token).slice(0, 40),
         notes: { app_id: link.app_id, guest_payment_token: token }
       });
-      await db.execute('UPDATE guest_payment_links SET razorpay_order_id=? WHERE token=?', [order.id, token]);
-      const p = await db.queryOne('SELECT full_name,email,whatsapp FROM guest_applications WHERE app_id=?', [link.app_id]);
-      return NextResponse.json({ success: true, orderId: order.id, amount: Math.round(Number(link.amount) * 100), currency: 'INR', keyId: process.env.RAZORPAY_KEY_ID1, name: p?.full_name || 'GGL Guest', email: p?.email || '', phone: p?.whatsapp || '' });
+
+      await db.execute('UPDATE guest_payment_links SET razorpay_order_id = ? WHERE token = ?', [order.id, token]);
+      const p = await db.queryOne('SELECT full_name, email, whatsapp FROM guest_applications WHERE app_id = ?', [link.app_id]);
+
+      return NextResponse.json({
+        success: true,
+        orderId: order.id,
+        amount: orderAmountPaise,
+        currency: 'INR',
+        keyId: getApplicationRazorpayKeyId(),
+        name: p?.full_name || 'GGL Guest',
+        email: p?.email || '',
+        phone: p?.whatsapp || ''
+      });
     }
+
     if (b.action === 'verify') {
-      const o = b.razorpay_order_id, pid = b.razorpay_payment_id, sig = b.razorpay_signature;
-      if (!rzp || !process.env.RAZORPAY_KEY_ID1 || !process.env.RAZORPAY_KEY_SECRET1 || !o || !pid || !sig || o !== link.razorpay_order_id || !verifyApplicationSignature(o, pid, sig)) return NextResponse.json({ error: 'Payment verification failed' }, { status: 400 });
+      const o = b.razorpay_order_id;
+      const pid = b.razorpay_payment_id;
+      const sig = b.razorpay_signature;
+
+      if (!rzp || !isApplicationRazorpayConfigured() || !o || !pid || !sig || o !== link.razorpay_order_id || !verifyApplicationRazorpaySignature(o, pid, sig)) {
+        console.error('Guest payment signature verification failed for token:', token, 'orderId:', o);
+        return NextResponse.json({ error: 'Payment verification failed' }, { status: 400 });
+      }
+
       const payment = await rzp.payments.fetch(pid);
-      if (payment.status !== 'captured' || Number(payment.amount) !== Math.round(Number(link.amount) * 100)) return NextResponse.json({ error: 'Payment is not captured or amount mismatch' }, { status: 400 });
-      await db.execute("UPDATE guest_payment_links SET status='PAID',razorpay_payment_id=?,paid_at=CURRENT_TIMESTAMP WHERE token=?", [pid, token]);
-      await db.execute("UPDATE guest_applications SET status='SUBMITTED' WHERE app_id=?", [link.app_id]);
-      await db.execute("INSERT INTO application_status_history (id,app_type,app_id,old_status,new_status,changed_by,reason) VALUES (?, 'GUEST', ?, 'PAYMENT_PENDING', 'SUBMITTED', 'SYSTEM', '₹49 Razorpay payment verified')", [`his-${Date.now()}`, link.app_id]);
-      const p = await db.queryOne('SELECT * FROM guest_applications WHERE app_id=?', [link.app_id]);
+      const expectedAmountPaise = Math.round(Number(link.amount) * 100);
+
+      if (payment.status !== 'captured' || Number(payment.amount) !== expectedAmountPaise) {
+        console.error('Guest payment not captured or amount mismatch. Status:', payment.status, 'Amount:', payment.amount, 'Expected:', expectedAmountPaise);
+        return NextResponse.json({ error: 'Payment is not captured or amount mismatch' }, { status: 400 });
+      }
+
+      // Mark payment link as PAID
+      await db.execute(
+        "UPDATE guest_payment_links SET status = 'PAID', razorpay_payment_id = ?, paid_at = CURRENT_TIMESTAMP WHERE token = ?",
+        [pid, token]
+      );
+
+      // Update guest application status
+      await db.execute(
+        `UPDATE guest_applications
+         SET payment_status = 'PAID',
+             payment_amount = ?,
+             payment_id = ?,
+             order_id = ?,
+             payment_verified_at = CURRENT_TIMESTAMP,
+             status = 'SUBMITTED',
+             updated_at = CURRENT_TIMESTAMP
+         WHERE app_id = ?`,
+        [link.amount, pid, o, link.app_id]
+      );
+
+      await db.execute(
+        "INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason) VALUES (?, 'GUEST', ?, 'PAYMENT_PENDING', 'SUBMITTED', 'SYSTEM', '₹49 Razorpay payment verified')",
+        [`his-${Date.now()}`, link.app_id]
+      ).catch(() => {});
+
+      const p = await db.queryOne('SELECT * FROM guest_applications WHERE app_id = ?', [link.app_id]);
       if (p) {
         const emailResult = await sendGenericApplicationEmails({
-          applicationType: 'GUEST', applicationId: p.app_id, name: p.full_name, email: p.email,
-          mobile: p.whatsapp, summary: `Profession: ${p.profession}\nCategory: ${p.category}\nCity: ${p.city}\nStage Name: ${p.stage_name || 'N/A'}\nPayment: ₹49 PAID\nPayment ID: ${pid}`
+          applicationType: 'GUEST',
+          applicationId: p.app_id,
+          name: p.full_name,
+          email: p.email,
+          mobile: p.whatsapp,
+          summary: `Profession: ${p.profession}\nCategory: ${p.category}\nCity: ${p.city}\nStage Name: ${p.stage_name || 'N/A'}\nPayment: ₹${Number(link.amount).toFixed(0)} PAID\nPayment ID: ${pid}`
+        }).catch((err: any) => {
+          console.warn('Guest email error:', err);
+          return { success: false, message: err?.message };
         });
-        saveIndividualEntryToS3('panel', p.app_id, { ...p, status: 'SUBMITTED', payment_status: 'PAID', payment_amount: 49, payment_id: pid, created_at: new Date().toISOString() }).catch(err => console.error('Guest S3 save error:', err));
-        syncSheetsToS3().catch(err => console.error('Guest sheets sync error:', err));
-        if (!emailResult.success) console.warn('Guest application email warning:', emailResult.message);
+
+        saveIndividualEntryToS3('panel', p.app_id, {
+          ...p,
+          status: 'SUBMITTED',
+          payment_status: 'PAID',
+          payment_amount: Number(link.amount) || 49,
+          payment_id: pid,
+          created_at: new Date().toISOString()
+        }).catch((err) => console.error('Guest S3 save error:', err));
+
+        syncSheetsToS3().catch((err) => console.error('Guest sheets sync error:', err));
+
+        if (emailResult && !emailResult.success) {
+          console.warn('Guest application email warning:', emailResult.message);
+        }
       }
+
       return NextResponse.json({ success: true, status: 'PAID' });
     }
+
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
   } catch (e: any) {
+    console.error('Guest payment processing error:', e);
     return NextResponse.json({ error: e.message || 'Guest payment processing failed' }, { status: 500 });
   }
 }

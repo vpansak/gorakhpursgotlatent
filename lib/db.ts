@@ -16,6 +16,7 @@ function getSqlClient() {
 
 declare global {
   var _schemaInitPromise: Promise<void> | undefined;
+  var _isSchemaReady: boolean | undefined;
 }
 
 /**
@@ -27,7 +28,7 @@ export function normalizeSql(sql: string): string {
   return sql.replace(/\?/g, () => `$${index++}`);
 }
 
-function withTimeout<T>(promise: Promise<T>, ms: number = 1800): Promise<T> {
+function withTimeout<T>(promise: Promise<T>, ms: number = 10000): Promise<T> {
   return Promise.race([
     promise,
     new Promise<T>((_, reject) =>
@@ -39,7 +40,7 @@ function withTimeout<T>(promise: Promise<T>, ms: number = 1800): Promise<T> {
 /**
  * Executes queries using stateless HTTP client with automatic retry logic for transient errors
  */
-async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], retries = 1): Promise<T[]> {
+async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], retries = 2): Promise<T[]> {
   const client = getSqlClient();
   if (!client) {
     return [];
@@ -49,16 +50,16 @@ async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], re
   let lastErr: any;
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const rows = await withTimeout(client.query(normalized, params), 1800);
+      const rows = await withTimeout(client.query(normalized, params), 10000);
       return (rows || []) as T[];
     } catch (err: any) {
       lastErr = err;
       const msg = (err?.message || String(err)).toLowerCase();
-      if (msg.includes('authentication') || msg.includes('password') || msg.includes('timed out')) {
-        break; // Fail fast on auth error or timeout, avoid hanging
+      if (msg.includes('authentication') || msg.includes('password')) {
+        break; // Fail fast on auth error, avoid hanging
       }
       if (attempt < retries) {
-        await new Promise((r) => setTimeout(r, 50));
+        await new Promise((r) => setTimeout(r, 100 * attempt));
       }
     }
   }
@@ -91,11 +92,23 @@ export interface AppDatabase {
  * Ensures all required PostgreSQL tables exist in Neon DB
  */
 export async function ensureDatabaseSchema() {
+  if (global._isSchemaReady) return;
   if (global._schemaInitPromise) return global._schemaInitPromise;
 
   global._schemaInitPromise = (async () => {
     const client = getSqlClient();
     if (!client) return;
+
+    try {
+      // Fast check: If tables are already initialized in Neon DB, skip heavy 30+ DDL migration queries
+      const check = await client.query('SELECT 1 FROM performer_applications LIMIT 1').catch(() => null);
+      if (check && Array.isArray(check)) {
+        global._isSchemaReady = true;
+        return;
+      }
+    } catch {
+      // Tables not yet present, run full schema initialization
+    }
 
     try {
       await withTimeout((async () => {
@@ -422,6 +435,13 @@ export async function ensureDatabaseSchema() {
       try { await client.query(`ALTER TABLE guest_applications ADD COLUMN IF NOT EXISTS youtube_url TEXT;`); } catch {}
       try { await client.query(`ALTER TABLE guest_applications ADD COLUMN IF NOT EXISTS profile_photo_url TEXT;`); } catch {}
       try { await client.query(`ALTER TABLE guest_applications ADD COLUMN IF NOT EXISTS press_kit_url TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE guest_applications ADD COLUMN IF NOT EXISTS payment_status TEXT DEFAULT 'PENDING';`); } catch {}
+      try { await client.query(`ALTER TABLE guest_applications ADD COLUMN IF NOT EXISTS payment_id TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE guest_applications ADD COLUMN IF NOT EXISTS order_id TEXT;`); } catch {}
+      try { await client.query(`ALTER TABLE guest_applications ADD COLUMN IF NOT EXISTS payment_amount NUMERIC(10,2) DEFAULT 49.00;`); } catch {}
+      try { await client.query(`ALTER TABLE guest_applications ADD COLUMN IF NOT EXISTS payment_verified_at TIMESTAMP WITH TIME ZONE;`); } catch {}
+      try { await client.query(`ALTER TABLE guest_applications DROP CONSTRAINT IF EXISTS guest_applications_status_check;`); } catch {}
+      try { await client.query(`ALTER TABLE guest_applications ADD CONSTRAINT guest_applications_status_check CHECK (status = ANY (ARRAY['PAYMENT_PENDING'::text, 'SUBMITTED'::text, 'UNDER REVIEW'::text, 'CONTACTED'::text, 'SHORTLISTED'::text, 'APPROVED'::text, 'SCHEDULED'::text, 'COMPLETED'::text, 'REJECTED'::text]));`); } catch {}
 
       // Seed default event and ticket categories if empty
       try {
@@ -438,7 +458,8 @@ export async function ensureDatabaseSchema() {
           ON CONFLICT (id) DO NOTHING;
         `);
       } catch {}
-      })(), 2500);
+      })(), 30000);
+      global._isSchemaReady = true;
     } catch (err) {
       console.warn('Schema init notice:', err);
     }

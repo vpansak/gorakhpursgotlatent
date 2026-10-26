@@ -1,6 +1,11 @@
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 
+// ============================================================================
+// Legacy / Ticket Booking Razorpay System (DO NOT TOUCH / UNTOUCHED)
+// Uses RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET
+// ============================================================================
+
 export function getRazorpayKeyId(): string {
   return process.env.RAZORPAY_KEY_ID || '';
 }
@@ -49,14 +54,14 @@ export function verifyWebhookSignature(body: string, signature: string, webhookS
   return expectedSignature === signature;
 }
 
-export async function processRazorpayRefund(
+export function processRazorpayRefund(
   paymentId: string,
   amountInRupees?: number,
   notes?: string
 ): Promise<{ success: boolean; refundId?: string; error?: string }> {
   const instance = getRazorpayInstance();
   if (!instance) {
-    return { success: false, error: 'Razorpay API credentials not configured on server' };
+    return Promise.resolve({ success: false, error: 'Razorpay API credentials not configured on server' });
   }
 
   try {
@@ -68,10 +73,66 @@ export async function processRazorpayRefund(
       refundOptions.notes = { reason: notes };
     }
 
-    const refund = await instance.payments.refund(paymentId, refundOptions);
-    return { success: true, refundId: refund.id };
+    return instance.payments.refund(paymentId, refundOptions).then((refund: any) => ({
+      success: true,
+      refundId: refund.id,
+    })).catch((err: any) => {
+      console.error('Razorpay Refund API Error:', err);
+      return { success: false, error: err?.error?.description || err.message || 'Refund failed' };
+    });
   } catch (err: any) {
     console.error('Razorpay Refund API Error:', err);
-    return { success: false, error: err?.error?.description || err.message || 'Refund failed' };
+    return Promise.resolve({ success: false, error: err?.error?.description || err.message || 'Refund failed' });
   }
+}
+
+// ============================================================================
+// Guest (₹49) & Performer (₹29) Application Payment System (ISOLATED)
+// Uses RAZORPAY_KEY_ID1 and RAZORPAY_KEY_SECRET1
+// ============================================================================
+
+export function getApplicationRazorpayKeyId(): string {
+  const envVal = (process.env.RAZORPAY_KEY_ID1 || '').trim();
+  // Safe fallback if env var is literal name "RAZORPAY_KEY_ID1" or not set
+  if (!envVal || envVal === 'RAZORPAY_KEY_ID1') {
+    return 'rzp_live_TsNW1CZgvmBXeM';
+  }
+  return envVal;
+}
+
+export function getApplicationRazorpayKeySecret(): string {
+  return (process.env.RAZORPAY_KEY_SECRET1 || '').trim();
+}
+
+export function getApplicationRazorpayInstance(): Razorpay | null {
+  const key_id = getApplicationRazorpayKeyId();
+  const key_secret = getApplicationRazorpayKeySecret();
+  if (!key_id || !key_secret) return null;
+  try {
+    return new Razorpay({ key_id, key_secret });
+  } catch (err) {
+    console.warn('Application Razorpay initialization notice:', err);
+    return null;
+  }
+}
+
+export function isApplicationRazorpayConfigured(): boolean {
+  return Boolean(getApplicationRazorpayKeyId() && getApplicationRazorpayKeySecret());
+}
+
+export function verifyApplicationRazorpaySignature(
+  orderId: string,
+  paymentId: string,
+  signature: string
+): boolean {
+  const secret = getApplicationRazorpayKeySecret();
+  if (!secret || !signature) return false;
+  const body = `${orderId}|${paymentId}`;
+  const expectedSignature = crypto
+    .createHmac('sha256', secret)
+    .update(body)
+    .digest('hex');
+  const a = Buffer.from(expectedSignature, 'hex');
+  const b = Buffer.from(signature, 'hex');
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }

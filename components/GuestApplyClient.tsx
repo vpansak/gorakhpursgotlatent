@@ -168,7 +168,7 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
     <div className="py-5 px-4 sm:px-6 max-w-3xl mx-auto space-y-4">
       <div className="text-center">
         <h1 className="text-2xl sm:text-3xl font-black text-white">Guest / Influencer Application</h1>
-        <p className="text-xs text-slate-400 mt-1">Guest judge • celebrity performer • creator • ₹100 application fee</p>
+        <p className="text-xs text-slate-400 mt-1">Guest judge • celebrity performer • creator • ₹49 application fee</p>
       </div>
 
       {error && <div className="p-4 rounded-xl bg-red-500/20 text-red-300 text-sm font-semibold">⚠️ {error}</div>}

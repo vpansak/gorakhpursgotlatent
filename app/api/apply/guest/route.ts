@@ -28,17 +28,6 @@ export async function POST(req: Request) {
     const id = `gst-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     const token = `gstpay-${Date.now().toString(36)}-${crypto.randomBytes(18).toString('hex')}`;
 
-    await db.execute(`CREATE TABLE IF NOT EXISTS guest_payment_links (
-      token TEXT PRIMARY KEY,
-      app_id TEXT NOT NULL,
-      amount NUMERIC(10,2) NOT NULL,
-      status TEXT NOT NULL DEFAULT 'PENDING',
-      razorpay_order_id TEXT,
-      razorpay_payment_id TEXT,
-      created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-      paid_at TIMESTAMPTZ
-    )`);
-
     await db.execute(`
       INSERT INTO guest_applications (
         id, app_id, full_name, stage_name, dob, email, whatsapp, phone, instagram_url,

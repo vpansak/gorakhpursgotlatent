@@ -25,8 +25,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Founders & Creators | Alok Singh & Naveen Varma - Gorakhpur's Got Latent",
-  description: "Meet Alok Singh and Naveen Varma, the co-founders and creators behind Gorakhpur's Got Latent, their roles, vision, technology, and entertainment platform.",
+  title: "Naveen Varma — Founder | Alok Singh — Co-Founder & Technical Head - Gorakhpur's Got Latent",
+  description: "Meet Naveen Varma, Founder and Show Creator, and Alok Singh, Co-Founder & Technical Head behind Gorakhpur's Got Latent, their roles, vision, technology, and entertainment platform.",
   authors: [{ name: "Naveen Varma", url: "https://gkpgotlatent.in/founder" }],
   creator: "Naveen Varma",
   publisher: "Gorakhpur's Got Latent",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Founders & Creators | Gorakhpur's Got Latent",
-    description: "Meet the people behind Gorakhpur's Got Latent: Alok Singh and Naveen Varma, their creative vision and technical contributions.",
+    description: "Meet the founder Naveen Varma and technical co-founder Alok Singh of Gorakhpur's Got Latent, their creative vision and technical contributions.",
     url: 'https://gkpgotlatent.in/founder',
     siteName: "Gorakhpur's Got Latent",
     images: [
@@ -166,32 +166,23 @@ export default function FounderPage() {
           <div className="mb-6 text-center">
             <p className="text-[10px] font-black uppercase tracking-[0.35em] text-red-400">GORAKHPUR'S GOT LATENT</p>
             <h1 className="mt-2 font-bebas text-5xl tracking-wide sm:text-7xl">FOUNDERS <span className="bg-gradient-to-r from-amber-200 to-orange-500 bg-clip-text text-transparent">&amp; CREATORS</span></h1>
-            <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-slate-400">Meet the people behind GGL's creative vision and digital platform.</p>
+            <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-slate-400">Meet Naveen Varma, Founder & Show Creator, and Alok Singh, Co-Founder & Technical Head of GGL.</p>
           </div>
           <div className="grid gap-5 md:grid-cols-2">
-            <article className="rounded-3xl border border-amber-400/25 bg-[#09090c] p-6 sm:p-8">
-              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-300">CO-FOUNDER &amp; TECHNICAL CREATOR</p>
-              <h2 className="mt-3 font-bebas text-4xl sm:text-5xl">ALOK SINGH</h2>
-              <p className="mt-4 text-sm leading-7 text-slate-300">Alok Singh contributes to Gorakhpur's Got Latent through its digital platform and technical infrastructure. His work focuses on website development, performer application flows, digital ticketing, and technology systems supporting show operations.</p>
-              <ul className="mt-5 space-y-2 text-sm leading-6 text-slate-400">
-                <li>• Website architecture and technical infrastructure</li>
-                <li>• Digital ticketing and performer application systems</li>
-                <li>• Technology integration and online operations</li>
-                <li>• Digital platform development and improvement</li>
-              </ul>
-              <a href="https://www.instagram.com/aloksingh_._/" target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-xl border border-white/10 px-4 py-3 text-xs font-black uppercase tracking-wider text-white hover:border-amber-400/40">Connect with Alok</a>
+            <article className="relative overflow-hidden rounded-3xl border border-amber-400/40 bg-gradient-to-br from-[#171006] via-[#09090c] to-[#09090c] p-6 shadow-[0_20px_70px_rgba(245,158,11,.10)] sm:p-8 md:col-span-2">
+              <div className="absolute right-0 top-0 rounded-bl-2xl bg-gradient-to-r from-amber-300 to-orange-500 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-black">Founder • Vision • Leadership</div>
+              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-300">FOUNDER, SHOW CREATOR &amp; HOST</p>
+              <h2 className="mt-3 font-bebas text-5xl sm:text-6xl">NAVEEN VARMA</h2>
+              <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-200">Naveen Varma is the Founder and Show Creator of Gorakhpur's Got Latent. He leads the show's creative vision, entertainment format, hosting, and talent showcase—shaping the platform's identity and experience for performers and audiences.</p>
+              <ul className="mt-5 grid gap-2 text-sm leading-6 text-slate-300 sm:grid-cols-2"><li>• Original show concept and creative vision</li><li>• Hosting and entertainment format</li><li>• Creative planning and show development</li><li>• Audience engagement and talent showcase</li></ul>
+              <a href="https://www.instagram.com/nvn_unfiltered/" target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-xl bg-gradient-to-r from-amber-300 to-orange-500 px-5 py-3 text-xs font-black uppercase tracking-wider text-black">Connect with Founder Naveen</a>
             </article>
-            <article className="rounded-3xl border border-red-500/25 bg-[#09090c] p-6 sm:p-8">
-              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-red-300">FOUNDER &amp; SHOW CREATOR</p>
-              <h2 className="mt-3 font-bebas text-4xl sm:text-5xl">NAVEEN VARMA</h2>
-              <p className="mt-4 text-sm leading-7 text-slate-300">Naveen Varma leads GGL's show concept and creative direction, including its entertainment format, hosting, and talent showcase. His work helps shape the experience for performers and audiences.</p>
-              <ul className="mt-5 space-y-2 text-sm leading-6 text-slate-400">
-                <li>• Show concept and creative vision</li>
-                <li>• Hosting and entertainment format</li>
-                <li>• Creative planning and show development</li>
-                <li>• Audience engagement and talent showcase</li>
-              </ul>
-              <a href="https://www.instagram.com/nvn_unfiltered/" target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-xl border border-white/10 px-4 py-3 text-xs font-black uppercase tracking-wider text-white hover:border-red-400/40">Connect with Naveen</a>
+            <article className="rounded-3xl border border-white/10 bg-[#09090c] p-6 sm:p-8">
+              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">CO-FOUNDER &amp; TECHNICAL HEAD</p>
+              <h2 className="mt-3 font-bebas text-4xl sm:text-5xl">ALOK SINGH</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-300">Alok Singh serves as Co-Founder &amp; Technical Head, responsible for the digital platform and technical infrastructure supporting GGL, including website development, performer application flows, digital ticketing, and online show operations.</p>
+              <ul className="mt-5 space-y-2 text-sm leading-6 text-slate-400"><li>• Website architecture and technical infrastructure</li><li>• Digital ticketing and performer application systems</li><li>• Technology integration and online operations</li><li>• Digital platform development and improvement</li></ul>
+              <a href="https://www.instagram.com/aloksingh_._/" target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-xl border border-white/10 px-4 py-3 text-xs font-black uppercase tracking-wider text-white hover:border-amber-400/40">Connect with Alok</a>
             </article>
           </div>
         </section>

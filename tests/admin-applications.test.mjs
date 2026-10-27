@@ -1,28 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
-import vm from 'node:vm';
-import { stripTypeScriptTypes } from 'node:module';
+import { load } from './helpers/load.mjs';
 
-function load(file, dependencies) {
-  const source = fs.readFileSync(new URL('../' + file, import.meta.url), 'utf8');
-  const names = [...source.matchAll(/export (?:async )?(?:function|const) (\w+)/g)].map(match => match[1]);
-  const compiled = stripTypeScriptTypes(source, { mode: 'strip' })
-    .replace(/import \{([^}]+)\} from ['"]([^'"]+)['"];?/g, (_, members, name) => `const {${members}} = require(${JSON.stringify(name)});`)
-    .replace(/export default [^;]+;/g, '')
-    .replace(/export (?=(async )?(function|const))/g, '') + '\n' + names.map(name => `exports.${name} = ${name};`).join('\n');
-  const exports = {};
-  vm.runInNewContext(compiled, { exports, require: (name) => {
-    if (!(name in dependencies)) throw new Error('Unexpected import: ' + name);
-    return dependencies[name];
-  }, global: {}, URL, Request, Response, console, setTimeout, clearTimeout, process: { env: {} } });
-  return exports;
-}
 const queries = load('lib/adminApplicationQueries.ts', {});
 const fixture = Array.from({ length: 91 }, (_, id) => ({ app_id: String(id), payment_status: 'FREE', created_at: '2026-10-27' }));
 function api(queryStrict) {
   return load('app/api/malik/applications/route.ts', {
     'next/server': { NextResponse: { json: (body, init) => Response.json(body, init) } },
+    '@/lib/performerDetails': { ensurePerformerDetailsTable: async () => {} },
     '@/lib/auth': { getSession: async () => ({ role: 'ADMIN' }) },
     '@/lib/db': { db: { queryStrict, execute: () => { throw new Error('GET must not mutate data'); } } },
     '@/lib/adminApplicationQueries': queries,

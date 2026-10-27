@@ -1,3 +1,4 @@
+import { matchesCapturedPerformerPayment, recordVerifiedPerformerPayment } from '@/lib/performerPaymentVerification';
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { sendPerformerApplicationEmail } from '@/lib/emailjs';
@@ -10,7 +11,7 @@ import {
 } from '@/lib/razorpay';
 
 async function ensureTable() {
-  await db.execute(
+  await db.queryStrict(
     "CREATE TABLE IF NOT EXISTS performer_payment_links (token TEXT PRIMARY KEY, app_id TEXT NOT NULL, amount NUMERIC(10,2) NOT NULL, status TEXT NOT NULL DEFAULT 'PENDING', razorpay_order_id TEXT, razorpay_payment_id TEXT, created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, paid_at TIMESTAMPTZ)"
   );
 }
@@ -19,7 +20,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ token: string 
   try {
     await ensureTable();
     const { token } = await ctx.params;
-    const rows = await db.query(
+    const rows = await db.queryStrict(
       `SELECT l.token, l.amount, l.status, l.razorpay_payment_id,
               p.app_id, p.full_name, p.email, p.mobile_number, p.whatsapp_number,
               p.city, p.performance_category, p.performance_title,
@@ -36,37 +37,17 @@ export async function GET(_req: Request, ctx: { params: Promise<{ token: string 
 
     const payment = rows[0];
 
-    // Reconcile both directions so a partially completed verification cannot
-    // leave the payment link PAID while the application remains PAYMENT_PENDING.
-    if (payment.app_id) {
-      const app = await db.queryOne(
-        'SELECT payment_status, payment_id, order_id FROM performer_applications WHERE app_id = ?',
-        [payment.app_id]
-      );
-
-      if (payment.status !== 'PAID' && app?.payment_status === 'PAID') {
-        await db.execute(
-          "UPDATE performer_payment_links SET status = 'PAID', razorpay_payment_id = COALESCE(razorpay_payment_id, ?) WHERE token = ?",
-          [app.payment_id || null, token]
-        );
-        payment.status = 'PAID';
-        payment.razorpay_payment_id = payment.razorpay_payment_id || app.payment_id || null;
-      } else if (payment.status === 'PAID' && app?.payment_status !== 'PAID') {
-        // Only trust the server-side payment link's PAID state; never use
-        // browser-provided payment details for this repair.
-        await db.execute(
-          `UPDATE performer_applications
-           SET payment_status = 'PAID',
-               payment_amount = ?,
-               payment_id = COALESCE(?, payment_id),
-               order_id = COALESCE(?, order_id),
-               payment_verified_at = COALESCE(payment_verified_at, CURRENT_TIMESTAMP),
-               application_status = 'SUBMITTED',
-               status = 'SUBMITTED',
-               updated_at = CURRENT_TIMESTAMP
-           WHERE app_id = ?`,
-          [payment.amount, payment.razorpay_payment_id || null, app.order_id || null, payment.app_id]
-        );
+    // Recover checkout callbacks missed due to a tab closing, using the gateway's captured payment.
+    if (payment.status !== 'PAID') {
+      const [link] = await db.queryStrict('SELECT * FROM performer_payment_links WHERE token=?', [token]);
+      const gateway = getRazorpayInstance();
+      if (link?.razorpay_order_id && gateway) {
+        const result = await gateway.orders.fetchPayments(link.razorpay_order_id);
+        const captured = result.items.find((entry: any) => matchesCapturedPerformerPayment(link, entry));
+        if (captured) {
+          await recordVerifiedPerformerPayment(link, captured);
+          payment.status = 'PAID'; payment.razorpay_payment_id = captured.id;
+        }
       }
     }
 
@@ -87,7 +68,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
     const { token } = await ctx.params;
     const b = await req.json();
 
-    const link = await db.queryOne('SELECT * FROM performer_payment_links WHERE token = ?', [token]);
+    const link = await db.queryOneStrict('SELECT * FROM performer_payment_links WHERE token = ?', [token]);
     if (!link) {
       return NextResponse.json({ error: 'Payment link not found' }, { status: 404 });
     }
@@ -115,8 +96,8 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
         notes: { app_id: link.app_id, performer_payment_token: token }
       });
 
-      await db.execute('UPDATE performer_payment_links SET razorpay_order_id = ? WHERE token = ?', [order.id, token]);
-      const p = await db.queryOne('SELECT full_name, email, mobile_number FROM performer_applications WHERE app_id = ?', [link.app_id]);
+      await db.queryStrict('UPDATE performer_payment_links SET razorpay_order_id = ? WHERE token = ?', [order.id, token]);
+      const p = await db.queryOneStrict('SELECT full_name, email, mobile_number FROM performer_applications WHERE app_id = ?', [link.app_id]);
 
       return NextResponse.json({
         success: true,
@@ -143,33 +124,14 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
       const payment = await rzp.payments.fetch(pid);
       const expectedAmountPaise = Math.round(Number(link.amount) * 100);
 
-      if (payment.status !== 'captured' || Number(payment.amount) !== expectedAmountPaise) {
+      if (!matchesCapturedPerformerPayment(link, payment)) {
         console.error('Payment not captured or amount mismatch. Status:', payment.status, 'Amount:', payment.amount, 'Expected:', expectedAmountPaise);
         return NextResponse.json({ error: 'Payment is not captured or amount mismatch' }, { status: 400 });
       }
 
-      // Mark payment link as PAID
-      await db.execute(
-        "UPDATE performer_payment_links SET status = 'PAID', razorpay_payment_id = ?, paid_at = CURRENT_TIMESTAMP WHERE token = ?",
-        [pid, token]
-      );
+      await recordVerifiedPerformerPayment(link, payment);
 
-      // Update performer application status
-      await db.execute(
-        `UPDATE performer_applications
-         SET payment_status = 'PAID',
-             payment_amount = ?,
-             payment_id = ?,
-             order_id = ?,
-             payment_verified_at = CURRENT_TIMESTAMP,
-             application_status = 'SUBMITTED',
-             status = 'SUBMITTED',
-             updated_at = CURRENT_TIMESTAMP
-         WHERE app_id = ?`,
-        [link.amount, pid, o, link.app_id]
-      );
-
-      const p = await db.queryOne(
+      const p = await db.queryOneStrict(
         `SELECT app_id, full_name, email, mobile_number, whatsapp_number,
                 performance_category, performance_title, performance_description,
                 performance_type, performer_count, performance_duration,
@@ -211,7 +173,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
         });
 
         if (emailResult && emailResult.success) {
-          await db.execute("UPDATE performer_applications SET email_status = 'SENT', admin_email_status = 'SENT' WHERE app_id = ?", [p.app_id]).catch(() => {});
+          await db.queryStrict("UPDATE performer_applications SET email_status = 'SENT', admin_email_status = 'SENT' WHERE app_id = ?", [p.app_id]).catch(() => {});
         }
 
         saveIndividualEntryToS3('performers/all', p.app_id, {
@@ -232,8 +194,8 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
 
         syncSheetsToS3().catch((err) => console.error('S3 sync error:', err));
 
-        await db.execute(
-          "INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason) VALUES (?, 'PERFORMER', ?, 'PAYMENT_PENDING', 'SUBMITTED', 'SYSTEM', '₹29 Razorpay payment verified')",
+        await db.queryStrict(
+          "INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason) VALUES (?, 'PERFORMER', ?, 'PAYMENT_PENDING', 'SUBMITTED', 'SYSTEM', 'Razorpay performer payment verified')",
           ['his-' + Date.now(), link.app_id]
         ).catch(() => {});
       }

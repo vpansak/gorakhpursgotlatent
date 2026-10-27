@@ -87,7 +87,7 @@ export function processRazorpayRefund(
 }
 
 // ============================================================================
-// Guest (₹49) & Performer (₹29) Application Payment System (ISOLATED)
+// Guest & legacy application payment system (ISOLATED)
 // Uses RAZORPAY_KEY_ID1 and RAZORPAY_KEY_SECRET1
 // ============================================================================
 

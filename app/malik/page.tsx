@@ -1,3 +1,4 @@
+import { ensurePerformerDetailsTable } from '@/lib/performerDetails';
 import { performerSelect, performerOrder, guestSelect, guestOrder } from '@/lib/adminApplicationQueries';
 import Link from 'next/link';
 import { getSession } from '@/lib/auth';
@@ -13,6 +14,8 @@ async function getAdminData() {
   if (!session || !['SUPER_ADMIN', 'ADMIN', 'STAFF', 'TICKET_STAFF'].includes(session.role)) {
     return null;
   }
+
+  await ensurePerformerDetailsTable();
 
   // Fetch all 4 application streams directly from Neon PostgreSQL
   const [performers, sponsors, team, guests, talentTrip] = await Promise.all([

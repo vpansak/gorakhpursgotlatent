@@ -1,7 +1,7 @@
 'use client';
 
 import { createPortal } from 'react-dom';
-import { performerDetailFields, hasVerifiedPerformerPayment } from '@/lib/performerDetailsFields';
+import { performerDetailFields, hasVerifiedPerformerPayment, combinedStageIntroduction } from '@/lib/performerDetailsFields';
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import {
@@ -1684,7 +1684,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
             {activeTab === 'performer' && <section className="space-y-4 rounded-2xl border border-orange-400/30 bg-orange-400/5 p-4">
               <h3 className="font-black text-orange-300">DETAILED PERFORMER FORM</h3>
               {selectedItem.details_submitted_at ? <><p className="text-xs text-slate-400">Submitted: {new Date(selectedItem.details_submitted_at).toLocaleString('en-IN')}</p>
-                {performerDetailFields.map(field => <div key={field.key}><p className="text-xs font-bold text-slate-400">{field.label}</p><p className="mt-1 whitespace-pre-wrap break-words text-sm text-white">{selectedItem.detail_answers?.[field.key] || '—'}</p></div>)}
+                {performerDetailFields.map(field => <div key={field.key}><p className="text-xs font-bold text-slate-400">{field.label}</p><p className="mt-1 whitespace-pre-wrap break-words text-sm text-white">{(field.key === 'stageName' ? combinedStageIntroduction(selectedItem.detail_answers) : selectedItem.detail_answers?.[field.key]) || '—'}</p></div>)}
               </> : <p className="text-sm text-slate-400">Detailed form abhi submit nahi hua hai.</p>}
               <button onClick={() => handleSendDetailForm(selectedItem)} className="rounded-xl bg-orange-500 px-4 py-2 text-sm font-bold text-black">Send Detail Form</button>
             </section>}

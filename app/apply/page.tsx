@@ -9,7 +9,7 @@ export default function ApplyPage() {
   const streams = [
     {
       title: 'Performer Application',
-      subtitle: 'Singers, Dancers, Comedians, Beatboxers & Unique Acts',
+      subtitle: 'Comedy, Mimicry, Magic, Unusual Talent, Music (Unique / Original) & More',
       desc: 'Showcase your talent on the biggest live stage in Purvanchal. Performer registrations for Episode 2 auditions are now LIVE!',
       href: '/apply/performer',
       icon: Mic2,

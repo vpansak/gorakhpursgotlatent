@@ -656,7 +656,7 @@ export default function AboutAlokSinghPage() {
 
           <div className="mt-6 space-y-4 text-base leading-relaxed text-slate-300 sm:text-lg">
             <p>
-              The inception of <strong className="text-amber-300">Gorakhpur’s Got Latent (GGL)</strong> represents the intersection of technology, creative entertainment, and local community empowerment in Eastern Uttar Pradesh. Founded by <strong className="text-white">Alok Singh</strong> and <strong className="text-white">Naveen</strong>, GGL was established to give emerging talent, performers, comedians, singers, and artists across Gorakhpur a high-production platform.
+              The inception of <strong className="text-amber-300">Gorakhpur’s Got Latent (GGL)</strong> represents the intersection of technology, creative entertainment, and local community empowerment in Eastern Uttar Pradesh. Founded by <strong className="text-white">Alok Singh</strong> and <strong className="text-white">Naveen</strong>, GGL was established to give emerging talent, performers, comedians, mimicry artists, magicians, original musicians, and artists across Gorakhpur a high-production platform.
             </p>
             <p>
               As <strong className="text-white">Co-Founder and Full-Stack Developer</strong>, Alok Singh’s primary role encompasses all technical aspects of the platform:

@@ -30,7 +30,7 @@ export default function Episode2Page() {
    <section className="mt-8 space-y-4">
     <h2 className="text-2xl font-black text-white">Date, time and venue</h2>
     <dl className="grid gap-4 sm:grid-cols-3">{[['Date', `${EPISODE_2.weekday}, ${EPISODE_2.date}`], ['Recording begins', EPISODE_2.time], ['Venue', `${EPISODE_2.venue}, Gorakhpur`]].map(([label, value]) => <div key={label} className="rounded-xl border border-amber-400/20 bg-white/[.03] p-5"><dt className="text-sm text-slate-400">{label}</dt><dd className="mt-2 font-bold text-amber-200">{value}</dd></div>)}</dl>
-    <p className="leading-7">GGL brings comedy, music, dance, poetry, beatboxing and original performances to a live stage. Performer selection and individual reporting instructions are communicated separately by the GGL team.</p>
+    <p className="leading-7">GGL brings comedy, mimicry, magic, unusual talent, Music (Unique / Original), poetry and beatboxing to a live stage. Performer selection and individual reporting instructions are communicated separately by the GGL team.</p>
    </section>
    <section className="mt-8 space-y-4">
     <h2 className="text-2xl font-black text-white">Tickets and performer applications</h2>

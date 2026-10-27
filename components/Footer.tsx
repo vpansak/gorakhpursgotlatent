@@ -157,7 +157,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed pr-4">
-              Purvanchal’s premier raw talent hunt, entertainment showcase, and live roast event platform. Providing an epic national stage for music, comedy, dance, beatboxing, and extraordinary performers.
+              Purvanchal’s premier raw talent hunt, entertainment showcase, and live roast event platform. Providing an epic national stage for comedy, mimicry, magic, unusual talent, Music (Unique / Original) and beatboxing.
             </p>
             <div className="flex items-center gap-3 pt-2">
               <a

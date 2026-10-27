@@ -40,7 +40,7 @@ export default function PerformerApplyClient() {
     city: '',
     whyShouldSelectYou: '',
     performanceDescription: '',
-    interestedInTalentTrip: 'No',
+    interestedInTalentTrip: '',
   });
 
   useLeadCapture({ source: 'performer', completed: submitted, data: formData, customerName: formData.fullName, mobile: formData.mobile, email: formData.email, instagramId: formData.instagramUrl, quantity: 1 });
@@ -332,10 +332,10 @@ export default function PerformerApplyClient() {
 
         <div className="rounded-xl border border-amber-500/25 bg-amber-500/5 p-4">
           <label className="mb-2 block text-xs font-bold text-amber-200">Are you interested in GGL Talent Trip?</label>
-          <select name="interestedInTalentTrip" value={formData.interestedInTalentTrip} onChange={handleChange} className="w-full rounded-xl bg-slate-900 border border-slate-700 px-4 py-3 text-sm text-white focus:border-amber-400 outline-none">
-            <option value="No">No</option><option value="Yes">Yes</option>
-          </select>
-          <p className="mt-2 text-xs text-slate-400">Travel • Music • Dance • Reels • Performances • Adventures</p>
+          <div className="flex gap-3">{['Yes', 'No'].map(option => <label key={option} className="inline-flex cursor-pointer items-center gap-2 rounded-xl border-2 border-slate-400 bg-slate-800 px-4 py-3 text-sm text-white has-[:checked]:border-orange-400">
+            <input type="radio" name="interestedInTalentTrip" value={option} checked={formData.interestedInTalentTrip === option} onChange={handleChange} required className="accent-orange-400" />{option === 'Yes' ? 'Haan / Yes' : 'Nahi / No'}
+          </label>)}</div>
+          <p className="mt-2 text-xs text-slate-400">Travel • Music (Unique / Original) • Reels • Performances • Adventures</p>
           <Link href="/ggl_talent_trip" className="mt-2 inline-flex text-xs font-bold text-amber-300 hover:text-amber-200">View GGL Talent Trip details →</Link>
         </div>
 

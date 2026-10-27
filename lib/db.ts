@@ -451,7 +451,7 @@ export async function ensureDatabaseSchema() {
       try {
         await client.query(`
           INSERT INTO events (id, title, slug, subtitle, description, event_date, start_time, venue_name, city, status)
-          VALUES ('evt-default', 'Gorakhpur''s Got Latent - Live Talent Show', 'ggl-live-show-2026', 'Purvanchal''s Biggest Talent Showcase', 'Watch Purvanchal''s finest creators, comedians, dancers and musicians live on stage.', '2026-11-15', '05:00 PM', 'Gorakhpur Auditorium', 'Gorakhpur', 'PUBLISHED')
+          VALUES ('evt-default', 'Gorakhpur''s Got Latent - Live Talent Show', 'ggl-live-show-2026', 'Purvanchal''s Biggest Talent Showcase', 'Watch Purvanchal''s finest comedians, mimicry artists, magicians, unusual talents and original musicians live on stage.', '2026-11-15', '05:00 PM', 'Gorakhpur Auditorium', 'Gorakhpur', 'PUBLISHED')
           ON CONFLICT (id) DO NOTHING;
         `);
         await client.query(`

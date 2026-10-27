@@ -1,3 +1,4 @@
+import { combinedStageIntroduction, normalizePerformerCategory, PERFORMANCE_DURATIONS } from '@/lib/performerDetailsFields';
 import { db } from '@/lib/db';
 import { SignJWT, jwtVerify } from 'jose';
 
@@ -26,12 +27,18 @@ export async function readPerformerDetailsToken(token: string) {
   } catch { return null; }
 }
 export function prefillPerformerDetails(p: Record<string, any>) {
-  const duration = String(p.performance_duration || '').match(/^[123]\b/)?.[0] || '';
+  const stored = p.detail_answers || {};
+  const rawDuration = String(stored.duration || p.performance_duration || '').trim();
+  const duration = rawDuration === '1.5' || /^1\.5\s*min/i.test(rawDuration) ? '1.5 minutes'
+    : rawDuration === 'Below 1 minute' || rawDuration === 'below_1' ? 'Below 1 minute' : '';
   return {
     mobile: p.mobile_number || p.whatsapp_number || '', fullName: p.full_name || '',
-    stageName: '', instagram: p.instagram_url || '', category: p.performance_category || '',
-    description: p.performance_description || '', actDetails: '', duration,
+    instagram: p.instagram_url || '', description: p.performance_description || '', actDetails: '',
     reportedPaymentStatus: ['PAID', 'PAYMENT_VERIFIED'].includes(p.payment_status) ? 'Paid' : 'Unpaid',
-    ...(p.detail_answers || {}),
+    ...stored,
+    stageName: combinedStageIntroduction(stored),
+    category: normalizePerformerCategory(stored.category || p.performance_category || ''),
+    duration: (PERFORMANCE_DURATIONS as readonly string[]).includes(duration) ? duration : '',
+    interestedInTalentTrip: ['Yes', 'No'].includes(stored.interestedInTalentTrip) ? stored.interestedInTalentTrip : '',
   };
 }

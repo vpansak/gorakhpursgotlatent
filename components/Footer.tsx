@@ -275,7 +275,6 @@ export default function Footer() {
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <p className="text-center sm:text-left">
             © {new Date().getFullYear()} Gorakhpur’s Got Latent. All rights reserved.
-            <span className="block mt-1">Founded by <Link href="/founder" className="text-slate-200 hover:text-amber-400">Naveen Varma</Link> · <Link href="/cofounder" className="text-slate-200 hover:text-amber-400">Alok Singh, Co-Founder & Technical Head</Link></span>
           </p>
 
           <div className="flex items-center justify-center gap-3 sm:gap-4" aria-label="Secure payment methods">

@@ -15,5 +15,5 @@ export async function POST(req: Request) {
     if (phone.length === 10) phone = '91' + phone;
     const text = `Hi ${p.full_name}! 🎤\n\nGGL ke liye apna detailed performer form fill kar dijiye. Aapki pehle wali details pre-filled hain; zarurat ho toh edit bhi kar sakte hain.\n\n${formUrl}\n\nPlease yeh personal link sirf apne paas rakhein. Thank you! 🙌`;
     return NextResponse.json({ success: true, formUrl, whatsappUrl: `https://api.whatsapp.com/send?${phone ? `phone=${phone}&` : ''}text=${encodeURIComponent(text)}` });
-  } catch { return NextResponse.json({ error: 'Could not create form link' }, { status: 500 }); }
+  } catch (error) { console.error('Performer detail link generation failed:', error instanceof Error ? error.message : 'Unknown error'); return NextResponse.json({ error: 'Could not create form link' }, { status: 500 }); }
 }

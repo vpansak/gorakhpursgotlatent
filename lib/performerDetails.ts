@@ -11,8 +11,9 @@ export function ensurePerformerDetailsTable() {
   )`).then(() => {}).catch((error) => { ready = undefined; throw error; });
 }
 function secret() {
-  if (!process.env.JWT_SECRET) throw new Error('Secure form links are not configured');
-  return new TextEncoder().encode(process.env.JWT_SECRET);
+  const signingSecret = process.env.PERFORMER_DETAIL_LINK_SECRET || process.env.JWT_SECRET;
+  if (!signingSecret) throw new Error('Secure form links are not configured');
+  return new TextEncoder().encode(signingSecret);
 }
 export async function createPerformerDetailsToken(appId: string) {
   return new SignJWT({ purpose: 'performer-details', appId }).setProtectedHeader({ alg: 'HS256' })

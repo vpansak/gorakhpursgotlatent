@@ -287,9 +287,8 @@ export default function Episode1WinnersPage() {
             className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold focus:outline-none"
           >
             <option value="ALL">All Categories</option>
-            <option value="Singing">Singing</option>
-            <option value="Dance">Dance</option>
-            <option value="Comedy">Stand Up Comedy</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Singing">Music (Unique / Original)</option>
             <option value="Poetry">Poetry / Shayari</option>
           </select>
         </div>

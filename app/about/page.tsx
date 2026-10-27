@@ -4,7 +4,7 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: "About Gorakhpur's Got Latent – ABOUT",
   description:
-    "Learn about Gorakhpur's Got Latent (GGL), a live entertainment and talent show from Gorakhpur, Uttar Pradesh featuring music, comedy, dance, poetry, beatboxing and original performances.",
+    "Learn about Gorakhpur's Got Latent (GGL), a live entertainment and talent show from Gorakhpur, Uttar Pradesh featuring comedy, mimicry, magic, unusual talent, Music (Unique / Original), poetry and beatboxing.",
   keywords: [
     "Gorakhpur's Got Latent",
     "Gorakhpur Got Latent",
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
     "Gorakhpur events",
     "Purvanchal talent show",
     "Gorakhpur comedy show",
-    "Gorakhpur dance show",
-    "Gorakhpur singer auditions",
+    "Gorakhpur mimicry and magic show",
+    "Gorakhpur original music auditions",
   ],
   alternates: {
     canonical: "https://www.gkpgotlatent.in/about",
@@ -90,8 +90,8 @@ export default function AboutPage() {
           <p className="mt-5 max-w-4xl text-base leading-8 text-slate-300 sm:text-lg">
             Gorakhpur&apos;s Got Latent (GGL) is a live entertainment and talent
             platform based in Gorakhpur, Uttar Pradesh. The show brings different
-            forms of original performance together on one stage, including singing,
-            dance, comedy, poetry, beatboxing, mimicry, unusual acts and other
+            forms of original performance together on one stage, including comedy,
+            mimicry, magic, unusual talent, Music (Unique / Original), poetry, beatboxing and other
             creative performances.
           </p>
         </header>
@@ -110,8 +110,8 @@ export default function AboutPage() {
               The concept is designed for performers as well as audiences. Performers
               can present their talent, while audience members can attend the live
               experience and follow official show updates online. The format can
-              include musicians, singers, dancers, stand-up comedians, beatboxers,
-              poets, mimics, magicians and other original acts.
+              include comedians, mimicry artists, magicians, unusual talents, original musicians,
+              poets, beatboxers and other original acts.
             </p>
           </section>
 
@@ -136,17 +136,18 @@ export default function AboutPage() {
             <h2 className="text-3xl font-black text-white">Talent Categories and Performances</h2>
             <p className="mt-4">
               GGL is intentionally broad in its approach to talent. Publicly described
-              performance areas include singing, music, dance, stand-up comedy,
-              beatboxing, poetry, mimicry and other unusual or original acts.
+              performance areas include comedy, mimicry, magic, unusual talent,
+              Music (Unique / Original), poetry and beatboxing.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {[
-                ["Singing & Music", "Singers, musicians and original musical performers can present their work."],
-                ["Dance", "Dance performances across different styles can be part of the live talent format."],
-                ["Comedy", "Stand-up, comic acts and spontaneous humour are part of the entertainment format."],
-                ["Poetry & Spoken Performance", "Poetry, spoken-word and personality-led stage performances can fit the format."],
-                ["Beatboxing & Vocal Acts", "Vocal rhythm, beatboxing and other sound-based creative performances can be showcased."],
-                ["Unique & Unexpected Acts", "GGL also welcomes the idea of original acts that do not fit into a single conventional category."],
+                ["Comedy", "Stand-up, comic acts and spontaneous humour."],
+                ["Mimicry", "Voice impressions, characters and creative mimicry."],
+                ["Magic", "Magic, illusions and original stage surprises."],
+                ["Unusual Talent", "Original, unexpected acts that stand out."],
+                ["Music (Unique / Original)", "Unique or original musical performances."],
+                ["Poetry & Spoken Performance", "Poetry, shayari and spoken-word performances."],
+                ["Beatboxing & Vocal Acts", "Vocal rhythm and other creative sound-based acts."],
               ].map(([title, text]) => (
                 <div key={title} className="rounded-2xl border border-amber-500/15 bg-slate-900/60 p-5">
                   <h3 className="font-bold text-amber-300">{title}</h3>
@@ -235,7 +236,7 @@ export default function AboutPage() {
               Searches related to Gorakhpur&apos;s Got Latent may include terms such as
               “Gorakhpur Got Latent”, “GGL Gorakhpur”, “Gorakhpur talent show”,
               “Gorakhpur live show”, “Gorakhpur auditions”, “Gorakhpur comedy show”,
-              “Gorakhpur dance audition”, “Gorakhpur singer audition” and
+              “Gorakhpur mimicry audition”, “Gorakhpur original music audition” and
               “Gorakhpur events”. This page provides one public reference point for
               understanding what the show is and where to find its official information.
             </p>

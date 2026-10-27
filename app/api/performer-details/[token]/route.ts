@@ -30,9 +30,9 @@ export async function POST(req: Request, context: Context) {
       ON CONFLICT (app_id) DO UPDATE SET answers=EXCLUDED.answers, updated_at=CURRENT_TIMESTAMP
       RETURNING app_id
     ) UPDATE performer_applications p SET full_name=?, mobile_number=?, whatsapp_number=?, instagram_url=?,
-      performance_category=?, performance_description=?, performance_duration=CASE WHEN ?='' THEN p.performance_duration ELSE ? || ' Minutes' END,
+      performance_category=?, performance_description=?, performance_duration=?, interested_in_talent_trip=?,
       updated_at=CURRENT_TIMESTAMP FROM saved WHERE p.app_id=saved.app_id RETURNING p.app_id`,
-      [JSON.stringify(answers), appId, answers.fullName, answers.mobile, answers.mobile, answers.instagram, answers.category, answers.description, answers.duration, answers.duration]);
+      [JSON.stringify(answers), appId, answers.fullName, answers.mobile, answers.mobile, answers.instagram, answers.category, answers.description, answers.duration, answers.interestedInTalentTrip]);
     if (!rows.length) return NextResponse.json({ error: 'Performer not found' }, { status: 404 });
     return NextResponse.json({ success: true }, { headers: noStore });
   } catch { return NextResponse.json({ error: 'Your form could not be saved. Please try again.' }, { status: 503 }); }

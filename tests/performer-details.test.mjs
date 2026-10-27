@@ -7,13 +7,13 @@ import * as jose from 'jose';
 const fields = load('lib/performerDetailsFields.ts', {});
 const queries = load('lib/adminApplicationQueries.ts', {});
 const json = { NextResponse: { json: (body, init) => Response.json(body, init) } };
-const valid = { mobile: '9876543210', fullName: 'Test Performer', category: 'Poetry', description: 'A poem', funnyFacts: 'Two fun facts', funnyIncident: 'A funny story', reportedPaymentStatus: 'Paid via QR' };
+const valid = { mobile: '9876543210', fullName: 'Test Performer', category: 'Poetry / Shayari', description: 'A poem', funnyFacts: 'Two fun facts', funnyIncident: 'A funny story', reportedPaymentStatus: 'Paid via QR', duration: '1.5 minutes', interestedInTalentTrip: 'No' };
 function strict(pg) { return async (sql, params = []) => { let index=0; const normalized=sql.replace(/\?/g, () => '$'+(++index)); return (await pg.query(normalized, params)).rows; }; }
 async function database() {
   const pg = new PGlite();
   await pg.exec(`CREATE TABLE performer_applications (
     app_id TEXT PRIMARY KEY, full_name TEXT, mobile_number TEXT, whatsapp_number TEXT, instagram_url TEXT,
-    performance_category TEXT, performance_description TEXT, performance_duration TEXT,
+    performance_category TEXT, performance_description TEXT, performance_duration TEXT, interested_in_talent_trip TEXT,
     payment_status TEXT, payment_amount NUMERIC, payment_id TEXT, order_id TEXT, payment_verified_at TIMESTAMPTZ,
     application_status TEXT DEFAULT 'SUBMITTED', status TEXT DEFAULT 'SUBMITTED', is_read INTEGER DEFAULT 0,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP);
@@ -43,7 +43,7 @@ test('detail form round-trip saves long answers, permits edits and keeps paid de
   const pg=await database();
   try {
     const queryStrict=strict(pg);
-    const details=load('lib/performerDetails.ts', { '@/lib/db': { db: { queryStrict } }, jose });
+    const details=load('lib/performerDetails.ts', { '@/lib/db': { db: { queryStrict } }, '@/lib/performerDetailsFields': fields, jose });
     const route=load('app/api/performer-details/[token]/route.ts', {
       'next/server':json, '@/lib/db': { db: { queryStrict } }, '@/lib/performerDetails': { ...details, readPerformerDetailsToken:async ()=>'TEST-1' }, '@/lib/performerDetailsFields':fields,
     });
@@ -90,7 +90,7 @@ test('captured matching ₹799 payment creates automatic tick; wrong order, curr
 });
 test('personal links are signed, application-bound, expiring and cannot be forged', async () => {
   const secret='test-only-performer-detail-secret';
-  const details=load('lib/performerDetails.ts',{'@/lib/db':{db:{}},jose},{process:{env:{JWT_SECRET:secret}}});
+  const details=load('lib/performerDetails.ts',{'@/lib/db':{db:{}},'@/lib/performerDetailsFields':fields,jose},{process:{env:{JWT_SECRET:secret}}});
   const token=await details.createPerformerDetailsToken('TEST-1');
   assert.equal(await details.readPerformerDetailsToken(token),'TEST-1');
   assert.equal(await details.readPerformerDetailsToken(token.slice(0,-8)+'modified'),null);
@@ -112,4 +112,26 @@ test('only admin staff can generate the personal link; WhatsApp is a draft with 
   assert.equal(url.searchParams.get('phone'),'919876543210');
   assert.ok(url.searchParams.get('text').includes('\n\n'));
   assert.ok(url.searchParams.get('text').includes(result.formUrl));
+});
+test('updated category order, duration choices and question order match the production brief', () => {
+  assert.deepEqual(Array.from(fields.PERFORMER_CATEGORIES).slice(0,4),['Comedy','Mimicry','Magic','Unusual Talent']);
+  assert.ok(!fields.PERFORMER_CATEGORIES.some(value=>/dance|singing/i.test(value)));
+  assert.ok(fields.PERFORMER_CATEGORIES.includes('Music (Unique / Original)'));
+  assert.deepEqual(Array.from(fields.PERFORMANCE_DURATIONS),['1.5 minutes','Below 1 minute']);
+  const keys=fields.performerDetailFields.map(field=>field.key);
+  assert.equal(keys.at(-1),'stageName');
+  assert.ok(!keys.includes('introduction'));
+  assert.deepEqual(Array.from(keys).slice(keys.indexOf('funnyFacts'),keys.indexOf('technicalRequirements')+1),['funnyFacts','hostTopics','stageExperience','offLimitTopics','technicalRequirements']);
+  for(const patch of [{duration:'2'},{duration:'1'},{interestedInTalentTrip:''},{category:'Dance'}]) assert.throws(()=>fields.validatePerformerDetails({...valid,...patch}));
+});
+test('legacy introduction answers are merged and old duration/trip defaults are not silently selected', () => {
+  const details=load('lib/performerDetails.ts',{'@/lib/db':{db:{}},'@/lib/performerDetailsFields':fields,jose});
+  const answers=details.prefillPerformerDetails({full_name:'Fixture',performance_category:'Singing',performance_duration:'2 Minutes',interested_in_talent_trip:'No',detail_answers:{stageName:'Stage Persona',introduction:'Welcome this performer'}});
+  assert.equal(answers.stageName,'Stage Persona — Welcome this performer');
+  assert.equal(answers.category,'Music (Unique / Original)');
+  assert.equal(answers.duration,'');
+  assert.equal(answers.interestedInTalentTrip,'');
+  const edited=details.prefillPerformerDetails({detail_answers:{duration:'Below 1 minute',interestedInTalentTrip:'Yes'}});
+  assert.equal(edited.duration,'Below 1 minute');
+  assert.equal(edited.interestedInTalentTrip,'Yes');
 });

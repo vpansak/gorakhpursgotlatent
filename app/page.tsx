@@ -69,7 +69,7 @@ export default async function HomePage() {
   const { activeEvent, performers } = await getHomepageData();
 
   const faqs = [
-    { q: "What is Gorakhpur's Got Latent?", a: "Gorakhpur's Got Latent is Purvanchal's flagship live talent hunt show and entertainment phenomenon. It showcases musicians, beatboxers, stand-up comedians, dancers, magicians, and raw unique performers live on stage." },
+    { q: "What is Gorakhpur's Got Latent?", a: "Gorakhpur's Got Latent is Purvanchal's flagship live talent hunt show and entertainment phenomenon. It showcases comedians, mimicry artists, magicians, unusual talents, original musicians and beatboxers live on stage." },
     { q: "When is Gorakhpur’s Got Latent Episode 2?", a: "Episode 2 recording starts on Tuesday, 3 November 2026 at 1:00 PM IST at Mars Orbit Entertainment, Gorakhpur." },
     { q: "How can I apply as a performer for Episode 2?", a: "You can submit your performer application online and send your performance clip on WhatsApp. Please follow official channels for event-date updates." },
     { q: "How do I receive my ticket after payment?", a: "As soon as your payment is verified via Razorpay, your official Digital E-Ticket with a unique QR code is generated instantly." },
@@ -165,7 +165,7 @@ export default async function HomePage() {
             <div className="home-kicker"><Sparkles className="h-4 w-4" /> THE SHOW</div>
             <h2 className="home-title mt-4">RAW TALENT.<br /><span>REAL REACTIONS.</span><br />ONE BIG STAGE.</h2>
             <p className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-slate-300 font-medium">
-              Gorakhpur’s Got Latent brings singers, dancers, comedians, beatboxers, creators and unique performers together for a live entertainment experience built around talent and unpredictability.
+              Gorakhpur’s Got Latent brings comedians, mimicry artists, magicians, unusual talents, original musicians, beatboxers and creators together for a live entertainment experience built around talent and unpredictability.
             </p>
             <div className="mt-8 grid grid-cols-2 gap-3 max-w-lg">
               <div className="home-stat"><strong>100+</strong><span>SHORTLISTED PERFORMERS</span></div>
@@ -198,8 +198,8 @@ export default async function HomePage() {
             <div className="inline-flex items-center gap-2 rounded-full border border-red-400/40 bg-red-500/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-red-300">NEW GGL INITIATIVE</div>
             <h2 className="mt-4 text-3xl font-black uppercase text-white sm:text-5xl">GGL <span className="text-amber-400">Talent Trip</span></h2>
             <p className="mt-3 text-xl font-extrabold text-amber-200">ये सफर है, यहाँ कुछ भी हो सकता है!</p>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">Meet talented strangers, explore new destinations, enjoy music and dance, create reels, perform together and make unforgettable memories.</p>
-            <p className="mt-3 text-xs font-bold text-amber-300">Travel • Music • Dance • Reels • Performances • Adventures</p>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">Meet talented strangers, explore new destinations, enjoy Music (Unique / Original) and live acts, create reels, perform together and make unforgettable memories.</p>
+            <p className="mt-3 text-xs font-bold text-amber-300">Travel • Music (Unique / Original) • Reels • Performances • Adventures</p>
             <div className="mt-6 flex flex-wrap items-center gap-3"><Link href="/ggl_talent_trip" className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-3.5 text-sm font-black uppercase text-black transition hover:scale-[1.02]">I’m Interested <ChevronRight className="h-4 w-4"/></Link><span className="text-xs font-bold text-emerald-300">First registration is FREE</span></div>
           </div>
           <div className="relative overflow-hidden rounded-2xl border border-white/10"><Image src="/logo.png" alt="GGL Talent Trip" width={640} height={360} className="h-52 w-full object-contain bg-black/50 p-5 sm:h-64"/><div className="absolute bottom-3 left-3 rounded-full bg-black/75 px-3 py-1.5 text-xs font-bold text-amber-200">Your next story starts here</div></div>

@@ -92,7 +92,7 @@ export default function TermsPage() {
 
           <div className="space-y-3 pl-1 text-slate-300">
             <p>
-              2.1 <strong className="text-white">Accuracy of Information:</strong> Performers, guest panelists, stand-up comedians, musicians, dancers, beatboxers, and sponsors explicitly confirm that all details provided during online registration (Full Name, Age, Contact Numbers, Instagram ID, City, Act Description) are true, accurate, and up-to-date.
+              2.1 <strong className="text-white">Accuracy of Information:</strong> Performers, guest panelists, stand-up comedians, mimicry artists, magicians, unusual talents, original musicians, beatboxers, and sponsors explicitly confirm that all details provided during online registration (Full Name, Age, Contact Numbers, Instagram ID, City, Act Description) are true, accurate, and up-to-date.
             </p>
             <p>
               2.2 <strong className="text-white">Age Qualification (Strictly 18+):</strong> All stage performers must be at least 18 years of age on or before the date of performance. Minors are strictly prohibited from submitting solo stage performance auditions unless accompanied by verified legal parental consent documentation.

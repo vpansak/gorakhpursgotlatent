@@ -45,7 +45,7 @@ export default function PerformerDetailsForm({ token }: { token: string }) {
           if ('options' in field) return <fieldset key={field.key}>
             <legend className="text-sm font-semibold">{field.label}{required ? ' *' : ''}</legend>
             <div className="mt-3 flex flex-wrap gap-3">{field.options.map(option => <label key={option} className="performer-detail-choice flex cursor-pointer items-center gap-2 rounded-xl border p-3 text-sm">
-              <input type="radio" name={field.key} value={option} required={required} checked={answers[field.key] === option} onChange={() => setAnswers(prev => ({ ...prev, [field.key]: option }))} className="accent-orange-500" />{option}{field.key === 'duration' ? ' min' : ''}
+              <input type="radio" name={field.key} value={option} required={required} checked={answers[field.key] === option} onChange={() => setAnswers(prev => ({ ...prev, [field.key]: option }))} className="accent-orange-500" />{field.key === 'interestedInTalentTrip' ? (option === 'Yes' ? 'Haan / Yes' : 'Nahi / No') : option}
             </label>)}</div>
             {field.key === 'reportedPaymentStatus' && <p className="mt-2 text-xs text-slate-400">Yeh aapka payment declaration hai. Verified payment Razorpay confirmation ke baad hi update hota hai.</p>}
           </fieldset>;

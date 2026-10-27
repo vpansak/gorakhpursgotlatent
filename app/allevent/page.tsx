@@ -106,7 +106,7 @@ export default function AllEventLandingPage() {
             Gorakhpur Talent Tour is an event name people can use to find local entertainment and talent-related activities in Gorakhpur, Uttar Pradesh. If you are searching for a Gorakhpur event, a creative community, or a place to discover local performers, start with the linked event page and review the latest information published by the organiser.
           </p>
           <p className="mt-4 leading-8 text-white/70">
-            Gorakhpur’s Got Latent, also known as GGL, is a local talent and entertainment platform focused on giving performers and creators opportunities to share their skills. Performance and creative formats associated with the GGL initiative may include comedy, singing, dance, acting, mimicry, poetry, spoken-word performances and other original acts. Specific activities depend on each event and should be confirmed on its own listing.
+            Gorakhpur’s Got Latent, also known as GGL, is a local talent and entertainment platform focused on giving performers and creators opportunities to share their skills. Performance and creative formats associated with the GGL initiative may include comedy, mimicry, magic, unusual talent, Music (Unique / Original), acting, poetry and spoken-word performances. Specific activities depend on each event and should be confirmed on its own listing.
           </p>
         </section>
 

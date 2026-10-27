@@ -40,9 +40,10 @@ function withTimeout<T>(promise: Promise<T>, ms: number = 10000): Promise<T> {
 /**
  * Executes queries using stateless HTTP client with automatic retry logic for transient errors
  */
-async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], retries = 2): Promise<T[]> {
+async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], retries = 2, strict = false): Promise<T[]> {
   const client = getSqlClient();
   if (!client) {
+    if (strict) throw new Error("Database is not configured");
     return [];
   }
 
@@ -63,6 +64,7 @@ async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], re
       }
     }
   }
+  if (strict) throw lastErr || new Error('Database query failed');
   console.warn('Database query notice (using safe fallback):', lastErr?.message || lastErr, '| SQL:', sqlText);
   return [];
 }
@@ -82,6 +84,7 @@ export const pool = {
 
 export interface AppDatabase {
   query: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
+  queryStrict: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
   queryOne: <T = any>(sql: string, params?: any[]) => Promise<T | null>;
   execute: (sql: string, params?: any[]) => Promise<{ rowCount: number }>;
   pool: typeof pool;
@@ -478,6 +481,12 @@ export async function query<T = any>(sql: string, params: any[] = []): Promise<T
   }
 }
 
+// Use for durable submissions and admin reads: a failed query is not an empty result.
+export async function queryStrict<T = any>(sql: string, params: any[] = []): Promise<T[]> {
+  await ensureDatabaseSchema();
+  return executeWithRetry<T>(sql, params, 2, true);
+}
+
 export async function queryOne<T = any>(sql: string, params: any[] = []): Promise<T | null> {
   const rows = await query<T>(sql, params);
   return rows.length > 0 ? rows[0] : null;
@@ -496,6 +505,7 @@ export async function execute(sql: string, params: any[] = []): Promise<{ rowCou
 
 export const db: AppDatabase = {
   query,
+  queryStrict,
   queryOne,
   execute,
   pool,

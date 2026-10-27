@@ -43,7 +43,7 @@ export default function PerformerApplyClient() {
     interestedInTalentTrip: 'No',
   });
 
-  useLeadCapture({ source: 'performer', data: formData, customerName: formData.fullName, mobile: formData.mobile, email: formData.email, instagramId: formData.instagramUrl, quantity: 1 });
+  useLeadCapture({ source: 'performer', completed: submitted, data: formData, customerName: formData.fullName, mobile: formData.mobile, email: formData.email, instagramId: formData.instagramUrl, quantity: 1 });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;

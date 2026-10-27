@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 
 type LeadCaptureOptions = {
   source: string;
+  completed?: boolean;
   data: Record<string, any>;
   customerName?: string;
   mobile?: string;
@@ -21,7 +22,7 @@ function hasMeaningfulValue(value: any): boolean {
 }
 
 function hasUserEnteredData(data: Record<string, any>): boolean {
-  const ignored = new Set(['duration', 'budget', 'termsAccepted']);
+  const ignored = new Set(['duration', 'budget', 'termsAccepted', 'age', 'interestedInTalentTrip']);
   return Object.entries(data).some(([key, value]) => !ignored.has(key) && hasMeaningfulValue(value));
 }
 
@@ -37,8 +38,9 @@ export function useLeadCapture(options: LeadCaptureOptions) {
   latestRef.current = options;
 
   useEffect(() => {
-    const saveLead = (status: 'IN_PROGRESS' | 'ABANDONED') => {
+    const saveLead = (status: 'IN_PROGRESS' | 'ABANDONED' | 'SUBMITTED') => {
       const current = latestRef.current;
+      if (current.completed && status !== 'SUBMITTED') return;
       const data = current.data || {};
       if (!hasUserEnteredData(data)) return;
       const payload = {
@@ -63,6 +65,10 @@ export function useLeadCapture(options: LeadCaptureOptions) {
       });
     };
 
+    if (options.completed) {
+      void saveLead('SUBMITTED');
+      return;
+    }
     const timer = window.setTimeout(() => { void saveLead('IN_PROGRESS'); }, 350);
     const flush = () => { void saveLead('ABANDONED'); };
     window.addEventListener('pagehide', flush);
@@ -72,6 +78,7 @@ export function useLeadCapture(options: LeadCaptureOptions) {
     };
   }, [
     options.source,
+    options.completed,
     options.customerName,
     options.mobile,
     options.email,

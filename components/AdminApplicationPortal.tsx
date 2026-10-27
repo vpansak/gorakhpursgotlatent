@@ -180,7 +180,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
       const res = await fetch('/api/malik/applications?type=all');
       const json = await res.json();
       if (json.success && json.data) {
-        setData(json.data);
+        setData((prev) => ({ ...prev, ...json.data }));
       }
       await fetchComputerJiScores();
       await fetchLeads();
@@ -754,7 +754,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
             title={`Download ${activeTab.toUpperCase()} applications directly as Microsoft Excel (.xlsx)`}
           >
             <Download className="w-4 h-4 stroke-[2.5]" />
-            <span>Download {activeTab === 'performer' ? 'Performers' : activeTab === 'sponsor' ? 'Sponsors' : activeTab === 'team' ? 'Team' : activeTab === 'guest' ? 'Judges' : 'Computer Ji Scores'} Excel Sheet (.xlsx)</span>
+            <span>Download {activeTab === 'performer' ? 'Performers' : activeTab === 'sponsor' ? 'Sponsors' : activeTab === 'team' ? 'Team' : activeTab === 'guest' ? 'Judges' : activeTab === 'leads' ? 'Leads' : 'Computer Ji Scores'} Excel Sheet (.xlsx)</span>
           </button>
         </div>
 
@@ -1048,7 +1048,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                             </span>
                           ) : (
                             <span className="px-2 py-0.5 rounded text-[10px] font-black bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                              ⚠️ ABANDONED DRAFT
+                              {item.status === 'SUBMITTED' ? '✅ SUBMITTED' : item.status === 'IN_PROGRESS' ? '✏️ IN PROGRESS' : '⚠️ ABANDONED DRAFT'}
                             </span>
                           )}
                         </td>

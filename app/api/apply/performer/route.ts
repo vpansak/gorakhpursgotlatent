@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     const parsedAge = parseInt((age || '').toString().replace(/\D/g, ''), 10) || 18;
     const parsedCount = parseInt((performerCount || '1').toString().replace(/\D/g, ''), 10) || 1;
 
-    await db.execute(`
+    await db.queryStrict(`
       INSERT INTO performer_applications (
         id, app_id, full_name, email, mobile_number, whatsapp_number, call_number,
         performance_category, performance_title, performance_description, performance_type,

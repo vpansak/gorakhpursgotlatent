@@ -26,8 +26,8 @@ export default function PerformerDetailsForm({ token }: { token: string }) {
     } catch (error: any) { setError(error.message || 'Please try again'); }
     finally { setBusy(false); }
   }
-  const inputStyle = 'mt-2 w-full rounded-xl border border-slate-600 bg-slate-950 p-3 text-white focus:outline-none focus:ring-2 focus:ring-orange-400';
-  return <main className="mx-auto max-w-3xl px-4 py-10 text-white">
+  const inputStyle = 'performer-detail-input mt-2 w-full rounded-xl border border-slate-600 bg-slate-950 p-3 text-white focus:outline-none focus:ring-2 focus:ring-orange-400';
+  return <main className="performer-details-form mx-auto max-w-3xl px-4 py-10 text-white">
     <div className="rounded-3xl border border-orange-400/40 bg-slate-900 p-5 sm:p-8">
       <p className="font-bold text-orange-300">GORAKHPUR’S GOT LATENT</p>
       <h1 className="mt-2 text-3xl font-black">Performer Details 🎤</h1>
@@ -44,14 +44,14 @@ export default function PerformerDetailsForm({ token }: { token: string }) {
           const required = 'required' in field && field.required;
           if ('options' in field) return <fieldset key={field.key}>
             <legend className="text-sm font-semibold">{field.label}{required ? ' *' : ''}</legend>
-            <div className="mt-3 flex flex-wrap gap-3">{field.options.map(option => <label key={option} className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-600 p-3 text-sm">
+            <div className="mt-3 flex flex-wrap gap-3">{field.options.map(option => <label key={option} className="performer-detail-choice flex cursor-pointer items-center gap-2 rounded-xl border p-3 text-sm">
               <input type="radio" name={field.key} value={option} required={required} checked={answers[field.key] === option} onChange={() => setAnswers(prev => ({ ...prev, [field.key]: option }))} className="accent-orange-500" />{option}{field.key === 'duration' ? ' min' : ''}
             </label>)}</div>
             {field.key === 'reportedPaymentStatus' && <p className="mt-2 text-xs text-slate-400">Yeh aapka payment declaration hai. Verified payment Razorpay confirmation ke baad hi update hota hai.</p>}
           </fieldset>;
           return <div key={field.key}><label htmlFor={field.key} className="text-sm font-semibold">{field.label}{required ? ' *' : ''}</label>
-            {'multiline' in field ? <textarea id={field.key} rows={4} maxLength={6000} required={required} value={answers[field.key] || ''} onChange={e => setAnswers(prev => ({ ...prev, [field.key]: e.target.value }))} className={inputStyle} />
-              : <input id={field.key} type={'type' in field ? field.type : 'text'} maxLength={field.key === 'mobile' ? 20 : 6000} required={required} value={answers[field.key] || ''} onChange={e => setAnswers(prev => ({ ...prev, [field.key]: e.target.value }))} className={inputStyle} />}
+            {'multiline' in field ? <textarea id={field.key} placeholder="Apna jawab yahan likhein…" rows={4} maxLength={6000} required={required} value={answers[field.key] || ''} onChange={e => setAnswers(prev => ({ ...prev, [field.key]: e.target.value }))} className={inputStyle} />
+              : <input id={field.key} placeholder={field.key === 'mobile' ? 'Mobile number' : 'Yahan likhein…'} type={'type' in field ? field.type : 'text'} maxLength={field.key === 'mobile' ? 20 : 6000} required={required} value={answers[field.key] || ''} onChange={e => setAnswers(prev => ({ ...prev, [field.key]: e.target.value }))} className={inputStyle} />}
           </div>;
         })}
         <button disabled={busy} className="w-full rounded-xl bg-orange-500 px-6 py-4 font-black text-black hover:bg-orange-400 disabled:opacity-50">{busy ? 'Saving…' : 'Submit Performer Details'}</button>

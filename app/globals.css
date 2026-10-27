@@ -1033,3 +1033,44 @@ body.ggl-site {
     backdrop-filter: none !important;
   }
 }
+
+/* Performer detail fields must remain visible against the dark form card. */
+.ggl-site main.performer-details-form .performer-detail-input {
+  border: 2px solid #94a3b8;
+  background: #1e293b;
+  color: #fff;
+  min-height: 52px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.ggl-site main.performer-details-form .performer-detail-input::placeholder {
+  color: #cbd5e1;
+  opacity: 1;
+}
+.ggl-site main.performer-details-form .performer-detail-input:hover {
+  border-color: #e2e8f0;
+  background: #243247;
+}
+.ggl-site main.performer-details-form .performer-detail-input:focus {
+  border-color: #fb923c;
+  background: #1e293b;
+  outline: 2px solid #fb923c;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(251, 146, 60, 0.15);
+}
+.ggl-site main.performer-details-form .performer-detail-choice {
+  min-height: 48px;
+  border: 2px solid #94a3b8;
+  background: #1e293b;
+  color: #f8fafc;
+}
+.ggl-site main.performer-details-form .performer-detail-choice:hover,
+.ggl-site main.performer-details-form .performer-detail-choice:has(input:checked) {
+  border-color: #fb923c;
+  background: #3a2a1d;
+}
+.ggl-site main.performer-details-form .performer-detail-choice input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #fb923c;
+  box-shadow: none;
+}

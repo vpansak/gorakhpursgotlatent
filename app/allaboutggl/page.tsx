@@ -27,8 +27,8 @@ export default function AllAboutGGLPage() {
             "url": "https://www.gkpgotlatent.in",
             "description": "Gorakhpur's talent and entertainment platform supporting performers, creative projects, and local entertainment.",
             "founder": [
-              { "@type": "Person", "name": "Alok Singh", "jobTitle": "Show Creator and Co-Founder", "url": "https://www.gkpgotlatent.in/aboutaloksingh" },
-              { "@type": "Person", "name": "Naveen Varma", "jobTitle": "Co-Founder" }
+              { "@type": "Person", "name": "Naveen Varma", "jobTitle": "Founder & Show Creator", "url": "https://www.gkpgotlatent.in/founder" },
+              { "@type": "Person", "name": "Alok Singh", "jobTitle": "Co-Founder & Technical Head", "url": "https://www.gkpgotlatent.in/cofounder" }
             ],
             "sameAs": [
               "https://www.instagram.com/gkp_got_latent/",
@@ -69,25 +69,25 @@ export default function AllAboutGGLPage() {
                 <p>His responsibilities include shaping the show concept and its digital presence, developing and maintaining the GGL website, supporting online performer and guest application journeys, organizing event information, and building technology-led tools for audience and team workflows.</p>
                 <p>Alongside the creative side, Alok focuses on making GGL easier to discover online and helping artists find official information about applications, events and projects. His broader interests include web development, software technology, digital products and AI-enabled workflows.</p>
                 <div className="chips"><span>Show Creator</span><span>Website & Technology</span><span>Digital Operations</span></div>
-                <a className="profile-link" href="/aboutaloksingh">Read Alok Singh’s profile →</a>
+                <a className="profile-link" href="/founder">Read Naveen Varma’s profile →</a>
               </article>
               <article className="founder-card">
-                <div className="number">CO-FOUNDER · 02</div>
+                <div className="number">CO-FOUNDER · TECHNICAL HEAD</div>
                 <h3>Naveen Varma</h3>
-                <p className="role">Co-Founder · GGL</p>
-                <p>Naveen Varma is a Co-Founder of Gorakhpur’s Got Latent and part of the leadership behind the initiative. The co-founders share the aim of building a recognizable local platform for talent, performance and entertainment.</p>
+                <p className="role">Co-Founder · Technical Head · Full-Stack Developer</p>
+                <p>Alok Singh leads GGL’s website, digital applications, ticketing and technical infrastructure, helping turn the show’s vision into a working digital experience.</p>
                 <p>GGL’s creative and operational development is a collaborative effort. Specific responsibilities may vary by project and are communicated by the team through official channels.</p>
                 <div className="chips"><span>Co-Founder</span><span>Shared Vision</span><span>GGL Leadership</span></div>
               </article>
             </div>
-            <div className="ownership"><strong>Equal co-ownership:</strong><span>Alok Singh — 50%</span><b>+</b><span>Naveen Varma — 50%</span></div>
+            
           </section>
 
           <section className="section">
             <div className="section-label">03 / ALOK’S ROLE</div>
             <h2>Why Alok Singh is closely connected with GGL</h2>
             <div className="feature-grid">
-              <div className="feature"><h3>Show creation</h3><p>Contributes to the show’s concept, identity and creative direction as GGL’s Show Creator.</p></div>
+              <div className="feature"><h3>Show creation</h3><p>Builds and maintains the website, application flows, ticketing and technology infrastructure as Co-Founder & Technical Head.</p></div>
               <div className="feature"><h3>Website and digital presence</h3><p>Builds and improves the official website and digital pathways used to share GGL information.</p></div>
               <div className="feature"><h3>Performer journey</h3><p>Supports online information and application flows so aspiring artists can understand how to connect with GGL.</p></div>
               <div className="feature"><h3>Technology and operations</h3><p>Works on digital tools, event information and practical systems that support the team’s activities.</p></div>

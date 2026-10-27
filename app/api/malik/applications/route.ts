@@ -1,3 +1,4 @@
+import { ensurePerformerDetailsTable } from '@/lib/performerDetails';
 import { NextResponse } from 'next/server';
 import { performerSelect, performerOrder, guestSelect, guestOrder } from '@/lib/adminApplicationQueries';
 import { db } from '@/lib/db';
@@ -9,6 +10,8 @@ export async function GET(req: Request) {
     if (!session || !['SUPER_ADMIN', 'ADMIN', 'STAFF'].includes(session.role)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
+
+    await ensurePerformerDetailsTable();
 
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type') || 'performer'; // performer, guest, sponsor, team, all

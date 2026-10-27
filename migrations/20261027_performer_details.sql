@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS performer_details (
+  app_id TEXT PRIMARY KEY REFERENCES performer_applications(app_id),
+  answers JSONB NOT NULL DEFAULT '{}'::jsonb,
+  submitted_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

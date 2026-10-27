@@ -8,20 +8,20 @@ export const metadata = {
 
 const sections = [
   {
-    title: "1. What does the ₹29 application fee cover?",
-    body: "The ₹29 is a one-time application processing/consideration fee for submitting a performer application for Gorakhpur's Got Latent (GGL) Episode 2. It covers only the application stage. It is not a ticket price, participation fee, audition guarantee, selection fee or promise of being featured on the show."
+    title: "1. Application form and separate payment links",
+    body: "Submitting the performer audition form is free. If GGL sends you a separate official payment link, review the amount and purpose shown on that page before paying. The current performer payment-link flow is ₹799. Payment does not guarantee shortlisting, selection or a performance slot."
   },
   {
     title: "2. Selection and shortlisting",
-    body: "Submitting an application and paying ₹29 does not guarantee that an applicant will be shortlisted, selected, invited to audition or given a performance slot. Applications and performance clips are reviewed according to the show's requirements and the organisers' decisions. Please provide accurate contact details and genuine performance information."
+    body: "Submitting an application and paying the stated fee does not guarantee that an applicant will be shortlisted, selected, invited to audition or given a performance slot. Applications and performance clips are reviewed according to the show's requirements and the organisers' decisions. Please provide accurate contact details and genuine performance information."
   },
   {
     title: "3. Additional charges after shortlisting",
-    body: "If an applicant is shortlisted or selected, additional charges may apply for a later stage or a separately offered service, such as participation, a show ticket, training, travel, accommodation or other clearly described arrangements. These are not included in the ₹29 application fee. Any applicable amount, purpose, due date and conditions must be communicated separately before the applicant is asked to pay. Do not assume any additional payment is required unless GGL communicates it through an official channel, and ask for clarification if details are unclear."
+    body: "If an applicant is shortlisted or selected, additional charges may apply for a later stage or a separately offered service, such as participation, a show ticket, training, travel, accommodation or other clearly described arrangements. These are not included in the stated application fee. Any applicable amount, purpose, due date and conditions must be communicated separately before the applicant is asked to pay. Do not assume any additional payment is required unless GGL communicates it through an official channel, and ask for clarification if details are unclear."
   },
   {
     title: "4. Non-refundable application fee",
-    body: "Once the ₹29 application payment has been successfully completed and recorded, it is non-refundable because it is charged for application processing/consideration. The fee is not refundable merely because an applicant is not shortlisted, is not selected, changes their mind, does not attend a later stage, or the event date is postponed. This policy does not override any refund or remedy required by applicable law. If you are charged more than once for the same application, or money is debited but the payment/application is not recorded, contact GGL with the payment reference so the transaction can be checked and any confirmed duplicate or failed transaction can be resolved."
+    body: "Once the stated application payment has been successfully completed and recorded, it is non-refundable because it is charged for application processing/consideration. The fee is not refundable merely because an applicant is not shortlisted, is not selected, changes their mind, does not attend a later stage, or the event date is postponed. This policy does not override any refund or remedy required by applicable law. If you are charged more than once for the same application, or money is debited but the payment/application is not recorded, contact GGL with the payment reference so the transaction can be checked and any confirmed duplicate or failed transaction can be resolved."
   },
   {
     title: "5. Event date changes or cancellation",
@@ -52,8 +52,8 @@ export default function PerformerPolicyPage() {
           <h1 className="mt-4 text-3xl font-black uppercase sm:text-4xl">Performer Application Policy</h1>
           <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">Gorakhpur's Got Latent (GGL) · Episode 2</p>
           <div className="mt-5 rounded-xl border border-amber-400/30 bg-black/40 p-4">
-            <p className="font-extrabold text-amber-200">Important: ₹29 is only the application fee.</p>
-            <p className="mt-1 text-sm leading-6 text-slate-200">It is non-refundable after successful payment. If you are shortlisted, separate charges may apply for a later stage or service; those charges are not included in ₹29 and must be communicated separately.</p>
+            <p className="font-extrabold text-amber-200">Important: The audition application form is free.</p>
+            <p className="mt-1 text-sm leading-6 text-slate-200">A separate official performer payment link shows ₹799. Review the displayed amount and the communicated payment conditions before paying.</p>
           </div>
         </header>
         <div className="mt-6 space-y-4">

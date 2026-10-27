@@ -84,6 +84,7 @@ export const pool = {
 
 export interface AppDatabase {
   query: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
+  queryOneStrict: <T = any>(sql: string, params?: any[]) => Promise<T | null>;
   queryStrict: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
   queryOne: <T = any>(sql: string, params?: any[]) => Promise<T | null>;
   execute: (sql: string, params?: any[]) => Promise<{ rowCount: number }>;
@@ -487,6 +488,10 @@ export async function queryStrict<T = any>(sql: string, params: any[] = []): Pro
   return executeWithRetry<T>(sql, params, 2, true);
 }
 
+export async function queryOneStrict<T = any>(sql: string, params: any[] = []): Promise<T | null> {
+  return (await queryStrict<T>(sql, params))[0] ?? null;
+}
+
 export async function queryOne<T = any>(sql: string, params: any[] = []): Promise<T | null> {
   const rows = await query<T>(sql, params);
   return rows.length > 0 ? rows[0] : null;
@@ -506,6 +511,7 @@ export async function execute(sql: string, params: any[] = []): Promise<{ rowCou
 export const db: AppDatabase = {
   query,
   queryStrict,
+  queryOneStrict,
   queryOne,
   execute,
   pool,

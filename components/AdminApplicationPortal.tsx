@@ -1,5 +1,7 @@
 'use client';
 
+import { createPortal } from 'react-dom';
+import { performerDetailFields, hasVerifiedPerformerPayment } from '@/lib/performerDetailsFields';
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import {
@@ -38,6 +40,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
   const [ticketStats, setTicketStats] = useState({ totalBooked: 0, paidTickets: 0 });
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
+  const [detailFilter, setDetailFilter] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [readFilter, setReadFilter] = useState<'ALL' | 'UNREAD' | 'READ'>('ALL');
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -50,6 +53,25 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
   const [savingNote, setSavingNote] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [exportingMaster, setExportingMaster] = useState(false);
+
+  useEffect(() => {
+    if (!selectedItem) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previous; };
+  }, [Boolean(selectedItem)]);
+
+  const handleSendDetailForm = async (item: any) => {
+    const waTab = window.open('about:blank', '_blank');
+    if (!waTab) { window.alert('Please allow pop-ups to open WhatsApp.'); return; }
+    waTab.document.title = 'Preparing performer form…';
+    try {
+      const res = await fetch('/api/malik/performer-details', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: item.app_id }) });
+      const result = await res.json();
+      if (!res.ok || !result.success) throw new Error(result.error || 'Could not create form link');
+      waTab.location.href = result.whatsappUrl;
+    } catch (error: any) { waTab.close(); window.alert(error.message || 'Unable to prepare form'); }
+  };
 
   // Fetch Computer Ji scores from API (with 10-day TTL auto-cleanup)
   const fetchComputerJiScores = async () => {
@@ -389,10 +411,13 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
         if (!item.is_read) return false;
       }
 
-      // Status filter
+      if (activeTab === 'performer' && detailFilter !== 'ALL' && Boolean(item.details_submitted_at) !== (detailFilter === 'FILLED')) return false;
+
       if (statusFilter !== 'ALL') {
-        const itemStatus = item.application_status || item.payment_status || item.status || '';
-        if (itemStatus !== statusFilter) return false;
+        const verified = activeTab === 'performer' && hasVerifiedPerformerPayment(item);
+        if (activeTab === 'performer' && ['PAID', 'UNPAID', 'PAYMENT_VERIFIED'].includes(statusFilter)) {
+          if (statusFilter === 'UNPAID' ? verified : !verified) return false;
+        } else if (![item.application_status, item.payment_status, item.status].includes(statusFilter)) return false;
       }
 
       // Search query (Email, Name, Phone, App ID, Razorpay ID)
@@ -439,7 +464,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
       const bTime = new Date(b.created_at || 0).getTime();
       return bTime - aTime;
     });
-  }, [currentList, activeTab, statusFilter, readFilter, search]);
+  }, [currentList, activeTab, statusFilter, detailFilter, readFilter, search]);
 
   // Counts
   const unreadCount = useMemo(() => {
@@ -812,6 +837,9 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
             </div>
 
             {/* Status Dropdown */}
+            {activeTab === 'performer' && <select aria-label="Detail form status" value={detailFilter} onChange={e => setDetailFilter(e.target.value)} className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white">
+              <option value="ALL">All detail forms</option><option value="FILLED">Detail form filled</option><option value="MISSING">Detail form not filled</option>
+            </select>}
             <div className="flex items-center gap-1.5 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-700">
               <Filter className="w-3.5 h-3.5 text-slate-400" />
               <select
@@ -823,7 +851,8 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                 {activeTab === 'performer' && (
                   <>
                     <option value="PAYMENT_VERIFIED" className="bg-slate-900">PAYMENT_VERIFIED</option>
-                    <option value="PAID" className="bg-slate-900">PAID</option>
+                    <option value="PAID" className="bg-slate-900">Paid — verified</option>
+                    <option value="UNPAID" className="bg-slate-900">Unpaid / unverified</option>
                     <option value="UNDER_REVIEW" className="bg-slate-900">UNDER_REVIEW</option>
                     <option value="SHORTLISTED" className="bg-slate-900">SHORTLISTED</option>
                     <option value="REFUNDED" className="bg-slate-900">REFUNDED</option>
@@ -1180,15 +1209,15 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                   const displayPhone = item.mobile_number || item.phone || item.whatsapp_number || item.whatsapp || 'N/A';
                   const email = item.email || item.biz_email || '';
                   const status = item.application_status || item.payment_status || item.status || 'RECEIVED';
-                  const isPaid = item.payment_status === 'PAID' || item.payment_status === 'PAYMENT_VERIFIED';
+                  const isPaid = activeTab === 'performer' ? hasVerifiedPerformerPayment(item) : item.payment_status === 'PAID' || item.payment_status === 'PAYMENT_VERIFIED';
                   const isUnread = !item.is_read;
 
                   return (
                     <tr
                       key={appId}
                       className={`transition-colors border-l-4 ${
-                        isPaid
-                          ? 'border-l-emerald-400 bg-emerald-500/[0.12] hover:bg-emerald-500/[0.18]'
+                        activeTab === 'performer' && item.details_submitted_at
+                          ? 'border-l-orange-400 bg-orange-500/[0.18] hover:bg-orange-500/[0.24]'
                           : isUnread
                             ? 'border-l-blue-400 bg-blue-500/[0.04] hover:bg-blue-500/[0.08]'
                             : 'border-l-transparent hover:bg-slate-900/60 opacity-80 hover:opacity-100'
@@ -1204,6 +1233,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                         <div className="flex items-center gap-1.5">
                           {isUnread && <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0 animate-ping" title="Unread Application (Top)" />}
                           <span>{appId}</span>
+                          {activeTab === 'performer' && isPaid && <span title="Razorpay payment verified" aria-label="Razorpay payment verified" className="text-sky-300"><CheckCircle2 className="h-4 w-4" /></span>}
                         </div>
                       </td>
 
@@ -1268,12 +1298,12 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                                 </>
                               ) : (
                                 (() => {
-                                  // ₹29 is shown as PAID only when server-side verification matched a PAID payment link and Razorpay Payment ID.
-                                  // Preserve the legacy ₹799 PAID records as they are.
-                                  const isVerified29 = Number(item.payment_amount) === 29 && Boolean(item.verified_payment_id);
-                                  const isLegacy799Paid = Number(item.payment_amount) === 799 && (item.payment_status === 'PAID' || item.payment_status === 'PAYMENT_VERIFIED') && Boolean(item.payment_id);
-                                  if (isVerified29 || isLegacy799Paid) {
-                                    const displayPaymentId = isVerified29 ? item.verified_payment_id : item.payment_id;
+                                  // Paid badges follow the server-verified payment link.
+
+                                  const isVerifiedPayment = hasVerifiedPerformerPayment(item);
+
+                                  if (isVerifiedPayment) {
+                                    const displayPaymentId = item.verified_payment_id;
                                     return (
                                       <>
                                         <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 inline-flex items-center gap-1">
@@ -1297,9 +1327,10 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                                   return <span className="text-[10px] text-amber-300/80 font-semibold">PAYMENT PENDING</span>;
                                 })()
                               )}
-                              {activeTab === 'performer' && item.payment_status !== 'PAID' && item.payment_status !== 'PAYMENT_VERIFIED' && (
+                              {activeTab === 'performer' && !isPaid && (
                                 <button onClick={async () => { const waTab = window.open('about:blank', '_blank'); if (!waTab) { window.alert('Please allow pop-ups for this site, then click Get Paid again.'); return; } waTab.document.title = 'Opening WhatsApp…'; waTab.document.body.innerHTML = '<p style="font-family:system-ui;padding:24px">Generating payment link and opening WhatsApp…</p>'; try { const res = await fetch('/api/malik/performer-payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: item.app_id || item.id, amount: 799 }) }); const json = await res.json(); if (!res.ok || !json.success || !json.whatsappUrl) throw new Error(json.error || 'Could not create payment link'); waTab.location.href = json.whatsappUrl; } catch (e: any) { waTab.close(); window.alert(e.message || 'Could not create payment link'); } }} className="mt-2 px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-[10px] font-extrabold inline-flex items-center gap-1.5" title="Create ₹799 payment link and immediately open WhatsApp"><CreditCard className="w-3 h-3" /> Get Paid ₹799</button>
                               )}
+                              {activeTab === 'performer' && <button onClick={() => handleSendDetailForm(item)} className="ml-2 mt-2 inline-flex items-center gap-1.5 rounded-lg border border-orange-400/40 bg-orange-500/15 px-2.5 py-1.5 text-[10px] font-bold text-orange-200" title="Send pre-filled detail form on WhatsApp" aria-label={`Send detail form to ${name}`}><FileText className="h-3.5 w-3.5" /> Detail Form</button>}
                             </div>
                           </td>
                         </>
@@ -1404,9 +1435,9 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
       </div>
 
       {/* FULL APPLICATION DETAILS MODAL */}
-      {selectedItem?.__isLead && (
+      {selectedItem?.__isLead && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="glass-panel max-w-3xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 rounded-3xl border border-rose-500/40 space-y-6 shadow-2xl">
+          <div style={{ overflowY: 'auto', maxHeight: '92dvh', overscrollBehavior: 'contain' }} role="dialog" aria-modal="true" aria-label="Application details" className="glass-panel max-w-3xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 rounded-3xl border border-rose-500/40 space-y-6 shadow-2xl">
             <div className="flex items-start justify-between border-b border-white/10 pb-4">
               <div>
                 <div className="flex items-center gap-2">
@@ -1471,12 +1502,12 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
               <button onClick={() => setSelectedItem(null)} className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs cursor-pointer">Close</button>
             </div>
           </div>
-        </div>
+        </div>, document.body
       )}
 
-      {selectedItem && !selectedItem.__isLead && (
+      {selectedItem && !selectedItem.__isLead && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="glass-panel max-w-3xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 rounded-3xl border border-amber-500/40 space-y-6 shadow-2xl">
+          <div style={{ overflowY: 'auto', maxHeight: '92dvh', overscrollBehavior: 'contain' }} role="dialog" aria-modal="true" aria-label="Application details" className="glass-panel max-w-3xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 rounded-3xl border border-amber-500/40 space-y-6 shadow-2xl">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div>
@@ -1642,6 +1673,22 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
             </div>
 
             {/* Description & Bio */}
+            {activeTab === 'performer' && <section className="rounded-2xl border border-slate-700 p-4">
+              <h3 className="mb-4 font-black text-amber-300">APPLICATION — ALL SAVED FIELDS</h3>
+              <dl className="space-y-3">{Object.entries(selectedItem).filter(([key]) => !key.startsWith('__') && !['detail_answers', 'verified_payment_id'].includes(key)).map(([key, value]) => <div key={key}>
+                <dt className="text-xs font-bold capitalize text-slate-400">{key.replace(/_/g, ' ')}</dt>
+                <dd className="mt-1 whitespace-pre-wrap break-words text-sm text-white">{value == null || value === '' ? '—' : typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)}</dd>
+              </div>)}</dl>
+            </section>}
+
+            {activeTab === 'performer' && <section className="space-y-4 rounded-2xl border border-orange-400/30 bg-orange-400/5 p-4">
+              <h3 className="font-black text-orange-300">DETAILED PERFORMER FORM</h3>
+              {selectedItem.details_submitted_at ? <><p className="text-xs text-slate-400">Submitted: {new Date(selectedItem.details_submitted_at).toLocaleString('en-IN')}</p>
+                {performerDetailFields.map(field => <div key={field.key}><p className="text-xs font-bold text-slate-400">{field.label}</p><p className="mt-1 whitespace-pre-wrap break-words text-sm text-white">{selectedItem.detail_answers?.[field.key] || '—'}</p></div>)}
+              </> : <p className="text-sm text-slate-400">Detailed form abhi submit nahi hua hai.</p>}
+              <button onClick={() => handleSendDetailForm(selectedItem)} className="rounded-xl bg-orange-500 px-4 py-2 text-sm font-bold text-black">Send Detail Form</button>
+            </section>}
+
             {(selectedItem.performance_description || selectedItem.about || selectedItem.short_intro || selectedItem.why_ggl || selectedItem.additional_message) && (
               <div className="space-y-2 text-xs bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
                 <span className="text-amber-400 font-bold uppercase block text-[11px]">Application Description & Notes</span>
@@ -1858,7 +1905,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
     </div>
   );
 }

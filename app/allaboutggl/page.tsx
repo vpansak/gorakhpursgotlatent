@@ -6,12 +6,12 @@ export default function AllAboutGGLPage() {
   return (
     <>
       <Head>
-        <title>Alok Singh & Naveen Varma — Co-Founders of Gorakhpur’s Got Latent (GGL)</title>
-        <meta name="description" content="Learn about Alok Singh, Show Creator and Co-Founder of Gorakhpur’s Got Latent (GGL), and Naveen Varma. GGL is a talent and entertainment platform based in Gorakhpur, Uttar Pradesh." />
+        <title>Naveen Varma — Founder | Alok Singh — Co-Founder & Technical Head of GGL</title>
+        <meta name="description" content="Meet Naveen Varma, Founder and Show Creator of Gorakhpur’s Got Latent (GGL), and Alok Singh, Co-Founder & Technical Head. GGL is a talent and entertainment platform based in Gorakhpur, Uttar Pradesh." />
         <meta name="keywords" content="Alok Singh, Alok Singh GGL, Gorakhpur's Got Latent founder, GGL show creator, GGL co-founder, Naveen Varma, Gorakhpur talent platform, Gorakhpur entertainment" />
         <link rel="canonical" href="https://www.gkpgotlatent.in/allaboutggl" />
-        <meta property="og:title" content="Alok Singh & Naveen Varma | Gorakhpur’s Got Latent" />
-        <meta property="og:description" content="Meet the co-founders behind Gorakhpur’s Got Latent: Alok Singh, Show Creator and technology lead, and Naveen Varma." />
+        <meta property="og:title" content="Naveen Varma, Founder | Gorakhpur’s Got Latent" />
+        <meta property="og:description" content="Naveen Varma leads Gorakhpur’s Got Latent as Founder and Show Creator; Alok Singh serves as Co-Founder & Technical Head." />
         <meta property="og:url" content="https://www.gkpgotlatent.in/allaboutggl" />
         <meta property="og:type" content="article" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
@@ -58,14 +58,14 @@ export default function AllAboutGGLPage() {
 
           <section className="founders">
             <div className="section-label">02 / LEADERSHIP</div>
-            <h2>Two Co-Founders. One Shared Vision.</h2>
-            <p className="muted">GGL is led jointly by its two co-founders. As stated by the organization, Alok Singh and Naveen Varma hold equal 50–50 ownership.</p>
+            <h2>Founder & Technical Leadership</h2>
+            <p className="muted">Naveen Varma is the Founder and Show Creator of GGL. Alok Singh serves as Co-Founder & Technical Head, supporting the digital platform and technical operations.</p>
             <div className="founder-grid">
               <article className="founder-card featured">
-                <div className="number">CO-FOUNDER · 01</div>
+                <div className="number">FOUNDER · SHOW CREATOR</div>
                 <h3>Alok Singh</h3>
-                <p className="role">Show Creator · Co-Founder · Full-Stack Developer · Technology Builder</p>
-                <p>Alok Singh is the Show Creator and Co-Founder of Gorakhpur’s Got Latent. His work brings together the creative concept of the show and the digital systems that help the initiative operate and communicate with its audience.</p>
+                <p className="role">Founder · Show Creator · Creative Leadership</p>
+                <p>Naveen Varma is the Founder and Show Creator of Gorakhpur’s Got Latent, leading the show's creative direction and entertainment format.</p>
                 <p>His responsibilities include shaping the show concept and its digital presence, developing and maintaining the GGL website, supporting online performer and guest application journeys, organizing event information, and building technology-led tools for audience and team workflows.</p>
                 <p>Alongside the creative side, Alok focuses on making GGL easier to discover online and helping artists find official information about applications, events and projects. His broader interests include web development, software technology, digital products and AI-enabled workflows.</p>
                 <div className="chips"><span>Show Creator</span><span>Website & Technology</span><span>Digital Operations</span></div>

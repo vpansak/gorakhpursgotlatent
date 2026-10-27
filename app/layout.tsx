@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   title: "Gorakhpur’s Got Latent | Kuch Bhi Ho Sakta Hai",
   description: "Kuch Bhi Ho Sakta Hai! Official platform for Gorakhpur's Got Latent live talent hunt, comedy roast, music performances, ticket booking, and performer registration.",
   keywords: ["Gorakhpur's Got Latent", "GGL Live", "Talent Show Gorakhpur", "Standup Comedy Gorakhpur", "Live Show Tickets", "Bhojpuri Fusion", "Purvanchal Talent"],
-  authors: [{ name: "Alok Singh", url: "https://gkpgotlatent.in/developer" }],
+  authors: [{ name: "Naveen Varma", url: "https://gkpgotlatent.in/founder" }, { name: "Alok Singh", url: "https://gkpgotlatent.in/cofounder" }],
   creator: "Naveen Varma",
   publisher: "Gorakhpur's Got Latent",
   robots: {
@@ -112,7 +112,7 @@ const jsonLdData = {
         '@type': 'Person',
         '@id': 'https://gkpgotlatent.in/developer#aloksingh',
         'name': 'Alok Singh',
-        'jobTitle': 'Head of Developers & Tech Architect',
+        'jobTitle': 'Co-Founder & Technical Head',
         'url': 'https://gkpgotlatent.in/developer',
         'sameAs': [
           'https://www.instagram.com/aloksingh_._/',
@@ -124,7 +124,7 @@ const jsonLdData = {
         '@type': 'Person',
         '@id': 'https://gkpgotlatent.in/#naveenvarma',
         'name': 'Naveen Varma',
-        'jobTitle': 'Show Creator & Founder',
+        'jobTitle': 'Founder & Show Creator',
         'url': 'https://gkpgotlatent.in/founder',
         'sameAs': [
           'https://www.instagram.com/nvn_unfiltered/'

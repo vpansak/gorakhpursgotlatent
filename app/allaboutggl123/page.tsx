@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: "All About GGL | Alok Singh & Naveen – Co-Founders of Gorakhpur's Got Latent",
+  title: "Naveen Varma Founder | Alok Singh Co-Founder & Technical Head — GGL",
   description:
-    "Learn about Gorakhpur's Got Latent (GGL), its co-founders Alok Singh and Naveen, the 50-50% partnership stated by the founders, the show's vision, talent platform, episodes and official links.",
+    "Learn about Gorakhpur's Got Latent (GGL), Founder and Show Creator Naveen Varma, and Alok Singh, Co-Founder & Technical Head, the show's vision, talent platform, episodes and official links.",
   alternates: { canonical: 'https://www.gkpgotlatent.in/allaboutggl123' },
   openGraph: {
-    title: "All About GGL | Alok Singh & Naveen",
+    title: "Naveen Varma Founder | All About GGL",
     description:
-      "The story, vision and people behind Gorakhpur's Got Latent — co-founded by Alok Singh and Naveen.",
+      "The story and vision of Gorakhpur's Got Latent, founded and creatively led by Naveen Varma with Alok Singh as Co-Founder & Technical Head.",
     url: 'https://www.gkpgotlatent.in/allaboutggl123',
     siteName: "Gorakhpur's Got Latent",
     type: 'website',
@@ -51,10 +51,10 @@ export default function AllAboutGGL123Page() {
       <section className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
         <div className="grid gap-6 md:grid-cols-2">
           <article className="rounded-3xl border border-red-500/30 bg-white/[0.04] p-6 sm:p-8">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-red-400">Co-Founder · Show Creator · Technology</p>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-red-400">Co-Founder · Technical Head</p>
             <h2 className="mt-3 text-3xl font-black">Alok Singh</h2>
             <p className="mt-4 leading-7 text-zinc-300">
-              Alok Singh is a co-founder and show creator associated with building Gorakhpur&apos;s Got Latent. His work spans the show&apos;s concept and digital presence, website development, technology, and the systems that help performers discover and engage with GGL.
+              Alok Singh serves as Co-Founder & Technical Head of Gorakhpur&apos;s Got Latent. His work focuses on website development, digital ticketing, performer applications, and technical systems supporting show operations.
             </p>
             <p className="mt-4 leading-7 text-zinc-300">
               A technology builder and full-stack developer from the Gorakhpur region, Alok brings together creativity and technology with the goal of helping local talent reach a wider audience.
@@ -66,19 +66,19 @@ export default function AllAboutGGL123Page() {
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300">Co-Founder</p>
             <h2 className="mt-3 text-3xl font-black">Naveen</h2>
             <p className="mt-4 leading-7 text-zinc-300">
-              Naveen is also a co-founder of Gorakhpur&apos;s Got Latent. He and Alok have been involved together in bringing the GGL concept and platform forward.
+              Naveen Varma is the Founder and Show Creator of Gorakhpur&apos;s Got Latent. He leads the show's creative vision, format, hosting, and talent showcase.
             </p>
             <p className="mt-4 leading-7 text-zinc-300">
-              GGL is a collaborative effort: both co-founders contribute to the project and its development. This page identifies both founders so that information about the people behind the platform is easier to find.
+              Naveen Varma leads GGL as Founder and Show Creator. Alok Singh supports the initiative as Co-Founder & Technical Head, developing the digital platform and technical operations.
             </p>
           </article>
         </div>
 
         <section className="mt-8 rounded-3xl border border-amber-400/30 bg-amber-400/[0.06] p-6 sm:p-8">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-200">Partnership</p>
-          <h2 className="mt-3 text-2xl font-black">Alok Singh & Naveen — 50–50% partnership</h2>
+          <h2 className="mt-3 text-2xl font-black">Naveen Varma — Founder · Alok Singh — Technical Co-Founder</h2>
           <p className="mt-3 max-w-4xl leading-7 text-zinc-300">
-            As stated by the GGL team for this profile, Alok Singh and Naveen are associated with GGL on a 50–50% partnership basis. For formal legal, financial, or contractual matters, refer to the applicable signed agreements and official records.
+            Naveen Varma is credited as Founder and Show Creator. Alok Singh is credited as Co-Founder & Technical Head.
           </p>
         </section>
 

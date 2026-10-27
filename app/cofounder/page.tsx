@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Alok Singh — Co-Founder | Gorakhpur’s Got Latent',
+  title: 'Alok Singh — Co-Founder & Technical Head | Gorakhpur’s Got Latent',
   description:
     'The story of Alok Singh, Co-Founder of Gorakhpur’s Got Latent — from Kaudiram, Gorakhpur to building a new entertainment platform with technology, creativity and Naveen.',
   keywords: [
@@ -66,7 +66,7 @@ const personJsonLd = {
     '@type': 'Person',
     '@id': 'https://gkpgotlatent.in/cofounder#person',
     name: 'Alok Singh',
-    jobTitle: 'Co-Founder',
+    jobTitle: 'Co-Founder & Technical Head',
     image: 'https://gkpgotlatent.in/developer-photo-1.jpg',
     sameAs: [
       'https://www.instagram.com/aloksingh_._/',
@@ -126,7 +126,7 @@ export default function CofounderPage() {
         <section className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.3em] text-amber-300">
-              Gorakhpur&apos;s Got Latent · Co-Founder
+              Gorakhpur&apos;s Got Latent · Co-Founder & Technical Head
             </p>
 
             <h1 className="mt-5 text-5xl font-black tracking-[-0.04em] sm:text-7xl lg:text-8xl">
@@ -135,7 +135,7 @@ export default function CofounderPage() {
             </h1>
 
             <p className="mt-5 max-w-2xl text-xl font-bold leading-8 text-slate-200 sm:text-2xl">
-              Co-Founder · Full-Stack Developer · Technology Builder · A journey from Kaudiram to building a stage for Gorakhpur.
+              Co-Founder & Technical Head · Full-Stack Developer · Leads GGL’s website, digital systems and technical infrastructure alongside Founder Naveen Varma.
             </p>
 
             <div className="mt-7 inline-flex items-center rounded-full border border-amber-300/25 bg-amber-300/10 px-4 py-2 text-sm font-bold text-amber-200">
@@ -214,7 +214,7 @@ export default function CofounderPage() {
             </p>
             <p>
               Today, Alok's role sits at the intersection of <strong className="text-white">
-              technology and vision</strong>. As Co-Founder and Full-Stack Developer, he
+              technology and vision</strong>. As Co-Founder & Technical Head and Full-Stack Developer, he
               works on the digital side of the platform while helping shape the bigger
               idea behind it.
             </p>

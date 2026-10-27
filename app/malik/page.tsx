@@ -1,3 +1,4 @@
+import { performerSelect, performerOrder, guestSelect, guestOrder } from '@/lib/adminApplicationQueries';
 import Link from 'next/link';
 import { getSession } from '@/lib/auth';
 import { db } from '@/lib/db';
@@ -15,11 +16,11 @@ async function getAdminData() {
 
   // Fetch all 4 application streams directly from Neon PostgreSQL
   const [performers, sponsors, team, guests, talentTrip] = await Promise.all([
-    db.query("SELECT p.*, NULL AS verified_payment_id FROM performer_applications p ORDER BY COALESCE(p.is_read, 0) ASC, p.created_at DESC"),
-    db.query('SELECT * FROM sponsor_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC'),
-    db.query('SELECT * FROM team_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC'),
-    db.query("SELECT g.*, l.razorpay_payment_id AS payment_id, l.amount AS payment_amount, CASE WHEN l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49 THEN 'PAID' ELSE NULL END AS payment_status FROM guest_applications g LEFT JOIN guest_payment_links l ON l.app_id=g.app_id WHERE (g.created_at < TIMESTAMPTZ '2026-10-26 05:15:00+00' OR (l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49)) ORDER BY COALESCE(g.is_read, 0) ASC, g.created_at DESC"),
-    db.query('SELECT COUNT(*)::int AS total FROM ggl_talent_trip_registrations'),
+    db.queryStrict(performerSelect + performerOrder),
+    db.queryStrict('SELECT * FROM sponsor_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC'),
+    db.queryStrict('SELECT * FROM team_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC'),
+    db.queryStrict(guestSelect + guestOrder),
+    db.queryStrict('SELECT COUNT(*)::int AS total FROM ggl_talent_trip_registrations'),
   ]);
 
   return {

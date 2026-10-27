@@ -72,7 +72,7 @@ export async function trackLead(input: {
   const cleanDob = (input.dob || '').trim();
   const qty = Number(input.quantity) || 1;
   const source = (input.source || 'unknown').trim();
-  const status = input.status || 'IN_PROGRESS';
+  const requestedStatus = input.status || 'IN_PROGRESS';
   const now = new Date().toISOString();
   const id = input.leadId || `lead_${crypto.randomUUID()}`;
 
@@ -90,7 +90,7 @@ export async function trackLead(input: {
     dob: cleanDob,
     quantity: qty,
     source,
-    status,
+    status: existing?.status === 'SUBMITTED' ? 'SUBMITTED' : requestedStatus,
     data: input.data || {},
     is_read: existing?.is_read || 0,
     read_at: existing?.read_at || null,
@@ -114,7 +114,7 @@ export async function trackLead(input: {
         dob=EXCLUDED.dob,
         quantity=EXCLUDED.quantity,
         source=EXCLUDED.source,
-        status=EXCLUDED.status,
+        status=CASE WHEN abandoned_leads.status='SUBMITTED' THEN abandoned_leads.status ELSE EXCLUDED.status END,
         data=EXCLUDED.data,
         updated_at=EXCLUDED.updated_at
     `, [

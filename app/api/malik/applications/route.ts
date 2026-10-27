@@ -1,21 +1,7 @@
 import { NextResponse } from 'next/server';
+import { performerSelect, performerOrder, guestSelect, guestOrder } from '@/lib/adminApplicationQueries';
 import { db } from '@/lib/db';
 import { getSession } from '@/lib/auth';
-
-/**
- * Auto-cleanup entries that were marked as read (is_read = 1) 
- * and read_at is older than 60 days (2 months).
- */
-async function autoCleanupReadApplications() {
-  try {
-    await db.execute("DELETE FROM performer_applications WHERE COALESCE(is_read, 0) = 1 AND read_at IS NOT NULL AND read_at < (CURRENT_TIMESTAMP - INTERVAL '60 days')");
-    await db.execute("DELETE FROM sponsor_applications WHERE COALESCE(is_read, 0) = 1 AND read_at IS NOT NULL AND read_at < (CURRENT_TIMESTAMP - INTERVAL '60 days')");
-    await db.execute("DELETE FROM team_applications WHERE COALESCE(is_read, 0) = 1 AND read_at IS NOT NULL AND read_at < (CURRENT_TIMESTAMP - INTERVAL '60 days')");
-    await db.execute("DELETE FROM guest_applications WHERE COALESCE(is_read, 0) = 1 AND read_at IS NOT NULL AND read_at < (CURRENT_TIMESTAMP - INTERVAL '60 days')");
-  } catch (err) {
-    console.error('Auto cleanup error:', err);
-  }
-}
 
 export async function GET(req: Request) {
   try {
@@ -24,9 +10,6 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    // Run auto-cleanup for items marked as read more than 60 days ago
-    await autoCleanupReadApplications();
-
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type') || 'performer'; // performer, guest, sponsor, team, all
     const search = searchParams.get('search') || '';
@@ -34,10 +17,10 @@ export async function GET(req: Request) {
 
     // If master export requested, fetch all 4 categories at once
     if (type === 'all') {
-      const performers = await db.query("SELECT p.*, CASE WHEN p.payment_status='PAID' AND p.payment_amount=29 AND p.payment_id IS NOT NULL AND EXISTS (SELECT 1 FROM performer_payment_links l WHERE l.app_id=p.app_id AND l.status='PAID' AND l.razorpay_payment_id=p.payment_id AND l.amount=29) THEN p.payment_id ELSE NULL END AS verified_payment_id FROM performer_applications p WHERE (p.created_at < TIMESTAMPTZ '2026-10-26 05:15:00+00' OR (p.payment_status='PAID' AND p.payment_amount=29 AND p.payment_id IS NOT NULL AND EXISTS (SELECT 1 FROM performer_payment_links l WHERE l.app_id=p.app_id AND l.status='PAID' AND l.razorpay_payment_id=p.payment_id AND l.amount=29))) ORDER BY COALESCE(p.is_read, 0) ASC, p.created_at DESC");
-      const sponsors = await db.query('SELECT * FROM sponsor_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC');
-      const team = await db.query('SELECT * FROM team_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC');
-      const guests = await db.query("SELECT g.*, l.razorpay_payment_id AS payment_id, l.amount AS payment_amount, CASE WHEN l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49 THEN 'PAID' ELSE NULL END AS payment_status FROM guest_applications g LEFT JOIN guest_payment_links l ON l.app_id=g.app_id WHERE (g.created_at < TIMESTAMPTZ '2026-10-26 04:20:27+00' OR (l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49)) ORDER BY COALESCE(g.is_read, 0) ASC, g.created_at DESC");
+      const performers = await db.queryStrict(performerSelect + performerOrder);
+      const sponsors = await db.queryStrict('SELECT * FROM sponsor_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC');
+      const team = await db.queryStrict('SELECT * FROM team_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC');
+      const guests = await db.queryStrict(guestSelect + guestOrder);
 
       return NextResponse.json({
         success: true,
@@ -59,7 +42,7 @@ export async function GET(req: Request) {
     let items: any[] = [];
 
     if (type === 'performer') {
-      let q = "SELECT p.*, CASE WHEN p.payment_status='PAID' AND p.payment_amount=29 AND p.payment_id IS NOT NULL AND EXISTS (SELECT 1 FROM performer_payment_links l WHERE l.app_id=p.app_id AND l.status='PAID' AND l.razorpay_payment_id=p.payment_id AND l.amount=29) THEN p.payment_id ELSE NULL END AS verified_payment_id FROM performer_applications p WHERE (p.created_at < TIMESTAMPTZ '2026-10-26 05:15:00+00' OR (p.payment_status='PAID' AND p.payment_amount=29 AND p.payment_id IS NOT NULL AND EXISTS (SELECT 1 FROM performer_payment_links l WHERE l.app_id=p.app_id AND l.status='PAID' AND l.razorpay_payment_id=p.payment_id AND l.amount=29)))";
+      let q = performerSelect + ' WHERE 1=1';
       const params: any[] = [];
       if (status) {
         q += ' AND (p.status = ? OR p.application_status = ? OR p.payment_status = ?)';
@@ -71,9 +54,9 @@ export async function GET(req: Request) {
         params.push(term, term, term, term, term, term, term, term, term);
       }
       q += ' ORDER BY COALESCE(p.is_read, 0) ASC, p.created_at DESC';
-      items = await db.query(q, params);
+      items = await db.queryStrict(q, params);
     } else if (type === 'guest') {
-      let q = "SELECT g.*, l.razorpay_payment_id AS payment_id, l.amount AS payment_amount, CASE WHEN l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49 THEN 'PAID' ELSE NULL END AS payment_status FROM guest_applications g LEFT JOIN guest_payment_links l ON l.app_id=g.app_id WHERE (g.created_at < TIMESTAMPTZ '2026-10-26 04:20:27+00' OR (l.status='PAID' AND l.razorpay_payment_id IS NOT NULL AND l.amount=49)) WHERE 1=1";
+      let q = guestSelect + ' WHERE 1=1';
       const params: any[] = [];
       if (status) {
         q += ' AND g.status = ?';
@@ -85,7 +68,7 @@ export async function GET(req: Request) {
         params.push(term, term, term, term, term, term, term, term);
       }
       q += ' ORDER BY COALESCE(g.is_read, 0) ASC, g.created_at DESC';
-      items = await db.query(q, params);
+      items = await db.queryStrict(q, params);
     } else if (type === 'sponsor') {
       let q = 'SELECT * FROM sponsor_applications WHERE 1=1';
       const params: any[] = [];
@@ -99,7 +82,7 @@ export async function GET(req: Request) {
         params.push(term, term, term, term, term, term, term);
       }
       q += ' ORDER BY COALESCE(is_read, 0) ASC, created_at DESC';
-      items = await db.query(q, params);
+      items = await db.queryStrict(q, params);
     } else if (type === 'team') {
       let q = 'SELECT * FROM team_applications WHERE 1=1';
       const params: any[] = [];
@@ -113,7 +96,7 @@ export async function GET(req: Request) {
         params.push(term, term, term, term, term);
       }
       q += ' ORDER BY COALESCE(is_read, 0) ASC, created_at DESC';
-      items = await db.query(q, params);
+      items = await db.queryStrict(q, params);
     }
 
     return NextResponse.json({ success: true, items });

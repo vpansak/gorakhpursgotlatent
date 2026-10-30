@@ -11,6 +11,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Admin login required' }, { status: 403 });
     }
     const body = await req.json();
+    const quantity = Number(body.quantity ?? 1);
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+      return NextResponse.json({ error: 'Ticket quantity must be a whole number from 1 to 10' }, { status: 400 });
+    }
     const name = String(body.name || '').trim();
     const mobile = String(body.mobile || '').trim();
     const digits = mobile.replace(/\\D/g, '');
@@ -24,7 +28,7 @@ export async function POST(req: Request) {
     const qrToken = crypto.randomBytes(24).toString('hex');
     const ticket = {
       id, ticket_id: ticketId, booking_id: bookingId, customer_name: name,
-      mobile, email: '', instagram_id: '', quantity: 1, amount: 0,
+      mobile, email: '', instagram_id: '', quantity, amount: 0,
       razorpay_order_id: '', razorpay_payment_id: '', payment_status: 'PAID',
       ticket_status: 'VALID' as const, qr_token: qrToken, checked_in: 0,
       checked_in_at: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString()

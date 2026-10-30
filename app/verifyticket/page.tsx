@@ -20,7 +20,8 @@ import {
   Clock,
   QrCode as QrIcon
 } from 'lucide-react';
-import TicketCard from '@/components/TicketCard';
+import TicketAdmissionSummary from '@/components/TicketAdmissionSummary';
+import { getTicketQuantity } from '@/lib/ticketQuantity';
 import { TicketRecord } from '@/lib/ticketTypes';
 
 export default function VerifyTicketPage() {
@@ -565,6 +566,8 @@ export default function VerifyTicketPage() {
               </h2>
             </div>
 
+            <TicketAdmissionSummary quantity={verificationResult.ticket.quantity} />
+
             {/* Ticket Snapshot Card */}
             <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2 text-xs">
               <div className="flex justify-between items-center border-b border-slate-800 pb-2">
@@ -576,6 +579,10 @@ export default function VerifyTicketPage() {
                 <div><span className="text-slate-500 uppercase text-[9px] block">Mobile</span><span className="font-semibold text-slate-200">{verificationResult.ticket.mobile}</span></div>
               </div>
             </div>
+
+            <p className="text-xs text-center text-slate-300">
+              Confirm entry for all {getTicketQuantity(verificationResult.ticket.quantity)} {getTicketQuantity(verificationResult.ticket.quantity) === 1 ? 'person' : 'people'} on this ticket together.
+            </p>
 
             {/* Code 11 Input */}
             <form onSubmit={handleConfirmFormSubmit} className="space-y-3 pt-1">
@@ -613,7 +620,7 @@ export default function VerifyTicketPage() {
                   className="flex-[2] py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg disabled:opacity-50 cursor-pointer"
                 >
                   {expiring ? <RefreshCw className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-                  <span>{expiring ? 'EXPIRING...' : 'CONFIRM ENTRY'}</span>
+                  <span>{expiring ? 'EXPIRING...' : `CONFIRM ENTRY — ${getTicketQuantity(verificationResult.ticket.quantity)} ${getTicketQuantity(verificationResult.ticket.quantity) === 1 ? 'PERSON' : 'PEOPLE'}`}</span>
                 </button>
               </div>
             </form>
@@ -637,6 +644,8 @@ export default function VerifyTicketPage() {
                 ENTRY CONFIRMED
               </h2>
             </div>
+
+            <TicketAdmissionSummary quantity={verificationResult.ticket.quantity} />
 
             <div className="p-4 rounded-2xl bg-slate-900 border border-emerald-500/40 space-y-2 text-xs">
               <div className="text-amber-400 font-mono font-black text-base">
@@ -677,6 +686,8 @@ export default function VerifyTicketPage() {
                 ALREADY EXPIRED
               </h2>
             </div>
+
+            <TicketAdmissionSummary quantity={verificationResult.ticket.quantity} />
 
             <div className="p-4 rounded-2xl bg-red-950/40 border border-red-500/40 space-y-2 text-xs text-left">
               <div className="flex justify-between items-center border-b border-red-500/20 pb-2">

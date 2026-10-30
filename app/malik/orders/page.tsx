@@ -21,6 +21,7 @@ import {
   Trash2
 } from 'lucide-react';
 import TicketCard from '@/components/TicketCard';
+import { getTicketQuantity } from '@/lib/ticketQuantity';
 import { TicketRecord } from '@/lib/ticketTypes';
 
 export default function OrdersLedgerPage() {
@@ -304,6 +305,7 @@ export default function OrdersLedgerPage() {
                   <th className="p-4">Customer Name</th>
                   <th className="p-4">Contact</th>
                   <th className="p-4">Instagram</th>
+                  <th className="p-4">Tickets / People</th>
                   <th className="p-4">Amount</th>
                   <th className="p-4">Razorpay ID</th>
                   <th className="p-4">Payment</th>
@@ -336,9 +338,14 @@ export default function OrdersLedgerPage() {
                       {tck.instagram_id}
                     </td>
 
+                    <td className="p-4 font-black text-amber-300 whitespace-nowrap">
+                      TICKETS × {getTicketQuantity(tck.quantity)}
+                      <div className="text-[11px] text-slate-300">{getTicketQuantity(tck.quantity)} {getTicketQuantity(tck.quantity) === 1 ? 'person' : 'people'}</div>
+                    </td>
+
                     {/* Amount */}
                     <td className="p-4 font-bold text-white font-mono">
-                      ₹{tck.amount} ({tck.quantity}x)
+                      ₹{tck.amount}
                     </td>
 
                     {/* Razorpay ID */}
@@ -427,7 +434,7 @@ export default function OrdersLedgerPage() {
                     onClick={() => handleCheckIn(selectedTicket.ticket_id)}
                     className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-wider"
                   >
-                    ✓ MARK AS CHECKED IN
+                    ✓ CHECK IN {getTicketQuantity(selectedTicket.quantity)} {getTicketQuantity(selectedTicket.quantity) === 1 ? 'PERSON' : 'PEOPLE'}
                   </button>
                 ) : (
                   <div className="text-xs text-amber-300 font-bold">

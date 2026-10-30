@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { TicketRecord } from '@/lib/ticketsStore';
 import TicketCard from '@/components/TicketCard';
+import { getTicketQuantity } from '@/lib/ticketQuantity';
 
 export default function TicketVerificationPage() {
   const params = useParams();
@@ -210,7 +211,7 @@ export default function TicketVerificationPage() {
                     className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl hover:scale-[1.02] transition-all cursor-pointer"
                   >
                     <Check className="w-5 h-5" />
-                    <span>{checkingIn ? 'Processing Check-In...' : 'CHECK IN ATTENDEE'}</span>
+                    <span>{checkingIn ? 'Processing Check-In...' : `CHECK IN ${getTicketQuantity(ticket.quantity)} ${getTicketQuantity(ticket.quantity) === 1 ? 'PERSON' : 'PEOPLE'}`}</span>
                   </button>
                 )}
               </div>

@@ -14,6 +14,8 @@ import {
   Sparkles
 } from 'lucide-react';
 import { TicketRecord } from '@/lib/ticketTypes';
+import { getTicketQuantity } from '@/lib/ticketQuantity';
+import TicketAdmissionSummary from '@/components/TicketAdmissionSummary';
 import { EPISODE_2 } from '@/lib/episode2';
 
 const GGL_MASCOT_DATA = "/ggl-mascot.jpg";
@@ -107,6 +109,7 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
     }
   };
 
+  const quantity = getTicketQuantity(ticket.quantity);
   const formattedAmount = ticket.amount ? `₹${ticket.amount}` : '₹149';
   const formattedCreated = ticket.created_at 
     ? new Date(ticket.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })
@@ -157,6 +160,8 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
               </div>
             </div>
 
+            <TicketAdmissionSummary quantity={quantity} />
+
             {/* Attendee Info Grid (Clean 2-Column Specs) */}
             <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs sm:text-sm my-0.5">
               <div>
@@ -172,7 +177,7 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
                 <div className="font-bold text-slate-200 text-xs leading-tight">{ticket.mobile}</div>
               </div>
               <div>
-                <div className="text-[9px] uppercase tracking-widest text-slate-400 font-bold">PRICE</div>
+                <div className="text-[9px] uppercase tracking-widest text-slate-400 font-bold">TOTAL PRICE</div>
                 <div className="font-black text-amber-300 text-xs sm:text-sm leading-tight">{formattedAmount}</div>
               </div>
               <div>
@@ -203,7 +208,7 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
           {/* 3. RIGHT STUB: QR CODE & TICKET CODE ("right me qr aur code") */}
           <div className="w-full md:w-[210px] lg:w-[230px] p-3 sm:p-4 flex flex-col items-center justify-between border-t md:border-t-0 md:border-l border-dashed border-amber-400/40 bg-black/50 shrink-0 text-center">
             <div className="space-y-0.5">
-              <div className="text-amber-300 text-[10px] font-black tracking-[0.25em] uppercase font-barlow">ADMIT ONE</div>
+              <div className="text-amber-300 text-[10px] font-black tracking-[0.25em] uppercase font-barlow">ADMIT {quantity} {quantity === 1 ? 'PERSON' : 'PEOPLE'}</div>
               <div className="text-[8px] text-slate-400 tracking-widest uppercase">SCAN AT VENUE</div>
             </div>
 

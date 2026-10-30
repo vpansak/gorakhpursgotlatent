@@ -45,6 +45,8 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
   const [readFilter, setReadFilter] = useState<'ALL' | 'UNREAD' | 'READ'>('ALL');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [refunding, setRefunding] = useState(false);
+  const [verifyingPayment, setVerifyingPayment] = useState(false);
+  const [paymentMessage, setPaymentMessage] = useState('');
 
   // Modal State
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
@@ -182,16 +184,22 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
   // Keep performer payment badges current after a payer completes checkout.
   useEffect(() => {
     if (activeTab !== 'performer') return;
+    let polling = false;
     const pollPayments = async () => {
+      if (polling) return;
+      polling = true;
       try {
+        await fetch('/api/malik/performer-payment/reconcile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
         const res = await fetch('/api/malik/applications?type=performer');
         const json = await res.json();
         if (json.success && Array.isArray(json.items)) {
           setData((prev) => ({ ...prev, performers: json.items }));
         }
       } catch (err) { console.error('Failed to refresh performer payment status:', err); }
+      finally { polling = false; }
     };
-    const timer = window.setInterval(pollPayments, 10000);
+    pollPayments();
+    const timer = window.setInterval(pollPayments, 15000);
     return () => window.clearInterval(timer);
   }, [activeTab]);
 
@@ -782,6 +790,22 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
             <span>Download {activeTab === 'performer' ? 'Performers' : activeTab === 'sponsor' ? 'Sponsors' : activeTab === 'team' ? 'Team' : activeTab === 'guest' ? 'Judges' : activeTab === 'leads' ? 'Leads' : 'Computer Ji Scores'} Excel Sheet (.xlsx)</span>
           </button>
         </div>
+
+        {activeTab === 'performer' && <div className="mb-3 flex flex-wrap items-center gap-3">
+          <p className="text-xs text-slate-400">Captured payments are checked automatically while this dashboard is open.</p>
+          {search.trim().startsWith('pay_') && <button disabled={verifyingPayment} className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-bold disabled:opacity-50" onClick={async () => {
+            setVerifyingPayment(true); setPaymentMessage('');
+            try {
+              const response = await fetch('/api/malik/performer-payment/reconcile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ paymentId: search.trim() }) });
+              const result = await response.json();
+              if (!response.ok || !result.success) throw new Error(result.error || 'Verification failed');
+              setPaymentMessage(`Verified ₹${result.amount} — ${result.appId} — ${result.paymentId}`);
+              await refreshAllData();
+            } catch (error: any) { setPaymentMessage(error.message || 'Unable to verify payment'); }
+            finally { setVerifyingPayment(false); }
+          }}>{verifyingPayment ? 'Checking payment…' : 'Verify payment ID'}</button>}
+          {paymentMessage && <p role="status" className="text-sm text-amber-200">{paymentMessage}</p>}
+        </div>}
 
         {/* TOOLBAR: SEARCH, FILTERS & STATS */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-black/40 p-3.5 rounded-2xl border border-white/5">

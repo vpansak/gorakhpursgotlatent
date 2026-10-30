@@ -89,14 +89,18 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
       }
 
       const orderAmountPaise = Math.round(Number(link.amount) * 100);
-      const order = await rzp.orders.create({
+      // Reuse the original order: retries must not orphan a payment still completing in UPI.
+      const order = link.razorpay_order_id ? await rzp.orders.fetch(link.razorpay_order_id) : await rzp.orders.create({
         amount: orderAmountPaise,
         currency: 'INR',
         receipt: ('ggl' + token).slice(0, 40),
         notes: { app_id: link.app_id, performer_payment_token: token }
       });
 
-      await db.queryStrict('UPDATE performer_payment_links SET razorpay_order_id = ? WHERE token = ?', [order.id, token]);
+      if (!link.razorpay_order_id) {
+        const bound = await db.queryStrict('UPDATE performer_payment_links SET razorpay_order_id = ? WHERE token = ? AND razorpay_order_id IS NULL RETURNING razorpay_order_id', [order.id, token]);
+        if (!bound.length) return NextResponse.json({ error: 'Checkout already started. Please retry to use the existing order.' }, { status: 409 });
+      }
       const p = await db.queryOneStrict('SELECT full_name, email, mobile_number FROM performer_applications WHERE app_id = ?', [link.app_id]);
 
       return NextResponse.json({

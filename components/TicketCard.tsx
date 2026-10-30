@@ -110,7 +110,7 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
   };
 
   const quantity = getTicketQuantity(ticket.quantity);
-  const formattedAmount = ticket.amount ? `₹${ticket.amount}` : '₹149';
+  const formattedAmount = `₹${ticket.amount ?? 0}`;
   const formattedCreated = ticket.created_at 
     ? new Date(ticket.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })
     : '03 October 2026';
@@ -126,14 +126,14 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
       )}
 
       {/* SLEEK WIDE GGL TICKET PASS */}
-      <div ref={ticketRef} className="relative w-full max-w-5xl mx-auto overflow-hidden rounded-[20px] border-2 border-amber-400/80 bg-[#08080b] text-white shadow-[0_15px_50px_rgba(0,0,0,0.7)]">
+      <div ref={ticketRef} className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-[20px] border-2 border-amber-400/80 bg-[#08080b] text-white shadow-[0_15px_50px_rgba(0,0,0,0.7)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,190,30,0.15),transparent_35%),radial-gradient(circle_at_85%_50%,rgba(180,0,0,0.2),transparent_40%),linear-gradient(115deg,#0c0607,#08080b_50%,#110906)]" />
         
-        <div className="relative flex flex-col md:flex-row items-stretch min-h-[220px] sm:min-h-[240px]">
+        <div className="relative flex flex-col md:flex-row items-stretch min-h-[200px]">
           
           {/* 1. LEFT STUB: LOGO & MASCOT ARTWORK ("lest me logo") */}
-          <div className="w-full md:w-[220px] lg:w-[240px] p-3 sm:p-4 flex flex-col items-center justify-between border-b md:border-b-0 md:border-r border-dashed border-amber-400/40 bg-gradient-to-b from-amber-950/50 via-black to-slate-950 shrink-0 text-center">
-            <div className="relative w-full h-[140px] sm:h-[150px] rounded-xl overflow-hidden border border-amber-400/50 shadow-[0_0_20px_rgba(255,190,30,0.3)] bg-black/60 p-1 flex items-center justify-center my-auto">
+          <div className="w-full md:w-[160px] lg:w-[180px] p-3 flex flex-col items-center justify-between border-b md:border-b-0 md:border-r border-dashed border-amber-400/40 bg-gradient-to-b from-amber-950/50 via-black to-slate-950 shrink-0 text-center">
+            <div className="relative w-full h-[100px] sm:h-[110px] rounded-xl overflow-hidden border border-amber-400/50 shadow-[0_0_20px_rgba(255,190,30,0.3)] bg-black/60 p-1 flex items-center justify-center my-auto">
               <img src={GGL_MASCOT_DATA} alt="GGL Mascot" className="w-full h-full object-contain" />
             </div>
 
@@ -144,26 +144,26 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
           </div>
 
           {/* 2. CENTER MAIN: ATTENDEE & TICKET DETAILS ("bech me details") */}
-          <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between space-y-3">
+          <div className="flex-1 min-w-0 p-3 flex flex-col justify-between space-y-2">
             {/* Header Title */}
-            <div className="flex items-center justify-between gap-2 border-b border-amber-400/20 pb-2.5">
+            <div className="flex items-center justify-between gap-2 border-b border-amber-400/20 pb-2">
               <div>
                 <div className="text-[9px] sm:text-[10px] tracking-[0.25em] text-amber-300 font-black uppercase font-barlow">Official Admission Pass</div>
-                <h2 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-white uppercase font-bebas leading-none mt-0.5">
+                <h2 className="text-lg sm:text-xl font-black tracking-tight text-white uppercase font-bebas leading-none mt-0.5">
                   GORAKHPUR&apos;S <span className="text-amber-300">GOT LATENT</span>
                 </h2>
                 <p className="text-[9px] tracking-[0.2em] text-slate-400 mt-0.5 uppercase">Talent • Comedy • Roast • Vibes</p>
               </div>
 
-              <div className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-black/50 border border-amber-400/30 p-1.5">
+              <div className="shrink-0 w-8 h-8 rounded-lg bg-black/50 border border-amber-400/30 p-1.5">
                 <img src="/ggl-logo.png" alt="GGL" className="w-full h-full object-contain" />
               </div>
             </div>
 
-            <TicketAdmissionSummary quantity={quantity} />
+            <TicketAdmissionSummary quantity={quantity} compact />
 
             {/* Attendee Info Grid (Clean 2-Column Specs) */}
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs sm:text-sm my-0.5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-1.5 text-xs my-0.5">
               <div>
                 <div className="text-[9px] uppercase tracking-widest text-slate-400 font-bold">NAME</div>
                 <div className="min-w-0 whitespace-normal break-words [overflow-wrap:anywhere] font-extrabold text-white text-xs sm:text-sm leading-snug">{ticket.customer_name}</div>
@@ -206,7 +206,7 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
           </div>
 
           {/* 3. RIGHT STUB: QR CODE & TICKET CODE ("right me qr aur code") */}
-          <div className="w-full md:w-[210px] lg:w-[230px] p-3 sm:p-4 flex flex-col items-center justify-between border-t md:border-t-0 md:border-l border-dashed border-amber-400/40 bg-black/50 shrink-0 text-center">
+          <div className="w-full md:w-[150px] lg:w-[160px] p-3 flex flex-col items-center justify-between border-t md:border-t-0 md:border-l border-dashed border-amber-400/40 bg-black/50 shrink-0 text-center">
             <div className="space-y-0.5">
               <div className="text-amber-300 text-[10px] font-black tracking-[0.25em] uppercase font-barlow">ADMIT {quantity} {quantity === 1 ? 'PERSON' : 'PEOPLE'}</div>
               <div className="text-[8px] text-slate-400 tracking-widest uppercase">SCAN AT VENUE</div>
@@ -214,9 +214,9 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
 
             <div className="my-1.5 p-1.5 bg-white rounded-2xl border-2 border-amber-400 shadow-[0_0_20px_rgba(255,190,30,0.25)] inline-block">
               {qrCodeDataUrl ? (
-                <img src={qrCodeDataUrl} alt={`QR Code for Ticket ${ticket.ticket_id}`} className="w-24 h-24 sm:w-28 sm:h-28 object-contain" />
+                <img src={qrCodeDataUrl} alt={`QR Code for Ticket ${ticket.ticket_id}`} className="w-20 h-20 sm:w-24 sm:h-24 object-contain" />
               ) : (
-                <div className="w-24 h-24 sm:w-28 sm:h-28 bg-slate-200 rounded-xl animate-pulse" />
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-slate-200 rounded-xl animate-pulse" />
               )}
             </div>
 

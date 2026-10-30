@@ -10,6 +10,7 @@ export default function InviteByUsPage() {
   const [password,setPassword] = useState('');
   const [name,setName] = useState('');
   const [mobile,setMobile] = useState('');
+  const [quantity,setQuantity] = useState(1);
   const [loading,setLoading] = useState(false);
   const [error,setError] = useState('');
   const [ticket,setTicket] = useState<TicketRecord|null>(null);
@@ -22,7 +23,7 @@ export default function InviteByUsPage() {
     if (!name.trim() || !/^\+?[0-9\s()-]{10,16}$/.test(normalizedMobile) || normalizedMobile.replace(/\D/g, '').length < 10 || normalizedMobile.replace(/\D/g, '').length > 15) { setError('Naam aur valid mobile number bhariye.'); return; }
     setLoading(true);
     try {
-      const res = await fetch('/api/malik/invite-ticket',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name.trim(),mobile:mobile.trim()})});
+      const res = await fetch('/api/malik/invite-ticket',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name.trim(),mobile:mobile.trim(),quantity})});
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Ticket nahi ban paya.');
       setTicket(data.ticket);
@@ -42,6 +43,7 @@ export default function InviteByUsPage() {
       <form onSubmit={createTicket} className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 sm:p-6 space-y-4">
         <label className="block text-sm font-bold">Guest Full Name<input value={name} onChange={e=>setName(e.target.value)} required maxLength={100} placeholder="Guest ka poora naam" className="mt-2 w-full rounded-xl bg-black/40 border border-white/15 px-4 py-3 outline-none focus:border-amber-400"/></label>
         <label className="block text-sm font-bold">Mobile Number<input value={mobile} onChange={e=>setMobile(e.target.value)} required inputMode="tel" maxLength={16} placeholder="10-digit mobile number" className="mt-2 w-full rounded-xl bg-black/40 border border-white/15 px-4 py-3 outline-none focus:border-amber-400"/></label>
+        <label className="block text-sm font-bold">Tickets / People<select value={quantity} onChange={e=>setQuantity(Number(e.target.value))} className="mt-2 w-full rounded-xl bg-slate-950 border border-white/15 px-4 py-3">{Array.from({length:10},(_,i)=>i+1).map(count=><option key={count} value={count}>{count} {count===1?'person':'people'}</option>)}</select></label>
         {error && <p className="text-red-300 text-sm flex items-center gap-2"><AlertCircle size={16}/>{error}</p>}
         <button disabled={loading} className="w-full rounded-xl bg-amber-400 text-black font-black py-3.5 flex items-center justify-center gap-2 disabled:opacity-60"><UserRoundPlus size={18}/>{loading?'Creating ticket…':'Create Complimentary Ticket'}</button>
       </form>

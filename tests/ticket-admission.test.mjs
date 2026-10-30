@@ -55,6 +55,8 @@ test('downloadable ticket markup identifies one, two and three admissions, inclu
   }
   const free = renderToStaticMarkup(React.createElement(Card, { ticket: { ...ticket, amount: 0, quantity: 3 }, showActions: false }));
   assert.ok(free.includes('TICKETS × 3'));
+  assert.ok(free.includes('₹0'));
+  assert.ok(!free.includes('₹149'));
 });
 
 test('scanner shows the stored party size before entry, after confirmation and on repeat scans', async () => {
@@ -92,4 +94,29 @@ test('existing QR lookup returns the original ticket ID and quantity without cha
   assert.equal(result.ticket.quantity, 3);
   assert.equal(result.ticket.ticket_id, before.ticket_id);
   assert.deepEqual(ticket, before);
+});
+
+test('admin complimentary tickets preserve one or three admissions and never modify existing tickets', async () => {
+  const writes = [];
+  const { POST } = await component('app/api/malik/invite-ticket/route.ts', {
+    'next/server': { NextResponse: { json: (body, init) => Response.json(body, init) } },
+    '@/lib/auth': { getSession: async () => ({ role: 'ADMIN' }) },
+    '@/lib/ticketsStore': { ensureTicketsTable: async () => {} },
+    '@/lib/db': { db: { execute: async (sql, params) => writes.push({ sql, params }) } },
+  });
+  for (const quantity of [undefined, 1, 3]) {
+    const response = await POST(new Request('https://test.invalid/api/malik/invite-ticket', { method: 'POST', body: JSON.stringify({ name: 'DEMO QA', mobile: '0000000000', quantity }) }));
+    assert.equal(response.status, 200);
+    const result = await response.json();
+    assert.equal(result.ticket.quantity, quantity ?? 1);
+    assert.equal(result.ticket.amount, 0);
+    assert.equal(writes.at(-1).params[7], quantity ?? 1);
+    assert.equal(writes.at(-1).params[8], 0);
+  }
+  for (const quantity of [0, -1, 1.5, 11, 'bad']) {
+    const response = await POST(new Request('https://test.invalid/api/malik/invite-ticket', { method: 'POST', body: JSON.stringify({ name: 'DEMO QA', mobile: '0000000000', quantity }) }));
+    assert.equal(response.status, 400);
+  }
+  assert.equal(writes.length, 6);
+  assert.ok(writes.every(({ sql }) => sql.trim().startsWith('INSERT INTO')));
 });

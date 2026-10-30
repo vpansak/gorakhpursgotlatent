@@ -10,6 +10,9 @@ export function matchesCapturedPerformerPayment(link: any, payment: any) {
 // Update the link and application atomically, so polling never sees a partial paid state.
 export async function recordVerifiedPerformerPayment(link: any, payment: any) {
   if (!matchesCapturedPerformerPayment(link, payment)) throw new Error('Payment does not match this performer order');
+  // Older production databases predate the verification timestamp column.
+  // Add it without replacing tables or changing any existing applications.
+  await db.queryStrict('ALTER TABLE performer_applications ADD COLUMN IF NOT EXISTS payment_verified_at TIMESTAMPTZ');
   const rows = await db.queryStrict(`WITH paid AS (
     UPDATE performer_payment_links SET status='PAID', razorpay_payment_id=?, paid_at=COALESCE(paid_at,CURRENT_TIMESTAMP)
     WHERE token=? AND app_id=? AND razorpay_order_id=? AND amount=?

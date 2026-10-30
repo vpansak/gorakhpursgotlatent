@@ -19,6 +19,8 @@ async function fixture() {
 test('admin recovers a captured payment when both checkout callback and webhook were missed',async()=>{
   const {pg,db,recovery,captured}=await fixture();
   try {
+    // Reproduce the legacy production schema that caused captured payments to fail saving.
+    await pg.exec('ALTER TABLE performer_applications DROP COLUMN payment_verified_at');
     const gateway={orders:{fetchPayments:async()=>({items:[captured]})}};
     assert.equal((await recovery.recoverPendingPerformerPayments(gateway)).verified,1);
     const app=await db.queryOneStrict('SELECT * FROM performer_applications');

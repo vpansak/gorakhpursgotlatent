@@ -20,9 +20,9 @@ export async function POST(req: Request) {
     const cleanEmail = (email || '').trim();
     const cleanInsta = (instagramId || '').trim();
 
-    // Quantity & Pricing (₹149 per ticket)
+    // Quantity & Pricing (₹99 per ticket)
     const qty = Math.max(1, Math.min(10, Math.floor(Number(quantity) || 1)));
-    const ticketPrice = 149;
+    const ticketPrice = 99;
     const totalAmount = qty * ticketPrice;
     const amountPaise = totalAmount * 100;
 

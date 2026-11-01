@@ -71,7 +71,7 @@ export default function QuickInfoPage() {
             href="/book-ticket"
             className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-black text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-[1.02] shadow-md mt-4"
           >
-            <span>Book Official Ticket — ₹149</span>
+            <span>Book Official Ticket — ₹99</span>
           </Link>
         </div>
 

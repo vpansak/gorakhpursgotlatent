@@ -1,3 +1,4 @@
+import WinnerPrizeNotice from '@/components/WinnerPrizeNotice';
 import Link from 'next/link';
 import {
   ShieldCheck, Ticket, FileText, Video, AlertTriangle, Scale,
@@ -78,6 +79,7 @@ export default function TermsPage() {
           </div>
         </section>
 
+      <WinnerPrizeNotice />
         {/* 2. Applicant Declarations & Performer Rules */}
         <section className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/20 space-y-4 shadow-xl">
           <div className="flex items-center gap-3 border-b border-amber-500/20 pb-3">

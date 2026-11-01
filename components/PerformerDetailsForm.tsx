@@ -1,4 +1,5 @@
 'use client';
+import WinnerPrizeNotice from '@/components/WinnerPrizeNotice';
 import { useEffect, useState } from 'react';
 import { performerDetailFields } from '@/lib/performerDetailsFields';
 export default function PerformerDetailsForm({ token }: { token: string }) {
@@ -32,6 +33,7 @@ export default function PerformerDetailsForm({ token }: { token: string }) {
       <p className="font-bold text-orange-300">GORAKHPUR’S GOT LATENT</p>
       <h1 className="mt-2 text-3xl font-black">Performer Details 🎤</h1>
       <p className="mt-3 text-sm text-slate-300">Pehle di hui details check karke edit kar sakte hain. Baaki sawalon ke jawab fill karke submit karein. * wale sawal zaroori hain.</p>
+      <WinnerPrizeNotice />
       {error && <p role="alert" className="mt-5 rounded-xl bg-red-950 p-4 text-red-200">{error}</p>}
       {!loaded && !error && <p className="mt-6" role="status">Aapka form load ho raha hai…</p>}
       {saved && <div role="status" className="mt-6 rounded-xl border border-orange-400 bg-orange-400/10 p-5">

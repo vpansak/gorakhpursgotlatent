@@ -1,9 +1,10 @@
+import { WINNER_PRIZE_SUMMARY, WINNER_PRIZE_DETAILS } from '@/lib/winnerPrize';
 import Link from 'next/link';
 
 export const metadata = {
-  title: "After Shortlist | Performer Participation & Refund Policy | GGL",
+  title: "After Shortlist | Performer Participation & Winner Prize | GGL",
   description:
-    "Important information for shortlisted Gorakhpur's Got Latent performers about the participation charge, payment confirmation, and winner refund policy.",
+    "Important information for shortlisted Gorakhpur's Got Latent performers about the participation charge, payment confirmation, and 3x verified participation payment winner prize.",
   alternates: { canonical: "https://www.gkpgotlatent.in/aftershortlist" },
 };
 
@@ -50,9 +51,9 @@ export default function AfterShortlistPage() {
           </article>
           <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-400/15 text-2xl">🏆</div>
-            <h2 className="text-xl font-bold">3. Winner ko refund</h2>
+            <h2 className="text-xl font-bold">3. Winner ko 3× prize</h2>
             <p className="mt-3 leading-7 text-zinc-300">
-              GGL ke announced winner ko uska jama kiya gaya applicable participation charge return kiya jayega. Refund ki process aur timeline GGL team confirm karegi.
+              {WINNER_PRIZE_SUMMARY} Example: ₹799 verified participation payment par total prize ₹2,397. {WINNER_PRIZE_DETAILS}
             </p>
           </article>
           <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
@@ -69,7 +70,7 @@ export default function AfterShortlistPage() {
           <ul className="mt-4 space-y-3 text-sm leading-6 text-zinc-200 sm:text-base">
             <li>• Performer application submit karna shortlist ya selection ki guarantee nahi hai.</li>
             <li>• Charge ki exact amount shortlisted performers ko payment se pehle communicate ki jayegi; is page par koi fixed amount announce nahi kiya gaya hai.</li>
-            <li>• Winner refund sirf GGL dwara officially declared winner ke liye hai; refund eligibility aur process ki confirmation team se lein.</li>
+            <li>• 3× prize sirf usi episode ke officially declared winner ke verified performer participation payment par calculate hoga.</li>
             <li>• Payment receipt/transaction ID sambhal kar rakhein aur kisi bhi doubt mein payment karne se pehle GGL team se verify karein.</li>
           </ul>
         </div>

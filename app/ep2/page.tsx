@@ -1,3 +1,4 @@
+import WinnerPrizeNotice from '@/components/WinnerPrizeNotice';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import CountdownTimer from '@/components/CountdownTimer';
@@ -27,6 +28,7 @@ export default function Episode2Page() {
    <p className="mt-3 text-base leading-7 text-amber-200">मंगलवार, 3 नवंबर 2026 · दोपहर 1 बजे से शो की रिकॉर्डिंग · Mars Orbit Entertainment, गोरखपुर।</p>
    <p className="mt-3 text-sm text-slate-400">Updated: 27 October 2026. This is the confirmed recording schedule, replacing the earlier postponed-date notice.</p>
    <CountdownTimer />
+          <WinnerPrizeNotice />
    <section className="mt-8 space-y-4">
     <h2 className="text-2xl font-black text-white">Date, time and venue</h2>
     <dl className="grid gap-4 sm:grid-cols-3">{[['Date', `${EPISODE_2.weekday}, ${EPISODE_2.date}`], ['Recording begins', EPISODE_2.time], ['Venue', `${EPISODE_2.venue}, Gorakhpur`]].map(([label, value]) => <div key={label} className="rounded-xl border border-amber-400/20 bg-white/[.03] p-5"><dt className="text-sm text-slate-400">{label}</dt><dd className="mt-2 font-bold text-amber-200">{value}</dd></div>)}</dl>

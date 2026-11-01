@@ -1,4 +1,5 @@
 'use client';
+import WinnerPrizeNotice from '@/components/WinnerPrizeNotice';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -344,6 +345,7 @@ export default function PerformerApplyClient() {
           <Link href="/ggl_talent_trip" className="mt-2 inline-flex text-xs font-bold text-amber-300 hover:text-amber-200">View GGL Talent Trip details →</Link>
         </div>
 
+      <WinnerPrizeNotice />
         <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center">
           <p className="text-xs font-bold text-amber-200">
             Application is completely FREE. Your details will be saved in the Admin Portal, then you can send your performance clip to {DISPLAY_PHONE} on WhatsApp.

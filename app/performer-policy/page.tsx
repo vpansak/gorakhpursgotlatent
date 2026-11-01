@@ -1,3 +1,4 @@
+import { WINNER_PRIZE_SUMMARY, WINNER_PRIZE_DETAILS } from '@/lib/winnerPrize';
 import Link from 'next/link';
 import { ChevronLeft, ShieldCheck } from 'lucide-react';
 
@@ -7,6 +8,7 @@ export const metadata = {
 };
 
 const sections = [
+  { title: "Episode 2 winner prize — 3× verified participation payment", body: WINNER_PRIZE_SUMMARY + " Example: ₹799 paid and verified → ₹2,397 total winner prize. " + WINNER_PRIZE_DETAILS },
   {
     title: "Previous-episode performers and non-refundable payments",
     body: "If you have performed in any previous GGL episode, you must disclose this to the GGL team before making any payment for a later episode and obtain confirmation that you are eligible to participate again. If a previous-episode performer applies again and pays without this confirmation, and their previous participation is identified after payment, the payment is non-refundable, including if repeat participation is declined. For example, this applies to an Episode 1 performer applying for Episode 2, or an Episode 2 performer applying for Episode 3. No refund will be provided in these circumstances, except where a refund is required by applicable law."

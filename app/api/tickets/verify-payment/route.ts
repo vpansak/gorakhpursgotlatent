@@ -1,21 +1,23 @@
 import { NextResponse } from 'next/server';
 import { EPISODE_2 } from '@/lib/episode2';
-import { verifyRazorpaySignature, getRazorpayKeySecret } from '@/lib/razorpay';
+import { verifyRazorpaySignature, getRazorpayKeySecret, getRazorpayInstance } from '@/lib/razorpay';
+import { verifiedTicketOrder } from '@/lib/verifiedTicketOrder';
 import { sendBookingConfirmationEmail } from '@/lib/emailjs';
-import { 
-  generateUniqueTicketId, 
-  generateQrToken, 
-  saveTicketRecord, 
-  TicketRecord 
+import {
+  generateUniqueTicketId,
+  generateQrToken,
+  saveTicketRecord,
+  getTicketByTicketId,
+  TicketRecord
 } from '@/lib/ticketsStore';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { 
-      bookingId, 
-      razorpay_order_id, 
-      razorpay_payment_id, 
+    const {
+      bookingId,
+      razorpay_order_id,
+      razorpay_payment_id,
       razorpay_signature,
       customerName,
       mobile,
@@ -52,6 +54,17 @@ export async function POST(req: Request) {
       );
     }
 
+    const gateway = getRazorpayInstance();
+    if (!gateway) return NextResponse.json({ success: false, error: 'Payment gateway unavailable.' }, { status: 503 });
+    const [order, payment] = await Promise.all([
+      gateway.orders.fetch(razorpay_order_id),
+      gateway.payments.fetch(razorpay_payment_id),
+    ]);
+    const verified = verifiedTicketOrder(order, payment, razorpay_order_id, razorpay_payment_id);
+    if (!verified) return NextResponse.json({ success: false, error: 'Captured ticket payment does not match this order.' }, { status: 400 });
+    const existing = await getTicketByTicketId(razorpay_payment_id);
+    if (existing) return NextResponse.json({ success: true, ticket: existing, message: 'Your ticket is already confirmed.' });
+
     const ticketId = generateUniqueTicketId();
     const qrToken = generateQrToken(ticketId);
     const now = new Date().toISOString();
@@ -59,13 +72,13 @@ export async function POST(req: Request) {
     const ticketRecord: TicketRecord = {
       id: `tck-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
       ticket_id: ticketId,
-      booking_id: bookingId || `ord-${Date.now()}`,
-      customer_name: customerName || 'Audience Guest',
-      mobile: mobile || '',
-      email: email || '',
-      instagram_id: instagramId ? (instagramId.startsWith('@') ? instagramId : `@${instagramId}`) : '@ggl_fan',
-      quantity: Number(quantity) || 1,
-      amount: Number(amount) || 149,
+      booking_id: String(order.receipt || bookingId || `ord-${Date.now()}`),
+      customer_name: String(order.notes?.customer_name || 'Audience Guest'),
+      mobile: String(order.notes?.customer_mobile || ''),
+      email: String(order.notes?.customer_email || ''),
+      instagram_id: String(order.notes?.instagram_id || '@ggl_guest'),
+      quantity: verified.quantity,
+      amount: verified.amount,
       razorpay_order_id,
       razorpay_payment_id,
       payment_status: 'PAID',

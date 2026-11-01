@@ -1,3 +1,4 @@
+import WinnerPrizeNotice from '@/components/WinnerPrizeNotice';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Mic2, Star, Building2, Users, ChevronRight, ShieldAlert } from 'lucide-react';
@@ -108,6 +109,7 @@ export default function ApplyPage() {
         </div>
       </div>
 
+      <WinnerPrizeNotice />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
         {streams.map((stream, idx) => {
           const Icon = stream.icon;

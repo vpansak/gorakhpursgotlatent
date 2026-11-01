@@ -1,3 +1,4 @@
+import WinnerPrizeNotice from '@/components/WinnerPrizeNotice';
 import Image from 'next/image';
 import Link from 'next/link';
 import CountdownTimer from '@/components/CountdownTimer';
@@ -154,6 +155,7 @@ export default async function HomePage() {
           <h2 className="mt-2 text-2xl font-black uppercase text-white sm:text-3xl">Episode 2 · Date Confirmed</h2>
           <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">{EPISODE_2.summary}</p>
           <CountdownTimer />
+          <WinnerPrizeNotice />
           <Link href="/ep2" className="font-bold text-amber-300 underline underline-offset-4">View Episode 2 details →</Link>
         </div>
       </section>

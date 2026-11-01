@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     const cleanInsta = (instagramId || '').trim();
 
     // Quantity & Pricing (₹149 per ticket)
-    const qty = Math.max(1, Math.min(10, Number(quantity) || 1));
+    const qty = Math.max(1, Math.min(10, Math.floor(Number(quantity) || 1)));
     const ticketPrice = 149;
     const totalAmount = qty * ticketPrice;
     const amountPaise = totalAmount * 100;

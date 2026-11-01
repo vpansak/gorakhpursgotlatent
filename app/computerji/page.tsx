@@ -130,7 +130,7 @@ function isValidScore(val: string): boolean {
  * - Intermediate dot allowed (e.g. '7.') to enable typing '7.5'.
  * - At most 1 decimal digit allowed.
  */
-export function filterScoreInput(newVal: string): string | null {
+function filterScoreInput(newVal: string): string | null {
   if (newVal === '') return '';
   const trimmed = newVal.trim();
   if (!/^\d*\.?\d*$/.test(trimmed)) return null;

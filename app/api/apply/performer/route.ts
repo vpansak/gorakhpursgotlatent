@@ -12,6 +12,10 @@ export async function POST(req: Request) {
       whyShouldSelectYou, performanceType, performerCount, duration, language, instagramUrl, instagram, interestedInTalentTrip
     } = body;
 
+    if (body.termsAccepted !== true) {
+      return NextResponse.json({ error: 'Please read and accept the performer Terms & Conditions.' }, { status: 400 });
+    }
+
     const effectiveFullName = (fullName || name || '').toString().trim();
     const effectiveEmail = (email || '').toString().trim();
     const effectiveMobile = (mobile || whatsapp || phone || '').toString().trim();
@@ -61,7 +65,7 @@ export async function POST(req: Request) {
     try {
       await db.execute(`
         INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
-        VALUES (?, 'PERFORMER', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Performer Audition Form Submission')
+        VALUES (?, 'PERFORMER', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Performer Audition Form Submission; performer terms v2026-11-01 accepted')
       `, [`his-${Date.now()}`, appId]);
     } catch (e) {}
 

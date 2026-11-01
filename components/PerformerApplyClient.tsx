@@ -41,6 +41,7 @@ export default function PerformerApplyClient() {
     whyShouldSelectYou: '',
     performanceDescription: '',
     interestedInTalentTrip: '',
+    termsAccepted: false,
   });
 
   useLeadCapture({ source: 'performer', completed: submitted, data: formData, customerName: formData.fullName, mobile: formData.mobile, email: formData.email, instagramId: formData.instagramUrl, quantity: 1 });
@@ -90,6 +91,10 @@ export default function PerformerApplyClient() {
     }
     if (!formData.email.trim() || !formData.email.includes('@')) {
       setError('Please enter a valid Email address.');
+      return;
+    }
+    if (!formData.termsAccepted) {
+      setError('Please read and accept the Terms & Conditions.');
       return;
     }
     setLoading(true);
@@ -345,10 +350,17 @@ export default function PerformerApplyClient() {
           </p>
         </div>
 
+        <div className="rounded-xl border border-amber-400/30 bg-slate-900 p-4">
+          <div className="flex items-start gap-3 text-sm text-slate-200">
+            <input id="performer-terms" name="termsAccepted" type="checkbox" required checked={formData.termsAccepted} onChange={handleChange} className="mt-1 h-5 w-5 shrink-0 accent-amber-400" />
+            <div><label htmlFor="performer-terms">I have read and agree to the </label><Link href="/performer-policy" target="_blank" rel="noopener noreferrer" className="font-bold text-amber-300 underline underline-offset-4">Terms &amp; Conditions</Link>.</div>
+          </div>
+        </div>
+
         <button
           type="submit"
-          disabled={loading}
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-500 to-orange-600 hover:from-amber-200 hover:to-orange-400 text-black font-extrabold text-base flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(16,185,129,0.35)] transition-all transform hover:scale-[1.01] cursor-pointer"
+          disabled={loading || !formData.termsAccepted}
+          className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-500 to-orange-600 hover:from-amber-200 hover:to-orange-400 text-black font-extrabold text-base flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(16,185,129,0.35)] transition-all transform hover:scale-[1.01] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
             <Loader2 className="w-5 h-5 animate-spin" />

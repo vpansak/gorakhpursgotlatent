@@ -2,11 +2,15 @@ import Link from 'next/link';
 import { ChevronLeft, ShieldCheck } from 'lucide-react';
 
 export const metadata = {
-  title: "Performer Application Policy | Gorakhpur's Got Latent",
+  title: "Performer Terms & Conditions | Gorakhpur's Got Latent",
   description: "Read the application fee, selection, additional charges and refund policy for GGL Episode 2 performer applications.",
 };
 
 const sections = [
+  {
+    title: "Previous-episode performers and non-refundable payments",
+    body: "If you have performed in any previous GGL episode, you must disclose this to the GGL team before making any payment for a later episode and obtain confirmation that you are eligible to participate again. If a previous-episode performer applies again and pays without this confirmation, and their previous participation is identified after payment, the payment is non-refundable, including if repeat participation is declined. For example, this applies to an Episode 1 performer applying for Episode 2, or an Episode 2 performer applying for Episode 3. No refund will be provided in these circumstances, except where a refund is required by applicable law."
+  },
   {
     title: "1. Application form and separate payment links",
     body: "Submitting the performer audition form is free. If GGL sends you a separate official payment link, review the amount and purpose shown on that page before paying. The current performer payment-link flow is ₹799. Payment does not guarantee shortlisting, selection or a performance slot."
@@ -49,7 +53,7 @@ export default function PerformerPolicyPage() {
             <ShieldCheck className="h-7 w-7" />
             <p className="text-xs font-black uppercase tracking-[0.18em]">Official GGL Policy</p>
           </div>
-          <h1 className="mt-4 text-3xl font-black uppercase sm:text-4xl">Performer Application Policy</h1>
+          <h1 className="mt-4 text-3xl font-black uppercase sm:text-4xl">Performer Terms & Conditions</h1>
           <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">Gorakhpur's Got Latent (GGL) · Episode 2</p>
           <div className="mt-5 rounded-xl border border-amber-400/30 bg-black/40 p-4">
             <p className="font-extrabold text-amber-200">Important: The audition application form is free.</p>

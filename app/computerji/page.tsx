@@ -38,39 +38,80 @@ import {
 
 
 // ============================================================
-// CONTESTANT LIST (Exact 23 Records)
+// Episode 2 roster from the nine-artist PDF; separate IDs preserve Episode 1 scores.
 // ============================================================
 export interface Contestant {
   id: number;
   name: string;
   category: string;
   phone: string;
+  note?: string;
 }
 
-const CONTESTANTS_LIST: Contestant[] = [
-  { id: 1, name: 'Abhay mishra', category: 'Stand up comedy', phone: '9026968581' },
-  { id: 2, name: 'Love Maurya', category: 'Poetry', phone: '8173870600' },
-  { id: 3, name: 'Vedant Triparhi', category: 'Dance', phone: '9648994400' },
-  { id: 4, name: 'Kuldeep Kumar', category: 'Singing', phone: '8173040852' },
-  { id: 5, name: 'Ayush jaiswal', category: 'Singing', phone: '7317438659' },
-  { id: 6, name: 'Aryan kushwaha', category: 'Shayri', phone: '9670730687' },
-  { id: 7, name: 'Alka patel', category: 'Dance', phone: '919026839256' },
-  { id: 8, name: 'Arpita singh', category: 'Dance', phone: '9792844219' },
-  { id: 9, name: 'Aftab', category: 'Singing', phone: '7991789469' },
-  { id: 10, name: 'Misthi Mishra', category: 'Dance', phone: '8299388799' },
-  { id: 11, name: 'Kirti Gupta', category: 'Singing', phone: '9565865240' },
-  { id: 12, name: 'Ashik Ansari', category: 'Poetry', phone: '9569639253' },
-  { id: 13, name: 'Aradhya', category: 'Singing', phone: '7080718509' },
-  { id: 14, name: 'Shraddha Pandey', category: 'Singing', phone: '7307468833' },
-  { id: 15, name: 'Nandani Kumari', category: 'Dance', phone: '7052273166' },
-  { id: 16, name: 'Himanshu bhatt', category: 'Poetry', phone: '8112585745' },
-  { id: 17, name: 'MD Arman', category: 'Mimicry', phone: '+9779817455559' },
-  { id: 18, name: 'rustam', category: 'dance', phone: '8545943855' },
-  { id: 19, name: 'Kritika singh', category: 'Singing', phone: '8127421810' },
-  { id: 20, name: 'Khushee madhyeshiya', category: 'Singing', phone: '9336550642' },
-  { id: 21, name: 'Kamya verma', category: 'Dance', phone: '9335477452' },
-  { id: 22, name: 'Neha', category: 'Couple dance', phone: '7992159035' },
-  { id: 23, name: 'Atul sharma', category: 'Dance', phone: '8604057703' },
+const EPISODE_2_CONTESTANTS: Contestant[] = [
+  {
+    "id": 2001,
+    "name": "Arpit Kumar",
+    "category": "Singer + sketch artist",
+    "phone": "",
+    "note": "Lyrics bhoolte hain; Spiderman ko guard ne bhagaya."
+  },
+  {
+    "id": 2002,
+    "name": "Sahil Babu",
+    "category": "Bhojpuri singer / writer",
+    "phone": "",
+    "note": "Gaane jaldi pakadte hain; khud lyrics bhi likhte hain."
+  },
+  {
+    "id": 2003,
+    "name": "Aham Kumar Sharma",
+    "category": "Stand-up comedian",
+    "phone": "",
+    "note": "Principal ki bike se cake lene gaye; self-roast ready."
+  },
+  {
+    "id": 2004,
+    "name": "Adarsh Kumar Mishra",
+    "category": "Comedy + mimicry",
+    "phone": "",
+    "note": "Khud ko Episode 2 winner bolte hain; crush ke saamne daant."
+  },
+  {
+    "id": 2005,
+    "name": "Divyanshu Dubey",
+    "category": "Roaster / content creator",
+    "phone": "",
+    "note": "Har situation mein comedy; spontaneous roast specialist."
+  },
+  {
+    "id": 2006,
+    "name": "Asara Satyarthi",
+    "category": "Multi-talented performer",
+    "phone": "",
+    "note": "Painting, poetry, music, dance; purani mulaqat bhool gayin."
+  },
+  {
+    "id": 2007,
+    "name": "Katyayani Tiwari",
+    "category": "Folk singer",
+    "phone": "",
+    "note": "Singing se pyaar; comedy aur roasting mein comfort kam."
+  },
+  {
+    "id": 2008,
+    "name": "Abhay Jaiswal",
+    "category": "Semi-trained singer",
+    "phone": "",
+    "note": "280 kg deadlift; mimicry; elevator se darr; title Lamboo."
+  },
+  {
+    "id": 2009,
+    "name": "Kajal Chauhan",
+    "category": "Singer / songwriter",
+    "phone": "",
+    "note": "Gaane likhti aur gaati hain; Bollywood singer banne ka dream."
+  }
 ];
 
 export interface Judge {
@@ -80,15 +121,9 @@ export interface Judge {
   isActive: boolean;
 }
 
-const DEFAULT_JUDGES: Judge[] = [
-  { id: 'j_brijesh', name: 'BRIJESH BIRJU', role: 'Panel Judge', isActive: true },
-  { id: 'j_somya', name: 'SOMYA', role: 'Panel Judge', isActive: true },
-  { id: 'j_naveen', name: 'NAVEEN VARMA', role: 'Panel Judge', isActive: true },
-  { id: 'j_jahanvi', name: 'JAHANVI GUPTA', role: 'Panel Judge', isActive: true },
-  { id: 'j_vivek', name: 'VIVEK GUPTA', role: 'Panel Judge', isActive: true },
-];
+const DEFAULT_JUDGES: Judge[] = [];
 
-const CORE_JUDGE_IDS = new Set(['j_brijesh', 'j_somya', 'j_naveen', 'j_jahanvi', 'j_vivek']);
+const CORE_JUDGE_IDS = new Set<string>();
 
 export interface SavedScoringRecord {
   contestantId: number;
@@ -148,8 +183,9 @@ function filterScoreInput(newVal: string): string | null {
   return trimmed;
 }
 
-const STORAGE_KEY_SCORES = 'ggl_computerji_scores_v3';
-const STORAGE_KEY_JUDGES = 'ggl_computerji_judges_v3';
+const STORAGE_KEY_SCORES = 'ggl_computerji_ep2_scores_v1';
+const STORAGE_KEY_JUDGES = 'ggl_computerji_ep2_judges_v1';
+const STORAGE_KEY_CONTESTANTS = 'ggl_computerji_ep2_contestants_v1';
 const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
 
 export default function ComputerJiControlPanel() {
@@ -162,8 +198,13 @@ export default function ComputerJiControlPanel() {
   const [isSubmittingAuth, setIsSubmittingAuth] = useState<boolean>(false);
 
   // Judges & Contestants state
+  const [contestants, setContestants] = useState<Contestant[]>(EPISODE_2_CONTESTANTS);
+  const [showAddContestantModal, setShowAddContestantModal] = useState(false);
+  const [newContestantName, setNewContestantName] = useState('');
+  const [newContestantCategory, setNewContestantCategory] = useState('');
+  const [newContestantPhone, setNewContestantPhone] = useState('');
   const [judges, setJudges] = useState<Judge[]>(DEFAULT_JUDGES);
-  const [selectedContestantId, setSelectedContestantId] = useState<number>(1);
+  const [selectedContestantId, setSelectedContestantId] = useState<number>(2001);
   const [savedRecords, setSavedRecords] = useState<Record<number, SavedScoringRecord>>({});
   const [lastSavedTime, setLastSavedTime] = useState<string | null>(null);
 
@@ -268,10 +309,18 @@ export default function ComputerJiControlPanel() {
   useEffect(() => {
     const now = Date.now();
     try {
+      const storedContestants = localStorage.getItem(STORAGE_KEY_CONTESTANTS);
+      if (storedContestants) {
+        const parsed = JSON.parse(storedContestants);
+        if (Array.isArray(parsed)) {
+          const additions = parsed.filter((c) => Number.isInteger(c.id) && c.id > 2009 && c.id < 3000 && typeof c.name === 'string' && c.name.trim() && typeof c.category === 'string' && typeof c.phone === 'string');
+          setContestants([...EPISODE_2_CONTESTANTS, ...additions]);
+        }
+      }
       const storedJudges = localStorage.getItem(STORAGE_KEY_JUDGES);
       if (storedJudges) {
         const parsed = JSON.parse(storedJudges);
-        if (Array.isArray(parsed) && parsed.length >= 5) setJudges(parsed);
+        if (Array.isArray(parsed) && parsed.every((j) => typeof j.id === 'string' && typeof j.name === 'string')) setJudges(parsed);
       }
 
       const storedRecords = localStorage.getItem(STORAGE_KEY_SCORES);
@@ -305,6 +354,7 @@ export default function ComputerJiControlPanel() {
         if (json.success && Array.isArray(json.data)) {
           const backendMap: Record<number, SavedScoringRecord> = {};
           json.data.forEach((row: any) => {
+            if (row.contestant_id < 2001 || row.contestant_id >= 3000) return;
             backendMap[row.contestant_id] = {
               contestantId: row.contestant_id,
               contestantName: row.contestant_name,
@@ -374,8 +424,8 @@ export default function ComputerJiControlPanel() {
   }, []);
 
   const currentContestant = useMemo(() => {
-    return CONTESTANTS_LIST.find((c) => c.id === selectedContestantId) || CONTESTANTS_LIST[0];
-  }, [selectedContestantId]);
+    return contestants.find((c) => c.id === selectedContestantId) || contestants[0];
+  }, [selectedContestantId, contestants]);
 
   const currentSavedRecord = savedRecords[selectedContestantId];
   const isCurrentCompleted = Boolean(currentSavedRecord);
@@ -412,14 +462,14 @@ export default function ComputerJiControlPanel() {
 
   const filteredContestants = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
-    if (!q) return CONTESTANTS_LIST;
-    return CONTESTANTS_LIST.filter(
+    if (!q) return contestants;
+    return contestants.filter(
       (c) =>
         c.name.toLowerCase().includes(q) ||
         c.category.toLowerCase().includes(q) ||
         c.phone.includes(q)
     );
-  }, [searchQuery]);
+  }, [searchQuery, contestants]);
 
   const handleJudgeScoreChange = (judgeId: string, val: string) => {
     setPanelError(null);
@@ -465,6 +515,10 @@ export default function ComputerJiControlPanel() {
   // Calculate Average
   const handleCalculateAverage = () => {
     setPanelError(null);
+    if (activeJudges.length === 0) {
+      setPanelError('Add a judge name before scoring.');
+      return;
+    }
     const missing = activeJudges.filter((j) => {
       const val = judgeScores[j.id]?.trim();
       return val === undefined || val === '' || isNaN(Number(val));
@@ -497,6 +551,10 @@ export default function ComputerJiControlPanel() {
   // Reveal Report & AUTOMATICALLY SAVE! (No need to click save button)
   const handleReveal = () => {
     setPanelError(null);
+    if (activeJudges.length === 0) {
+      setPanelError('Add a judge name before scoring.');
+      return;
+    }
 
     const missing = activeJudges.filter((j) => {
       const val = judgeScores[j.id]?.trim();
@@ -578,6 +636,10 @@ export default function ComputerJiControlPanel() {
   // Save Score & Proceed to Next Contestant
   const handleSaveAndNext = (advanceToNext: boolean = false) => {
     setPanelError(null);
+    if (activeJudges.length === 0) {
+      setPanelError('Add a judge name before scoring.');
+      return;
+    }
 
     const missing = activeJudges.filter((j) => {
       const val = judgeScores[j.id]?.trim();
@@ -645,16 +707,39 @@ export default function ComputerJiControlPanel() {
 
     if (advanceToNext) {
       // Find next pending contestant or next ID
-      const nextPending = CONTESTANTS_LIST.find(
+      const nextPending = contestants.find(
         (c) => c.id > currentContestant.id && !updated[c.id]
-      ) || CONTESTANTS_LIST.find((c) => !updated[c.id]);
+      ) || contestants.find((c) => !updated[c.id]);
 
       if (nextPending) {
         setSelectedContestantId(nextPending.id);
-      } else if (currentContestant.id < CONTESTANTS_LIST.length) {
+      } else if (currentContestant.id < Math.max(...contestants.map((c) => c.id))) {
         setSelectedContestantId(currentContestant.id + 1);
       }
     }
+  };
+
+  const handleAddContestant = (e: React.FormEvent) => {
+    e.preventDefault();
+    const name = newContestantName.trim();
+    if (!name) return;
+    const id = Math.max(...contestants.map((c) => c.id)) + 1;
+    if (id >= 3000) return;
+    const updated = [...contestants, { id, name, category: newContestantCategory.trim() || 'To be confirmed', phone: newContestantPhone.trim() }];
+    try {
+      localStorage.setItem(STORAGE_KEY_CONTESTANTS, JSON.stringify(updated));
+    } catch {
+      setPanelError('Could not save contestant. Please allow browser storage and try again.');
+      return;
+    }
+    setContestants(updated);
+    setSelectedContestantId(id);
+    setSearchQuery('');
+    setShowAddContestantModal(false);
+    setIsDropdownOpen(false);
+    setNewContestantName('');
+    setNewContestantCategory('');
+    setNewContestantPhone('');
   };
 
   // Add Judge
@@ -665,6 +750,9 @@ export default function ComputerJiControlPanel() {
     const newId = `j_${Date.now()}`;
     const newJudge: Judge = { id: newId, name: trimmed, isActive: true };
     setJudges([...judges, newJudge]);
+    setComputerJiAverage(null);
+    setRawAverage(null);
+    setIsRevealed(false);
     setJudgeScores((prev) => ({ ...prev, [newId]: '' }));
     setNewJudgeName('');
     setShowAddJudgeModal(false);
@@ -675,6 +763,9 @@ export default function ComputerJiControlPanel() {
     if (CORE_JUDGE_IDS.has(judgeId)) return;
     const updated = judges.filter((j) => j.id !== judgeId);
     setJudges(updated);
+    setComputerJiAverage(null);
+    setRawAverage(null);
+    setIsRevealed(false);
     setJudgeScores((prev) => {
       const copy = { ...prev };
       delete copy[judgeId];
@@ -709,7 +800,7 @@ export default function ComputerJiControlPanel() {
         return sc !== undefined && sc !== '' ? sc : 'N/A';
       });
       return [
-        rec.contestantId,
+        rec.contestantId - 2000,
         `"${rec.contestantName.replace(/"/g, '""')}"`,
         `"${rec.category.replace(/"/g, '""')}"`,
         `"${rec.phone}"`,
@@ -728,7 +819,7 @@ export default function ComputerJiControlPanel() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'GGL-ComputerJi-Scoring.csv');
+    link.setAttribute('download', 'GGL-Episode2-ComputerJi-Scoring.csv');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -736,7 +827,7 @@ export default function ComputerJiControlPanel() {
   };
 
   const completedCount = Object.keys(savedRecords).length;
-  const totalCount = CONTESTANTS_LIST.length;
+  const totalCount = contestants.length;
   const formatTimer = (sec: number) => {
     const m = Math.floor(sec / 60);
     const s = sec % 60;
@@ -965,12 +1056,17 @@ export default function ComputerJiControlPanel() {
               className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
             >
               <Plus className="w-3 h-3" />
-              ADD
+              Add Judge
             </button>
           </div>
 
           {/* Judges List (Scrollable internally if many judges, won't scroll page) */}
           <div className="flex-1 overflow-y-auto space-y-1.5 py-1.5 pr-1 min-h-0">
+            {judges.length === 0 && (
+              <div className="p-4 text-sm text-slate-300">
+                Judge names to be confirmed. Use <strong className="text-amber-400">Add Judge</strong> when ready.
+              </div>
+            )}
             {judges.map((judge, idx) => (
               <div
                 key={judge.id}
@@ -1063,7 +1159,7 @@ export default function ComputerJiControlPanel() {
               className="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5"
             >
               <User className="w-3.5 h-3.5 text-amber-400" />
-              SELECT CONTESTANT ({currentContestant.id}/{totalCount})
+              EPISODE 2 · SELECT CONTESTANT ({currentContestant.id - 2000}/{totalCount})
             </h2>
             <span
               className={`text-[10px] font-black px-2 py-0.5 rounded border uppercase ${isCurrentCompleted
@@ -1084,7 +1180,7 @@ export default function ComputerJiControlPanel() {
             >
               <div className="flex items-center gap-2 truncate">
                 <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-xs font-mono shrink-0">
-                  {currentContestant.id}
+                  {currentContestant.id - 2000}
                 </span>
                 <span className="font-bold text-sm text-white truncate">
                   {currentContestant.name}
@@ -1142,7 +1238,7 @@ export default function ComputerJiControlPanel() {
                           <span className="text-[10px] text-slate-400">({c.category})</span>
                         </div>
                         <span className="text-[9px] font-mono text-slate-400 shrink-0">
-                          #{c.id}
+                          #{c.id - 2000}
                         </span>
                       </button>
                     );
@@ -1152,6 +1248,12 @@ export default function ComputerJiControlPanel() {
             )}
           </div>
 
+          <div className="flex items-center justify-between gap-2 my-1 shrink-0">
+            <button type="button" onClick={() => setShowAddContestantModal(true)} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-amber-500/40 text-amber-300 text-xs font-bold hover:bg-amber-500/10">
+              <Plus className="w-3.5 h-3.5" /> Add contestant
+            </button>
+            <a href="/documents/GGL_Episode_2_Nine_Artists.pdf" target="_blank" rel="noopener noreferrer" className="text-xs text-amber-300 underline">Episode 2 · Artist PDF</a>
+          </div>
           {/* Contestant Details Strip */}
           <div className="grid grid-cols-3 gap-2 p-2 rounded-xl bg-black/40 border border-white/10 text-xs">
             <div>
@@ -1167,10 +1269,12 @@ export default function ComputerJiControlPanel() {
             <div>
               <span className="text-[9px] uppercase font-bold text-slate-400 block">CONTACT</span>
               <span className="font-mono text-slate-300 truncate block">
-                {currentContestant.phone}
+                {currentContestant.phone || 'Not provided'}
               </span>
             </div>
           </div>
+
+          {currentContestant.note && <p className="my-1 text-[11px] text-slate-300">{currentContestant.note}</p>}
 
           {/* CONTESTANT SCORE INPUT (Inside the Contestant card as requested) */}
           <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-3 shrink-0">
@@ -1265,7 +1369,7 @@ export default function ComputerJiControlPanel() {
                       className={`hover:bg-amber-500/10 cursor-pointer transition-colors ${rec.contestantId === selectedContestantId ? 'bg-amber-500/15' : ''
                         }`}
                     >
-                      <td className="p-1.5 font-bold text-amber-400">{rec.contestantId}</td>
+                      <td className="p-1.5 font-bold text-amber-400">{rec.contestantId - 2000}</td>
                       <td className="p-1.5 font-sans font-bold text-white truncate max-w-[100px]">
                         {rec.contestantName}
                       </td>
@@ -1457,6 +1561,28 @@ export default function ComputerJiControlPanel() {
           </div>
         </section>
       </main>
+
+      {showAddContestantModal && (
+        <div role="dialog" aria-modal="true" aria-label="Add contestant" className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3">
+          <form onSubmit={handleAddContestant} className="max-w-sm w-full rounded-2xl bg-[#0e111d] border border-amber-500/40 p-5 space-y-3 shadow-2xl">
+            <h3 className="text-lg font-bold text-amber-400">Add contestant · Episode 2</h3>
+            <label className="block text-xs text-slate-300">Full name
+              <input autoFocus required maxLength={150} value={newContestantName} onChange={(e) => setNewContestantName(e.target.value)} className="mt-1 w-full p-2 rounded-lg bg-black/60 border border-white/20 text-white" />
+            </label>
+            <label className="block text-xs text-slate-300">Category
+              <input maxLength={150} value={newContestantCategory} onChange={(e) => setNewContestantCategory(e.target.value)} className="mt-1 w-full p-2 rounded-lg bg-black/60 border border-white/20 text-white" />
+            </label>
+            <label className="block text-xs text-slate-300">Phone (optional)
+              <input type="tel" maxLength={30} value={newContestantPhone} onChange={(e) => setNewContestantPhone(e.target.value)} className="mt-1 w-full p-2 rounded-lg bg-black/60 border border-white/20 text-white" />
+            </label>
+            <p className="text-xs text-slate-400">Added contestants stay saved in this browser.</p>
+            <div className="flex justify-end gap-2">
+              <button type="button" onClick={() => setShowAddContestantModal(false)} className="px-3 py-2 text-slate-300">Cancel</button>
+              <button type="submit" className="px-4 py-2 rounded-lg bg-amber-500 text-black font-bold">Add contestant</button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* ============================================================
           MODAL: ADD JUDGE

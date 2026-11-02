@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Computer Ji — Control Panel | Gorakhpur’s Got Latent",
+  title: "Computer Ji — Episode 2 Control Panel | Gorakhpur’s Got Latent",
   description: "Live Operator and Scoring Control Console for Gorakhpur’s Got Latent Computer Ji.",
 };
 

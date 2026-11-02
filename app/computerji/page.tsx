@@ -937,7 +937,7 @@ export default function ComputerJiControlPanel() {
   }
 
   return (
-    <div className="h-screen max-h-screen bg-[#07080e] text-slate-100 flex flex-col justify-between overflow-hidden p-2 sm:p-3 selection:bg-amber-500 selection:text-black">
+    <div className="min-h-screen lg:h-screen lg:max-h-screen bg-[#07080e] text-slate-100 flex flex-col justify-between overflow-y-auto lg:overflow-hidden p-2 sm:p-3 selection:bg-amber-500 selection:text-black">
       {/* ============================================================
           TOP SOUNDBOARD STRIP (Replaces old navbar in exact same space)
           ============================================================ */}
@@ -1031,13 +1031,13 @@ export default function ComputerJiControlPanel() {
           TOP ROW: [ JUDGE SCORES (Left) ] | [ SELECT CONTESTANT (Right) ]
           BOTTOM ROW: [ SAVED DATA (Left) ] | [ TIMER 2 MIN ] | [ REPORT & NEXT (Right) ]
           ============================================================ */}
-      <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-2.5 my-2 min-h-0 overflow-hidden">
+      <main className="flex-none lg:flex-1 grid grid-cols-1 lg:grid-cols-12 gap-2.5 my-2 min-h-0 overflow-visible lg:overflow-hidden">
         {/* ==========================================================
             CARD 1: JUDGE SCORES (Left Top, 6 cols)
             ========================================================== */}
         <section
           aria-labelledby="judge-scores-heading"
-          className="lg:col-span-6 rounded-2xl bg-[#0e111d]/95 border border-amber-500/30 p-3 flex flex-col justify-between shadow-xl min-h-0 overflow-hidden"
+          className="lg:col-span-6 rounded-2xl bg-[#0e111d]/95 border border-amber-500/30 p-3 flex flex-col justify-between shadow-xl min-h-[250px] lg:min-h-0 overflow-visible lg:overflow-hidden"
         >
           {/* Header & Add Button */}
           <div className="flex items-center justify-between border-b border-white/10 pb-1.5 shrink-0">
@@ -1150,7 +1150,7 @@ export default function ComputerJiControlPanel() {
             ========================================================== */}
         <section
           aria-labelledby="contestant-heading"
-          className="lg:col-span-6 rounded-2xl bg-[#0e111d]/95 border border-amber-500/30 p-3 flex flex-col justify-between shadow-xl min-h-0 overflow-hidden"
+          className="lg:col-span-6 rounded-2xl bg-[#0e111d]/95 border border-amber-500/30 p-3 flex flex-col justify-between shadow-xl min-h-[250px] lg:min-h-0 overflow-visible lg:overflow-hidden"
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-1.5 shrink-0">
@@ -1320,7 +1320,7 @@ export default function ComputerJiControlPanel() {
             ========================================================== */}
         <section
           aria-labelledby="saved-data-heading"
-          className="lg:col-span-5 rounded-2xl bg-[#0e111d]/95 border border-amber-500/30 p-3 flex flex-col justify-between shadow-xl min-h-0 overflow-hidden"
+          className="lg:col-span-5 rounded-2xl bg-[#0e111d]/95 border border-amber-500/30 p-3 flex flex-col justify-between shadow-xl min-h-[250px] lg:min-h-0 overflow-visible lg:overflow-hidden"
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-1.5 shrink-0">
@@ -1409,7 +1409,7 @@ export default function ComputerJiControlPanel() {
             ========================================================== */}
         <section
           aria-labelledby="timer-heading"
-          className="lg:col-span-3 rounded-2xl bg-[#0e111d]/95 border border-amber-500/30 p-3 flex flex-col justify-between text-center shadow-xl min-h-0 overflow-hidden"
+          className="lg:col-span-3 rounded-2xl bg-[#0e111d]/95 border border-amber-500/30 p-3 flex flex-col justify-between text-center shadow-xl min-h-[250px] lg:min-h-0 overflow-visible lg:overflow-hidden"
         >
           <div className="flex items-center justify-between border-b border-white/10 pb-1.5 shrink-0">
             <h2
@@ -1485,7 +1485,7 @@ export default function ComputerJiControlPanel() {
             ========================================================== */}
         <section
           aria-labelledby="report-heading"
-          className="lg:col-span-4 rounded-2xl bg-[#0e111d]/95 border border-amber-500/30 p-3 flex flex-col justify-between shadow-xl min-h-0 overflow-hidden"
+          className="lg:col-span-4 rounded-2xl bg-[#0e111d]/95 border border-amber-500/30 p-3 flex flex-col justify-between shadow-xl min-h-[250px] lg:min-h-0 overflow-visible lg:overflow-hidden"
         >
           <div className="flex items-center justify-between border-b border-white/10 pb-1.5 shrink-0">
             <h2

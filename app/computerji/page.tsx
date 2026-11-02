@@ -153,10 +153,9 @@ const STORAGE_KEY_JUDGES = 'ggl_computerji_judges_v3';
 const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
 
 export default function ComputerJiControlPanel() {
-  // Operator Authentication (ID: 8528085859 | Pass: GGL@GKP)
+  // Single-PIN operator unlock; never render the access code in the login UI.
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [authChecking, setAuthChecking] = useState<boolean>(true);
-  const [loginId, setLoginId] = useState<string>('');
   const [loginPassword, setLoginPassword] = useState<string>('');
   const [authError, setAuthError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -229,18 +228,16 @@ export default function ComputerJiControlPanel() {
     setAuthError(null);
     setIsSubmittingAuth(true);
 
-    const cleanId = loginId.trim();
     const cleanPass = loginPassword.trim();
 
-    // Accept operator ID 8528085859 with password being the same mobile number (8528085859) or GGL@GKP
-    if (cleanId === '8528085859' && (cleanPass === cleanId || cleanPass === '8528085859' || cleanPass === 'GGL@GKP')) {
+    if (cleanPass === '1100') {
       try {
         sessionStorage.setItem('ggl_computerji_auth_v1', 'verified');
       } catch (err) { }
       setIsAuthenticated(true);
       setIsSubmittingAuth(false);
     } else {
-      setAuthError('गलत Operator ID या Security Password! कृपया सही विवरण डालें।');
+      setAuthError('गलत PIN। कृपया दोबारा कोशिश करें।');
       setIsSubmittingAuth(false);
     }
   };
@@ -797,36 +794,21 @@ export default function ComputerJiControlPanel() {
               </div>
             )}
 
-            {/* Operator ID Input */}
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
-                Operator ID / फोन नंबर
-              </label>
-              <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  required
-                  placeholder="8528085859"
-                  value={loginId}
-                  onChange={(e) => setLoginId(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-black/60 border border-white/10 focus:border-amber-400 text-sm text-white font-mono placeholder:text-slate-600 focus:outline-none transition-all"
-                  autoFocus
-                />
-              </div>
-            </div>
-
             {/* Password Input */}
             <div className="space-y-1.5">
               <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
-                Security Password / पासवर्ड
+                Access PIN / पिन
               </label>
               <div className="relative">
                 <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
-                  placeholder="••••••••"
+                  placeholder="PIN डालें"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  autoFocus
+                  maxLength={4}
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-black/60 border border-white/10 focus:border-amber-400 text-sm text-white font-mono placeholder:text-slate-600 focus:outline-none transition-all"
@@ -844,7 +826,7 @@ export default function ComputerJiControlPanel() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isSubmittingAuth || !loginId || !loginPassword}
+              disabled={isSubmittingAuth || loginPassword.length !== 4}
               className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:brightness-110 active:scale-98 text-black font-black text-sm uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
             >
               <Unlock className="w-4 h-4 stroke-[2.5]" />

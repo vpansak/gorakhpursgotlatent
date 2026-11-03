@@ -11,18 +11,18 @@ export default function ApplyPage() {
     {
       title: 'Performer Application',
       subtitle: 'Comedy, Mimicry, Magic, Unusual Talent, Music (Unique / Original) & More',
-      desc: 'Showcase your talent on the biggest live stage in Purvanchal. Performer registrations for Episode 2 auditions are now LIVE!',
+      desc: 'Showcase your talent on the biggest live stage in Purvanchal. Performer registrations for Episode 3 auditions are now LIVE!',
       href: '/apply/performer',
       icon: Mic2,
-      badge: 'EPISODE 2 AUDITIONS • REGISTRATION LIVE',
+      badge: 'EPISODE 3 AUDITIONS • REGISTRATION LIVE',
       badgeClass: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse',
       color: 'from-amber-500/20 via-amber-500/10 to-transparent',
       borderColor: 'border-amber-500/40',
       btnBg: 'bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black hover:opacity-95',
-      btnText: 'APPLY FOR EPISODE 2 AUDITION',
+      btnText: 'APPLY FOR EPISODE 3 AUDITION',
       alertBox: {
-        tag: 'FREE AUDITION APPLICATION',
-        text: 'Applying and submitting your audition clip is FREE. After shortlisting, selected performers will be contacted for the registration process. Any applicable registration fee and exact amount will be informed only after shortlisting.',
+        tag: 'FREE APPLICATION · ₹799 AFTER SHORTLIST',
+        text: 'Applying and submitting your audition clip is FREE. After shortlisting, selected performers will be contacted for the registration process. Shortlisted performers must pay the ₹799 performer registration fee to confirm their participation.',
       },
     },
     {
@@ -85,11 +85,11 @@ export default function ApplyPage() {
                 🎉 REGISTRATION LIVE NOW
               </span>
               <strong className="text-white font-bold text-sm">
-                Performer Registration: Episode 2 Auditions Are Live!
+                Performer Registration: Episode 3 Auditions Are Live!
               </strong>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed font-semibold">
-              Apply and submit your performance clip on WhatsApp (<strong className="text-amber-400">+91 8423858424</strong>) <strong className="text-emerald-300">FREE OF CHARGE</strong>. Shortlisted performers will be informed about the registration process and any applicable fee after shortlisting.
+              Apply and submit your performance clip on WhatsApp (<strong className="text-amber-400">+91 8423858424</strong>) <strong className="text-emerald-300">FREE OF CHARGE</strong>. Only after shortlisting, selected performers must pay ₹799 to confirm participation.
             </p>
           </div>
         </div>
@@ -97,7 +97,7 @@ export default function ApplyPage() {
           href="/apply/performer"
           className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs whitespace-nowrap shadow-lg transition-all flex items-center gap-1.5 shrink-0 self-stretch sm:self-auto justify-center"
         >
-          APPLY FOR EPISODE 2 <ChevronRight className="w-4 h-4" />
+          APPLY FOR EPISODE 3 <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
 

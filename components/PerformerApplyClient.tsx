@@ -209,7 +209,7 @@ export default function PerformerApplyClient() {
     <div className="py-5 px-4 sm:px-6 max-w-2xl mx-auto space-y-4">
       <div className="text-center">
         <h1 className="text-2xl sm:text-3xl font-black text-white">Performer Application</h1>
-        <p className="text-xs text-slate-400 mt-1">Episode 2 • FREE application • 18+ only</p>
+        <p className="text-xs text-slate-400 mt-1">Episode 3 • FREE application • 18+ only</p>
       </div>
 
       {error && (
@@ -374,7 +374,8 @@ export default function PerformerApplyClient() {
             </>
           )}
         </button>
-      </form>
+        <p className="pt-1 text-center text-[10px] leading-relaxed text-slate-500">Note: Applying is free. Only if you are shortlisted, a ₹799 registration fee will be required to confirm your participation.</p>
+    </form>
     </div>
   );
 }

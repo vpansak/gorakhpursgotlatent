@@ -571,6 +571,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
         </div>
 
         <div className="flex items-center gap-2.5 shrink-0">
+          <a href="/api/malik/episode-backup" className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-black text-black hover:bg-amber-300" title="Download all eight categories, full details and payment references as a private ZIP">Download All 8 Categories ZIP</a>
           <button
             onClick={handleDownloadMaster}
             disabled={exportingMaster}

@@ -18,6 +18,7 @@ export async function POST(req: Request) {
 
     // Optional fields with sensible defaults
     const cleanEmail = (email || '').trim();
+    if (cleanEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) return NextResponse.json({error:'Enter a valid email address or leave it blank.'},{status:400});
     const cleanInsta = (instagramId || '').trim();
 
     // Quantity & Pricing (₹149 per ticket)
@@ -45,7 +46,7 @@ export async function POST(req: Request) {
           receipt: bookingId,
           notes: {
             customer_name: customerName,
-            customer_email: cleanEmail || 'attendee@gkpgotlatent.in',
+            customer_email: cleanEmail,
             customer_mobile: mobile,
             instagram_id: cleanInsta || '@ggl_guest',
             quantity: String(qty),

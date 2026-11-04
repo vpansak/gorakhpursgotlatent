@@ -148,6 +148,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
       if (p) {
         after(async () => {
         const emailResult = await sendPerformerApplicationEmail({
+          skipAdminNotification: true,
           application_id: p.app_id,
           created_at: new Date().toISOString(),
           full_name: p.full_name,

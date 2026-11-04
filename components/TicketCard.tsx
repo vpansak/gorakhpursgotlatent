@@ -50,6 +50,24 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
   }, [ticket]);
 
   const [downloading, setDownloading] = useState(false);
+  const [deliveryEmail, setDeliveryEmail] = useState(ticket.email === 'attendee@gkpgotlatent.in' ? '' : ticket.email || '');
+  const [emailBusy, setEmailBusy] = useState(false);
+  const [emailMessage, setEmailMessage] = useState('');
+  useEffect(() => {setDeliveryEmail(ticket.email === 'attendee@gkpgotlatent.in' ? '' : ticket.email || '');setEmailMessage('');}, [ticket.ticket_id, ticket.email]);
+  const sendEmail = async (event: React.FormEvent) => {
+    event.preventDefault(); if(emailBusy)return;setEmailBusy(true);setEmailMessage('');
+    try {
+      const res=await fetch('/api/tickets/email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ticketId:ticket.ticket_id,token:ticket.qr_token,email:deliveryEmail})});
+      const json=await res.json();if(!res.ok)throw new Error(json.error||'Unable to email ticket');setEmailMessage(json.message);
+    } catch(error:any){setEmailMessage(error.message||'Please try again.');}finally{setEmailBusy(false);}
+  };
+  const downloadPdf = async () => {
+    try {
+      const res=await fetch('/api/tickets/pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ticketId:ticket.ticket_id,token:ticket.qr_token})});
+      if(!res.ok)throw new Error('Unable to download PDF');
+      const url=URL.createObjectURL(await res.blob());const a=document.createElement('a');a.href=url;a.download=`GGL-Ticket-${ticket.ticket_id}.pdf`;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
+    }catch(error:any){setEmailMessage(error.message);}
+  };
 
   const handleDownloadImage = async () => {
     if (!ticketRef.current || downloading) return;
@@ -234,6 +252,15 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
         </div>
       </div>
 
+      {showActions && <div className="mx-auto w-full max-w-xl space-y-3 print:hidden">
+        <button onClick={downloadPdf} className="w-full rounded-xl border border-amber-400 px-5 py-3 font-bold text-amber-300">Download ticket PDF</button>
+        <form onSubmit={sendEmail} className="space-y-2 rounded-xl border border-slate-700 bg-slate-900 p-4">
+          <label htmlFor={`ticket-email-${ticket.ticket_id}`} className="block text-sm font-bold text-white">Send ticket PDF to email</label>
+          <input id={`ticket-email-${ticket.ticket_id}`} type="email" required maxLength={254} value={deliveryEmail} onChange={event=>setDeliveryEmail(event.target.value)} placeholder="Your email address" className="w-full rounded-lg border border-slate-600 bg-slate-950 p-3 text-white" />
+          <button disabled={emailBusy} className="w-full rounded-lg bg-amber-400 p-3 font-bold text-black disabled:opacity-50">{emailBusy?'Sending…':'Send to email'}</button>
+          {emailMessage && <p role="status" className="text-sm text-slate-200">{emailMessage}</p>}
+        </form>
+      </div>}
       {/* ACTION BUTTONS: VIEW / DOWNLOAD / PRINT */}
       {showActions && (
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2 print:hidden">

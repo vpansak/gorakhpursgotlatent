@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
+import { after, NextResponse } from 'next/server';
 import { EPISODE_2 } from '@/lib/episode2';
 import { verifyRazorpaySignature, getRazorpayKeySecret, getRazorpayInstance } from '@/lib/razorpay';
 import { verifiedTicketOrder } from '@/lib/verifiedTicketOrder';
-import { sendBookingConfirmationEmail } from '@/lib/emailjs';
+import { sendTicketPdf } from '@/lib/ticketEmail';
+export const maxDuration=60;
 import {
   generateUniqueTicketId,
   generateQrToken,
@@ -92,25 +93,8 @@ export async function POST(req: Request) {
 
     await saveTicketRecord(ticketRecord);
 
-    if (ticketRecord.email) {
-      sendBookingConfirmationEmail({
-        customerName: ticketRecord.customer_name,
-        customerEmail: ticketRecord.email,
-        orderNumber: ticketRecord.booking_id,
-        razorpayOrderId: ticketRecord.razorpay_order_id,
-        razorpayPaymentId: ticketRecord.razorpay_payment_id,
-        ticketNumber: ticketRecord.ticket_id,
-        eventTitle: 'Gorakhpur\'s Got Latent — Episode 3',
-        eventDate: 'To be announced',
-        startTime: 'To be announced',
-        venueName: 'To be announced',
-        categoryName: 'Show Ticket',
-        quantity: ticketRecord.quantity,
-        totalAmount: ticketRecord.amount,
-        currency: 'INR',
-      }).then((res) => {
-        if (!res.success) console.warn('Ticket confirmation email warning:', res.message);
-      }).catch((err) => console.error('Ticket confirmation email error:', err));
+    if (ticketRecord.email && ticketRecord.email !== 'attendee@gkpgotlatent.in') {
+      after(async()=>{try {await sendTicketPdf(ticketRecord,ticketRecord.email);}catch {console.error('Automatic ticket PDF email failed',{ticketId:ticketRecord.ticket_id});}});
     }
 
 

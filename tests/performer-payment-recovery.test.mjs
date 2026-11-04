@@ -11,7 +11,7 @@ async function fixture() {
     INSERT INTO performer_payment_links(token,app_id,amount,status,razorpay_order_id) VALUES('token-1','APP-1',799,'PENDING','order_one');`);
   const queryStrict=async(sql,params=[])=>{let n=0;return(await pg.query(sql.replace(/\?/g,()=>'$'+(++n)),params)).rows;};
   const db={queryStrict,queryOneStrict:async(...args)=>(await queryStrict(...args))[0]};
-  const verification=load('lib/performerPaymentVerification.ts',{'@/lib/db':{db}});
+  const verification=load('lib/performerPaymentVerification.ts',{'@/lib/db':{db},'next/server':{after:()=>{}},'@/lib/performerAdminNotification':{}});
   const recovery=load('lib/performerPaymentRecovery.ts',{'@/lib/db':{db},'@/lib/performerPaymentVerification':verification});
   const captured={id:'pay_test',order_id:'order_one',status:'captured',amount:79900,currency:'INR'};
   return {pg,db,recovery,captured};

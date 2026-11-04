@@ -1,3 +1,5 @@
+import { after } from 'next/server';
+import { notifyPerformerAdmin } from '@/lib/performerAdminNotification';
 import { db } from '@/lib/db';
 
 export function matchesCapturedPerformerPayment(link: any, payment: any) {
@@ -24,4 +26,5 @@ export async function recordVerifiedPerformerPayment(link: any, payment: any) {
     updated_at=CURRENT_TIMESTAMP FROM paid WHERE p.app_id=paid.app_id RETURNING p.app_id`,
     [payment.id, link.token, link.app_id, payment.order_id, link.amount, payment.id, payment.order_id]);
   if (!rows.length) throw new Error('Verified payment could not be saved');
+  after(async()=>{try {await notifyPerformerAdmin(link.app_id,'PAID');}catch {console.error('Performer payment admin notification failed',{appId:link.app_id});}});
 }

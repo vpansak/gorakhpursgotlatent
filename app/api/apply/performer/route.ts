@@ -1,3 +1,4 @@
+import { notifyPerformerAdmin } from '@/lib/performerAdminNotification';
 import { after, NextResponse } from 'next/server';
 import { createPerformerInvitation, emailPerformerInvitation } from '@/lib/performerInvitation';
 
@@ -75,6 +76,8 @@ export async function POST(req: Request) {
         VALUES (?, 'PERFORMER', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Initial Performer Audition Form Submission; performer terms v2026-11-01 accepted')
       `, [`his-${Date.now()}`, appId]);
     } catch (e) {}
+
+    after(async()=>{try {await notifyPerformerAdmin(appId,'APPLIED');}catch {console.error('Performer application admin notification failed',{appId});}});
 
     let paymentUrl: string | undefined;
     try {

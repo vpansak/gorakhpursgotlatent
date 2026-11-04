@@ -72,7 +72,7 @@ test('captured matching ₹799 payment creates automatic tick; wrong order, curr
   const pg=await database();
   try {
     const queryStrict=strict(pg);
-    const verification=load('lib/performerPaymentVerification.ts',{ '@/lib/db':{ db:{ queryStrict } } });
+    const verification=load('lib/performerPaymentVerification.ts',{ '@/lib/db':{ db:{ queryStrict } },'next/server':{after:()=>{}},'@/lib/performerAdminNotification':{} });
     const [link]=await queryStrict('SELECT * FROM performer_payment_links');
     const captured={id:'pay_test',order_id:'order_test',amount:79900,currency:'INR',status:'captured'};
     for(const patch of [{order_id:'wrong'},{amount:2900},{currency:'USD'},{status:'authorized'}]) {

@@ -213,6 +213,7 @@ Gorakhpur's Got Latent Team`;
 }
 
 export interface PerformerEmailParams {
+  skipAdminNotification?: boolean;
   application_id: string;
   created_at?: string;
   full_name: string;
@@ -333,7 +334,7 @@ Gorakhpur's Got Latent Team`;
       }
     };
 
-    const adminResult = await sendPrimitiveAdminEmail(`🎤 Performer Application | ${params.application_id}`, adminBody);
+    const adminResult = params.skipAdminNotification ? {success:true} : await sendPrimitiveAdminEmail(`🎤 Performer Application | ${params.application_id}`, adminBody);
     if (!adminResult.success) console.warn(`Primitive admin delivery failed for ${params.application_id}: ${adminResult.message}`);
 
     let applicantResult: { success: boolean; message?: string } = { success: false, message: 'Applicant email not attempted' };

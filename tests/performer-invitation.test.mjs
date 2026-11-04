@@ -36,13 +36,13 @@ test('submission persists application before email and never marks an unpaid app
   const route=load('app/api/apply/performer/route.ts',{
     'next/server':{after:cb=>callbacks.push(cb),NextResponse:{json:(body,init)=>Response.json(body,init)}},
     '@/lib/db':{db:{queryStrict:async(...args)=>{queries.push(args);return [];},execute:async()=>{}}},
-    '@/lib/storage':{},'@/lib/helpers':{generateAppId:()=>person.appId},
+    '@/lib/performerAdminNotification':{notifyPerformerAdmin:async()=>{}},'@/lib/storage':{},'@/lib/helpers':{generateAppId:()=>person.appId},
     '@/lib/performerInvitation':{createPerformerInvitation:async()=>{assert.ok(queries[0][0].includes('INSERT INTO performer_applications'));return person.paymentUrl;},emailPerformerInvitation:async p=>sent.push(p)}
   });
   const req=body=>new Request('https://www.gkpgotlatent.in/api/apply/performer',{method:'POST',body:JSON.stringify(body)});
   assert.equal((await route.POST(req({termsAccepted:true,email:'bad'}))).status,400);
   const res=await route.POST(req({termsAccepted:true,fullName:'Rahul',email:person.email,mobile:person.mobile,age:22,instagram:'rahul'}));
   const json=await res.json();assert.equal(json.success,true);assert.equal(json.paymentUrl,person.paymentUrl);
-  assert.equal(sent.length,0);assert.equal(callbacks.length,1);await callbacks[0]();assert.equal(sent[0].email,person.email);
+  assert.equal(sent.length,0);assert.equal(callbacks.length,2);await callbacks[1]();assert.equal(sent[0].email,person.email);
   assert.ok(queries[0][0].includes("'FREE'"));
 });

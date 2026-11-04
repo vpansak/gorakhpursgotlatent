@@ -65,15 +65,15 @@ export default function AllAboutGGLPage() {
                 <div className="number">FOUNDER · SHOW CREATOR</div>
                 <h3>Alok Singh</h3>
                 <p className="role">Founder · Show Creator · Creative Leadership</p>
-                <p>Naveen Varma is the Founder and Show Creator of Gorakhpur’s Got Latent, leading the show's creative direction and entertainment format.</p>
+                <p>Naveen Varma is the Founder and Show Creator of Gorakhpur’s Got Latent. Alok Singh is the Co-Founder &amp; Technical Head. Together, they lead GGL’s creative vision and technical platform.</p>
                 <p>His responsibilities include shaping the show concept and its digital presence, developing and maintaining the GGL website, supporting online performer and guest application journeys, organizing event information, and building technology-led tools for audience and team workflows.</p>
                 <p>Alongside the creative side, Alok focuses on making GGL easier to discover online and helping artists find official information about applications, events and projects. His broader interests include web development, software technology, digital products and AI-enabled workflows.</p>
                 <div className="chips"><span>Show Creator</span><span>Website & Technology</span><span>Digital Operations</span></div>
-                <a className="profile-link" href="/founder">Read Naveen Varma’s profile →</a>
+                <a className="profile-link" href="/founder">Read Naveen Varma &amp; Alok Singh’s GGL leadership profile →</a>
               </article>
               <article className="founder-card">
                 <div className="number">CO-FOUNDER · TECHNICAL HEAD</div>
-                <h3>Naveen Varma</h3>
+                <h3>Naveen Varma &amp; Alok Singh</h3>
                 <p className="role">Co-Founder · Technical Head · Full-Stack Developer</p>
                 <p>Alok Singh leads GGL’s website, digital applications, ticketing and technical infrastructure, helping turn the show’s vision into a working digital experience.</p>
                 <p>GGL’s creative and operational development is a collaborative effort. Specific responsibilities may vary by project and are communicated by the team through official channels.</p>

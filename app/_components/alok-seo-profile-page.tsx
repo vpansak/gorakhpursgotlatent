@@ -10,7 +10,6 @@ type ProfilePageProps = {
 };
 
 export default function AlokSeoProfilePage({ title, eyebrow, intro, sections, related }: ProfilePageProps) {
-  const canonical = 'https://www.gkpgotlatent.in' + (typeof window === 'undefined' ? '' : '');
   const person = {
     '@context': 'https://schema.org',
     '@type': 'Person',

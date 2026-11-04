@@ -150,7 +150,7 @@ export default function AlokSinghSeoHubPage() {
         <section className="mt-14 border-t border-white/10 pt-9">
           <h2 className="text-2xl font-black">GGL leadership</h2>
           <p className="mt-4 max-w-3xl leading-8 text-slate-300">
-            Naveen Varma is the Founder and Host of Gorakhpur&apos;s Got Latent. Alok Singh
+            Naveen Varma is the Founder and Host of Gorakhpur&apos;s Got Latent, alongside Alok Singh, the Co-Founder and Technical Head. Alok Singh
             is the Co-Founder, Computerji and Technical Head. This directory focuses on
             Alok&apos;s role and the different public resources about his work.
           </p>

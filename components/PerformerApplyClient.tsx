@@ -40,20 +40,13 @@ export default function PerformerApplyClient() {
     city: '',
     whyShouldSelectYou: '',
     performanceDescription: '',
-    interestedInTalentTrip: '',
-    termsAccepted: false,
   });
 
   useLeadCapture({ source: 'performer', completed: submitted, data: formData, customerName: formData.fullName, mobile: formData.mobile, email: formData.email, instagramId: formData.instagramUrl, quantity: 1 });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    if (type === 'checkbox') {
-      const checked = (e.target as HTMLInputElement).checked;
-      setFormData(prev => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
-    }
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const constructWhatsAppMessage = (data: typeof formData, appId: string) => {
@@ -68,7 +61,6 @@ export default function PerformerApplyClient() {
 📸 *Instagram Username:* ${data.instagramUrl.trim()}
 📍 *Address / City:* ${data.city.trim() || 'Gorakhpur'}
 ✨ *What is unique about you?:* ${data.whyShouldSelectYou.trim() || 'N/A'}
-🧳 *Interested in GGL Talent Trip?:* ${data.interestedInTalentTrip}
 📝 *About You / Performance:* ${data.performanceDescription.trim() || 'N/A'}
 ✅ *WhatsApp Clip Confirmation:* Confirmed to send performance clip on WhatsApp!
 
@@ -93,7 +85,6 @@ export default function PerformerApplyClient() {
       setError('Please enter a valid Email address.');
       return;
     }
-    if (!formData.termsAccepted) {setError('Please read and accept the performer Terms & Conditions.');return;}
     setLoading(true);
     let assignedAppId = '';
 
@@ -337,18 +328,9 @@ export default function PerformerApplyClient() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-amber-500/25 bg-amber-500/5 p-4">
-          <label className="mb-2 block text-xs font-bold text-amber-200">Are you interested in GGL Talent Trip?</label>
-          <div className="flex gap-3">{['Yes', 'No'].map(option => <label key={option} className="inline-flex cursor-pointer items-center gap-2 rounded-xl border-2 border-slate-400 bg-slate-800 px-4 py-3 text-sm text-white has-[:checked]:border-orange-400">
-            <input type="radio" name="interestedInTalentTrip" value={option} checked={formData.interestedInTalentTrip === option} onChange={handleChange} required className="accent-orange-400" />{option === 'Yes' ? 'Haan / Yes' : 'Nahi / No'}
-          </label>)}</div>
-          <p className="mt-2 text-xs text-slate-400">Travel • Music (Unique / Original) • Reels • Performances • Adventures</p>
-          <Link href="/ggl_talent_trip" className="mt-2 inline-flex text-xs font-bold text-amber-300 hover:text-amber-200">View GGL Talent Trip details →</Link>
-        </div>
-        <div className="flex items-start gap-3 rounded-xl border border-amber-400/40 bg-slate-900 p-4">
-          <input id="performer-terms" name="termsAccepted" type="checkbox" checked={formData.termsAccepted} onChange={event => setFormData(prev => ({...prev, termsAccepted: event.target.checked}))} required className="mt-0.5 h-5 w-5 shrink-0 accent-amber-400" />
-          <label htmlFor="performer-terms" className="text-sm text-slate-200">I have read and agree to the <Link href="/performer-policy" target="_blank" rel="noopener noreferrer" className="font-semibold text-amber-300 underline underline-offset-2">Terms &amp; Conditions</Link>.</label>
-        </div>
+        <p className="rounded-xl border border-amber-400/40 bg-slate-900 p-4 text-sm text-slate-200">
+          Kindly read <Link href="/performer-policy" target="_blank" rel="noopener noreferrer" className="font-semibold text-amber-300 underline underline-offset-2">terms and conditions</Link>.
+        </p>
 
         <button
           type="submit"

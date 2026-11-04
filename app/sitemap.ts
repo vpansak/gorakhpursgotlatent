@@ -57,7 +57,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority:
       route === ''
         ? 1.0
-        : ['/developer', '/cofounder', '/kaudiramkasabsefamousaadmi', '/aboutaloksingh', '/allaboutaloksingh', '/allaboutggl', '/qpqpqpqp', '/allaboutggl123', '/aloksinghalbum', '/aloksinghinstagram', '/aloksinghfacebook', '/aloksinghx', '/gglaloksingh', '/ep1', '/ep1p1trailer', '/episodes'].includes(route)
+        : ['/founder', '/founder', '/developer', '/cofounder', '/kaudiramkasabsefamousaadmi', '/aboutaloksingh', '/allaboutaloksingh', '/allaboutggl', '/qpqpqpqp', '/allaboutggl123', '/aloksinghalbum', '/aloksinghinstagram', '/aloksinghfacebook', '/aloksinghx', '/gglaloksingh', '/ep1', '/ep1p1trailer', '/episodes'].includes(route)
           ? 0.9
           : 0.8,
   }));

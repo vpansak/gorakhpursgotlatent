@@ -31,7 +31,7 @@ export default function BookTicketPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [confirmedTicket, setConfirmedTicket] = useState<TicketRecord | null>(null);
 
-  const totalAmount = quantity * 99;
+  const totalAmount = quantity * 149;
 
   useLeadCapture({
     source: 'book-ticket',
@@ -162,7 +162,7 @@ export default function BookTicketPage() {
         <div>
           <h1 className="text-2xl sm:text-3xl font-black">Book GGL Ticket</h1>
           <p className="text-sm text-slate-400 mt-1.5">
-            <strong className="text-amber-400">₹99 / person</strong>
+            <strong className="text-amber-400">₹149 / person</strong>
           </p>
         </div>
 
@@ -171,7 +171,7 @@ export default function BookTicketPage() {
             <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400"><TicketIcon className="w-5 h-5" /></div>
             <div>
               <span className="font-extrabold text-white block">Official Ticket Pass</span>
-              <span className="text-slate-300 text-xs">₹99 per ticket</span>
+              <span className="text-slate-300 text-xs">₹149 per ticket</span>
             </div>
           </div>
           <div className="text-right">
@@ -213,11 +213,11 @@ export default function BookTicketPage() {
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Number of Tickets *</label>
             <select value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-300 font-bold outline-none focus:border-amber-500">
-              <option value={1}>1 Ticket (₹99)</option>
-              <option value={2}>2 Tickets (₹198)</option>
-              <option value={3}>3 Tickets (₹297)</option>
-              <option value={4}>4 Tickets (₹396)</option>
-              <option value={5}>5 Tickets (₹495)</option>
+              <option value={1}>1 Ticket (₹149)</option>
+              <option value={2}>2 Tickets (₹298)</option>
+              <option value={3}>3 Tickets (₹447)</option>
+              <option value={4}>4 Tickets (₹596)</option>
+              <option value={5}>5 Tickets (₹745)</option>
             </select>
           </div>
 

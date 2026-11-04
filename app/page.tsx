@@ -16,11 +16,11 @@ export const revalidate = 0;
 
 export const metadata = {
   title: "Gorakhpur's Got Latent | Episode 3 – Book Tickets & Apply",
-  description: "GGL Episode 3 registrations are now open. Book your audience ticket or apply to perform on the GGL stage.",
+  description: "Gorakhpur’s Got Latent is created by Founder & Show Creator Naveen Varma, alongside Co-Founder & Technical Head Alok Singh. GGL Episode 3 registrations are now open.",
   alternates: { canonical: 'https://www.gkpgotlatent.in/' },
   openGraph: {
     title: "GGL Episode 3 – Registrations Open",
-    description: "Book tickets and apply for Episode 3.",
+    description: "Created by Naveen Varma (Founder & Show Creator) with Alok Singh (Co-Founder & Technical Head). Book tickets and apply for Episode 3.",
     url: 'https://www.gkpgotlatent.in/',
   },
   twitter: { card: 'summary_large_image', title: 'GGL Episode 3 – Registrations Open', description: 'Book tickets and apply for Episode 3.' },

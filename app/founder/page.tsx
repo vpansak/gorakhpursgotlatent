@@ -181,7 +181,8 @@ export default function FounderPage() {
               <div className="absolute right-0 top-0 rounded-bl-2xl bg-gradient-to-r from-amber-300 to-orange-500 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-black">Founder • Vision • Leadership</div>
               <p className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-300">FOUNDER, SHOW CREATOR &amp; HOST</p>
               <h2 className="mt-3 font-bebas text-5xl sm:text-6xl">NAVEEN VARMA</h2>
-              <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-200">Naveen Varma is the Founder and Show Creator of Gorakhpur's Got Latent. He leads the show's creative vision, entertainment format, hosting, and talent showcase—shaping the platform's identity and experience for performers and audiences.</p>
+                <p className="mt-1 text-sm font-semibold text-amber-300">With Alok Singh — Co-Founder &amp; Technical Head</p>
+              <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-200">Naveen Varma is the Founder and Show Creator of Gorakhpur's Got Latent. Alok Singh is the Co-Founder & Technical Head. Together, they lead GGL's creative, technical and digital development. Naveen leads the show's creative vision, entertainment format, hosting, and talent showcase—shaping the platform's identity and experience for performers and audiences.</p>
               <ul className="mt-5 grid gap-2 text-sm leading-6 text-slate-300 sm:grid-cols-2"><li>• Original show concept and creative vision</li><li>• Hosting and entertainment format</li><li>• Creative planning and show development</li><li>• Audience engagement and talent showcase</li></ul>
               <a href="https://www.instagram.com/nvn_unfiltered/" target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-xl bg-gradient-to-r from-amber-300 to-orange-500 px-5 py-3 text-xs font-black uppercase tracking-wider text-black">Connect with Founder Naveen</a>
             </article>
@@ -259,7 +260,7 @@ export default function FounderPage() {
               <p className="text-[10px] font-black uppercase tracking-[0.35em] text-red-400">THE BLUEPRINT</p>
               <h2 className="mt-2 font-bebas text-5xl leading-none sm:text-7xl">SHOW <span className="bg-gradient-to-r from-amber-200 to-orange-500 bg-clip-text text-transparent">VISION</span></h2>
             </div>
-            <p className="max-w-xl text-sm leading-6 text-slate-400">How Naveen Varma conceptualized Gorakhpur’s Got Latent to blend live stage roasts, authentic regional talent, and cutting-edge tech.</p>
+            <p className="max-w-xl text-sm leading-6 text-slate-400">How Naveen Varma and Alok Singh built Gorakhpur’s Got Latent, blending live stage roasts, authentic regional talent, and cutting-edge tech.</p>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             {pillars.map((pillar, idx) => (
@@ -283,7 +284,7 @@ export default function FounderPage() {
           <div className="relative">
             <p className="text-[10px] font-black uppercase tracking-[0.35em] text-red-400">KEEP WATCHING</p>
             <h2 className="mt-3 font-bebas text-4xl sm:text-6xl">THE STORY IS <span className="bg-gradient-to-r from-amber-200 to-orange-500 bg-clip-text text-transparent">JUST BEGINNING.</span></h2>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-400">Stay updated with behind-the-scenes tapings, audition drops, Episode 2 announcements, and live roasts directly from Founder Naveen Varma.</p>
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-400">Stay updated with behind-the-scenes tapings, audition drops, Episode 2 announcements, and live roasts directly from Founder Naveen Varma and Co-Founder Alok Singh.</p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <a href="https://www.instagram.com/nvn_unfiltered/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-pink-600 via-purple-600 to-amber-500 px-6 py-4 text-xs font-black uppercase tracking-wider text-white shadow-2xl transition hover:scale-[1.02]">
                 <InstagramIcon className="h-5 w-5" /> @nvn_unfiltered

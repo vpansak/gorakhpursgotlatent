@@ -22,5 +22,6 @@ export async function emailPerformerInvitation(p: Parameters<typeof performerInv
   const result = await sendNitrosendEmail(p.email, message.subject, message.body, message.html, `ggl-performer-invitation-${p.appId}`);
   await db.queryStrict('UPDATE performer_applications SET email_status=? WHERE app_id=?', [result.success ? 'SENT' : 'FAILED', p.appId]);
   if (!result.success) console.error('Performer invitation email not accepted', {appId:p.appId});
+  else console.info('Performer invitation accepted by NitroSend', {appId:p.appId});
   return result;
 }

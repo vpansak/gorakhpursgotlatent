@@ -61,6 +61,46 @@ const pages = [
     title: 'Alok Singh — Photo Album',
     description: 'A public photo and visual profile page.',
   },
+  {
+    href: '/alok-singh-ggl-role',
+    title: "Alok Singh's Role at GGL",
+    description: 'Co-Founder, Computerji and Technical Head responsibilities.',
+  },
+  {
+    href: '/alok-singh-computerji',
+    title: 'Who Is Computerji?',
+    description: 'The Computerji identity associated with Alok Singh at GGL.',
+  },
+  {
+    href: '/alok-singh-technical-head',
+    title: 'Alok Singh — Technical Head',
+    description: 'Technical leadership and digital platform responsibilities.',
+  },
+  {
+    href: '/alok-singh-web-developer-gorakhpur',
+    title: 'Alok Singh — Web Developer in Gorakhpur',
+    description: 'Web development and technology work connected with GGL.',
+  },
+  {
+    href: '/alok-singh-and-gorakhpurs-got-latent',
+    title: "Alok Singh and Gorakhpur's Got Latent",
+    description: 'How Alok Singh is connected with the GGL platform.',
+  },
+  {
+    href: '/ggl-cofounder-alok-singh',
+    title: 'GGL Co-Founder Alok Singh',
+    description: 'A concise reference for the GGL Co-Founder role.',
+  },
+  {
+    href: '/computerji-ggl',
+    title: 'Computerji at GGL',
+    description: 'Computerji identity and technical role at Gorakhpur’s Got Latent.',
+  },
+  {
+    href: '/alok-singh-ggl-profile',
+    title: 'Alok Singh — GGL Profile',
+    description: 'Public information and links about Alok Singh’s GGL role.',
+  },
 ];
 
 const itemListSchema = {

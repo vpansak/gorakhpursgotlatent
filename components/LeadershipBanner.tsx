@@ -2,9 +2,19 @@
 
 import { usePathname } from 'next/navigation';
 
+const leadershipPages = new Set([
+  '/founder',
+  '/allaboutggl',
+  '/allaboutggl123',
+  '/alok-singh-ggl-cofounder',
+  '/alok-singh-ggl-seo',
+]);
+
 export default function LeadershipBanner() {
   const pathname = usePathname();
-  if (pathname === '/') return null;
+  const currentPath = pathname?.replace(/\\/$/, '') || '/';
+
+  if (!leadershipPages.has(currentPath)) return null;
 
   return (
     <div className="w-full border-y border-amber-500/20 bg-[#101116] px-4 py-2 text-center text-xs sm:text-sm text-slate-300">

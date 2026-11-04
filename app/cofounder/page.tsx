@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     'Gorakhpur talent platform',
   ],
   alternates: {
-    canonical: 'https://gkpgotlatent.in/cofounder',
+    canonical: 'https://www.gkpgotlatent.in/cofounder',
   },
   robots: {
     index: true,
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     title: 'Alok Singh — Co-Founder | Gorakhpur’s Got Latent',
     description:
       'From Kaudiram to building Gorakhpur’s Got Latent with Naveen — the journey of Co-Founder Alok Singh.',
-    url: 'https://gkpgotlatent.in/cofounder',
+    url: 'https://www.gkpgotlatent.in/cofounder',
     siteName: "Gorakhpur's Got Latent",
     images: [
       {
@@ -57,14 +57,14 @@ export const metadata: Metadata = {
 const personJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
-  '@id': 'https://gkpgotlatent.in/cofounder#webpage',
-  url: 'https://gkpgotlatent.in/cofounder',
+  '@id': 'https://www.gkpgotlatent.in/cofounder#webpage',
+  url: 'https://www.gkpgotlatent.in/cofounder',
   name: 'Alok Singh — Co-Founder of Gorakhpur’s Got Latent',
   description:
     'Official profile and journey of Alok Singh, Co-Founder of Gorakhpur’s Got Latent.',
   mainEntity: {
     '@type': 'Person',
-    '@id': 'https://gkpgotlatent.in/cofounder#person',
+    '@id': 'https://www.gkpgotlatent.in/#aloksingh',
     name: 'Alok Singh',
     jobTitle: 'Co-Founder & Technical Head',
     image: 'https://gkpgotlatent.in/developer-photo-1.jpg',

@@ -3,7 +3,6 @@ import { Bebas_Neue, Barlow_Condensed, Anton, Outfit, Inter } from 'next/font/go
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import LeadershipBanner from '@/components/LeadershipBanner';
 
 const bebas = Bebas_Neue({
   weight: '400',
@@ -226,7 +225,6 @@ export default function RootLayout({
       <body className="ggl-site bg-[#07080e] text-slate-100 antialiased selection:bg-amber-500 selection:text-black min-h-screen flex flex-col justify-between">
         <div>
           <Navbar />
-          <LeadershipBanner />
           <main className="relative">{children}</main>
         </div>
         <Footer />

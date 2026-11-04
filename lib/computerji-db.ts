@@ -18,7 +18,7 @@ export interface ComputerJiDbRecord {
 }
 
 /**
- * Ensures table exists and performs 10-day TTL cleanup
+ * Ensures the table exists without purging archived episode records.
  */
 export async function ensureComputerJiTable() {
   try {
@@ -60,11 +60,11 @@ export async function purgeExpiredComputerJiScores(): Promise<number> {
 }
 
 /**
- * Get all saved scores (with 10-day TTL pruning applied first)
+ * Get saved scores without deleting historical episodes.
  */
 export async function getAllComputerJiScores(): Promise<ComputerJiDbRecord[]> {
   await ensureComputerJiTable();
-  await purgeExpiredComputerJiScores();
+  // Archived episode scores must remain in Neon until the owner requests deletion.
 
   try {
     const res = await pool.query(`
@@ -126,7 +126,7 @@ export async function upsertComputerJiScore(record: {
   savedAt: string;
 }): Promise<boolean> {
   await ensureComputerJiTable();
-  await purgeExpiredComputerJiScores();
+  // Archived episode scores must remain in Neon until the owner requests deletion.
 
   try {
     await pool.query(

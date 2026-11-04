@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { load } from './helpers/load.mjs';
 
 const queries = load('lib/adminApplicationQueries.ts', {});
-const fixture = Array.from({ length: 91 }, (_, id) => ({ app_id: String(id), payment_status: 'FREE', created_at: '2026-10-27' }));
+const visibility = load('lib/episodeVisibility.ts', {});
+const fixture = Array.from({ length: 91 }, (_, id) => ({ app_id: String(id), payment_status: 'FREE', created_at: '2026-11-05' }));
 function api(queryStrict) {
   return load('app/api/malik/applications/route.ts', {
     'next/server': { NextResponse: { json: (body, init) => Response.json(body, init) } },
@@ -11,6 +12,7 @@ function api(queryStrict) {
     '@/lib/auth': { getSession: async () => ({ role: 'ADMIN' }) },
     '@/lib/db': { db: { queryStrict, execute: () => { throw new Error('GET must not mutate data'); } } },
     '@/lib/adminApplicationQueries': queries,
+    '@/lib/episodeVisibility': visibility,
   });
 }
 test('polling and master export retain all 91 free applications, including new submissions', async () => {
@@ -32,7 +34,7 @@ test('guest filtering has one outer WHERE and parameterized search/status', asyn
     assert.ok(sql.startsWith(queries.guestSelect + ' WHERE 1=1'));
     assert.equal((sql.match(/WHERE/g) || []).length, 1);
     assert.deepEqual(Array.from(params), ['SUBMITTED', ...Array(8).fill('%Test%')]);
-    return [{ app_id: 'guest-free' }];
+    return [{ app_id: 'guest-free', created_at: '2026-11-05' }];
   });
   const result = await (await route.GET(new Request('https://example.test/api?type=guest&status=SUBMITTED&search=Test'))).json();
   assert.equal(result.items[0].app_id, 'guest-free');

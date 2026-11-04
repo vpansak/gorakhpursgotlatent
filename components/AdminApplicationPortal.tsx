@@ -559,7 +559,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
           </div>
           <div>
             <h4 className="text-sm font-black text-white flex items-center gap-2">
-              <span>Neon Cloud Permanent Data Archive Active</span>
+              <span>Episode 3 · Fresh Website View</span>
               <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-300 font-bold uppercase">
                 100% Secure & Permanent
               </span>

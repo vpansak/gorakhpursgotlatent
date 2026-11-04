@@ -1,3 +1,4 @@
+import { currentEpisodeRows } from '@/lib/episodeVisibility';
 import { ensurePerformerDetailsTable } from '@/lib/performerDetails';
 import { NextResponse } from 'next/server';
 import { performerSelect, performerOrder, guestSelect, guestOrder } from '@/lib/adminApplicationQueries';
@@ -20,10 +21,10 @@ export async function GET(req: Request) {
 
     // If master export requested, fetch all 4 categories at once
     if (type === 'all') {
-      const performers = await db.queryStrict(performerSelect + performerOrder);
-      const sponsors = await db.queryStrict('SELECT * FROM sponsor_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC');
+      const performers = currentEpisodeRows(await db.queryStrict(performerSelect + performerOrder), 'performer');
+      const sponsors = currentEpisodeRows(await db.queryStrict('SELECT * FROM sponsor_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC'), 'sponsor');
       const team = await db.queryStrict('SELECT * FROM team_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC');
-      const guests = await db.queryStrict(guestSelect + guestOrder);
+      const guests = currentEpisodeRows(await db.queryStrict(guestSelect + guestOrder), 'guest');
 
       return NextResponse.json({
         success: true,
@@ -102,7 +103,7 @@ export async function GET(req: Request) {
       items = await db.queryStrict(q, params);
     }
 
-    return NextResponse.json({ success: true, items });
+    return NextResponse.json({ success: true, items: currentEpisodeRows(items, type) });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Error fetching applications' }, { status: 500 });
   }

@@ -1,3 +1,4 @@
+import { currentEpisodeRows } from '@/lib/episodeVisibility';
 import { NextResponse } from 'next/server';
 import { getLeads, deleteLead } from '@/lib/leadsStore';
 import { getSession } from '@/lib/auth';
@@ -9,7 +10,7 @@ export async function GET() {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const leads = await getLeads();
+    const leads = currentEpisodeRows(await getLeads(), 'leads');
     return NextResponse.json({ success: true, leads });
   } catch (err: any) {
     console.error('Error fetching leads:', err);

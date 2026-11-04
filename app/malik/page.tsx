@@ -1,3 +1,4 @@
+import { currentEpisodeRows } from '@/lib/episodeVisibility';
 import { ensurePerformerDetailsTable } from '@/lib/performerDetails';
 import { performerSelect, performerOrder, guestSelect, guestOrder } from '@/lib/adminApplicationQueries';
 import Link from 'next/link';
@@ -29,10 +30,10 @@ async function getAdminData() {
   return {
     session,
     initialData: {
-      performers: performers || [],
-      sponsors: sponsors || [],
+      performers: currentEpisodeRows(performers || [], 'performer'),
+      sponsors: currentEpisodeRows(sponsors || [], 'sponsor'),
       team: team || [],
-      guests: guests || [],
+      guests: currentEpisodeRows(guests || [], 'guest'),
       talentTripCount: Number(talentTrip?.[0]?.total || 0),
     },
   };
@@ -64,7 +65,7 @@ export default async function AdminDashboardPage() {
             <span>Admin Portal</span>
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Performers, Sponsors, Team Members & Judges applications management with instant Excel (.xlsx) download.
+            Episode 3 applications · Previous episode archived from this website view. Join Team and GGL Talent Trip remain active.
           </p>
           <Link href="/malik/talent-trip" className="mt-3 inline-flex items-center gap-2 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-2 text-sm font-black text-amber-200 hover:bg-amber-400/20">GGL Talent Trip Management <span className="rounded bg-red-600 px-1.5 py-0.5 text-[9px] text-white">NEW</span></Link>
         </div>

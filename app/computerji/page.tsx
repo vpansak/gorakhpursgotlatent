@@ -183,7 +183,7 @@ function filterScoreInput(newVal: string): string | null {
   return trimmed;
 }
 
-const STORAGE_KEY_SCORES = 'ggl_computerji_ep2_scores_v1';
+const STORAGE_KEY_SCORES = 'ggl_computerji_ep3_scores_v1';
 const STORAGE_KEY_JUDGES = 'ggl_computerji_ep2_judges_v1';
 const STORAGE_KEY_CONTESTANTS = 'ggl_computerji_ep2_contestants_v1';
 const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;

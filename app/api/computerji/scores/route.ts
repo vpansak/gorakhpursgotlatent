@@ -1,3 +1,4 @@
+import { currentEpisodeRows } from '@/lib/episodeVisibility';
 import { NextResponse } from 'next/server';
 import {
   getAllComputerJiScores,
@@ -9,7 +10,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const scores = await getAllComputerJiScores();
+    const scores = currentEpisodeRows(await getAllComputerJiScores(), 'computerji');
     return NextResponse.json({
       success: true,
       data: scores,

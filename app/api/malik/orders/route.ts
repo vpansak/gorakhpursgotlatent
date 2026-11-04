@@ -1,3 +1,4 @@
+import { currentEpisodeRows } from '@/lib/episodeVisibility';
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getSession } from '@/lib/auth';
@@ -37,7 +38,7 @@ export async function GET(req: Request) {
 
     const orders = await db.query(query, params);
 
-    return NextResponse.json({ success: true, orders });
+    return NextResponse.json({ success: true, orders: currentEpisodeRows(orders, 'orders') });
   } catch (err: any) {
     return NextResponse.json({ error: 'Failed to fetch orders ledger' }, { status: 500 });
   }

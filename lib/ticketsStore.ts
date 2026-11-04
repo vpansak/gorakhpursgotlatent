@@ -1,3 +1,4 @@
+import { currentEpisodeRows } from '@/lib/episodeVisibility';
 import { TicketRecord } from './ticketTypes';
 export { type TicketRecord };
 import crypto from 'crypto';
@@ -232,7 +233,7 @@ export async function getAllTickets(): Promise<TicketRecord[]> {
   } catch (err) {
     console.warn('getAllTickets database notice:', err);
   }
-  return Array.from(memoryTickets.values());
+  return currentEpisodeRows(Array.from(memoryTickets.values()), 'tickets');
 }
 
 /**

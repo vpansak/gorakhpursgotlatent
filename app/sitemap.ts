@@ -55,7 +55,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ? 'daily'
         : 'weekly',
     priority:
-      route === ''
+      route === '' || route === '/founder'
         ? 1.0
         : ['/founder', '/developer', '/cofounder', '/kaudiramkasabsefamousaadmi', '/aboutaloksingh', '/allaboutaloksingh', '/allaboutggl', '/qpqpqpqp', '/allaboutggl123', '/aloksinghalbum', '/aloksinghinstagram', '/aloksinghfacebook', '/aloksinghx', '/gglaloksingh', '/ep1', '/ep1p1trailer', '/episodes'].includes(route)
           ? 0.9

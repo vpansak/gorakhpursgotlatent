@@ -199,7 +199,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
       finally { polling = false; }
     };
     pollPayments();
-    const timer = window.setInterval(pollPayments, 15000);
+    const timer = window.setInterval(pollPayments, 5000);
     return () => window.clearInterval(timer);
   }, [activeTab]);
 

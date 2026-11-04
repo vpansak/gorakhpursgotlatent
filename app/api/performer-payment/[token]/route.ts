@@ -1,5 +1,6 @@
 import { matchesCapturedPerformerPayment, recordVerifiedPerformerPayment } from '@/lib/performerPaymentVerification';
-import { NextResponse } from 'next/server';
+import { after, NextResponse } from 'next/server';
+export const maxDuration = 180;
 import { db } from '@/lib/db';
 import { sendPerformerApplicationEmail } from '@/lib/emailjs';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
@@ -145,6 +146,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
       );
 
       if (p) {
+        after(async () => {
         const emailResult = await sendPerformerApplicationEmail({
           application_id: p.app_id,
           created_at: new Date().toISOString(),
@@ -179,6 +181,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
         if (emailResult && emailResult.success) {
           await db.queryStrict("UPDATE performer_applications SET email_status = 'SENT', admin_email_status = 'SENT' WHERE app_id = ?", [p.app_id]).catch(() => {});
         }
+        });
 
         saveIndividualEntryToS3('performers/all', p.app_id, {
           ...p,

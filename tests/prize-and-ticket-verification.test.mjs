@@ -19,7 +19,7 @@ test('wrong payment, order, currency, amount and fractional admission count fail
   for (const quantity of ['1.5','10','0','-1','bad']) assert.equal(verifiedTicketOrder({...order,notes:{quantity}},payment,'order_1','pay_1'),null);
 });
 test('unaccepted performer terms are rejected before database access', async () => {
- const route=load('app/api/apply/performer/route.ts',{'next/server':{NextResponse:{json:(body,init)=>Response.json(body,init)}},'@/lib/db':{db:{queryStrict:()=>{throw Error('Must not write')}}},'@/lib/storage':{},'@/lib/helpers':{}});
+ const route=load('app/api/apply/performer/route.ts',{'next/server':{NextResponse:{json:(body,init)=>Response.json(body,init)}},'@/lib/db':{db:{queryStrict:()=>{throw Error('Must not write')}}},'@/lib/storage':{},'@/lib/helpers':{},'@/lib/performerInvitation':{}});
  for (const termsAccepted of [undefined,false,'true']) assert.equal((await route.POST(new Request('https://test.invalid',{method:'POST',body:JSON.stringify({termsAccepted})}))).status,400);
 });
 test('forged browser ticket amount is ignored and a callback retry reuses the saved ticket', async () => {

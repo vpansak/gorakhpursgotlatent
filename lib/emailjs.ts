@@ -755,7 +755,7 @@ export async function sendPrimitiveAdminEmail(subject: string, body: string, htm
   }
 }
 
-async function sendNitrosendEmail(to: string, subject: string, body: string, htmlOverride?: string): Promise<{ success: boolean; message?: string }> {
+export async function sendNitrosendEmail(to: string, subject: string, body: string, htmlOverride?: string, stableIdempotencyKey?: string): Promise<{ success: boolean; message?: string }> {
   const apiKey = process.env.NITROSEND_API_KEY;
   if (!apiKey) return { success: false, message: 'NITROSEND_API_KEY not configured' };
 
@@ -855,7 +855,7 @@ async function sendNitrosendEmail(to: string, subject: string, body: string, htm
   const html = htmlOverride || defaultHtml;
 
   try {
-    const idempotencyKey = `ggl-${Date.now()}-${crypto.randomUUID()}`;
+    const idempotencyKey = stableIdempotencyKey || `ggl-${Date.now()}-${crypto.randomUUID()}`;
     const res = await fetch('https://api.nitrosend.com/v1/my/messages', {
       method: 'POST',
       headers: {

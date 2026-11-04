@@ -28,6 +28,7 @@ export default function PerformerApplyClient() {
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submittedAppId, setSubmittedAppId] = useState('');
+  const [paymentUrl, setPaymentUrl] = useState('');
   const [generatedWhatsAppUrl, setGeneratedWhatsAppUrl] = useState('');
 
   const [formData, setFormData] = useState({
@@ -113,6 +114,7 @@ export default function PerformerApplyClient() {
         const messageText = constructWhatsAppMessage(formData, assignedAppId);
         const waUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(messageText)}`;
         setSubmittedAppId(assignedAppId);
+        setPaymentUrl(data.paymentUrl || '');
         setGeneratedWhatsAppUrl(waUrl);
         setSubmitted(true);
         window.setTimeout(() => { window.location.href = waUrl; }, 1200);
@@ -179,6 +181,10 @@ export default function PerformerApplyClient() {
         </div>
 
         <div className="space-y-3 max-w-md mx-auto pt-2">
+          {paymentUrl && <>
+            <p className="text-sm text-slate-300">Your personal ₹799 payment link is being emailed to {formData.email}. Please check your inbox and spam folder.</p>
+            <a href={paymentUrl} className="block rounded-xl bg-amber-400 px-6 py-4 text-center font-bold text-black">Pay ₹799 to confirm your seat</a>
+          </>}
           <a
             href={generatedWhatsAppUrl}
             target="_blank"

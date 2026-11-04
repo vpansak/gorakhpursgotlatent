@@ -1,4 +1,7 @@
-import { NextResponse } from 'next/server';
+import { after, NextResponse } from 'next/server';
+import { createPerformerInvitation, emailPerformerInvitation } from '@/lib/performerInvitation';
+
+export const maxDuration = 180;
 import { db } from '@/lib/db';
 import { syncSheetsToS3, saveIndividualEntryToS3 } from '@/lib/storage';
 import { generateAppId } from '@/lib/helpers';
@@ -26,6 +29,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Please enter a valid Instagram username, for example @your_handle.' }, { status: 400 });
     }
     const formattedInstagram = normalizedInstagram ? `@${normalizedInstagram}` : '';
+
+    if (!effectiveFullName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(effectiveEmail) || effectiveMobile.replace(/\D/g, '').length < 10) {
+      return NextResponse.json({ error: 'Please enter your name, valid email and mobile number.' }, { status: 400 });
+    }
 
     const appId = generateAppId('PER');
     const id = `per-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -69,8 +76,24 @@ export async function POST(req: Request) {
       `, [`his-${Date.now()}`, appId]);
     } catch (e) {}
 
+    let paymentUrl: string | undefined;
+    try {
+      paymentUrl = await createPerformerInvitation(appId);
+      const invitation = {appId, email: effectiveEmail, name: effectiveFullName, mobile: effectiveMobile, age: parsedAge, instagram: formattedInstagram, paymentUrl};
+      after(async () => {
+        try { await emailPerformerInvitation(invitation); }
+        catch { console.error('Performer invitation failed', {appId}); }
+      });
+    } catch {
+      // The application is already saved: do not invite duplicate form submissions.
+      console.error('Performer invitation setup failed', {appId});
+      await db.queryStrict("UPDATE performer_applications SET email_status='FAILED' WHERE app_id=?", [appId]).catch(() => {});
+    }
+
     return NextResponse.json({
       success: true,
+      paymentUrl,
+      emailStatus: paymentUrl ? 'PENDING' : 'FAILED',
       message: 'Free application saved successfully.',
       appId,
       status: 'SUBMITTED',

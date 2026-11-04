@@ -20,9 +20,9 @@ export async function POST(req: Request) {
     const cleanEmail = (email || '').trim();
     const cleanInsta = (instagramId || '').trim();
 
-    // Quantity & Pricing (₹99 per ticket)
+    // Quantity & Pricing (₹149 per ticket)
     const qty = Math.max(1, Math.min(10, Math.floor(Number(quantity) || 1)));
-    const ticketPrice = 99;
+    const ticketPrice = 149;
     const totalAmount = qty * ticketPrice;
     const amountPaise = totalAmount * 100;
 
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
             customer_mobile: mobile,
             instagram_id: cleanInsta || '@ggl_guest',
             quantity: String(qty),
-            event: "Gorakhpur's Got Latent Live Show",
+            event: "Gorakhpur's Got Latent Episode 3",
           },
         });
         razorpayOrderId = rzpOrder.id;

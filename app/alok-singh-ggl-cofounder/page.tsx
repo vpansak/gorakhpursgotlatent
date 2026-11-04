@@ -215,7 +215,7 @@ export default function AlokSinghGGLCoFounderPage() {
         <section className="mt-14 max-w-4xl">
           <h2 className="text-3xl font-black">GGL leadership</h2>
           <p className="mt-4 text-base leading-8 text-slate-300">
-            Gorakhpur&apos;s Got Latent is founded by Naveen Varma, who is also the show&apos;s
+            Gorakhpur&apos;s Got Latent is founded by Naveen Varma, alongside Co-Founder &amp; Technical Head Alok Singh. Naveen is also the show&apos;s
             host. Alok Singh is the Co-Founder, Computerji and Technical Head. These are
             distinct roles within the GGL team.
           </p>

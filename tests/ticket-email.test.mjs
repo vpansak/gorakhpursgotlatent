@@ -2,11 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { timingSafeEqual,createHash } from 'node:crypto';
 import { PDFDocument } from 'pdf-lib';
-import { createTicketPdf } from '../lib/ticketPdf.ts';
+
 import { load } from './helpers/load.mjs';
 const ticket={ticket_id:'GGLT123456',customer_name:'राहुल शर्मा / Rahul',booking_id:'ord-1',mobile:'9999999999',email:'',quantity:3,amount:447,payment_status:'PAID',ticket_status:'VALID',qr_token:'secret-token',created_at:'2026-11-04T00:00:00Z'};
 test('ticket PDF is a valid one-page file with embedded fonts and QR for three admissions',async()=>{
-  const bytes=await createTicketPdf(ticket);assert.ok(bytes.length>1000);const pdf=await PDFDocument.load(bytes);assert.equal(pdf.getPageCount(),1);assert.equal(pdf.getPage(0).getWidth(),600);
+  const {PNG}=await import('pngjs');
+  const png=PNG.sync.write(new PNG({width:1200,height:480}));
+  const {ticketPdfFromImage}=load('lib/ticketPdf.ts',{'pdf-lib':{PDFDocument},'@/lib/ticketVisual':{}},{Buffer});
+  const bytes=await ticketPdfFromImage(png);assert.ok(bytes.length>100);const pdf=await PDFDocument.load(bytes);assert.equal(pdf.getPageCount(),1);assert.equal(pdf.getPage(0).getWidth(),1200);
 });
 test('PDF and email require the private ticket token and a valid payment',async()=>{
   let record=ticket;

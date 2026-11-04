@@ -6,7 +6,7 @@ export async function sendTicketPdf(ticket:TicketRecord,email:string) {
   const recipient=email.trim().toLowerCase();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)||recipient.length>254)throw new Error('Enter a valid email address');
   await db.queryStrict(`CREATE TABLE IF NOT EXISTS ticket_email_deliveries (send_key TEXT PRIMARY KEY,ticket_id TEXT NOT NULL,email TEXT NOT NULL,payload JSONB NOT NULL,status TEXT NOT NULL DEFAULT 'PENDING',created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP)`);
-  const key=emailSendKey(ticket.ticket_id,recipient);
+  const key=emailSendKey(ticket.ticket_id+'-same-visual-v2',recipient);
   let entry=await db.queryOneStrict('SELECT * FROM ticket_email_deliveries WHERE send_key=?',[key]);
   if(entry?.status==='ACCEPTED')return;
   if(!entry){

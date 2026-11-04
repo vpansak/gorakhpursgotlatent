@@ -93,6 +93,7 @@ export default function PerformerApplyClient() {
       setError('Please enter a valid Email address.');
       return;
     }
+    if (!formData.termsAccepted) {setError('Please read and accept the performer Terms & Conditions.');return;}
     setLoading(true);
     let assignedAppId = '';
 
@@ -344,7 +345,10 @@ export default function PerformerApplyClient() {
           <p className="mt-2 text-xs text-slate-400">Travel • Music (Unique / Original) • Reels • Performances • Adventures</p>
           <Link href="/ggl_talent_trip" className="mt-2 inline-flex text-xs font-bold text-amber-300 hover:text-amber-200">View GGL Talent Trip details →</Link>
         </div>
-        <p className="text-center text-[11px] text-slate-400">Kindly read the <Link href="/performer-policy" target="_blank" rel="noopener noreferrer" className="font-semibold text-amber-300 underline underline-offset-2">Terms &amp; Conditions</Link>.</p>
+        <div className="flex items-start gap-3 rounded-xl border border-amber-400/40 bg-slate-900 p-4">
+          <input id="performer-terms" name="termsAccepted" type="checkbox" checked={formData.termsAccepted} onChange={event => setFormData(prev => ({...prev, termsAccepted: event.target.checked}))} required className="mt-0.5 h-5 w-5 shrink-0 accent-amber-400" />
+          <label htmlFor="performer-terms" className="text-sm text-slate-200">I have read and agree to the <Link href="/performer-policy" target="_blank" rel="noopener noreferrer" className="font-semibold text-amber-300 underline underline-offset-2">Terms &amp; Conditions</Link>.</label>
+        </div>
 
         <button
           type="submit"

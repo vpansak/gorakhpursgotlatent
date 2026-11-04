@@ -28,6 +28,12 @@ interface TicketCardProps {
 export default function TicketCard({ ticket, showActions = true }: TicketCardProps) {
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
   const ticketRef = useRef<HTMLDivElement>(null);
+  const [ticketImage,setTicketImage]=useState('');
+  const [imageError,setImageError]=useState('');
+  useEffect(()=>{let active=true;let url='';setTicketImage('');setImageError('');
+    fetch('/api/tickets/image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ticketId:ticket.ticket_id,token:ticket.qr_token})}).then(async res=>{if(!res.ok)throw new Error('Ticket image unavailable. Please reload.');url=URL.createObjectURL(await res.blob());if(active)setTicketImage(url);else URL.revokeObjectURL(url);}).catch(error=>{if(active)setImageError(error.message);});
+    return()=>{active=false;if(url)URL.revokeObjectURL(url);};
+  },[ticket.ticket_id,ticket.qr_token]);
 
   useEffect(() => {
     async function generateQr() {
@@ -70,61 +76,8 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
   };
 
   const handleDownloadImage = async () => {
-    if (!ticketRef.current || downloading) return;
-    setDownloading(true);
-    try {
-      const images = Array.from(ticketRef.current.querySelectorAll('img'));
-      await Promise.all(
-        images.map(
-          (img) =>
-            new Promise((res) => {
-              if (img.complete && img.naturalWidth !== 0) {
-                res(true);
-              } else {
-                img.onload = () => res(true);
-                img.onerror = () => res(true);
-                setTimeout(() => res(true), 1200);
-              }
-            })
-        )
-      );
-
-      const renderPromise = html2canvas(ticketRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#08080b',
-        logging: false,
-        imageTimeout: 2000,
-      });
-
-      const timeoutPromise = new Promise<null>((res) => setTimeout(() => res(null), 4000));
-      const canvas = await Promise.race([renderPromise, timeoutPromise]);
-
-      if (canvas && canvas instanceof HTMLCanvasElement) {
-        const link = document.createElement('a');
-        link.download = `GGL-Ticket-${ticket.ticket_id}.png`;
-        link.href = canvas.toDataURL('image/png', 0.95);
-        link.click();
-      } else {
-        console.warn('Primary html2canvas render timed out, using fast fallback render...');
-        const fallbackCanvas = await html2canvas(ticketRef.current, {
-          scale: 1.5,
-          backgroundColor: '#08080b',
-          logging: false,
-          imageTimeout: 1000,
-        });
-        const link = document.createElement('a');
-        link.download = `GGL-Ticket-${ticket.ticket_id}.png`;
-        link.href = fallbackCanvas.toDataURL('image/png', 0.9);
-        link.click();
-      }
-    } catch (error) {
-      console.error('Ticket image download failed:', error);
-      alert('Download notice: Please tap Download Ticket Image again.');
-    } finally {
-      setDownloading(false);
-    }
+    if(!ticketImage)return;
+    const link=document.createElement('a');link.download=`GGL-Ticket-${ticket.ticket_id}.png`;link.href=ticketImage;link.click();
   };
 
   const quantity = getTicketQuantity(ticket.quantity);
@@ -143,8 +96,10 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
         </div>
       )}
 
+      {ticketImage && <img src={ticketImage} alt={`GGL Episode 3 ticket ${ticket.ticket_id}, admits ${quantity} people`} className="mx-auto w-full max-w-4xl rounded-2xl" />}
+      {imageError && <p role="status" className="text-center text-red-300">{imageError}</p>}
       {/* SLEEK WIDE GGL TICKET PASS */}
-      <div ref={ticketRef} className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-[20px] border-2 border-amber-400/80 bg-[#08080b] text-white shadow-[0_15px_50px_rgba(0,0,0,0.7)]">
+      <div hidden={Boolean(ticketImage)} ref={ticketRef} className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-[20px] border-2 border-amber-400/80 bg-[#08080b] text-white shadow-[0_15px_50px_rgba(0,0,0,0.7)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,190,30,0.15),transparent_35%),radial-gradient(circle_at_85%_50%,rgba(180,0,0,0.2),transparent_40%),linear-gradient(115deg,#0c0607,#08080b_50%,#110906)]" />
         
         <div className="relative flex flex-col md:flex-row items-stretch min-h-[200px]">
@@ -209,8 +164,8 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
             </div>
 
             <div className="border-t border-amber-400/20 pt-2 text-[10px] leading-4 text-slate-200">
-              <p className="font-bold text-amber-200">EPISODE 2 · {EPISODE_2.date} · {EPISODE_2.time}</p>
-              <p>Recording at {EPISODE_2.venue}, Gorakhpur</p>
+              <p className="font-bold text-amber-200">EPISODE 3</p>
+              <p>Date, time &amp; venue: official updates coming soon.</p>
             </div>
             {/* Footer Status Badges */}
             <div className="flex flex-wrap items-center gap-2 border-t border-amber-400/20 pt-2">
@@ -265,7 +220,7 @@ export default function TicketCard({ ticket, showActions = true }: TicketCardPro
       {showActions && (
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2 print:hidden">
           <button
-            onClick={handleDownloadImage}
+            disabled={!ticketImage} onClick={handleDownloadImage}
             className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-black font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-xl hover:scale-105 transition-all cursor-pointer"
           >
             <Download className="w-4 h-4" />

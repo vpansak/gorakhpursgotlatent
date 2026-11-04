@@ -12,7 +12,7 @@ const leadershipPages = new Set([
 
 export default function LeadershipBanner() {
   const pathname = usePathname();
-  const currentPath = pathname?.replace(/\\/$/, '') || '/';
+  const currentPath = pathname && pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : (pathname || '/');
 
   if (!leadershipPages.has(currentPath)) return null;
 

@@ -138,7 +138,7 @@ export default function BookTicketPage() {
           <div className="text-center">
             <CheckCircle2 className="w-14 h-14 text-emerald-400 mx-auto mb-3" />
             <h1 className="text-3xl font-bold">Ticket Confirmed</h1>
-            <p className="text-sm text-emerald-300 mt-2">Your GGL ticket has been booked successfully.</p>
+            <p className="text-sm text-emerald-300 mt-2">Your GGL Episode 3 ticket has been booked successfully.</p>
           </div>
           <TicketCard ticket={confirmedTicket} showActions={true} />
           <button onClick={() => {
@@ -160,7 +160,7 @@ export default function BookTicketPage() {
     <main className="min-h-screen bg-[#07080e] text-white px-4 py-4 sm:py-6">
       <div className="max-w-xl mx-auto space-y-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black">Book GGL Ticket</h1>
+          <h1 className="text-2xl sm:text-3xl font-black">Book GGL Episode 3 Ticket</h1>
           <p className="text-sm text-slate-400 mt-1.5">
             <strong className="text-amber-400">₹149 / person</strong>
           </p>

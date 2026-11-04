@@ -27,9 +27,13 @@ import {
 export const metadata: Metadata = {
   title: "Gorakhpur's Got Latent Creators: Naveen Varma & Alok Singh",
   description: "Official GGL creator profile: Naveen Varma is Founder & Show Creator, with Alok Singh as Co-Founder & Technical Head. Discover their roles in Gorakhpur's Got Latent.",
-  authors: [{ name: "Naveen Varma", url: "https://gkpgotlatent.in/founder" }],
-  creator: "Naveen Varma",
+  authors: [
+    { name: "Naveen Varma", url: "https://www.gkpgotlatent.in/founder" },
+    { name: "Alok Singh", url: "https://www.gkpgotlatent.in/developer" },
+  ],
+  creator: "Naveen Varma & Alok Singh",
   publisher: "Gorakhpur's Got Latent",
+  alternates: { canonical: 'https://www.gkpgotlatent.in/founder' },
   robots: {
     index: true,
     follow: true,

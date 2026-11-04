@@ -1,6 +1,4 @@
 'use client';
-import WinnerPrizeNotice from '@/components/WinnerPrizeNotice';
-
 import { useState } from 'react';
 import Link from 'next/link';
 import { Mic2, CheckCircle2, ArrowRight, Loader2, Sparkles, MessageSquare, Mail, AlertCircle, CheckSquare } from 'lucide-react';
@@ -340,8 +338,6 @@ export default function PerformerApplyClient() {
           <p className="mt-2 text-xs text-slate-400">Travel • Music (Unique / Original) • Reels • Performances • Adventures</p>
           <Link href="/ggl_talent_trip" className="mt-2 inline-flex text-xs font-bold text-amber-300 hover:text-amber-200">View GGL Talent Trip details →</Link>
         </div>
-
-      <WinnerPrizeNotice />
         <p className="text-center text-[11px] text-slate-400">Kindly read the <Link href="/performer-policy" target="_blank" rel="noopener noreferrer" className="font-semibold text-amber-300 underline underline-offset-2">Terms &amp; Conditions</Link>.</p>
 
         <button

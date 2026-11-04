@@ -120,16 +120,24 @@ const jsonLdData = {
           'https://www.linkedin.com/in/alok-singh-8102a8414/'
         ]
       },
-      'creator': {
-        '@type': 'Person',
-        '@id': 'https://gkpgotlatent.in/#naveenvarma',
-        'name': 'Naveen Varma',
-        'jobTitle': 'Founder & Show Creator',
-        'url': 'https://gkpgotlatent.in/founder',
-        'sameAs': [
-          'https://www.instagram.com/nvn_unfiltered/'
-        ]
-      },
+      'creator': [
+        {
+          '@type': 'Person',
+          '@id': 'https://www.gkpgotlatent.in/#naveenvarma',
+          'name': 'Naveen Varma',
+          'jobTitle': 'Founder & Show Creator',
+          'url': 'https://www.gkpgotlatent.in/founder',
+          'sameAs': ['https://www.instagram.com/nvn_unfiltered/']
+        },
+        {
+          '@type': 'Person',
+          '@id': 'https://www.gkpgotlatent.in/#aloksingh',
+          'name': 'Alok Singh',
+          'jobTitle': 'Co-Founder & Technical Head',
+          'url': 'https://www.gkpgotlatent.in/developer',
+          'sameAs': ['https://www.instagram.com/aloksingh_._/', 'https://x.com/rajpratapsinghh', 'https://www.linkedin.com/in/alok-singh-8102a8414/']
+        }
+      ],
       'publisher': {
         '@type': 'Organization',
         '@id': 'https://gkpgotlatent.in/#organization',
@@ -150,9 +158,11 @@ const jsonLdData = {
         },
         'employee': {
           '@type': 'Person',
+          '@id': 'https://www.gkpgotlatent.in/#aloksingh',
           'name': 'Alok Singh',
-          'jobTitle': 'Head of Developers & Tech Architect',
-          'url': 'https://gkpgotlatent.in/developer'
+          'jobTitle': 'Co-Founder & Technical Head',
+          'url': 'https://www.gkpgotlatent.in/developer',
+          'sameAs': ['https://www.instagram.com/aloksingh_._/', 'https://x.com/rajpratapsinghh', 'https://www.linkedin.com/in/alok-singh-8102a8414/']
         }
       }
     },
@@ -174,14 +184,19 @@ const jsonLdData = {
       'logo': 'https://gkpgotlatent.in/logo.png',
       'founder': {
         '@type': 'Person',
+        '@id': 'https://www.gkpgotlatent.in/#naveenvarma',
         'name': 'Naveen Varma',
-        'jobTitle': 'Show Creator & Founder'
+        'jobTitle': 'Founder & Show Creator',
+        'url': 'https://www.gkpgotlatent.in/founder',
+        'sameAs': ['https://www.instagram.com/nvn_unfiltered/']
       },
-      'member': {
+      'employee': {
         '@type': 'Person',
+        '@id': 'https://www.gkpgotlatent.in/#aloksingh',
         'name': 'Alok Singh',
-        'jobTitle': 'Head of Developers & Tech Architect',
-        'url': 'https://gkpgotlatent.in/developer'
+        'jobTitle': 'Co-Founder & Technical Head',
+        'url': 'https://www.gkpgotlatent.in/developer',
+        'sameAs': ['https://www.instagram.com/aloksingh_._/', 'https://x.com/rajpratapsinghh', 'https://www.linkedin.com/in/alok-singh-8102a8414/']
       }
     }
   ]

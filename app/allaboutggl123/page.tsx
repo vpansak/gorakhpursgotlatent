@@ -64,9 +64,9 @@ export default function AllAboutGGL123Page() {
 
           <article className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300">Co-Founder</p>
-            <h2 className="mt-3 text-3xl font-black">Naveen</h2>
+            <h2 className="mt-3 text-3xl font-black">Naveen Varma &amp; Alok Singh</h2>
             <p className="mt-4 leading-7 text-zinc-300">
-              Naveen Varma is the Founder and Show Creator of Gorakhpur&apos;s Got Latent. He leads the show's creative vision, format, hosting, and talent showcase.
+              Naveen Varma is the Founder and Show Creator of Gorakhpur&apos;s Got Latent, and Alok Singh is the Co-Founder &amp; Technical Head. Together, they lead the show’s creative vision, technical platform, format, hosting, and talent showcase.
             </p>
             <p className="mt-4 leading-7 text-zinc-300">
               Naveen Varma leads GGL as Founder and Show Creator. Alok Singh supports the initiative as Co-Founder & Technical Head, developing the digital platform and technical operations.

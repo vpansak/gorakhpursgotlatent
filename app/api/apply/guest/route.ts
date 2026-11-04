@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import crypto from 'crypto';
 import { db } from '@/lib/db';
 import { generateAppId } from '@/lib/helpers';
 
@@ -26,16 +25,15 @@ export async function POST(req: Request) {
 
     const appId = generateAppId('GST');
     const id = `gst-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-    const token = `gstpay-${Date.now().toString(36)}-${crypto.randomBytes(18).toString('hex')}`;
 
-    await db.execute(`
+    await db.queryStrict(`
       INSERT INTO guest_applications (
         id, app_id, full_name, stage_name, dob, email, whatsapp, phone, instagram_url,
         youtube_url, social_url, city, location, profession, category, short_intro,
         why_ggl, previous_shows, social_info, management_name, manager_contact,
         availability, preferred_date, travel_req, accommodation_req, special_req,
         important_info, profile_photo_url, press_kit_url, doc_url, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PAYMENT_PENDING')
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'SUBMITTED')
     `, [
       id, appId, effectiveFullName, (stageName || '').toString().trim(), (dob || '').toString().trim(),
       effectiveEmail, effectiveWhatsapp, (phone || '').toString().trim(),
@@ -49,15 +47,11 @@ export async function POST(req: Request) {
       (importantInfo || '').toString().trim(), (profilePhotoUrl || '').toString().trim(), (pressKitUrl || '').toString().trim(), (docUrl || '').toString().trim()
     ]);
 
-    await db.execute(
-      "INSERT INTO guest_payment_links (token, app_id, amount, status) VALUES (?, ?, 49.00, 'PENDING')",
-      [token, appId]
-    );
 
     try {
       await db.execute(`
         INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)
-        VALUES (?, 'GUEST', ?, NULL, 'PAYMENT_PENDING', 'SYSTEM', 'Guest application awaiting verified ₹49 payment')
+        VALUES (?, 'GUEST', ?, NULL, 'SUBMITTED', 'SYSTEM', 'Free guest application submitted')
       `, [`his-${Date.now()}`, appId]);
     } catch (historyError) {
       console.warn('Could not write guest application status history:', historyError);
@@ -65,10 +59,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Application details saved. Complete the ₹49 payment to submit your application.',
+      message: 'Your free guest application has been submitted successfully.',
       appId,
-      status: 'PAYMENT_PENDING',
-      paymentUrl: `/guest-payment/${token}`,
+      status: 'SUBMITTED',
     });
   } catch (err: any) {
     console.error('Error submitting guest application:', err);

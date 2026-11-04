@@ -132,7 +132,7 @@ const profileJsonLd = {
     'Official biography and profile of Alok Singh, a full-stack developer, technology builder and Co-Founder of Gorakhpur’s Got Latent from Kaudiram, Gorakhpur, Uttar Pradesh, India.',
   mainEntity: {
     '@type': 'Person',
-    '@id': 'https://www.gkpgotlatent.in/aboutaloksingh#person',
+    '@id': 'https://www.gkpgotlatent.in/#aloksingh',
     name: 'Alok Singh',
     alternateName: [
       'Alok Singh Gorakhpur',

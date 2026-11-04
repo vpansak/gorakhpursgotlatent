@@ -25,8 +25,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Naveen Varma — Founder | Alok Singh — Co-Founder & Technical Head - Gorakhpur's Got Latent",
-  description: "Meet Naveen Varma, Founder and Show Creator, and Alok Singh, Co-Founder & Technical Head behind Gorakhpur's Got Latent, their roles, vision, technology, and entertainment platform.",
+  title: "Gorakhpur's Got Latent Creators: Naveen Varma & Alok Singh",
+  description: "Official GGL creator profile: Naveen Varma is Founder & Show Creator, with Alok Singh as Co-Founder & Technical Head. Discover their roles in Gorakhpur's Got Latent.",
   authors: [{ name: "Naveen Varma", url: "https://gkpgotlatent.in/founder" }],
   creator: "Naveen Varma",
   publisher: "Gorakhpur's Got Latent",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Founders & Creators | Gorakhpur's Got Latent",
     description: "Meet the founder Naveen Varma and technical co-founder Alok Singh of Gorakhpur's Got Latent, their creative vision and technical contributions.",
-    url: 'https://gkpgotlatent.in/founder',
+    url: 'https://www.gkpgotlatent.in/founder',
     siteName: "Gorakhpur's Got Latent",
     images: [
       {
@@ -59,8 +59,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Naveen Varma | Founder - Gorakhpur's Got Latent",
-    description: "Founder & Show Creator of Gorakhpur's Got Latent. Kuch Bhi Ho Sakta Hai!",
+    title: "GGL Creators: Naveen Varma & Alok Singh",
+    description: "Naveen Varma — Founder & Show Creator; Alok Singh — Co-Founder & Technical Head of Gorakhpur's Got Latent.",
     images: ['/naveen-varma.jpg'],
   },
 };
@@ -110,32 +110,36 @@ export default function FounderPage() {
 
   const founderJsonLd = {
     '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'ProfilePage',
-        '@id': 'https://gkpgotlatent.in/founder#webpage',
-        'url': 'https://gkpgotlatent.in/founder',
-        'name': "Naveen Varma - Founder & Show Creator | Gorakhpur's Got Latent",
-        'description': "Official profile and vision of Naveen Varma, Founder and Show Creator of Gorakhpur's Got Latent.",
-        'mainEntity': {
-          '@type': 'Person',
-          '@id': 'https://gkpgotlatent.in/#naveenvarma',
-          'name': 'Naveen Varma',
-          'jobTitle': 'Founder, Show Creator & Producer',
-          'description': "Founder, Show Creator, and Lead Host who envisioned and launched Gorakhpur's Got Latent, Purvanchal's flagship live talent hunt and roast show.",
-          'url': 'https://gkpgotlatent.in/founder',
-          'image': 'https://gkpgotlatent.in/naveen-varma.jpg',
-          'sameAs': [
-            'https://www.instagram.com/nvn_unfiltered/'
-          ],
-          'worksFor': {
-            '@type': 'Organization',
-            '@id': 'https://gkpgotlatent.in/#organization',
-            'name': "Gorakhpur's Got Latent",
-            'url': 'https://gkpgotlatent.in'
-          }
-        }
+    '@type': 'ProfilePage',
+    '@id': 'https://www.gkpgotlatent.in/founder#webpage',
+    url: 'https://www.gkpgotlatent.in/founder',
+    name: "Gorakhpur's Got Latent — Founders & Show Creators",
+    description: 'Official creator profile for GGL: Naveen Varma, Founder & Show Creator, and Alok Singh, Co-Founder & Technical Head.',
+    mainEntity: {
+      '@type': 'Organization',
+      '@id': 'https://www.gkpgotlatent.in/#organization',
+      name: "Gorakhpur's Got Latent",
+      url: 'https://www.gkpgotlatent.in',
+      founder: {
+        '@type': 'Person',
+        '@id': 'https://www.gkpgotlatent.in/#naveenvarma',
+        name: 'Naveen Varma',
+        jobTitle: 'Founder & Show Creator',
+        url: 'https://www.gkpgotlatent.in/founder',
+        sameAs: ['https://www.instagram.com/nvn_unfiltered/']
+      },
+      employee: {
+        '@type': 'Person',
+        '@id': 'https://www.gkpgotlatent.in/#aloksingh',
+        name: 'Alok Singh',
+        jobTitle: 'Co-Founder & Technical Head',
+        url: 'https://www.gkpgotlatent.in/developer',
+        sameAs: ['https://www.instagram.com/aloksingh_._/', 'https://x.com/rajpratapsinghh', 'https://www.linkedin.com/in/alok-singh-8102a8414/']
       }
+    },
+    about: [
+      {'@id': 'https://www.gkpgotlatent.in/#naveenvarma'},
+      {'@id': 'https://www.gkpgotlatent.in/#aloksingh'}
     ]
   };
 

@@ -31,7 +31,7 @@ test('email failure is recorded without changing performer payment status',async
   const {lib,queries}=fixture({success:false});assert.equal((await lib.emailPerformerInvitation(person)).success,false);
   assert.equal(queries.at(-1)[1][0],'FAILED');assert.ok(queries.every(([sql])=>!sql.includes('payment_status')));
 });
-test('submission persists application before email and never marks an unpaid applicant paid',async()=>{
+test('submission without terms or trip fields persists application before email and never marks an unpaid applicant paid',async()=>{
   const queries=[],callbacks=[],sent=[];
   const route=load('app/api/apply/performer/route.ts',{
     'next/server':{after:cb=>callbacks.push(cb),NextResponse:{json:(body,init)=>Response.json(body,init)}},
@@ -41,7 +41,7 @@ test('submission persists application before email and never marks an unpaid app
   });
   const req=body=>new Request('https://www.gkpgotlatent.in/api/apply/performer',{method:'POST',body:JSON.stringify(body)});
   assert.equal((await route.POST(req({termsAccepted:true,email:'bad'}))).status,400);
-  const res=await route.POST(req({termsAccepted:true,fullName:'Rahul',email:person.email,mobile:person.mobile,age:22,instagram:'rahul'}));
+  const res=await route.POST(req({fullName:'Rahul',email:person.email,mobile:person.mobile,age:22,instagram:'rahul'}));
   const json=await res.json();assert.equal(json.success,true);assert.equal(json.paymentUrl,person.paymentUrl);
   assert.equal(sent.length,0);assert.equal(callbacks.length,2);await callbacks[1]();assert.equal(sent[0].email,person.email);
   assert.ok(queries[0][0].includes("'FREE'"));

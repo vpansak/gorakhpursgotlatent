@@ -94,10 +94,6 @@ export default function PerformerApplyClient() {
       setError('Please enter a valid Email address.');
       return;
     }
-    if (!formData.termsAccepted) {
-      setError('Please read and accept the Terms & Conditions.');
-      return;
-    }
     setLoading(true);
     let assignedAppId = '';
 
@@ -346,22 +342,11 @@ export default function PerformerApplyClient() {
         </div>
 
       <WinnerPrizeNotice />
-        <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center">
-          <p className="text-xs font-bold text-amber-200">
-            Application is completely FREE. Your details will be saved in the Admin Portal, then you can send your performance clip to {DISPLAY_PHONE} on WhatsApp.
-          </p>
-        </div>
-
-        <div className="rounded-xl border border-amber-400/30 bg-slate-900 p-4">
-          <div className="flex items-start gap-3 text-sm text-slate-200">
-            <input id="performer-terms" name="termsAccepted" type="checkbox" required checked={formData.termsAccepted} onChange={handleChange} className="mt-1 h-5 w-5 shrink-0 accent-amber-400" />
-            <div><label htmlFor="performer-terms">I have read and agree to the </label><Link href="/performer-policy" target="_blank" rel="noopener noreferrer" className="font-bold text-amber-300 underline underline-offset-4">Terms &amp; Conditions</Link>.</div>
-          </div>
-        </div>
+        <p className="text-center text-[11px] text-slate-400">Kindly read the <Link href="/performer-policy" target="_blank" rel="noopener noreferrer" className="font-semibold text-amber-300 underline underline-offset-2">Terms &amp; Conditions</Link>.</p>
 
         <button
           type="submit"
-          disabled={loading || !formData.termsAccepted}
+          disabled={loading}
           className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-500 to-orange-600 hover:from-amber-200 hover:to-orange-400 text-black font-extrabold text-base flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(16,185,129,0.35)] transition-all transform hover:scale-[1.01] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
@@ -374,7 +359,7 @@ export default function PerformerApplyClient() {
             </>
           )}
         </button>
-        <p className="pt-1 text-center text-[10px] leading-relaxed text-slate-500">Note: Applying is free. Only if you are shortlisted, a ₹799 registration fee will be required to confirm your participation.</p>
+        <p className="pt-1 text-center text-[10px] leading-relaxed text-slate-400">If shortlisted, you’ll need to pay ₹799 to confirm your participation.</p>
     </form>
     </div>
   );

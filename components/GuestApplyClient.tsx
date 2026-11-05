@@ -170,7 +170,7 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
     <div className="py-5 px-4 sm:px-6 max-w-3xl mx-auto space-y-4">
       <div className="text-center">
         <h1 className="text-2xl sm:text-3xl font-black text-white">Guest / Influencer Application</h1>
-        <p className="text-xs text-slate-400 mt-1">Guest judge • celebrity performer • creator • FREE application</p>
+        <p className="text-xs text-slate-400 mt-1">Guest judge • celebrity performer • creator application</p>
       </div>
 
       {error && <div className="p-4 rounded-xl bg-red-500/20 text-red-300 text-sm font-semibold">⚠️ {error}</div>}
@@ -228,8 +228,8 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
         <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-[11px] text-emerald-200">
           <WhatsAppIcon className="w-6 h-6 text-emerald-400 shrink-0" />
           <div>
-            <strong className="text-white block font-bold">Free Guest Application:</strong>
-            No payment is required. Submit your application, then connect with our team on WhatsApp ({DISPLAY_PHONE}).
+            <strong className="text-white block font-bold">Guest Application:</strong>
+            Submit your application and connect with our team on WhatsApp ({DISPLAY_PHONE}).
           </div>
         </div>
 
@@ -243,11 +243,14 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
           ) : (
             <>
               <WhatsAppIcon className="w-6 h-6 fill-current" />
-              SUBMIT FREE APPLICATION
+              SUBMIT APPLICATION
               <ArrowRight className="w-5 h-5" />
             </>
           )}
         </button>
+        <p className="text-center text-[11px] sm:text-xs text-slate-400 mt-2">
+          If you are selected by our team, you will have to pay ₹6,000.
+        </p>
       </form>
 
       {/* WHATSAPP DRAFT INQUIRY & EMAIL CONTACT CARDS */}

@@ -1,15 +1,17 @@
+import { indianMobile } from '@/lib/phone';
 import { NextResponse } from 'next/server';
 import { getRazorpayKeyId, getRazorpayInstance, isRazorpayConfigured } from '@/lib/razorpay';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { customerName, mobile, email, instagramId, quantity = 1 } = body;
+    const { customerName, mobile: rawMobile, email, instagramId, quantity = 1 } = body;
+    const mobile = indianMobile(rawMobile);
 
     // Validate mandatory fields (Only Full Name and Mobile are required)
-    if (!customerName || !customerName.trim() || !mobile || !mobile.trim()) {
+    if (typeof customerName !== 'string' || !customerName.trim() || !mobile) {
       return NextResponse.json(
-        { error: 'Please provide both Full Name and Mobile Number.' },
+        { error: 'Please provide your full name and a valid 10-digit Indian mobile number.' },
         { status: 400 }
       );
     }
@@ -22,7 +24,8 @@ export async function POST(req: Request) {
     const cleanInsta = (instagramId || '').trim();
 
     // Quantity & Pricing (₹149 per ticket)
-    const qty = Math.max(1, Math.min(10, Math.floor(Number(quantity) || 1)));
+    const qty = Number(quantity);
+    if (!Number.isInteger(qty) || qty < 1 || qty > 5) return NextResponse.json({ error: 'Choose between 1 and 5 tickets.' }, { status: 400 });
     const ticketPrice = 149;
     const totalAmount = qty * ticketPrice;
     const amountPaise = totalAmount * 100;

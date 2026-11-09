@@ -24,12 +24,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No verified Razorpay Payment ID associated with this application to refund' }, { status: 400 });
     }
 
-    const refundAmount = app.payment_amount || 199;
+    if (app.payment_status === 'REFUNDED' || app.refund_id) return NextResponse.json({ error: 'This payment has already been refunded.' }, { status: 409 });
+    const refundAmount = Number(app.payment_amount);
+    if (!Number.isFinite(refundAmount) || refundAmount <= 0) return NextResponse.json({ error: 'A verified positive payment amount is required.' }, { status: 400 });
 
     // Call Razorpay Refund API
     const refundResult = await processRazorpayRefund(app.payment_id, refundAmount, refundReason || 'Performer application rejection refund');
 
-    const refundId = refundResult.refundId || `ref_demo_${Date.now()}`;
+    if (!refundResult.success || !refundResult.refundId) {
+      return NextResponse.json({ error: refundResult.error || 'Razorpay did not confirm the refund. Payment status has not changed.' }, { status: 502 });
+    }
+    const refundId = refundResult.refundId;
     const now = new Date().toISOString();
 
     // Update database

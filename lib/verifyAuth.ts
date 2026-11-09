@@ -1,3 +1,4 @@
+import { getSession } from '@/lib/auth';
 import crypto from 'crypto';
 import { cookies } from 'next/headers';
 
@@ -5,7 +6,7 @@ const COOKIE_NAME = 'ggl_verify_session';
 const SESSION_TTL_SECONDS = 8 * 60 * 60;
 
 function getSecret(): string {
-  return process.env.GGL_VERIFY_SESSION_SECRET || 'ggl_verify_default_session_secret_key_2026';
+  return process.env.GGL_VERIFY_SESSION_SECRET || process.env.JWT_SECRET || '';
 }
 
 function sign(payload: string): string {
@@ -38,6 +39,8 @@ export function isVerifySessionValid(token: string | undefined | null): boolean 
 }
 
 export async function isVerifyAuthenticated(): Promise<boolean> {
+  const session = await getSession();
+  if (session && ['SUPER_ADMIN','ADMIN','STAFF','TICKET_STAFF'].includes(session.role)) return true;
   const cookieStore = await cookies();
   return isVerifySessionValid(cookieStore.get(COOKIE_NAME)?.value);
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getSession } from '@/lib/auth';
 import {
   createVerifySession,
   getVerifyCookieName,
@@ -7,16 +8,18 @@ import {
 
 export async function POST(req: Request) {
   try {
+    const staff = await getSession();
+    if (staff && ['SUPER_ADMIN','ADMIN','STAFF','TICKET_STAFF'].includes(staff.role)) return NextResponse.json({ success: true });
     const body = await req.json();
     const id = String(body?.id || '').trim();
     const password = String(body?.password || '').trim();
 
-    const expectedId = String(process.env.GGL_VERIFY_ID || '8423858424').trim();
-    const expectedPassword = String(process.env.GGL_VERIFY_PASSWORD || '1122').trim();
+    const expectedId = String(process.env.GGL_VERIFY_ID || '').trim();
+    const expectedPassword = String(process.env.GGL_VERIFY_PASSWORD || '').trim();
 
-    if (password !== '1100' && (id !== expectedId || password !== expectedPassword)) {
+    if (!expectedId || !expectedPassword || id !== expectedId || password !== expectedPassword) {
       return NextResponse.json(
-        { success: false, error: 'Invalid ID or Password. Access Denied.' },
+        { success: false, error: 'Sign in through the admin portal or use your configured gate staff credentials.' },
         { status: 401 }
       );
     }

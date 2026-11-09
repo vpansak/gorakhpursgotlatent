@@ -35,6 +35,7 @@ export default function BookTicketPage() {
 
   useLeadCapture({
     source: 'book-ticket',
+    completed: Boolean(confirmedTicket),
     data: { customerName, mobile, email, instagramId , quantity },
     customerName,
     mobile,

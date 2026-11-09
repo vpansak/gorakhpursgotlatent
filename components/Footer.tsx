@@ -70,7 +70,7 @@ export default function Footer() {
   let contextLabel = "Quick Support & Help";
 
   if (pathname.includes('/performer')) {
-    whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI have a query regarding Performer Application / Episode 2 Audition slots.";
+    whatsappDraftText = "Hi Gorakhpur's Got Latent Team,\n\nI have a query regarding Performer Application / Episode 3 Audition slots.";
     emailSubject = "Performer Audition Query - Gorakhpur's Got Latent";
     contextLabel = "Performer & Audition Support";
   } else if (pathname.includes('/sponsor')) {

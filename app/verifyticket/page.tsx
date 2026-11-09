@@ -25,11 +25,6 @@ import { getTicketQuantity } from '@/lib/ticketQuantity';
 import { TicketRecord } from '@/lib/ticketTypes';
 
 export default function VerifyTicketPage() {
-  // Shared event access passcode gate
-  const [accessGranted, setAccessGranted] = useState(true);
-  const [accessPassword, setAccessPassword] = useState('');
-  const [accessError, setAccessError] = useState('');
-
   // Auth State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loginId, setLoginId] = useState('');
@@ -374,10 +369,11 @@ export default function VerifyTicketPage() {
               GATE VERIFICATION LOGIN
             </h1>
             <p className="text-xs text-slate-400">
-              Gorakhpur's Got Latent — Enter access password
+              Gorakhpur's Got Latent — sign in as staff
             </p>
           </div>
 
+          <Link href="/malik" className="block text-center font-bold text-amber-300">Sign in through Admin Portal</Link>
           <form onSubmit={handleLogin} className="p-6 rounded-3xl border border-amber-500/30 space-y-4 bg-slate-900/90 shadow-2xl">
             {loginError && (
               <div className="p-3 rounded-xl bg-red-950/80 border border-red-500/50 text-red-300 text-xs font-bold text-center flex items-center justify-center gap-2">
@@ -386,6 +382,7 @@ export default function VerifyTicketPage() {
               </div>
             )}
 
+            <label className="block text-xs text-slate-300">Staff ID<input value={loginId} onChange={e => setLoginId(e.target.value)} placeholder="Configured gate staff ID" required className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-white" /></label>
             <div className="space-y-1">
               <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                 <Lock className="w-3.5 h-3.5 text-amber-400" /> Password
@@ -424,7 +421,6 @@ export default function VerifyTicketPage() {
   // -------------------------------------------------------------
   return (
     <>
-    {!accessGranted ? <main className="min-h-screen bg-[#07080d] text-white flex items-center justify-center p-5"><section className="w-full max-w-md rounded-3xl border border-amber-400/30 bg-slate-900/90 p-7"><div className="text-center"><Lock className="mx-auto text-amber-300" size={36}/><h1 className="text-2xl font-black mt-3">Ticket Verification Access</h1><p className="text-slate-400 text-sm mt-2">Enter the event access password to continue.</p></div><form onSubmit={(e)=>{e.preventDefault();if(accessPassword==='1100'){setAccessGranted(true);setAccessError('');}else{setAccessError('Incorrect password');}}} className="mt-5 space-y-4"><input type="password" value={accessPassword} onChange={e=>setAccessPassword(e.target.value)} placeholder="Enter password" required className="w-full rounded-xl bg-black/40 border border-white/15 px-4 py-3"/>{accessError&&<p className="text-red-300 text-sm">{accessError}</p>}<button className="w-full rounded-xl bg-amber-400 text-black font-black py-3">Unlock Verification</button></form></section></main> : <>
     <div className="fixed inset-0 z-[9999] bg-[#07080e] text-slate-100 flex flex-col justify-between p-3 sm:p-4 overflow-hidden select-none h-[100dvh] w-full">
       
       {/* 1. TOP HEADER BAR — ONLY LOGOUT BUTTON & BRANDING */}
@@ -781,7 +777,6 @@ export default function VerifyTicketPage() {
       )}
 
     </div>
-    </>}
     </>
   );
 }

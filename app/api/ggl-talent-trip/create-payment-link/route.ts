@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     const rows = await db.query<any>('SELECT * FROM ggl_talent_trip_registrations WHERE app_id = ?', [appId]);
     const person = rows[0];
     if (!person) return NextResponse.json({ success:false, error:'Registration not found.' }, { status:404 });
+    if (person.payment_status === 'PAID' || person.entry_fee_status === 'PAID') return NextResponse.json({ success:false, error:'This registration is already paid.' }, { status:409 });
     if (person.verification_status !== 'VERIFIED') return NextResponse.json({ success:false, error:'Mark the participant VERIFIED before generating a payment link.' }, { status:400 });
     const razorpay = getRazorpayInstance();
     const keyId = getRazorpayKeyId();

@@ -21,15 +21,22 @@ function hasMeaningfulValue(value: any): boolean {
   return String(value).trim().length > 0;
 }
 
-function hasUserEnteredData(data: Record<string, any>): boolean {
+export function hasUserEnteredData(data: Record<string, any>, initialData: Record<string, any> = {}): boolean {
   const ignored = new Set(['duration', 'budget', 'termsAccepted', 'age', 'interestedInTalentTrip']);
-  return Object.entries(data).some(([key, value]) => !ignored.has(key) && hasMeaningfulValue(value));
+  return Object.entries(data).some(([key, value]) => !ignored.has(key) && hasMeaningfulValue(value) && JSON.stringify(value) !== JSON.stringify(initialData[key]));
 }
 
 export function useLeadCapture(options: LeadCaptureOptions) {
   // A unique ID per mounted application form prevents different applicants in the same tab
   // from overwriting each other's leads.
   const leadIdRef = useRef<string>('');
+  const initialDataRef = useRef(options.data);
+  const previousCompleted = useRef(false);
+  if (previousCompleted.current && !options.completed) {
+    leadIdRef.current = '';
+    initialDataRef.current = options.data;
+  }
+  previousCompleted.current = Boolean(options.completed);
   if (!leadIdRef.current && typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
     leadIdRef.current = `lead_session_${crypto.randomUUID()}`;
   }
@@ -42,7 +49,7 @@ export function useLeadCapture(options: LeadCaptureOptions) {
       const current = latestRef.current;
       if (current.completed && status !== 'SUBMITTED') return;
       const data = current.data || {};
-      if (!hasUserEnteredData(data)) return;
+      if (!hasUserEnteredData(data, initialDataRef.current)) return;
       const payload = {
         leadId: leadIdRef.current || undefined,
         customerName: current.customerName || '',

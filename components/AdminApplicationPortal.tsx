@@ -1,4 +1,5 @@
 'use client';
+import { whatsappNumber } from '@/lib/phone';
 
 import { createPortal } from 'react-dom';
 import { performerDetailFields, hasVerifiedPerformerPayment, canEditManualPerformerPayment, combinedStageIntroduction } from '@/lib/performerDetailsFields';
@@ -1204,7 +1205,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                             {item.phone && (
                               <div className="flex items-center gap-1">
                                 <a
-                                  href={`https://wa.me/${String(item.phone).replace(/[^0-9]/g, '')}`}
+                                  href={`https://wa.me/${whatsappNumber(item.phone)}`}
                                   target="_blank"
                                   rel="noreferrer"
                                   className="p-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-400 transition-colors"
@@ -1327,7 +1328,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                           {phoneNum && (
                             <div className="flex items-center gap-1">
                               <a
-                                href={`https://wa.me/${phoneNum}`}
+                                href={`https://wa.me/${whatsappNumber(phoneNum)}`}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="p-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-400 transition-colors"

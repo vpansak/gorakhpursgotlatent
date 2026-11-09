@@ -27,17 +27,17 @@ export async function GET(req: Request) {
     let type = '';
 
     // Helper to generate flexible SQL WHERE clause
-    const getWhereClause = (emailCol: string = 'email') => {
+    const getWhereClause = (emailCol: string = 'email', idCol: string = 'app_id') => {
       const conditions: string[] = [];
       const params: any[] = [];
 
       if (cleanId) {
-        conditions.push(`UPPER(TRIM(app_id)) = ?`);
+        conditions.push(`UPPER(TRIM(${idCol})) = ?`);
         params.push(cleanId);
         conditions.push(`UPPER(TRIM(id)) = ?`);
         params.push(cleanId);
         if (strippedId) {
-          conditions.push(`REPLACE(UPPER(app_id), '-', '') = ?`);
+          conditions.push(`REPLACE(UPPER(${idCol}), '-', '') = ?`);
           params.push(strippedId);
         }
       }
@@ -56,7 +56,7 @@ export async function GET(req: Request) {
     // 1. Check performer_applications table
     const perWhere = getWhereClause('email');
     if (perWhere.clause) {
-      result = await db.queryOne(`
+      result = await db.queryOneStrict(`
         SELECT app_id, full_name, email, mobile_number, whatsapp_number, city, age,
                performance_category, performance_title, performance_type, performer_count,
                performance_duration, performance_language, special_requirements,
@@ -74,7 +74,7 @@ export async function GET(req: Request) {
       // 2. Check team_applications
       const teamWhere = getWhereClause('email');
       if (teamWhere.clause) {
-        result = await db.queryOne(`
+        result = await db.queryOneStrict(`
           SELECT app_id, full_name, email, mobile_number, address, status, created_at, updated_at
           FROM team_applications
           WHERE ${teamWhere.clause}
@@ -88,7 +88,7 @@ export async function GET(req: Request) {
         // 3. Check guest_applications
         const guestWhere = getWhereClause('email');
         if (guestWhere.clause) {
-          result = await db.queryOne(`
+          result = await db.queryOneStrict(`
             SELECT app_id, full_name, email, category, city, status, created_at, updated_at
             FROM guest_applications
             WHERE ${guestWhere.clause}
@@ -102,7 +102,7 @@ export async function GET(req: Request) {
           // 4. Check sponsor_applications
           const sponsorWhere = getWhereClause('biz_email');
           if (sponsorWhere.clause) {
-            result = await db.queryOne(`
+            result = await db.queryOneStrict(`
               SELECT app_id, company_name, biz_email AS email, contact_person, sponsorship_type, status, created_at, updated_at
               FROM sponsor_applications
               WHERE ${sponsorWhere.clause}
@@ -116,7 +116,7 @@ export async function GET(req: Request) {
             // 5. Check event_booking_applications
             const eventWhere = getWhereClause('email');
             if (eventWhere.clause) {
-              result = await db.queryOne(`
+              result = await db.queryOneStrict(`
                 SELECT app_id, org_name, email, contact_person, city, event_date, status, created_at, updated_at
                 FROM event_booking_applications
                 WHERE ${eventWhere.clause}
@@ -128,9 +128,9 @@ export async function GET(req: Request) {
               type = 'Show Booking Application';
             } else {
               // 6. Check ticket_orders fallback
-              const ticketWhere = getWhereClause('customer_email');
+              const ticketWhere = getWhereClause('customer_email', 'order_number');
               if (ticketWhere.clause) {
-                result = await db.queryOne(`
+                result = await db.queryOneStrict(`
                   SELECT order_number AS app_id, customer_name AS full_name, customer_email AS email,
                          customer_phone AS mobile_number, total_amount, payment_status AS status,
                          created_at, updated_at
@@ -159,7 +159,7 @@ export async function GET(req: Request) {
     const matchedAppId = (result.app_id || result.id || cleanId).toUpperCase();
 
     // Fetch status history timeline
-    const history = await db.query(
+    const history = await db.queryStrict(
       'SELECT old_status, new_status, reason, created_at FROM application_status_history WHERE UPPER(app_id) = ? ORDER BY created_at ASC',
       [matchedAppId]
     );
@@ -167,8 +167,8 @@ export async function GET(req: Request) {
     return NextResponse.json({
       success: true,
       type,
-      application: result,
-      history,
+      application: { app_id: result.app_id, status: result.application_status || result.status || 'SUBMITTED', created_at: result.created_at, updated_at: result.updated_at },
+      history: history.map((item: any) => ({ new_status: item.new_status, created_at: item.created_at })),
     });
   } catch (err: any) {
     console.error('Error tracking application:', err);

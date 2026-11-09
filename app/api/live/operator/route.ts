@@ -1,3 +1,4 @@
+import { hasOperatorAccess } from '@/lib/operatorAccess';
 import { NextRequest, NextResponse } from 'next/server';
 import { execute, query, queryOne } from '@/lib/db';
 import { calculateJudgeAverage, revealLiveResult, ensureLiveShowTables, getFullLiveState } from '@/lib/liveShow';
@@ -7,6 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
+    if (!(await hasOperatorAccess())) return NextResponse.json({ success: false, error: 'Staff authentication required' }, { status: 403 });
     await ensureLiveShowTables();
     const body = await req.json();
     const { action } = body;

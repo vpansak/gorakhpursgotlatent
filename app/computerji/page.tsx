@@ -255,38 +255,23 @@ export default function ComputerJiControlPanel() {
 
   // Check operator authentication session on mount
   useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem('ggl_computerji_auth_v1');
-      if (stored === 'verified') {
-        setIsAuthenticated(true);
-      }
-    } catch (e) { }
-    setAuthChecking(false);
+    fetch('/api/computerji/auth', { cache: 'no-store' }).then(res => res.json()).then(data => setIsAuthenticated(Boolean(data.authenticated))).catch(() => setIsAuthenticated(false));
   }, []);
 
-  const handleAuthSubmit = (e: React.FormEvent) => {
+  const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
     setIsSubmittingAuth(true);
-
-    const cleanPass = loginPassword.trim();
-
-    if (cleanPass === '1100') {
-      try {
-        sessionStorage.setItem('ggl_computerji_auth_v1', 'verified');
-      } catch (err) { }
-      setIsAuthenticated(true);
-      setIsSubmittingAuth(false);
-    } else {
-      setAuthError('गलत PIN। कृपया दोबारा कोशिश करें।');
-      setIsSubmittingAuth(false);
-    }
-  };
-
-  const handleLockConsole = () => {
     try {
-      sessionStorage.removeItem('ggl_computerji_auth_v1');
-    } catch (err) { }
+      const res = await fetch('/api/computerji/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: loginPassword }) });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Authentication failed');
+      setIsAuthenticated(true);
+    } catch (error: any) { setAuthError(error.message || 'Authentication failed'); }
+    finally { setIsSubmittingAuth(false); }
+  };
+  const handleLockConsole = async () => {
+    await fetch('/api/computerji/auth', { method: 'DELETE' });
     setIsAuthenticated(false);
     setLoginPassword('');
     setAuthError(null);
@@ -295,11 +280,12 @@ export default function ComputerJiControlPanel() {
   // Background sync to Neon DB / Admin Console
   const syncRecordToBackend = async (rec: SavedScoringRecord) => {
     try {
-      await fetch('/api/computerji/scores', {
+      const response = await fetch('/api/computerji/scores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(rec),
       });
+      if (!response.ok) throw new Error('Score sync failed. Please sign in again and retry.');
     } catch (err) {
       console.error('Failed to sync score to backend:', err);
     }
@@ -876,6 +862,8 @@ export default function ComputerJiControlPanel() {
             </p>
           </div>
 
+          <a href="/malik" className="block rounded-xl border border-amber-400/40 px-4 py-3 text-center font-bold text-amber-300">Sign in through Admin Portal</a>
+          <p className="text-center text-xs text-slate-400">Admin staff are recognized automatically. A separate operator PIN works only when configured by your administrator.</p>
           {/* Form */}
           <form onSubmit={handleAuthSubmit} className="space-y-4">
             {authError && (

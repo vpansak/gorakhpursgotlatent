@@ -43,8 +43,8 @@ export async function GET() {
   try {
     const session = await getSession();
     if (!session || !ADMIN_ROLES.includes(session.role)) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
-    const registrations = await db.query('SELECT * FROM ggl_talent_trip_registrations ORDER BY created_at DESC');
-    const sponsorships = await db.query("SELECT * FROM sponsor_applications WHERE sponsorship_type ILIKE '%talent trip%' OR message ILIKE '%talent trip%' ORDER BY created_at DESC");
+    const registrations = await db.queryStrict('SELECT * FROM ggl_talent_trip_registrations ORDER BY created_at DESC');
+    const sponsorships = await db.queryStrict("SELECT * FROM sponsor_applications WHERE sponsorship_type ILIKE '%talent trip%' OR message ILIKE '%talent trip%' ORDER BY created_at DESC");
     return NextResponse.json({ success: true, registrations, sponsorships });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message || 'Could not load registrations' }, { status: 500 });
@@ -83,7 +83,7 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ success: false, error: 'Registration ID and confirmation code 11 are required.' }, { status: 400 });
     }
 
-    const existing = await db.query(
+    const existing = await db.queryStrict(
       'SELECT app_id FROM ggl_talent_trip_registrations WHERE app_id = ? LIMIT 1',
       [appId]
     );

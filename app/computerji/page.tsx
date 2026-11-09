@@ -255,7 +255,25 @@ export default function ComputerJiControlPanel() {
 
   // Check operator authentication session on mount
   useEffect(() => {
-    fetch('/api/computerji/auth', { cache: 'no-store' }).then(res => res.json()).then(data => setIsAuthenticated(Boolean(data.authenticated))).catch(() => setIsAuthenticated(false));
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    fetch('/api/computerji/auth', { cache: 'no-store', signal: controller.signal })
+      .then(res => {
+        if (!res.ok) throw new Error('Unable to verify operator session');
+        return res.json();
+      })
+      .then(data => setIsAuthenticated(Boolean(data.authenticated)))
+      .catch(() => setIsAuthenticated(false))
+      .finally(() => {
+        clearTimeout(timeout);
+        setAuthChecking(false);
+      });
+
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, []);
 
   const handleAuthSubmit = async (e: React.FormEvent) => {

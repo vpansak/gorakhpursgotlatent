@@ -75,3 +75,22 @@ test('untouched guest defaults do not create phantom leads',()=>{
  assert.equal(hasUserEnteredData({...baseline,fullName:'Artist'},baseline),true);
  assert.equal(hasUserEnteredData({...baseline,profession:'Actor'},baseline),true);
 });
+
+test('tracking works against the real minimal schema and never returns private fields',async()=>{
+ const pg=new PGlite();
+ try {
+  await pg.exec(`CREATE TABLE performer_applications(id TEXT,app_id TEXT,email TEXT,application_status TEXT,status TEXT,created_at TIMESTAMPTZ,updated_at TIMESTAMPTZ);
+  CREATE TABLE team_applications(id TEXT,app_id TEXT,email TEXT,status TEXT,created_at TIMESTAMPTZ,updated_at TIMESTAMPTZ);
+  CREATE TABLE guest_applications(id TEXT,app_id TEXT,email TEXT,status TEXT,created_at TIMESTAMPTZ,updated_at TIMESTAMPTZ);
+  CREATE TABLE sponsor_applications(id TEXT,app_id TEXT,biz_email TEXT,status TEXT,created_at TIMESTAMPTZ,updated_at TIMESTAMPTZ);
+  CREATE TABLE event_booking_applications(id TEXT,app_id TEXT,email TEXT,status TEXT,created_at TIMESTAMPTZ,updated_at TIMESTAMPTZ);
+  CREATE TABLE ticket_orders(id TEXT,order_number TEXT,customer_email TEXT,payment_status TEXT,created_at TIMESTAMPTZ,updated_at TIMESTAMPTZ);
+  CREATE TABLE application_status_history(app_id TEXT,new_status TEXT,created_at TIMESTAMPTZ);
+  INSERT INTO performer_applications VALUES('p','GGL-A','private@example.test','SHORTLISTED','SUBMITTED',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);`);
+  const query=async(sql,params=[])=>{let n=0;return(await pg.query(sql.replace(/\?/g,()=>'$'+(++n)),params)).rows};
+  const route=load('app/api/track/route.ts',{'next/server':json,'@/lib/db':{db:{queryStrict:query,queryOneStrict:async(...args)=>(await query(...args))[0]||null}}});
+  const response=await route.GET(new Request('https://test.invalid/?query=GGL-A'));assert.equal(response.status,200);
+  const body=await response.json();assert.equal(body.application.status,'SHORTLISTED');assert.equal(body.application.email,undefined);
+  assert.equal((await route.GET(new Request('https://test.invalid/?query=GGL-UNKNOWN'))).status,404);
+ } finally {await pg.close();}
+});

@@ -12,6 +12,7 @@ export function ensurePerformerDetailsTable() {
   )`).then(async () => {
     await db.queryStrict(`ALTER TABLE performer_applications
       ADD COLUMN IF NOT EXISTS manual_payment_reference TEXT,
+      ADD COLUMN IF NOT EXISTS manual_payment_method TEXT,
       ADD COLUMN IF NOT EXISTS manual_payment_recorded_by TEXT,
       ADD COLUMN IF NOT EXISTS manual_payment_recorded_at TIMESTAMPTZ`);
   }).catch((error) => { ready = undefined; throw error; });

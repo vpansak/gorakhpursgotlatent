@@ -37,6 +37,8 @@ export async function GET(_req: Request, ctx: { params: Promise<{ token: string 
     }
 
     const payment = rows[0];
+    const applicant = await db.queryOneStrict('SELECT payment_status FROM performer_applications WHERE app_id=?', [payment.app_id]);
+    if (['PAID', 'PAYMENT_VERIFIED'].includes(applicant?.payment_status)) payment.status = 'PAID';
 
     // Recover checkout callbacks missed due to a tab closing, using the gateway's captured payment.
     if (payment.status !== 'PAID') {
@@ -74,7 +76,8 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
       return NextResponse.json({ error: 'Payment link not found' }, { status: 404 });
     }
 
-    if (link.status === 'PAID') {
+    const applicant = await db.queryOneStrict('SELECT payment_status FROM performer_applications WHERE app_id=?', [link.app_id]);
+    if (link.status === 'PAID' || ['PAID', 'PAYMENT_VERIFIED'].includes(applicant?.payment_status)) {
       return NextResponse.json({ success: true, status: 'PAID' });
     }
 

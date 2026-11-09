@@ -75,6 +75,25 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     } catch (error: any) { waTab.close(); window.alert(error.message || 'Unable to prepare form'); }
   };
 
+  const [markingPaid, setMarkingPaid] = useState<string | null>(null);
+  const handleMarkPaid = async (item: any) => {
+    const rawAmount = window.prompt(`Amount received from ${item.full_name} (₹)`, '799');
+    if (rawAmount === null) return;
+    const amount = Number(rawAmount);
+    if (!Number.isFinite(amount) || amount <= 0) { window.alert('Enter a valid amount'); return; }
+    const reference = window.prompt('Enter the payment UTR / transaction reference after checking receipt in your account');
+    if (!reference?.trim()) return;
+    if (!window.confirm(`Mark ${item.full_name} as paid manually for ₹${amount}? Confirm you received this payment. Reference: ${reference.trim()}`)) return;
+    setMarkingPaid(item.app_id);
+    try {
+      const res = await fetch('/api/malik/performer-payment/manual', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: item.app_id, amount, reference }) });
+      const json = await res.json();
+      if (!res.ok || !json.success) throw new Error(json.error || 'Unable to record payment');
+      await refreshAllData();
+    } catch (error: any) { window.alert(error.message || 'Unable to record payment'); }
+    finally { setMarkingPaid(null); }
+  };
+
   // Fetch Computer Ji scores from API (with 10-day TTL auto-cleanup)
   const fetchComputerJiScores = async () => {
     try {
@@ -1258,7 +1277,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                         <div className="flex items-center gap-1.5">
                           {isUnread && <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0 animate-ping" title="Unread Application (Top)" />}
                           <span>{appId}</span>
-                          {activeTab === 'performer' && isPaid && <span title="Razorpay payment verified" aria-label="Razorpay payment verified" className="text-sky-300"><CheckCircle2 className="h-4 w-4" /></span>}
+                          {activeTab === 'performer' && isPaid && <span title={item.manual_payment_reference ? "Payment recorded manually" : "Razorpay payment verified"} aria-label={item.manual_payment_reference ? "Payment recorded manually" : "Razorpay payment verified"} className="text-sky-300"><CheckCircle2 className="h-4 w-4" /></span>}
                         </div>
                       </td>
 
@@ -1314,7 +1333,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                           <td className="py-3.5 px-4 text-slate-300">{item.city || 'Gorakhpur'}</td>
                           <td className="py-3.5 px-4 font-mono text-[11px]">
                             <div className="space-y-1">
-                              {Number(item.payment_amount || 0) === 0 || item.payment_status === 'FREE_AUDITION_SUBMITTED' ? (
+                              {!isPaid && (Number(item.payment_amount || 0) === 0 || item.payment_status === 'FREE_AUDITION_SUBMITTED') ? (
                                 <>
                                   <span className="px-2 py-0.5 rounded text-[10px] font-black bg-blue-500/20 text-blue-300 border border-blue-500/30 inline-flex items-center gap-1">
                                     <CheckCircle2 className="w-3 h-3 text-blue-400" /> FREE AUDITION
@@ -1328,11 +1347,11 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                                   const isVerifiedPayment = hasVerifiedPerformerPayment(item);
 
                                   if (isVerifiedPayment) {
-                                    const displayPaymentId = item.verified_payment_id;
+                                    const displayPaymentId = item.manual_payment_reference || item.verified_payment_id;
                                     return (
                                       <>
                                         <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 inline-flex items-center gap-1">
-                                          <CheckCircle2 className="w-3 h-3 text-emerald-400" /> ₹{item.payment_amount} PAID
+                                          <CheckCircle2 className="w-3 h-3 text-emerald-400" /> ₹{item.payment_amount} {item.manual_payment_reference ? 'PAID MANUALLY' : 'PAID'}
                                         </span>
                                         <div className="flex items-center gap-1">
                                           <span className="text-[10px] font-mono text-amber-300 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800 truncate max-w-[130px]" title={displayPaymentId}>
@@ -1354,6 +1373,9 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                               )}
                               {activeTab === 'performer' && !isPaid && (
                                 <button onClick={async () => { const waTab = window.open('about:blank', '_blank'); if (!waTab) { window.alert('Please allow pop-ups for this site, then click Get Paid again.'); return; } waTab.document.title = 'Opening WhatsApp…'; waTab.document.body.innerHTML = '<p style="font-family:system-ui;padding:24px">Generating payment link and opening WhatsApp…</p>'; try { const res = await fetch('/api/malik/performer-payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: item.app_id || item.id, amount: 799 }) }); const json = await res.json(); if (!res.ok || !json.success || !json.whatsappUrl) throw new Error(json.error || 'Could not create payment link'); waTab.location.href = json.whatsappUrl; } catch (e: any) { waTab.close(); window.alert(e.message || 'Could not create payment link'); } }} className="mt-2 px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-[10px] font-extrabold inline-flex items-center gap-1.5" title="Create ₹799 payment link and immediately open WhatsApp"><CreditCard className="w-3 h-3" /> Get Paid ₹799</button>
+                              )}
+                              {activeTab === 'performer' && !isPaid && !['REFUNDED', 'REJECTED_REFUND'].includes(item.status) && item.payment_status !== 'REFUNDED' && (
+                                <button onClick={() => handleMarkPaid(item)} disabled={markingPaid !== null} className="ml-2 mt-2 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-2.5 py-1.5 text-[10px] font-bold text-emerald-200 disabled:opacity-50" title="Record a scanner / QR payment you have received">{markingPaid === item.app_id ? 'Saving…' : 'Mark as Paid'}</button>
                               )}
                               {activeTab === 'performer' && <button onClick={() => handleSendDetailForm(item)} className="ml-2 mt-2 inline-flex items-center gap-1.5 rounded-lg border border-orange-400/40 bg-orange-500/15 px-2.5 py-1.5 text-[10px] font-bold text-orange-200" title="Send pre-filled detail form on WhatsApp" aria-label={`Send detail form to ${name}`}><FileText className="h-3.5 w-3.5" /> Detail Form</button>}
                             </div>

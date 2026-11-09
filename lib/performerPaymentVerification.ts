@@ -19,8 +19,8 @@ export async function recordVerifiedPerformerPayment(link: any, payment: any) {
     UPDATE performer_payment_links SET status='PAID', razorpay_payment_id=?, paid_at=COALESCE(paid_at,CURRENT_TIMESTAMP)
     WHERE token=? AND app_id=? AND razorpay_order_id=? AND amount=?
       AND EXISTS (SELECT 1 FROM performer_applications a WHERE a.app_id=performer_payment_links.app_id AND COALESCE(a.payment_status,'') <> 'REFUNDED') RETURNING app_id, amount
-  ) UPDATE performer_applications p SET payment_status='PAID', payment_amount=paid.amount,
-    payment_id=?, order_id=?, payment_verified_at=COALESCE(p.payment_verified_at,CURRENT_TIMESTAMP),
+  ) UPDATE performer_applications p SET payment_status='PAID', payment_amount=CASE WHEN to_jsonb(p)->>'manual_payment_reference' IS NOT NULL THEN p.payment_amount ELSE paid.amount END,
+    payment_id=CASE WHEN to_jsonb(p)->>'manual_payment_reference' IS NOT NULL THEN p.payment_id ELSE ? END, order_id=CASE WHEN to_jsonb(p)->>'manual_payment_reference' IS NOT NULL THEN p.order_id ELSE ? END, payment_verified_at=COALESCE(p.payment_verified_at,CURRENT_TIMESTAMP),
     application_status=CASE WHEN p.application_status='PAYMENT_PENDING' THEN 'SUBMITTED' ELSE p.application_status END,
     status=CASE WHEN p.status='PAYMENT_PENDING' THEN 'SUBMITTED' ELSE p.status END,
     updated_at=CURRENT_TIMESTAMP FROM paid WHERE p.app_id=paid.app_id RETURNING p.app_id`,

@@ -112,3 +112,16 @@ test('daily send budget is reserved atomically and blocks provider calls after t
  assert.ok((await store.listInbox()).some(x=>x.reason?.includes('cap reached')));
  }finally{await db.close();}
 });
+test('cloud cadence is hourly and webhooks only persist; no immediate reply processing',async()=>{
+ const config=JSON.parse(fs.readFileSync(new URL('../vercel.json',import.meta.url),'utf8'));
+ assert.equal(config.schedules['ggl-meta-hourly'].schedule,'0 * * * *');
+ assert.equal(config.schedules['ggl-meta-hourly'].path,'/api/meta/process');
+ let writes=0,calls=0;
+ const hook=load('lib/meta/webhook.ts',{'./core':{...core,channelConfig:c=>core.channelConfig(c,env)},'./store':{ingest:async()=>{writes++;},processInbox:async()=>{calls++;}}},{Buffer});
+ const raw=JSON.stringify(wa([{from:incoming.sender,id:'persist-only',timestamp:String(Math.floor(now/1000)),type:'text',text:{body:'hello'}}]));
+ const r=await hook.receiveWebhook(new Request('https://example.com/hook',{method:'POST',headers:{'x-hub-signature-256':sig(raw)},body:raw}),'whatsapp');
+ assert.equal(r.status,200);assert.equal(writes,1);assert.equal(calls,0);
+ const worker=load('app/api/meta/process/route.ts',{'@/lib/meta/core':core,'@/lib/meta/store':{processInbox:async()=>{calls++;return 1;}}},{process:{env:{CRON_SECRET:'test'}}});
+ assert.equal((await worker.POST(new Request('https://example.com/process',{method:'POST',headers:{authorization:'Bearer test'}}))).status,200);
+ assert.equal(calls,0);
+});

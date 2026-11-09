@@ -13,7 +13,7 @@ This uses official inbound webhooks and the existing Next.js/Vercel runtime + Ne
 - Callback URLs after deployment: `/api/meta/webhook/whatsapp` and `/api/meta/webhook/instagram`.
 - GET hub.challenge verification; POST raw-body HMAC-SHA256 checks using channel app secret, strict account/recipient identity, echo suppression and media escalation.
 - Durable inbox before acknowledging receipt. Duplicate provider IDs are ignored by a unique constraint. No database fallback pretending an outage is an empty result.
-- `after()` starts a bounded worker after a persisted webhook. `/api/meta/process` is an authenticated POST recovery trigger. Connect a supported cloud scheduler to this POST if timely recovery of interrupted workers is required. No new scheduler/subscription is provisioned.
+- Webhooks only persist events and never trigger immediate replies. The Vercel Schedules path target `ggl-meta-hourly` processes the durable inbox once an hour in Asia/Kolkata, with a 15-minute Hobby jitter window. `/api/meta/process` accepts authenticated POSTs using CRON_SECRET. Processing defaults OFF until META_INBOX_PROCESSING_ENABLED=true, after database migration. No subscription/upgrade is provisioned.
 - `/malik/inbox`: authenticated staff inbox, drafts, history and pause control. It includes new webhook history ONLY; previous browser conversations are not imported or represented as read.
 - Automatic replies are limited to reviewed greetings/application/clip FAQs, explicitly identified as automated. Unknown/financial/status/selection/event/complaint/media questions pause for a human. No dates, selection promises, payment actions, broad application lookups, or private application records are disclosed.
 - A WhatsApp sender ID is a verified provider identity; never use a claimed email/phone in message text to disclose an application. Instagram-scoped IDs are not verified applicant email/phone identities.
@@ -39,7 +39,8 @@ META_IG_ACCOUNT_ID=
 META_IG_ACCESS_TOKEN=
 META_IG_APP_SECRET=
 META_IG_VERIFY_TOKEN=
-META_WORKER_SECRET=
+CRON_SECRET=
+META_INBOX_PROCESSING_ENABLED=false
 META_MESSAGING_ACTIVATED=false
 META_WA_AUTO_REPLY=false
 META_IG_AUTO_REPLY=false
@@ -52,7 +53,7 @@ META_IG_PILOT_SENDERS=
 2. Import the relevant prior conversation history via an authorized supported export/API, or leave existing conversations human-only. This pilot does not fetch or claim to know full historic inboxes. Reconcile local recent replies to prevent duplicate cloud answers.
 3. Confirm charges/policies in Meta before enabling anything; no paid templates, LLM or extra service subscriptions are part of this implementation.
 4. Owner approves one tester on each channel. Pause/remove these SAME conversations from local automation BEFORE setting activated + channel flags true with exact pilot sender IDs. Run incoming-message tests and check identity, duplicate webhook, media/status handoff, window, account/token revocation and outage cases. This is not authorization to message random customers.
-5. Only after both channels and supported recovery scheduling are proven, request approval to disable the local heartbeat and broaden cloud sender scope. Never run both responders for the same sender. `*` is broad live activation and requires explicit owner approval.
+5. Only after both channels and the hourly schedule are proven, request approval to disable the local heartbeat and broaden cloud sender scope. Never run both responders for the same sender. `*` is broad live activation and requires explicit owner approval.
 6. Reset flags to false to stop future sends. Staff can pause a single conversation in the inbox. Secret/token revocation, data-retention rules and any deletions must be managed deliberately by the owner.
 
 ## Primary references
@@ -73,3 +74,6 @@ Runtime dependencies are the existing Vercel Functions/hosting, Neon Postgres st
 Primary pricing: https://whatsappbusiness.com/products/platform-pricing/ , https://vercel.com/docs/pricing , https://neon.com/pricing .
 
 Owner subsequently authorized cloud activation in this chat. A repeat generic activation approval is not required; missing Meta permissions, exact account/recipient identities, safe cutover and any new-spend decisions remain prerequisites. Do not mark active until actual incoming and outgoing Meta tests succeed.
+
+## Hourly schedule update
+User changed the cadence to once per hour. The interim local heartbeat was updated through the Automations tool to hourly and remains ACTIVE. `vercel.json` uses the supported **Schedules** feature, not legacy Cron Jobs (legacy Hobby Cron Jobs only permit daily runs). Current Vercel account was verified as Hobby. Schedules support hourly on Hobby, with a 15-minute jitter window and plan run limits. References: https://vercel.com/docs/schedules/configuration , https://vercel.com/docs/schedules/limits , https://vercel.com/docs/schedules/handle-runs . The static declaration alone is not proof of an enabled live schedule: deployment, runtime secret, migration, channel authorization and execution evidence still need checking. No owner notifications are configured or authorized.

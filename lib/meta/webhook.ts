@@ -1,7 +1,6 @@
-import { after } from 'next/server';
 import { channelConfig, parseIncoming, secureEqual, verifySignature } from './core';
 import type { Channel } from './core';
-import { ingest, processInbox } from './store';
+import { ingest } from './store';
 const headers = { 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff' };
 export function verifyWebhook(req:Request, channel:Channel) {
   const c=channelConfig(channel), url=new URL(req.url);
@@ -31,7 +30,7 @@ export async function receiveWebhook(req:Request, channel:Channel) {
     // Persist before 200. A DB failure returns 503 so Meta can redeliver the webhook.
     if(events.length) {
       await ingest(events);
-      after(async()=>{try{await processInbox();}catch{console.error('Meta inbox worker needs attention');}});
+      // Hourly cloud schedule processes the durable inbox; never reply immediately here.
     }
     return Response.json({received:true},{headers});
   } catch {

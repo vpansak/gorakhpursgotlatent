@@ -1,7 +1,7 @@
 'use client';
 
 import { createPortal } from 'react-dom';
-import { performerDetailFields, hasVerifiedPerformerPayment, combinedStageIntroduction } from '@/lib/performerDetailsFields';
+import { performerDetailFields, hasVerifiedPerformerPayment, canEditManualPerformerPayment, combinedStageIntroduction } from '@/lib/performerDetailsFields';
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import {
@@ -77,13 +77,21 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
 
   const [markingPaid, setMarkingPaid] = useState<string | null>(null);
   const [manualPaymentItem, setManualPaymentItem] = useState<any | null>(null);
+  const [editingManualPayment, setEditingManualPayment] = useState(false);
+  const [manualPaymentStatus, setManualPaymentStatus] = useState('PAID');
+  const [manualPaymentMethod, setManualPaymentMethod] = useState('');
+  const [manualCorrectionReason, setManualCorrectionReason] = useState('');
   const [manualAmount, setManualAmount] = useState('799');
   const [manualReference, setManualReference] = useState('');
   const [manualConfirmed, setManualConfirmed] = useState(false);
   const [manualPaymentError, setManualPaymentError] = useState('');
-  const openManualPayment = (item: any) => {
-    setManualAmount('799');
-    setManualReference('');
+  const openManualPayment = (item: any, editing = false) => {
+    setEditingManualPayment(editing);
+    setManualPaymentStatus('PAID');
+    setManualPaymentMethod(editing ? item.manual_payment_method || '' : '');
+    setManualCorrectionReason('');
+    setManualAmount(editing ? String(item.payment_amount) : '799');
+    setManualReference(editing ? item.manual_payment_reference || '' : '');
     setManualConfirmed(false);
     setManualPaymentError('');
     setManualPaymentItem(item);
@@ -92,17 +100,23 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     event.preventDefault();
     if (!manualPaymentItem || markingPaid) return;
     const amount = Number(manualAmount);
-    if (!Number.isFinite(amount) || amount <= 0 || amount > 1000000 || !manualReference.trim() || !manualConfirmed) {
+    if ((manualPaymentStatus === 'PAID' && (!Number.isFinite(amount) || amount <= 0 || amount > 1000000 || !manualReference.trim())) || !manualConfirmed || (editingManualPayment && !manualCorrectionReason.trim())) {
       setManualPaymentError('Enter a valid amount and UTR/reference, then confirm receipt.');
       return;
     }
     setMarkingPaid(manualPaymentItem.app_id);
     setManualPaymentError('');
     try {
-      const res = await fetch('/api/malik/performer-payment/manual', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: manualPaymentItem.app_id, amount, reference: manualReference.trim() }) });
+      const res = await fetch('/api/malik/performer-payment/manual', { method: editingManualPayment ? 'PATCH' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: manualPaymentItem.app_id, amount, reference: manualReference.trim(), method: manualPaymentMethod, status: manualPaymentStatus, reason: manualCorrectionReason }) });
       const json = await res.json();
       if (!res.ok || !json.success) throw new Error(json.error || 'Unable to record payment');
       await refreshAllData();
+      if (selectedItem?.app_id === manualPaymentItem.app_id) {
+        const refreshed = await fetch('/api/malik/applications?type=performer');
+        const latest = await refreshed.json();
+        const updated = latest.items?.find((item: any) => item.app_id === manualPaymentItem.app_id);
+        if (updated) setSelectedItem(updated);
+      }
       setManualPaymentItem(null);
     } catch (error: any) { setManualPaymentError(error.message || 'Unable to record payment'); }
     finally { setMarkingPaid(null); }
@@ -1606,6 +1620,9 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                   <CheckCheck className="w-3.5 h-3.5" />
                   <span>{!selectedItem.is_read ? 'Mark as Read' : 'Mark as Unread'}</span>
                 </button>
+                {activeTab === 'performer' && canEditManualPerformerPayment(selectedItem) && (
+                  <button type="button" onClick={() => openManualPayment(selectedItem, true)} className="rounded-xl border border-amber-500/40 bg-amber-500/15 px-3 py-1.5 text-xs font-bold text-amber-200" title="Edit manually recorded payment">Edit</button>
+                )}
 
                 <button
                   type="button"
@@ -1970,22 +1987,36 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
       {manualPaymentItem && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4">
           <form onSubmit={handleMarkPaid} role="dialog" aria-modal="true" aria-labelledby="manual-payment-title" className="w-full max-w-md space-y-4 rounded-2xl border border-slate-700 bg-slate-950 p-6 text-white shadow-2xl">
-            <h2 id="manual-payment-title" className="text-xl font-bold">Record Manual Payment</h2>
+            <h2 id="manual-payment-title" className="text-xl font-bold">{editingManualPayment ? 'Edit Manual Payment' : 'Record Manual Payment'}</h2>
             <p className="text-sm text-slate-300">{manualPaymentItem.full_name} · {manualPaymentItem.app_id}</p>
+            {editingManualPayment && <label className="block text-sm">Payment status
+              <select value={manualPaymentStatus} onChange={(e) => { setManualPaymentStatus(e.target.value); setManualConfirmed(false); }} disabled={Boolean(markingPaid)} className="mt-1 w-full rounded-lg border border-slate-600 bg-slate-900 p-3">
+                <option value="PAID">Paid manually</option><option value="UNPAID">Unpaid — correct a mistaken Paid entry</option>
+              </select>
+            </label>}
+            {manualPaymentStatus === 'UNPAID' && <p className="text-sm text-amber-200">This corrects the recorded status only. It does not send a refund.</p>}
+            {manualPaymentStatus === 'PAID' && <>
             <label className="block text-sm">Amount received (₹)
               <input autoFocus required type="number" min="0.01" max="1000000" step="0.01" value={manualAmount} onChange={(e) => setManualAmount(e.target.value)} disabled={Boolean(markingPaid)} className="mt-1 w-full rounded-lg border border-slate-600 bg-slate-900 p-3" />
             </label>
             <label className="block text-sm">Payment UTR / reference
               <input required maxLength={200} value={manualReference} onChange={(e) => setManualReference(e.target.value)} disabled={Boolean(markingPaid)} className="mt-1 w-full rounded-lg border border-slate-600 bg-slate-900 p-3" />
             </label>
+            <label className="block text-sm">Paid via (optional)
+              <input maxLength={80} placeholder="Google Pay / PhonePe / Bank / Cash" value={manualPaymentMethod} onChange={(e) => setManualPaymentMethod(e.target.value)} disabled={Boolean(markingPaid)} className="mt-1 w-full rounded-lg border border-slate-600 bg-slate-900 p-3" />
+            </label>
+            </>}
+            {editingManualPayment && <label className="block text-sm">Correction reason
+              <input required maxLength={1000} value={manualCorrectionReason} onChange={(e) => setManualCorrectionReason(e.target.value)} disabled={Boolean(markingPaid)} className="mt-1 w-full rounded-lg border border-slate-600 bg-slate-900 p-3" />
+            </label>}
             <label className="flex items-start gap-2 text-sm text-slate-300">
               <input required type="checkbox" checked={manualConfirmed} onChange={(e) => setManualConfirmed(e.target.checked)} disabled={Boolean(markingPaid)} className="mt-1" />
-              I checked my account and received this payment.
+              {editingManualPayment ? 'I checked these details and confirm this correction.' : 'I checked my account and received this payment.'}
             </label>
             {manualPaymentError && <p role="alert" className="text-sm text-red-300">{manualPaymentError}</p>}
             <div className="flex justify-end gap-3">
               <button type="button" disabled={Boolean(markingPaid)} onClick={() => setManualPaymentItem(null)} className="rounded-lg bg-slate-800 px-4 py-2 disabled:opacity-50">Cancel</button>
-              <button type="submit" disabled={Boolean(markingPaid) || !manualConfirmed || !manualReference.trim()} className="rounded-lg bg-emerald-600 px-4 py-2 font-bold disabled:opacity-50">{markingPaid ? 'Saving…' : 'Confirm Paid'}</button>
+              <button type="submit" disabled={Boolean(markingPaid) || !manualConfirmed || (manualPaymentStatus === 'PAID' && !manualReference.trim()) || (editingManualPayment && !manualCorrectionReason.trim())} className="rounded-lg bg-emerald-600 px-4 py-2 font-bold disabled:opacity-50">{markingPaid ? 'Saving…' : editingManualPayment ? 'Save Payment Changes' : 'Confirm Paid'}</button>
             </div>
           </form>
         </div>, document.body

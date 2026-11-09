@@ -76,21 +76,35 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
   };
 
   const [markingPaid, setMarkingPaid] = useState<string | null>(null);
-  const handleMarkPaid = async (item: any) => {
-    const rawAmount = window.prompt(`Amount received from ${item.full_name} (₹)`, '799');
-    if (rawAmount === null) return;
-    const amount = Number(rawAmount);
-    if (!Number.isFinite(amount) || amount <= 0) { window.alert('Enter a valid amount'); return; }
-    const reference = window.prompt('Enter the payment UTR / transaction reference after checking receipt in your account');
-    if (!reference?.trim()) return;
-    if (!window.confirm(`Mark ${item.full_name} as paid manually for ₹${amount}? Confirm you received this payment. Reference: ${reference.trim()}`)) return;
-    setMarkingPaid(item.app_id);
+  const [manualPaymentItem, setManualPaymentItem] = useState<any | null>(null);
+  const [manualAmount, setManualAmount] = useState('799');
+  const [manualReference, setManualReference] = useState('');
+  const [manualConfirmed, setManualConfirmed] = useState(false);
+  const [manualPaymentError, setManualPaymentError] = useState('');
+  const openManualPayment = (item: any) => {
+    setManualAmount('799');
+    setManualReference('');
+    setManualConfirmed(false);
+    setManualPaymentError('');
+    setManualPaymentItem(item);
+  };
+  const handleMarkPaid = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!manualPaymentItem || markingPaid) return;
+    const amount = Number(manualAmount);
+    if (!Number.isFinite(amount) || amount <= 0 || amount > 1000000 || !manualReference.trim() || !manualConfirmed) {
+      setManualPaymentError('Enter a valid amount and UTR/reference, then confirm receipt.');
+      return;
+    }
+    setMarkingPaid(manualPaymentItem.app_id);
+    setManualPaymentError('');
     try {
-      const res = await fetch('/api/malik/performer-payment/manual', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: item.app_id, amount, reference }) });
+      const res = await fetch('/api/malik/performer-payment/manual', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: manualPaymentItem.app_id, amount, reference: manualReference.trim() }) });
       const json = await res.json();
       if (!res.ok || !json.success) throw new Error(json.error || 'Unable to record payment');
       await refreshAllData();
-    } catch (error: any) { window.alert(error.message || 'Unable to record payment'); }
+      setManualPaymentItem(null);
+    } catch (error: any) { setManualPaymentError(error.message || 'Unable to record payment'); }
     finally { setMarkingPaid(null); }
   };
 
@@ -1375,7 +1389,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                                 <button onClick={async () => { const waTab = window.open('about:blank', '_blank'); if (!waTab) { window.alert('Please allow pop-ups for this site, then click Get Paid again.'); return; } waTab.document.title = 'Opening WhatsApp…'; waTab.document.body.innerHTML = '<p style="font-family:system-ui;padding:24px">Generating payment link and opening WhatsApp…</p>'; try { const res = await fetch('/api/malik/performer-payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: item.app_id || item.id, amount: 799 }) }); const json = await res.json(); if (!res.ok || !json.success || !json.whatsappUrl) throw new Error(json.error || 'Could not create payment link'); waTab.location.href = json.whatsappUrl; } catch (e: any) { waTab.close(); window.alert(e.message || 'Could not create payment link'); } }} className="mt-2 px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-[10px] font-extrabold inline-flex items-center gap-1.5" title="Create ₹799 payment link and immediately open WhatsApp"><CreditCard className="w-3 h-3" /> Get Paid ₹799</button>
                               )}
                               {activeTab === 'performer' && !isPaid && !['REFUNDED', 'REJECTED_REFUND'].includes(item.status) && item.payment_status !== 'REFUNDED' && (
-                                <button onClick={() => handleMarkPaid(item)} disabled={markingPaid !== null} className="ml-2 mt-2 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-2.5 py-1.5 text-[10px] font-bold text-emerald-200 disabled:opacity-50" title="Record a scanner / QR payment you have received">{markingPaid === item.app_id ? 'Saving…' : 'Mark as Paid'}</button>
+                                <button onClick={() => openManualPayment(item)} disabled={markingPaid !== null} className="ml-2 mt-2 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-2.5 py-1.5 text-[10px] font-bold text-emerald-200 disabled:opacity-50" title="Record a scanner / QR payment you have received">{markingPaid === item.app_id ? 'Saving…' : 'Mark as Paid'}</button>
                               )}
                               {activeTab === 'performer' && <button onClick={() => handleSendDetailForm(item)} className="ml-2 mt-2 inline-flex items-center gap-1.5 rounded-lg border border-orange-400/40 bg-orange-500/15 px-2.5 py-1.5 text-[10px] font-bold text-orange-200" title="Send pre-filled detail form on WhatsApp" aria-label={`Send detail form to ${name}`}><FileText className="h-3.5 w-3.5" /> Detail Form</button>}
                             </div>
@@ -1953,6 +1967,29 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
           </div>
         </div>
       , document.body)}
+      {manualPaymentItem && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4">
+          <form onSubmit={handleMarkPaid} role="dialog" aria-modal="true" aria-labelledby="manual-payment-title" className="w-full max-w-md space-y-4 rounded-2xl border border-slate-700 bg-slate-950 p-6 text-white shadow-2xl">
+            <h2 id="manual-payment-title" className="text-xl font-bold">Record Manual Payment</h2>
+            <p className="text-sm text-slate-300">{manualPaymentItem.full_name} · {manualPaymentItem.app_id}</p>
+            <label className="block text-sm">Amount received (₹)
+              <input autoFocus required type="number" min="0.01" max="1000000" step="0.01" value={manualAmount} onChange={(e) => setManualAmount(e.target.value)} disabled={Boolean(markingPaid)} className="mt-1 w-full rounded-lg border border-slate-600 bg-slate-900 p-3" />
+            </label>
+            <label className="block text-sm">Payment UTR / reference
+              <input required maxLength={200} value={manualReference} onChange={(e) => setManualReference(e.target.value)} disabled={Boolean(markingPaid)} className="mt-1 w-full rounded-lg border border-slate-600 bg-slate-900 p-3" />
+            </label>
+            <label className="flex items-start gap-2 text-sm text-slate-300">
+              <input required type="checkbox" checked={manualConfirmed} onChange={(e) => setManualConfirmed(e.target.checked)} disabled={Boolean(markingPaid)} className="mt-1" />
+              I checked my account and received this payment.
+            </label>
+            {manualPaymentError && <p role="alert" className="text-sm text-red-300">{manualPaymentError}</p>}
+            <div className="flex justify-end gap-3">
+              <button type="button" disabled={Boolean(markingPaid)} onClick={() => setManualPaymentItem(null)} className="rounded-lg bg-slate-800 px-4 py-2 disabled:opacity-50">Cancel</button>
+              <button type="submit" disabled={Boolean(markingPaid) || !manualConfirmed || !manualReference.trim()} className="rounded-lg bg-emerald-600 px-4 py-2 font-bold disabled:opacity-50">{markingPaid ? 'Saving…' : 'Confirm Paid'}</button>
+            </div>
+          </form>
+        </div>, document.body
+      )}
     </div>
   );
 }

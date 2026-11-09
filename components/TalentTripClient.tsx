@@ -60,7 +60,7 @@ export default function TalentTripClient() {
   return <main className="min-h-screen bg-[#07080e] text-white">
     <section id="interest-form" className="scroll-mt-24 px-4 py-10 sm:px-6">
       <div className="mx-auto max-w-4xl">
-        <div className="mb-6 text-center"><p className="text-xs font-black uppercase tracking-[.25em] text-amber-400">GGL Talent Trip • Free Interest Registration</p><h1 className="mt-3 text-3xl font-black sm:text-4xl">I’M INTERESTED</h1><p className="mt-3 text-sm text-slate-400">Fill out this simple form. If selected, our team will contact you on WhatsApp.</p></div>
+        <div className="mb-6 text-center"><p className="text-xs font-black uppercase tracking-[.25em] text-amber-400">GGL Talent Trip • Free Interest Registration</p><h1 className="mt-3 text-3xl font-black sm:text-4xl">GGL Talent Trip — Travel, Create & Perform</h1><p className="mt-3 text-sm text-slate-400">Fill out this simple form. If selected, our team will contact you on WhatsApp.</p></div>
         <form onSubmit={submit} className={appId ? "hidden" : "space-y-6 rounded-3xl border border-white/10 bg-white/[.035] p-5 sm:p-8"}>
           {error && <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{error}</p>}
           <div className="grid gap-4 sm:grid-cols-2">

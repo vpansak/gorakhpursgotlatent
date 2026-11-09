@@ -56,5 +56,5 @@ export function validatePerformerDetails(input: Record<string, unknown>) {
 }
 
 export function hasVerifiedPerformerPayment(item: Record<string, any>) {
-  return ['PAID', 'PAYMENT_VERIFIED'].includes(item.payment_status) && Boolean(item.verified_payment_id) && !['REFUNDED', 'REJECTED_REFUND'].includes(item.status);
+  return ['PAID', 'PAYMENT_VERIFIED'].includes(item.payment_status) && (Boolean(item.verified_payment_id) || (Boolean(item.manual_payment_reference) && Boolean(item.manual_payment_recorded_by) && Boolean(item.manual_payment_recorded_at) && Number(item.payment_amount) > 0)) && !['REFUNDED', 'REJECTED_REFUND'].includes(item.status);
 }

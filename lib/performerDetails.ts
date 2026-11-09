@@ -9,7 +9,12 @@ export function ensurePerformerDetailsTable() {
     answers JSONB NOT NULL DEFAULT '{}'::jsonb,
     submitted_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
-  )`).then(() => {}).catch((error) => { ready = undefined; throw error; });
+  )`).then(async () => {
+    await db.queryStrict(`ALTER TABLE performer_applications
+      ADD COLUMN IF NOT EXISTS manual_payment_reference TEXT,
+      ADD COLUMN IF NOT EXISTS manual_payment_recorded_by TEXT,
+      ADD COLUMN IF NOT EXISTS manual_payment_recorded_at TIMESTAMPTZ`);
+  }).catch((error) => { ready = undefined; throw error; });
 }
 function secret() {
   const signingSecret = process.env.PERFORMER_DETAIL_LINK_SECRET || process.env.JWT_SECRET;

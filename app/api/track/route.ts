@@ -57,11 +57,7 @@ export async function GET(req: Request) {
     const perWhere = getWhereClause('email');
     if (perWhere.clause) {
       result = await db.queryOneStrict(`
-        SELECT app_id, full_name, email, mobile_number, whatsapp_number, city, age,
-               performance_category, performance_title, performance_type, performer_count,
-               performance_duration, performance_language, special_requirements,
-               payment_status, application_status, status, payment_amount, order_id,
-               payment_id, payment_verified_at, created_at, updated_at
+        SELECT app_id, application_status, status, created_at, updated_at
         FROM performer_applications
         WHERE ${perWhere.clause}
         ORDER BY created_at DESC LIMIT 1
@@ -75,7 +71,7 @@ export async function GET(req: Request) {
       const teamWhere = getWhereClause('email');
       if (teamWhere.clause) {
         result = await db.queryOneStrict(`
-          SELECT app_id, full_name, email, mobile_number, address, status, created_at, updated_at
+          SELECT app_id, status, created_at, updated_at
           FROM team_applications
           WHERE ${teamWhere.clause}
           ORDER BY created_at DESC LIMIT 1
@@ -89,7 +85,7 @@ export async function GET(req: Request) {
         const guestWhere = getWhereClause('email');
         if (guestWhere.clause) {
           result = await db.queryOneStrict(`
-            SELECT app_id, full_name, email, category, city, status, created_at, updated_at
+            SELECT app_id, status, created_at, updated_at
             FROM guest_applications
             WHERE ${guestWhere.clause}
             ORDER BY created_at DESC LIMIT 1
@@ -103,7 +99,7 @@ export async function GET(req: Request) {
           const sponsorWhere = getWhereClause('biz_email');
           if (sponsorWhere.clause) {
             result = await db.queryOneStrict(`
-              SELECT app_id, company_name, biz_email AS email, contact_person, sponsorship_type, status, created_at, updated_at
+              SELECT app_id, status, created_at, updated_at
               FROM sponsor_applications
               WHERE ${sponsorWhere.clause}
               ORDER BY created_at DESC LIMIT 1
@@ -117,7 +113,7 @@ export async function GET(req: Request) {
             const eventWhere = getWhereClause('email');
             if (eventWhere.clause) {
               result = await db.queryOneStrict(`
-                SELECT app_id, org_name, email, contact_person, city, event_date, status, created_at, updated_at
+                SELECT app_id, status, created_at, updated_at
                 FROM event_booking_applications
                 WHERE ${eventWhere.clause}
                 ORDER BY created_at DESC LIMIT 1
@@ -131,9 +127,7 @@ export async function GET(req: Request) {
               const ticketWhere = getWhereClause('customer_email', 'order_number');
               if (ticketWhere.clause) {
                 result = await db.queryOneStrict(`
-                  SELECT order_number AS app_id, customer_name AS full_name, customer_email AS email,
-                         customer_phone AS mobile_number, total_amount, payment_status AS status,
-                         created_at, updated_at
+                  SELECT order_number AS app_id, payment_status AS status, created_at, updated_at
                   FROM ticket_orders
                   WHERE ${ticketWhere.clause}
                   ORDER BY created_at DESC LIMIT 1
@@ -160,7 +154,7 @@ export async function GET(req: Request) {
 
     // Fetch status history timeline
     const history = await db.queryStrict(
-      'SELECT old_status, new_status, reason, created_at FROM application_status_history WHERE UPPER(app_id) = ? ORDER BY created_at ASC',
+      'SELECT new_status, created_at FROM application_status_history WHERE UPPER(app_id) = ? ORDER BY created_at ASC',
       [matchedAppId]
     );
 

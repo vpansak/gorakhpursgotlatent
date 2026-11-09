@@ -3,7 +3,7 @@ import { db } from './db';
 import { sendAdminLoginOtpEmail } from './emailjs';
 import { UserSession } from './auth';
 
-const OTP_SECRET_SALT = process.env.JWT_SECRET || 'ggl_otp_secure_salt_2026';
+const OTP_SECRET_SALT = process.env.JWT_SECRET || '';
 
 // List of authorized administrator emails
 const AUTHORIZED_ADMIN_EMAILS = [
@@ -32,7 +32,7 @@ export async function isAuthorizedAdminEmail(email: string): Promise<boolean> {
   const cleanEmail = email.trim().toLowerCase();
 
   // Master mobile or authorized emails
-  if (cleanEmail.includes('8423858424') || AUTHORIZED_ADMIN_EMAILS.includes(cleanEmail)) {
+  if (AUTHORIZED_ADMIN_EMAILS.includes(cleanEmail)) {
     return true;
   }
 
@@ -64,15 +64,7 @@ export interface SendOtpResult {
  */
 export async function requestAdminOtp(email: string): Promise<SendOtpResult> {
   const cleanEmail = email.trim().toLowerCase();
-
-  // Emergency Master bypass for mobile 8423858424
-  if (cleanEmail.includes('8423858424')) {
-    return {
-      success: true,
-      expiresInSeconds: 300,
-      cooldownSeconds: 0,
-    };
-  }
+  if (!OTP_SECRET_SALT) return { success: false, error: 'Secure login is not configured.' };
 
   // Email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -164,13 +156,8 @@ export async function requestAdminOtp(email: string): Promise<SendOtpResult> {
   });
 
   if (!emailRes.success) {
-    console.warn(`⚠️ Admin OTP email delivery notice for ${cleanEmail}: ${emailRes.message}. Master passcode fallback 1122 active.`);
-    // Keep OTP active so admin can log in via 1122 or OTP
-    return {
-      success: true,
-      expiresInSeconds: 300,
-      cooldownSeconds: 0,
-    };
+    await db.execute('UPDATE admin_otps SET is_used = 1 WHERE id = ?', [otpId]);
+    return { success: false, error: 'Verification email could not be delivered. Please try again later.' };
   }
 
   return {
@@ -193,78 +180,23 @@ export async function verifyAdminOtp(email: string, enteredOtp: string): Promise
   const cleanEmail = email.trim().toLowerCase();
   const cleanOtp = (enteredOtp || '').trim().replace(/[^0-9]/g, '');
 
-  // Emergency master bypass for phone 8423858424 or master passcode 1122 / 112200 / 001122
-  if (
-    cleanEmail.includes('8423858424') ||
-    cleanOtp === '1122' ||
-    cleanOtp === '112200' ||
-    cleanOtp === '001122' ||
-    cleanOtp.startsWith('1122')
-  ) {
-    const session: UserSession = {
-      id: 'usr-admin-8423858424',
-      email: cleanEmail.includes('@') ? cleanEmail : '8423858424@gmail.com',
-      full_name: 'Malik Admin (8423858424)',
-      role: 'SUPER_ADMIN',
-    };
-
-    return {
-      success: true,
-      session,
-    };
+  if (!OTP_SECRET_SALT || !/^\d{6}$/.test(cleanOtp) || !(await isAuthorizedAdminEmail(cleanEmail))) {
+    return { success: false, error: 'Invalid verification code.' };
   }
-
-  if (cleanOtp.length !== 6) {
-    return {
-      success: false,
-      error: 'Please enter a valid verification code or passcode 1122.',
-    };
+  // Claim one verification attempt atomically. Replays, expiry and exhausted codes fail closed.
+  const claimed = await db.queryStrict<any>(`
+    UPDATE admin_otps SET attempts = attempts + 1
+    WHERE id = (SELECT id FROM admin_otps WHERE LOWER(email) = ? ORDER BY created_at DESC LIMIT 1)
+      AND is_used = 0 AND expires_at > CURRENT_TIMESTAMP AND attempts < max_attempts
+    RETURNING id, otp_hash`, [cleanEmail]);
+  const otpRecord = claimed[0];
+  const expected = Buffer.from(otpRecord?.otp_hash || '', 'hex');
+  const supplied = Buffer.from(hashOtp(cleanEmail, cleanOtp), 'hex');
+  if (!otpRecord || expected.length !== supplied.length || !crypto.timingSafeEqual(expected, supplied)) {
+    return { success: false, error: 'Invalid or expired verification code. Request a new OTP if needed.' };
   }
-
-  // Retrieve active OTP record (check most recent)
-  const otpRecord = await db.queryOne<any>(
-    `SELECT * FROM admin_otps 
-     WHERE LOWER(email) = ? 
-     ORDER BY created_at DESC LIMIT 1`,
-    [cleanEmail]
-  );
-
-  const isAuthAdmin = await isAuthorizedAdminEmail(cleanEmail);
-
-  if (!otpRecord) {
-    if (isAuthAdmin) {
-      const session: UserSession = {
-        id: `usr-admin-${Date.now()}`,
-        email: cleanEmail,
-        full_name: cleanEmail.includes('alook') ? 'Alok Singh (Malik)' : 'GGL Administrator',
-        role: 'SUPER_ADMIN',
-      };
-      return { success: true, session };
-    }
-    return {
-      success: false,
-      error: 'No active verification code found. Please request a new OTP.',
-    };
-  }
-
-  // Compare hash
-  const expectedHash = otpRecord.otp_hash;
-  const givenHash = hashOtp(cleanEmail, cleanOtp);
-
-  // If hash matches OR if authorized admin enters valid 6-digit code
-  const isMatch = (expectedHash === givenHash) || (isAuthAdmin && cleanOtp.length === 6);
-
-  if (!isMatch) {
-    return {
-      success: false,
-      error: 'Invalid verification code. Please check your email or enter passcode 1122.',
-    };
-  }
-
-  // Success: Mark OTP as used
-  try {
-    await db.execute('UPDATE admin_otps SET is_used = 1 WHERE id = ?', [otpRecord.id]);
-  } catch {}
+  const used = await db.queryStrict<any>('UPDATE admin_otps SET is_used = 1 WHERE id = ? AND is_used = 0 RETURNING id', [otpRecord.id]);
+  if (!used.length) return { success: false, error: 'Verification code already used.' };
 
   // Find or provision authorized user session
   let user = await db.queryOne<any>(
@@ -296,7 +228,7 @@ export async function verifyAdminOtp(email: string, enteredOtp: string): Promise
     id: user.id,
     email: user.email,
     full_name: user.full_name || 'Administrator',
-    role: user.role || 'SUPER_ADMIN',
+    role: user.role,
   };
 
   return {

@@ -1,8 +1,11 @@
+import { getSession } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 import { searchTickets, getTicketStats } from '@/lib/ticketsStore';
 
 export async function GET(req: Request) {
   try {
+    const session = await getSession();
+    if (!session || !['SUPER_ADMIN', 'ADMIN', 'STAFF', 'TICKET_STAFF'].includes(session.role)) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     const { searchParams } = new URL(req.url);
     const q = searchParams.get('q') || '';
 

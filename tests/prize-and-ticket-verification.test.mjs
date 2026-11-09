@@ -5,8 +5,8 @@ const { winnerPrizeAmount } = load('lib/winnerPrize.ts', {});
 const { verifiedTicketOrder } = load('lib/verifiedTicketOrder.ts', {});
 const order = { id: 'order_1', amount: 44700, currency: 'INR', notes: { quantity: '3' } };
 const payment = { id: 'pay_1', order_id: 'order_1', amount: 44700, currency: 'INR', status: 'captured' };
-test('prize uses exact 3x participation payment including paise', () => {
-  assert.equal(winnerPrizeAmount(799), 2397); assert.equal(winnerPrizeAmount('499.50'),1498.5); assert.equal(winnerPrizeAmount('0.01'),0.03);
+test('prize uses announced 2x participation payment including paise', () => {
+  assert.equal(winnerPrizeAmount(799), 1598); assert.equal(winnerPrizeAmount('499.50'),999); assert.equal(winnerPrizeAmount('0.01'),0.02);
 });
 test('invalid prize amounts never display a payout', () => {
   for (const amount of ['', 'bad', '-2', 0, -1, Infinity, NaN, '10.001', Number.MAX_SAFE_INTEGER]) assert.equal(winnerPrizeAmount(amount),null);

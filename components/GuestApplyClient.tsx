@@ -37,7 +37,7 @@ export default function GuestApplyClient() {
     whyGgl: '',
   });
 
-  useLeadCapture({ source: 'guest', data: formData, customerName: formData.fullName || formData.stageName, mobile: formData.whatsapp, email: formData.email, instagramId: formData.instagramUrl });
+  useLeadCapture({ completed: submitted, source: 'guest', data: formData, customerName: formData.fullName || formData.stageName, mobile: formData.whatsapp, email: formData.email, instagramId: formData.instagramUrl });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

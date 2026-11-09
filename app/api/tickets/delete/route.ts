@@ -1,8 +1,11 @@
+import { getSession } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 import { deleteTicketRecord } from '@/lib/ticketsStore';
 
 export async function DELETE(req: Request) {
   try {
+    const session = await getSession();
+    if (!session || !['SUPER_ADMIN', 'ADMIN'].includes(session.role)) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     const { searchParams } = new URL(req.url);
     let ticketId = searchParams.get('ticketId') || '';
 

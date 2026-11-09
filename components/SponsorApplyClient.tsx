@@ -35,7 +35,7 @@ export default function SponsorApplyClient() {
     message: '',
   });
 
-  useLeadCapture({ source: 'sponsor', data: formData, customerName: formData.contactPerson || formData.companyName, mobile: formData.whatsapp, email: formData.bizEmail });
+  useLeadCapture({ completed: submitted, source: 'sponsor', data: formData, customerName: formData.contactPerson || formData.companyName, mobile: formData.whatsapp, email: formData.bizEmail });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -89,7 +89,7 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
       const res = await fetch('/api/apply/sponsor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -99,14 +99,12 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
       clearTimeout(timeoutId);
 
       const data = await parseResponse(res);
-      if (data.success && data.appId) {
-        assignedAppId = data.appId;
-        setSubmittedAppId(data.appId);
-      }
+      if (!res.ok || !data.success || !data.appId) throw new Error(data.error || 'Application could not be saved. Please try again.');
+      assignedAppId = data.appId;
+      setSubmittedAppId(data.appId);
     } catch (err: any) {
-      console.warn('DB save warning (proceeding to WhatsApp):', err);
-      assignedAppId = `SPN-${Date.now().toString().slice(-6)}`;
-      setSubmittedAppId(assignedAppId);
+      setError(err?.message || 'Application could not be saved. Please try again.');
+      return;
     } finally {
       setLoading(false);
     }

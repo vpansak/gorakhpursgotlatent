@@ -40,7 +40,7 @@ export default function InstagramShowcase({ initialFeed }: { initialFeed: Instag
           <p className="mt-5 font-mono text-6xl font-black tracking-tight text-amber-300 sm:text-7xl">{views}</p>
           <p className="mt-1 text-lg font-bold text-white">views. One unforgettable GGL moment.</p>
           <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300 sm:text-base">Brijesh Birju के इस musical moment को इतना प्यार देने के लिए शुक्रिया! हर view, हर share और हर मुस्कान—ये जश्न पूरी GGL family के नाम। यहाँ कुछ भी हो सकता है!</p>
-          <p className="mt-4 text-xs text-amber-100/70">{feed.featured.views.toLocaleString('en-IN')} views · {feed.featured.live?'Instagram sync':'Verified on Instagram'} · {dateLabel(feed.featured.checkedAt)}</p>
+          <p className="mt-4 text-xs text-amber-100/70">{feed.featured.source.includes('approximate') ? 'लगभग ' : ''}{feed.featured.views.toLocaleString('en-IN')} views · {feed.featured.live?'Instagram sync':feed.featured.source.includes('approximate')?'GGL milestone update':'Verified on Instagram'} · {dateLabel(feed.featured.checkedAt)}</p>
           <a href={feed.featured.permalink} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-black text-black">Watch on Instagram <ExternalLink className="h-4 w-4"/></a>
         </div>
         <div className="mx-auto w-full max-w-[350px] overflow-hidden rounded-2xl border border-amber-400/25 bg-[#090909]">

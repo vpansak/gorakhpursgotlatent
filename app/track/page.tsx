@@ -100,8 +100,6 @@ export default function TrackPage() {
                 </div>
                 <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
                   <div><span className="text-slate-500">Application ID</span><p className="mt-1 font-mono font-bold text-amber-300">{application.app_id || '—'}</p></div>
-                  <div><span className="text-slate-500">Name</span><p className="mt-1 font-semibold">{application.full_name || application.company_name || application.contact_person || '—'}</p></div>
-                  <div><span className="text-slate-500">Email</span><p className="mt-1 break-all text-slate-200">{application.email || '—'}</p></div>
                   <div><span className="text-slate-500">Submitted</span><p className="mt-1 text-slate-200">{application.created_at ? new Date(application.created_at).toLocaleString('en-IN') : '—'}</p></div>
                 </div>
               </div>

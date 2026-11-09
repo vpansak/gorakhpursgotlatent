@@ -36,7 +36,7 @@ export async function GET(req: Request) {
 
     query += ' ORDER BY o.created_at DESC';
 
-    const orders = await db.query(query, params);
+    const orders = await db.queryStrict(query, params);
 
     return NextResponse.json({ success: true, orders: currentEpisodeRows(orders, 'orders') });
   } catch (err: any) {

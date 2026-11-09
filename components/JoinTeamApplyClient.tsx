@@ -47,7 +47,7 @@ export default function JoinTeamApplyClient() {
   const [loading, setLoading] = useState(false);
   const [submittedAppId, setSubmittedAppId] = useState('');
 
-  useLeadCapture({ source: 'team', data: formData, customerName: formData.name, mobile: formData.mobile, email: formData.email, instagramId: formData.instagram });
+  useLeadCapture({ completed: submitted, source: 'team', data: formData, customerName: formData.name, mobile: formData.mobile, email: formData.email, instagramId: formData.instagram });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -113,7 +113,7 @@ ${data.about.trim()}
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
       const res = await fetch('/api/apply/join-team', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -122,14 +122,12 @@ ${data.about.trim()}
       });
       clearTimeout(timeoutId);
       const data = await parseResponse(res);
-      if (data.success && data.appId) {
-        assignedAppId = data.appId;
-        setSubmittedAppId(data.appId);
-      }
-    } catch (err) {
-      console.warn('API save warning (proceeding to WhatsApp):', err);
-      assignedAppId = `EVT-${Date.now().toString().slice(-6)}`;
-      setSubmittedAppId(assignedAppId);
+      if (!res.ok || !data.success || !data.appId) throw new Error(data.error || 'Application could not be saved. Please try again.');
+      assignedAppId = data.appId;
+      setSubmittedAppId(data.appId);
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'Application could not be saved. Please try again.');
+      return;
     } finally {
       setLoading(false);
     }

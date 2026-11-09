@@ -498,14 +498,9 @@ export async function queryOne<T = any>(sql: string, params: any[] = []): Promis
 }
 
 export async function execute(sql: string, params: any[] = []): Promise<{ rowCount: number }> {
-  try {
-    await ensureDatabaseSchema();
-    const rows = await executeWithRetry(sql, params);
-    return { rowCount: Array.isArray(rows) ? rows.length : 0 };
-  } catch (err) {
-    console.warn('db.execute notice:', err);
-    return { rowCount: 0 };
-  }
+  await ensureDatabaseSchema();
+  const rows = await executeWithRetry(sql, params, 2, true);
+  return { rowCount: Array.isArray(rows) ? rows.length : 0 };
 }
 
 export const db: AppDatabase = {

@@ -1,3 +1,4 @@
+import { hasOperatorAccess } from '@/lib/operatorAccess';
 import { currentEpisodeRows } from '@/lib/episodeVisibility';
 import { NextResponse } from 'next/server';
 import {
@@ -10,6 +11,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
+    if (!(await hasOperatorAccess())) return NextResponse.json({ success: false, error: 'Staff authentication required' }, { status: 403 });
     const scores = currentEpisodeRows(await getAllComputerJiScores(), 'computerji');
     return NextResponse.json({
       success: true,
@@ -27,6 +29,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    if (!(await hasOperatorAccess())) return NextResponse.json({ success: false, error: 'Staff authentication required' }, { status: 403 });
     const body = await req.json();
 
     if (!body || typeof body.contestantId !== 'number') {
@@ -72,6 +75,7 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    if (!(await hasOperatorAccess())) return NextResponse.json({ success: false, error: 'Staff authentication required' }, { status: 403 });
     const { searchParams } = new URL(req.url);
     const contestantId = searchParams.get('id');
 

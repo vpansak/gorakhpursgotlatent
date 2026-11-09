@@ -65,7 +65,7 @@ test('scanner shows the stored party size before entry, after confirmation and o
     const hooks = { ...React,
       useState: initial => {
         state++;
-        const value = initial?.status === 'IDLE' ? { status, ticket, message: '', checkedInAt: '2026-10-30T00:00:00Z' } : state === 4 ? true : initial;
+        const value = initial?.status === 'IDLE' ? { status, ticket, message: '', checkedInAt: '2026-10-30T00:00:00Z' } : state === 1 ? true : initial;
         return [value, () => {}];
       },
       useEffect: () => {}, useRef: () => ({ current: null }),

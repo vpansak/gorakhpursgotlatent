@@ -1,3 +1,4 @@
+import { hasOperatorAccess } from '@/lib/operatorAccess';
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
@@ -8,6 +9,7 @@ const VALID_SOUND_IDS = ['THEME', 'ENTRY', 'LAUGH', 'APPLAUSE', 'SUSPENSE', 'WIN
 
 export async function POST(req: NextRequest) {
   try {
+    if (!(await hasOperatorAccess())) return NextResponse.json({ success: false, error: 'Staff authentication required' }, { status: 403 });
     const formData = await req.formData();
     const soundId = formData.get('soundId') as string;
     const file = formData.get('file') as File;

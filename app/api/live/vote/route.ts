@@ -1,3 +1,4 @@
+import { createHmac } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { execute, query, queryOne } from '@/lib/db';
 import { ensureLiveShowTables } from '@/lib/liveShow';
@@ -41,17 +42,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: 'Audience voting is currently closed by the operator.' }, { status: 403 });
     }
 
-    const targetPerformerId = performerId || state?.current_performer_id;
+    if (performerId && performerId !== state?.current_performer_id) return NextResponse.json({ success: false, error: 'Voting is only available for the current performer.' }, { status: 409 });
+    const targetPerformerId = state?.current_performer_id;
     if (!targetPerformerId) {
       return NextResponse.json({ success: false, error: 'No active performer on stage.' }, { status: 400 });
     }
 
-    const voterId = req.headers.get('x-forwarded-for') || 'anon-' + Math.random().toString(36).substring(7);
-    const voteId = `vote-${targetPerformerId}-${Date.now()}-${Math.random().toString(36).substring(5)}`;
-
+    const address = (req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '').split(',')[0].trim();
+    const secret = process.env.JWT_SECRET;
+    if (!address || !secret) return NextResponse.json({ success: false, error: 'Voting verification unavailable. Please try again later.' }, { status: 503 });
+    const voterId = createHmac('sha256', secret).update(address).digest('hex');
+    const voteId = createHmac('sha256', secret).update(`${targetPerformerId}:${voterId}`).digest('hex');
     await execute(`
       INSERT INTO live_audience_votes (id, performer_id, vote_value, voter_id)
-      VALUES (?, ?, ?, ?)
+      VALUES (?, ?, ?, ?) ON CONFLICT (id) DO NOTHING
     `, [voteId, targetPerformerId, 1, voterId]);
 
     const countRow = await queryOne<any>('SELECT COUNT(*) as count FROM live_audience_votes WHERE performer_id = ?', [targetPerformerId]);

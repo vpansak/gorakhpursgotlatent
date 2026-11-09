@@ -168,13 +168,13 @@ export default function AdminOtpLogin({ onSuccess }: AdminOtpLoginProps) {
     setError('');
 
     const fullOtp = otpDigits.join('');
-    if (fullOtp.length < 4) {
-      setError('Please enter your verification code or passcode.');
+    if (fullOtp.length !== 6) {
+      setError('Please enter your verification code.');
       return;
     }
 
-    if (isExpired && !fullOtp.startsWith('1122')) {
-      setError('OTP has expired. Please click SEND NEW OTP or use passcode.');
+    if (isExpired) {
+      setError('OTP has expired. Please click SEND NEW OTP.');
       return;
     }
 

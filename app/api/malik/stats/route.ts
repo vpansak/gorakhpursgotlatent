@@ -11,11 +11,11 @@ export async function GET() {
     }
 
     // Applications breakdown
-    const perfCountRow = await db.queryOne<any>('SELECT COUNT(*) as count FROM performer_applications WHERE created_at > ?', [WEBSITE_ARCHIVE_BEFORE]);
-    const perfPaidRow = await db.queryOne<any>("SELECT COUNT(*) as count FROM performer_applications WHERE created_at > ? AND (payment_status = 'PAID' OR payment_status = 'PAYMENT_VERIFIED')", [WEBSITE_ARCHIVE_BEFORE]);
-    const guestCountRow = await db.queryOne<any>('SELECT COUNT(*) as count FROM guest_applications WHERE created_at > ?', [WEBSITE_ARCHIVE_BEFORE]);
-    const sponsorCountRow = await db.queryOne<any>('SELECT COUNT(*) as count FROM sponsor_applications WHERE created_at > ?', [WEBSITE_ARCHIVE_BEFORE]);
-    const teamCountRow = await db.queryOne<any>('SELECT COUNT(*) as count FROM team_applications');
+    const perfCountRow = await db.queryOneStrict<any>('SELECT COUNT(*) as count FROM performer_applications WHERE created_at > ?', [WEBSITE_ARCHIVE_BEFORE]);
+    const perfPaidRow = await db.queryOneStrict<any>("SELECT COUNT(*) as count FROM performer_applications WHERE created_at > ? AND (payment_status = 'PAID' OR payment_status = 'PAYMENT_VERIFIED')", [WEBSITE_ARCHIVE_BEFORE]);
+    const guestCountRow = await db.queryOneStrict<any>('SELECT COUNT(*) as count FROM guest_applications WHERE created_at > ?', [WEBSITE_ARCHIVE_BEFORE]);
+    const sponsorCountRow = await db.queryOneStrict<any>('SELECT COUNT(*) as count FROM sponsor_applications WHERE created_at > ?', [WEBSITE_ARCHIVE_BEFORE]);
+    const teamCountRow = await db.queryOneStrict<any>('SELECT COUNT(*) as count FROM team_applications');
 
     const perfCount = Number(perfCountRow?.count) || 0;
     const perfPaidCount = Number(perfPaidRow?.count) || 0;

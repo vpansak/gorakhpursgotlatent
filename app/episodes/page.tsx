@@ -27,7 +27,7 @@ const EPISODES: Episode[] = [
     id: 'episode-1-part-1',
     number: 1,
     title: 'Episode 1 — Part 1',
-    description: 'Episode 1 Part 1 premieres on 14 October 2026 at 5:00 PM IST.',
+    description: 'Watch Gorakhpur’s Got Latent Episode 1 Part 1.',
     driveFileId: '1rIrnu06FKCuKLNfdC9rrRGVv72EnTSsP',
     status: 'locked',
   },
@@ -62,13 +62,13 @@ export default function EpisodesPage() {
     : `https://drive.google.com/file/d/${selectedEpisode.driveFileId}/preview`;
 
   useEffect(() => {
-    const episodeNumber = Number(new URLSearchParams(window.location.search).get('episode'));
-    const sharedEpisode = EPISODES.find((episode) => episode.number === episodeNumber && episode.status === 'available');
+    const query = new URLSearchParams(window.location.search);
+    const sharedEpisode = EPISODES.find((episode) => episode.id === query.get('id')) || EPISODES.find((episode) => episode.number === Number(query.get('episode')) && episode.status === 'available');
     if (sharedEpisode) setSelectedId(sharedEpisode.id);
   }, []);
 
   const shareEpisode = async (episode: Episode) => {
-    const url = `${window.location.origin}/episodes?episode=${episode.number}`;
+    const url = `${window.location.origin}/episodes?id=${episode.id}`;
     try {
       if (navigator.share) {
         await navigator.share({ title: `GGL — Episode ${episode.number}`, text: episode.title, url });
@@ -132,7 +132,7 @@ export default function EpisodesPage() {
                 WATCH <span className="text-amber-400">EPISODES</span>
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
-                Watch the official Episode 1 trailer below. Episode 1 Part 1 premieres today at 5:00 PM IST.
+                Watch the official Episode 1 trailer and Part 1 below.
               </p>
             </div>
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-xs font-bold text-emerald-300 sm:text-sm">
@@ -209,7 +209,7 @@ export default function EpisodesPage() {
                       <span className="min-w-0 flex-1">
                         <span className="block text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Episode {episode.number}</span>
                         <span className={`mt-1 block text-sm font-extrabold leading-snug ${active ? 'text-amber-200' : 'text-white'}`}>{episode.title.replace('Episode 1 — ', '')}</span>
-                        <span className="mt-1 block text-[11px] text-slate-400">{episode.id === 'episode-1-trailer' ? '▶ Official YouTube trailer' : episode.status === 'locked' && locked ? '🔒 Tap to see countdown' : episode.status === 'available' ? '▶ Watch now' : 'Coming soon'}</span>
+                        <span className="mt-1 block text-[11px] text-slate-400">{episode.id === 'episode-1-trailer' ? '▶ Official YouTube trailer' : episode.status === 'locked' && locked ? '🔒 Tap to see countdown' : episode.status === 'available' || (episode.status === 'locked' && !locked) ? '▶ Watch now' : 'Coming soon'}</span>
                       </span>
                     </button>
                     <button

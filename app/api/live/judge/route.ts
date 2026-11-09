@@ -1,3 +1,4 @@
+import { scopedSession, scopedSessionToken } from '@/lib/scopedSession';
 import { NextRequest, NextResponse } from 'next/server';
 import { execute, query, queryOne } from '@/lib/db';
 import { ensureLiveShowTables } from '@/lib/liveShow';
@@ -26,8 +27,15 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, error: 'Invalid PIN. Please check your credentials.' }, { status: 401 });
       }
 
-      return NextResponse.json({ success: true, judge });
+      const response = NextResponse.json({ success: true, judge });
+      response.cookies.set('ggl_judge_session', scopedSessionToken('judge', String(judge.id)), { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', path: '/', maxAge: 8 * 60 * 60 });
+      return response;
     }
+
+    const authenticatedJudge = await scopedSession('judge');
+    if (!authenticatedJudge || authenticatedJudge !== String(body.judgeId || '')) return NextResponse.json({ success: false, error: 'Judge authentication required. Please sign in again.' }, { status: 403 });
+    const activeJudge = await queryOne<any>('SELECT id FROM live_judges WHERE id = ? AND is_active = 1', [authenticatedJudge]);
+    if (!activeJudge) return NextResponse.json({ success: false, error: 'Judge access is no longer active.' }, { status: 403 });
 
     // 2. GET CURRENT ACT FOR JUDGE
     if (action === 'GET_ACT') {
@@ -75,6 +83,7 @@ export async function POST(req: NextRequest) {
       }
 
       const state = await queryOne<any>('SELECT * FROM live_show_state WHERE id = ?', ['main']);
+      if (state?.current_performer_id !== performerId) return NextResponse.json({ success: false, error: 'This performer is not the current act. Refresh and try again.' }, { status: 409 });
       if (state?.judges_open === 0) {
         return NextResponse.json({ success: false, error: 'Judge scoring is currently closed by the operator.' }, { status: 403 });
       }

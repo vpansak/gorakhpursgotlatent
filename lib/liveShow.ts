@@ -297,11 +297,11 @@ export async function getFullLiveState(isOperator = false) {
   }
 
   return {
-    state,
+    state: isOperator || isRevealed ? state : state ? { ...state, calculated_average: null } : state,
     currentPerformer: safePerformer,
     performers: safePerformers,
     judges,
-    scores,
+    scores: isOperator || isRevealed ? scores : [],
     scoredJudgesCount,
     totalJudgesCount: judges.length || 5,
     audienceVoteCount,

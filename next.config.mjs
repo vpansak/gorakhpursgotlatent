@@ -12,21 +12,40 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/malik',
+        has: [{ type: 'host', value: 'admin\\.gkpgotlatent\\.in' }],
+        destination: '/',
+        permanent: false,
+      },
+      {
         source: '/tickets',
         destination: '/book-ticket',
         permanent: false,
       },
       {
         source: '/admin',
-        destination: '/malik',
+        destination: 'https://admin.gkpgotlatent.in',
         permanent: false,
       },
       {
         source: '/admin/:path*',
-        destination: '/malik/:path*',
+        destination: 'https://admin.gkpgotlatent.in/malik/:path*',
         permanent: false,
       },
     ];
+  },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/',
+          has: [{ type: 'host', value: 'admin\\.gkpgotlatent\\.in' }],
+          destination: '/malik',
+        },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
   },
 };
 

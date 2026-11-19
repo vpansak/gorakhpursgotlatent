@@ -7,7 +7,7 @@ async function deliverBatch() {
   try {
     if(await managedRecoveryReady()){
       const result=await recoveryRuntime().coordinator.recover();
-      return {pending:Object.values(result.nodes).some(value=>value==='PENDING')?-1:0,delivered:0};
+      return {pending:Object.values(result.nodes).some(value=>value==='PENDING')?(result.pending>0?result.pending:-1):0,delivered:0};
     }
     return await runReplicaMirror(5);
   }

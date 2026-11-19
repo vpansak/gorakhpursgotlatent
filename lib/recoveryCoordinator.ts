@@ -11,15 +11,16 @@ const other=(node:NodeName):NodeName=>node==='neon'?'supabase':'neon';
 export function createRecoveryCoordinator(journal:Journal,nodes:Record<NodeName,Node>,store:Store) {
   async function locked<T>(action:(lease:Lease)=>Promise<T>) {
     let lease:Lease|undefined;
-    for(let i=0;i<30;i++) {
+    const deadline=Date.now()+60000;
+    while(Date.now()<deadline) {
       try {lease=await journal.acquire();break;}
-      catch(error){if(!['JOURNAL_BUSY','CONFLICT'].includes((error as any)?.code||(error as Error)?.message))throw error;await new Promise(resolve=>setTimeout(resolve,100+i*20));}
+      catch(error){if(!['JOURNAL_BUSY','CONFLICT'].includes((error as any)?.code||(error as Error)?.message))throw error;await new Promise(resolve=>setTimeout(resolve,150+Math.floor(Math.random()*150)));}
     }
     if(!lease)throw new Error('RECOVERY_BUSY_RETRY');
     try {if(lease.state.status!=='READY')throw new Error('RECOVERY_NOT_READY');return await action(lease);}
     finally {await journal.release(lease).catch(()=>{});}
   }
-  async function catchUp(lease:Lease,name:NodeName) {
+  async function catchUp(lease:Lease,name:NodeName,limit=Number.POSITIVE_INFINITY) {
     const node=nodes[name];
     if(lease.state.nodes[name].dirty) {
       if(lease.state.pending?.touched.includes(name))throw new Error('UNRESOLVED_NODE_WRITE');
@@ -30,13 +31,13 @@ export function createRecoveryCoordinator(journal:Journal,nodes:Record<NodeName,
     }
     let position=await node.position(lease.state.fence);
     if(position>lease.state.head)throw new Error('UNPUBLISHED_DATABASE_STATE');
-    for(const entry of await journal.entriesAfter(position)) {
+    for(const entry of (await journal.entriesAfter(position)).slice(0,limit)) {
       await journal.renew(lease);
       const document=await store.read(entry.path);
       if(!document||document.value.sequence!==entry.sequence)throw new Error('RECOVERY_ENTRY_MISSING');
       await node.apply(document.value,lease.state.fence);position=entry.sequence;
     }
-    await journal.markSynced(lease,name,position);
+    if(lease.state.nodes[name].applied!==position||lease.state.nodes[name].dirty)await journal.markSynced(lease,name,position);
   }
   async function executePending(lease:Lease,name:NodeName,intent:any) {
     if(!lease.state.pending)throw new Error('NO_RECOVERY_INTENT');
@@ -121,9 +122,9 @@ export function createRecoveryCoordinator(journal:Journal,nodes:Record<NodeName,
       await settle(lease);
       const results:Record<string,string>={};
       for(const name of [lease.state.active,other(lease.state.active)]) {
-        try{await catchUp(lease,name);results[name]='CAUGHT_UP';}catch{results[name]='PENDING';}
+        try{await catchUp(lease,name,3);results[name]=lease.state.nodes[name].applied===lease.state.head&&!lease.state.nodes[name].dirty?'CAUGHT_UP':'PENDING';}catch{results[name]='PENDING';}
       }
-      return {active:lease.state.active,head:lease.state.head,nodes:results};
+      return {active:lease.state.active,head:lease.state.head,nodes:results,pending:Math.max(...Object.values(lease.state.nodes).map(node=>lease.state.head-node.applied))};
     });
   }
   return {read,write,recover};

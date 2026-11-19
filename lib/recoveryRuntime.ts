@@ -21,7 +21,7 @@ export function recoveryRuntime() {
         if(name==='supabase'&&!url.hostname.endsWith('.supabase.com')&&!url.hostname.endsWith('.supabase.co'))throw new Error('INVALID_REPLICA_HOST');
         if(name==='neon'&&!url.hostname.endsWith('.neon.tech'))throw new Error('INVALID_PRIMARY_HOST');
         ['sslmode','sslcert','sslkey','sslrootcert'].forEach(key=>url.searchParams.delete(key));
-        pools[name]=new Pool({connectionString:url.toString(),ssl:name==='supabase'?{ca:SUPABASE_ROOT_CA,rejectUnauthorized:true}:{rejectUnauthorized:true},max:2,connectionTimeoutMillis:5000,query_timeout:25000,statement_timeout:20000,idleTimeoutMillis:10000,allowExitOnIdle:true});
+        pools[name]=new Pool({connectionString:url.toString(),ssl:name==='supabase'?{ca:SUPABASE_ROOT_CA,rejectUnauthorized:true}:{rejectUnauthorized:true},max:6,connectionTimeoutMillis:15000,query_timeout:25000,statement_timeout:20000,idleTimeoutMillis:10000,allowExitOnIdle:true});
       }
       const client=await pools[name]!.connect();
       return {query:async(sql:string,params:any[]=[]) => (await client.query(sql,params)).rows,close:async()=>{client.release();}};

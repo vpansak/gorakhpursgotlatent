@@ -89,7 +89,7 @@ function keyMatch(keys: string[], left: string, right: string) {
   return keys.map(key => `${left}.${quote(key)} IS NOT DISTINCT FROM ${right}.${quote(key)}`).join(' AND ');
 }
 
-export async function refreshReplicaContents(source: Query, target: Query, options: { allowQuarantinedWrites?: boolean } = {}) {
+export async function refreshReplicaContents(source: Query, target: Query, options: { allowQuarantinedWrites?: boolean; expectedFence?:number } = {}) {
   const tables = await replicaTables(source);
   const secondary = await replicaTables(target);
   if (JSON.stringify(tables) !== JSON.stringify(secondary)) throw new Error('REPLICA_SCHEMA_MISMATCH');
@@ -105,6 +105,11 @@ export async function refreshReplicaContents(source: Query, target: Query, optio
   await target('BEGIN');
   try {
     await target('SELECT pg_advisory_xact_lock(714033921)');
+    if(options.expectedFence!==undefined){
+      const [writer]=await target('SELECT fence::text FROM ggl_replica.ledger_state WHERE singleton=true FOR UPDATE');
+      if(!writer||Number(writer.fence)>options.expectedFence)throw new Error('DATABASE_WRITER_FENCED');
+      await target('UPDATE ggl_replica.ledger_state SET fence=$1 WHERE singleton=true',[options.expectedFence]);
+    }
     await target("SELECT set_config('ggl_replica.apply','on',true)");
     await target("SET LOCAL TIME ZONE 'UTC'");
     await target('SET CONSTRAINTS ALL DEFERRED');
@@ -126,6 +131,7 @@ export async function refreshReplicaContents(source: Query, target: Query, optio
           UNION ALL(SELECT row FROM actual EXCEPT ALL SELECT row FROM expected)) differences) AS matches`,[snapshot.data[table.name]]);
       if(comparison.matches!==true) throw new Error('REPLICA_REFRESH_VERIFICATION_FAILED');
     }
+    await alignReplicaSequences(target);
     await target('COMMIT');
     return { refreshedTables:tables.length };
   } catch(error) { await target('ROLLBACK'); throw error; }

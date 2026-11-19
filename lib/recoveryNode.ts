@@ -88,8 +88,7 @@ export function createRecoveryNode(name:'neon'|'supabase',open:()=>Promise<Conne
       await store.create(archive,{node:name,position,fence,tables,data:snapshot.data});
       await peer.snapshotTransaction(fence,async(source)=>{
         await local.query('UPDATE ggl_replica.node SET active_node=$1 WHERE singleton=true',[peer.name]);
-        await refreshReplicaContents(source,local.query,{allowQuarantinedWrites:true});
-        await alignReplicaSequences(local.query);
+        await refreshReplicaContents(source,local.query,{allowQuarantinedWrites:true,expectedFence:fence});
       });
       await transaction(fence,async(query)=>{await query('UPDATE ggl_replica.ledger_state SET position=$1 WHERE singleton=true',[position]);});
       return archive;

@@ -3,7 +3,7 @@ import { HookConflictError,HookNotFoundError } from 'workflow/errors';
 import { retiredLegacyMirrorWorkflow } from '../workflows/replicaSync';
 import { prepareReplica } from './prepareReplica';
 import { recoveryRuntime } from './recoveryRuntime';
-import { replicaTables,alignReplicaSequences } from './replicaJournal';
+import { replicaTables } from './replicaJournal';
 import { startReplicaWorker } from './startReplicaWorker';
 
 export async function activateRecovery() {
@@ -27,7 +27,6 @@ export async function activateRecovery() {
     const [snapshot]=await source(`SELECT jsonb_build_object(${tables.map(t=>`${literal(t.name)},(SELECT COALESCE(jsonb_agg(to_jsonb(r)),'[]'::jsonb)::text FROM public."${t.name.replace(/"/g,'""')}" r)`).join(',')}) AS data`);
     baseline=`ggl-recovery/baselines/${crypto.randomUUID()}.json`;
     await runtime.store.create(baseline,{version:1,tables,data:snapshot.data,createdAt:Date.now()});
-    await alignReplicaSequences(target);
     await runtime.journal.initialize();
     const lease=await runtime.journal.acquire();
     try {

@@ -78,3 +78,10 @@ test('refresh refuses a destination that has its own unsynced writes',async()=>{
     assert.equal((await f.target("SELECT name FROM users WHERE id='keep-me'"))[0].name,'Destination write');
   }finally{await f.close();}
 });
+test('expired rebuild cannot overwrite data after a newer database writer is fenced in',async()=>{
+ const f=await fixture();try{
+  await f.b.exec("INSERT INTO users VALUES('newer','Confirmed newer data');UPDATE ggl_replica.ledger_state SET fence=20 WHERE singleton=true");
+  await assert.rejects(refreshReplicaContents(f.source,f.target,{allowQuarantinedWrites:true,expectedFence:19}),/WRITER_FENCED/);
+  assert.equal((await f.target("SELECT name FROM users WHERE id='newer'"))[0].name,'Confirmed newer data');
+ }finally{await f.close();}
+});

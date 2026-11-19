@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   try {
     if(body?.action==='activate')return Response.json({success:true,...await activateRecovery()},{headers});
     if(body?.action==='rotate-worker'){
-      for(const token of ['ggl-replica:recovery-v2','ggl-replica:recovery-v3']) {
+      for(const token of ['ggl-replica:recovery-v2','ggl-replica:recovery-v3','ggl-replica:recovery-v4']) {
         try{const hook=await getHookByToken(token);await getRun(hook.runId).cancel();}catch(error){if(!HookNotFoundError.is(error))throw error;}
         try{await start(retiredLegacyMirrorWorkflow,[],{experimental_hook:{token}});}catch(error){if(!HookConflictError.is(error))throw error;}
       }

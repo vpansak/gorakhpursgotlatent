@@ -893,12 +893,13 @@ export default function ComputerJiControlPanel() {
 
             {/* Password Input */}
             <div className="space-y-1.5">
-              <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
+              <label htmlFor="computerji-pin" className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
                 Access PIN / पिन
               </label>
               <div className="relative">
                 <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
+                  id="computerji-pin"
                   type={showPassword ? 'text' : 'password'}
                   required
                   placeholder="PIN डालें"
@@ -912,6 +913,8 @@ export default function ComputerJiControlPanel() {
                 />
                 <button
                   type="button"
+                  aria-label={showPassword ? "Hide PIN" : "Show PIN"}
+                  aria-pressed={showPassword}
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors cursor-pointer"
                 >

@@ -31,7 +31,7 @@ const sections = [
   },
   {
     title: "5. Event date changes or cancellation",
-    body: "Episode 2 recording starts on Tuesday, 3 November 2026 at 1:00 PM IST at Mars Orbit Entertainment, Gorakhpur. Applicants should check official updates and keep their contact details active. A date change alone does not automatically make the application fee refundable, subject to applicable law and any specific announcement made by the organisers. If the event is cancelled or the policy changes, GGL will communicate relevant next steps through official channels."
+    body: "Episode 3 date, time and venue will be announced through official GGL channels. Applicants should check official updates and keep their contact details active. A date change alone does not automatically make the application fee refundable, subject to applicable law and any specific announcement made by the organisers. If the event is cancelled or the policy changes, GGL will communicate relevant next steps through official channels."
   },
   {
     title: "6. Payment safety and official communication",

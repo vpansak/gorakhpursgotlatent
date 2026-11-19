@@ -17,8 +17,9 @@ async function ensureTable() {
 
 export async function GET(_req: Request, ctx: { params: Promise<{ token: string }> }) {
   try {
-    await ensureTable();
     const { token } = await ctx.params;
+    if(!/^[a-zA-Z0-9_-]{24,128}$/.test(token))return NextResponse.json({error:'Payment link not found'},{status:404});
+    await ensureTable();
     const rows = await db.query(
       `SELECT l.token, l.amount, l.status, l.razorpay_payment_id,
               g.app_id, g.full_name, g.stage_name, g.email, g.whatsapp,
@@ -64,8 +65,9 @@ export async function GET(_req: Request, ctx: { params: Promise<{ token: string 
 
 export async function POST(req: Request, ctx: { params: Promise<{ token: string }> }) {
   try {
-    await ensureTable();
     const { token } = await ctx.params;
+    if(!/^[a-zA-Z0-9_-]{24,128}$/.test(token))return NextResponse.json({error:'Payment link not found'},{status:404});
+    await ensureTable();
     const b = await req.json();
 
     const link = await db.queryOne('SELECT * FROM guest_payment_links WHERE token = ?', [token]);

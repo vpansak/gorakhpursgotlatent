@@ -192,28 +192,28 @@ export default function BookTicketPage() {
 
         <form onSubmit={handleBookingSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Full Name *</label>
-            <input type="text" required value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Enter your full name" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-amber-500/50 text-white outline-none focus:border-amber-400" />
+            <label htmlFor="ticket-name" className="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Full Name *</label>
+            <input id="ticket-name" type="text" required value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Enter your full name" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-amber-500/50 text-white outline-none focus:border-amber-400" />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Mobile Number (WhatsApp) *</label>
-            <input type="tel" required inputMode="numeric" value={mobile} onChange={(e) => setMobile(e.target.value)} placeholder="10-digit mobile number" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-amber-500/50 text-white outline-none focus:border-amber-400" />
+            <label htmlFor="ticket-mobile" className="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Mobile Number (WhatsApp) *</label>
+            <input id="ticket-mobile" type="tel" required inputMode="numeric" value={mobile} onChange={(e) => setMobile(e.target.value)} placeholder="10-digit mobile number" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-amber-500/50 text-white outline-none focus:border-amber-400" />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Email Address <span className="text-[10px] text-slate-500 font-normal lowercase">(optional)</span></label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email (optional)" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
+            <label htmlFor="ticket-email" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Email Address <span className="text-[10px] text-slate-500 font-normal lowercase">(optional)</span></label>
+            <input id="ticket-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email (optional)" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Instagram Handle <span className="text-[10px] text-slate-500 font-normal lowercase">(optional)</span></label>
-            <input type="text" value={instagramId} onChange={(e) => setInstagramId(e.target.value)} placeholder="@username (optional)" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
+            <label htmlFor="ticket-instagram" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Instagram Handle <span className="text-[10px] text-slate-500 font-normal lowercase">(optional)</span></label>
+            <input id="ticket-instagram" type="text" value={instagramId} onChange={(e) => setInstagramId(e.target.value)} placeholder="@username (optional)" className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-amber-500" />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Number of Tickets *</label>
-            <select value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-300 font-bold outline-none focus:border-amber-500">
+            <label htmlFor="ticket-quantity" className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Number of Tickets *</label>
+            <select id="ticket-quantity" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-amber-300 font-bold outline-none focus:border-amber-500">
               <option value={1}>1 Ticket (₹149)</option>
               <option value={2}>2 Tickets (₹298)</option>
               <option value={3}>3 Tickets (₹447)</option>

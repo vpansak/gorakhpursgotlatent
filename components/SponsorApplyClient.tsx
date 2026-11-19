@@ -192,8 +192,8 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Company / Brand Name *</label>
-              <input
+              <label htmlFor="sponsorapplyclient-companyName" className="block text-xs font-bold text-slate-300 mb-1">Company / Brand Name *</label>
+              <input id="sponsorapplyclient-companyName"
                 type="text"
                 name="companyName"
                 required
@@ -205,8 +205,8 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Contact Person Name *</label>
-              <input
+              <label htmlFor="sponsorapplyclient-contactPerson" className="block text-xs font-bold text-slate-300 mb-1">Contact Person Name *</label>
+              <input id="sponsorapplyclient-contactPerson"
                 type="text"
                 name="contactPerson"
                 required
@@ -218,8 +218,8 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Designation</label>
-              <input
+              <label htmlFor="sponsorapplyclient-designation" className="block text-xs font-bold text-slate-300 mb-1">Designation</label>
+              <input id="sponsorapplyclient-designation"
                 type="text"
                 name="designation"
                 value={formData.designation}
@@ -230,8 +230,8 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Industry / Category</label>
-              <input
+              <label htmlFor="sponsorapplyclient-industry" className="block text-xs font-bold text-slate-300 mb-1">Industry / Category</label>
+              <input id="sponsorapplyclient-industry"
                 type="text"
                 name="industry"
                 value={formData.industry}
@@ -242,8 +242,8 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Business Email *</label>
-              <input
+              <label htmlFor="sponsorapplyclient-bizEmail" className="block text-xs font-bold text-slate-300 mb-1">Business Email *</label>
+              <input id="sponsorapplyclient-bizEmail"
                 type="email"
                 name="bizEmail"
                 required
@@ -255,8 +255,8 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">WhatsApp / Mobile Number *</label>
-              <input
+              <label htmlFor="sponsorapplyclient-whatsapp" className="block text-xs font-bold text-slate-300 mb-1">WhatsApp / Mobile Number *</label>
+              <input id="sponsorapplyclient-whatsapp"
                 type="tel"
                 name="whatsapp"
                 required
@@ -269,8 +269,8 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Website or Social Media Link</label>
-            <input
+            <label htmlFor="sponsorapplyclient-website" className="block text-xs font-bold text-slate-300 mb-1">Website or Social Media Link</label>
+            <input id="sponsorapplyclient-website"
               type="url"
               name="website"
               value={formData.website}
@@ -281,8 +281,8 @@ ${data.message.trim() || 'Interested in Brand Sponsorship for Gorakhpur’s Got 
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Proposal Message / Brand Requirements</label>
-            <textarea
+            <label htmlFor="sponsorapplyclient-message" className="block text-xs font-bold text-slate-300 mb-1">Proposal Message / Brand Requirements</label>
+            <textarea id="sponsorapplyclient-message"
               name="message"
               rows={4}
               value={formData.message}

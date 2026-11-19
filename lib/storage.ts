@@ -105,7 +105,9 @@ export function jsonToCSV(items: any[]): string {
         let val = item[h];
         if (val === null || val === undefined) val = '';
         if (typeof val === 'object') val = JSON.stringify(val);
-        const str = String(val).replace(/"/g, '""');
+        const text=String(val);
+        const safe=/^[\u0000-\u0020]*[=+\-@]/.test(text)?"'"+text:text;
+        const str = safe.replace(/"/g, '""');
         return `"${str}"`;
       })
       .join(',');

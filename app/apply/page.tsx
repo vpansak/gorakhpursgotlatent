@@ -34,7 +34,7 @@ export default function ApplyPage() {
       badge: 'VIP PANEL',
       color: 'from-purple-500/20 via-purple-500/10 to-transparent',
       borderColor: 'border-purple-500/40',
-      btnBg: 'bg-purple-500 text-white hover:bg-purple-400',
+      btnBg: 'bg-purple-700 text-white hover:bg-purple-800',
     },
     {
       title: 'Brand Sponsorship',
@@ -45,7 +45,7 @@ export default function ApplyPage() {
       badge: 'BUSINESS',
       color: 'from-blue-500/20 via-blue-500/10 to-transparent',
       borderColor: 'border-blue-500/40',
-      btnBg: 'bg-blue-500 text-white hover:bg-blue-400',
+      btnBg: 'bg-blue-700 text-white hover:bg-blue-800',
     },
     {
       title: 'Join Team',

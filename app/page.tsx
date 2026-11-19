@@ -78,6 +78,7 @@ export default async function HomePage() {
 
   return (
     <div className="home-dark relative overflow-hidden">
+      <h1 className="sr-only">Gorakhpur’s Got Latent — Episode 3 tickets and applications</h1>
       {/* PREMIUM HERO */}
       <section className="home-hero relative min-h-[72vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-5 pb-10 sm:pt-8 sm:pb-14">
         <div className="absolute inset-0 pointer-events-none">

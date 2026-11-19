@@ -218,8 +218,8 @@ export default function PerformerApplyClient() {
         <div className="space-y-4">
           {/* 1. Full Name */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Full Name (अपना नाम) *</label>
-            <input
+            <label htmlFor="performerapplyclient-fullName" className="block text-xs font-bold text-slate-300 mb-1">Full Name (अपना नाम) *</label>
+            <input id="performerapplyclient-fullName"
               type="text"
               name="fullName"
               required
@@ -233,8 +233,8 @@ export default function PerformerApplyClient() {
           {/* 2. Mobile & Email */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Mobile Number (मोबाइल नंबर) *</label>
-              <input
+              <label htmlFor="performerapplyclient-mobile" className="block text-xs font-bold text-slate-300 mb-1">Mobile Number (मोबाइल नंबर) *</label>
+              <input id="performerapplyclient-mobile"
                 type="tel"
                 name="mobile"
                 required
@@ -246,8 +246,8 @@ export default function PerformerApplyClient() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Email Address (ईमेल) *</label>
-              <input
+              <label htmlFor="performerapplyclient-email" className="block text-xs font-bold text-slate-300 mb-1">Email Address (ईमेल) *</label>
+              <input id="performerapplyclient-email"
                 type="email"
                 name="email"
                 required
@@ -261,8 +261,8 @@ export default function PerformerApplyClient() {
 
           {/* 3. Age Dropdown (Strictly 18+) */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Age / उम्र Dropdown (Strictly 18+ Only) *</label>
-            <select
+            <label htmlFor="performerapplyclient-age" className="block text-xs font-bold text-slate-300 mb-1">Age / उम्र Dropdown (Strictly 18+ Only) *</label>
+            <select id="performerapplyclient-age"
               name="age"
               value={formData.age}
               onChange={handleChange}
@@ -278,8 +278,8 @@ export default function PerformerApplyClient() {
 
           {/* 4. Instagram Username (optional) */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Username (इन्स्टाग्राम यूज़रनेम) <span className="text-[10px] text-slate-500 font-normal lowercase">(optional)</span></label>
-            <input
+            <label htmlFor="performerapplyclient-instagramUrl" className="block text-xs font-bold text-slate-300 mb-1">Instagram Username (इन्स्टाग्राम यूज़रनेम) <span className="text-[10px] text-slate-500 font-normal lowercase">(optional)</span></label>
+            <input id="performerapplyclient-instagramUrl"
               type="text"
               name="instagramUrl"
               value={formData.instagramUrl}
@@ -293,8 +293,8 @@ export default function PerformerApplyClient() {
 
           {/* 5. What is unique about you? */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">What is Unique About You? (आपमें क्या खास / यूनिक है?)</label>
-            <textarea
+            <label htmlFor="performerapplyclient-whyShouldSelectYou" className="block text-xs font-bold text-slate-300 mb-1">What is Unique About You? (आपमें क्या खास / यूनिक है?)</label>
+            <textarea id="performerapplyclient-whyShouldSelectYou"
               name="whyShouldSelectYou"
               rows={3}
               value={formData.whyShouldSelectYou}
@@ -306,8 +306,8 @@ export default function PerformerApplyClient() {
 
           {/* 6. Address / Base Location */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Address / City (पता / शहर)</label>
-            <input
+            <label htmlFor="performerapplyclient-city" className="block text-xs font-bold text-slate-300 mb-1">Address / City (पता / शहर)</label>
+            <input id="performerapplyclient-city"
               type="text"
               name="city"
               value={formData.city}
@@ -319,8 +319,8 @@ export default function PerformerApplyClient() {
 
           {/* 8. About yourself / performance details */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">About Your Performance / Yourself (थोड़ा सा अपने बारे में)</label>
-            <textarea
+            <label htmlFor="performerapplyclient-performanceDescription" className="block text-xs font-bold text-slate-300 mb-1">About Your Performance / Yourself (थोड़ा सा अपने बारे में)</label>
+            <textarea id="performerapplyclient-performanceDescription"
               name="performanceDescription"
               rows={3}
               value={formData.performanceDescription}

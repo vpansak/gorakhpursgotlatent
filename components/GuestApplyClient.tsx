@@ -180,28 +180,28 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
           <h3 className="text-lg font-bold text-purple-400 border-b border-purple-500/20 pb-2">1. Guest & Professional Profile</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Full Legal Name *</label>
-              <input type="text" name="fullName" required value={formData.fullName} onChange={handleChange} placeholder="e.g. Samarth Sharma" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm focus:border-purple-500 outline-none" />
+              <label htmlFor="guestapplyclient-fullName" className="block text-xs font-bold text-slate-300 mb-1">Full Legal Name *</label>
+              <input id="guestapplyclient-fullName" type="text" name="fullName" required value={formData.fullName} onChange={handleChange} placeholder="e.g. Samarth Sharma" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm focus:border-purple-500 outline-none" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Public / Stage Name</label>
-              <input type="text" name="stageName" value={formData.stageName} onChange={handleChange} placeholder="e.g. Samarth Standup" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm focus:border-purple-500 outline-none" />
+              <label htmlFor="guestapplyclient-stageName" className="block text-xs font-bold text-slate-300 mb-1">Public / Stage Name</label>
+              <input id="guestapplyclient-stageName" type="text" name="stageName" value={formData.stageName} onChange={handleChange} placeholder="e.g. Samarth Standup" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm focus:border-purple-500 outline-none" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Email *</label>
-              <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="name@domain.com" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm focus:border-purple-500 outline-none" />
+              <label htmlFor="guestapplyclient-email" className="block text-xs font-bold text-slate-300 mb-1">Email *</label>
+              <input id="guestapplyclient-email" type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="name@domain.com" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm focus:border-purple-500 outline-none" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">WhatsApp / Call Number *</label>
-              <input type="tel" name="whatsapp" required value={formData.whatsapp} onChange={handleChange} placeholder="+91 98765 43210" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm font-mono focus:border-purple-500 outline-none" />
+              <label htmlFor="guestapplyclient-whatsapp" className="block text-xs font-bold text-slate-300 mb-1">WhatsApp / Call Number *</label>
+              <input id="guestapplyclient-whatsapp" type="tel" name="whatsapp" required value={formData.whatsapp} onChange={handleChange} placeholder="+91 98765 43210" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm font-mono focus:border-purple-500 outline-none" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">City / Base Location *</label>
-              <input type="text" name="city" required value={formData.city} onChange={handleChange} placeholder="e.g. Gorakhpur / Lucknow" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm focus:border-purple-500 outline-none" />
+              <label htmlFor="guestapplyclient-city" className="block text-xs font-bold text-slate-300 mb-1">City / Base Location *</label>
+              <input id="guestapplyclient-city" type="text" name="city" required value={formData.city} onChange={handleChange} placeholder="e.g. Gorakhpur / Lucknow" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm focus:border-purple-500 outline-none" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Profession / Domain *</label>
-              <input type="text" name="profession" required value={formData.profession} onChange={handleChange} placeholder="Content Creator / Influencer" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm focus:border-purple-500 outline-none" />
+              <label htmlFor="guestapplyclient-profession" className="block text-xs font-bold text-slate-300 mb-1">Profession / Domain *</label>
+              <input id="guestapplyclient-profession" type="text" name="profession" required value={formData.profession} onChange={handleChange} placeholder="Content Creator / Influencer" className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs sm:text-sm focus:border-purple-500 outline-none" />
             </div>
           </div>
         </div>
@@ -210,17 +210,17 @@ ${data.whyGgl.trim() || 'Interested in appearing as guest judge/panelist.'}
           <h3 className="text-lg font-bold text-purple-400 border-b border-purple-500/20 pb-2">2. Social Media & Audience Reach</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Instagram Profile URL</label>
-              <input type="url" name="instagramUrl" value={formData.instagramUrl} onChange={handleChange} placeholder="https://instagram.com/..." className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:border-purple-500 outline-none" />
+              <label htmlFor="guestapplyclient-instagramUrl" className="block text-xs font-bold text-slate-300 mb-1">Instagram Profile URL</label>
+              <input id="guestapplyclient-instagramUrl" type="url" name="instagramUrl" value={formData.instagramUrl} onChange={handleChange} placeholder="https://instagram.com/..." className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:border-purple-500 outline-none" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">YouTube Channel URL</label>
-              <input type="url" name="youtubeUrl" value={formData.youtubeUrl} onChange={handleChange} placeholder="https://youtube.com/..." className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:border-purple-500 outline-none" />
+              <label htmlFor="guestapplyclient-youtubeUrl" className="block text-xs font-bold text-slate-300 mb-1">YouTube Channel URL</label>
+              <input id="guestapplyclient-youtubeUrl" type="url" name="youtubeUrl" value={formData.youtubeUrl} onChange={handleChange} placeholder="https://youtube.com/..." className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:border-purple-500 outline-none" />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1">Why would you like to appear on Gorakhpur's Got Latent?</label>
-            <textarea name="whyGgl" rows={3} value={formData.whyGgl} onChange={handleChange} placeholder="Tell us why you want to appear on the show..." className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:border-purple-500 outline-none leading-relaxed" />
+            <label htmlFor="guestapplyclient-whyGgl" className="block text-xs font-bold text-slate-300 mb-1">Why would you like to appear on Gorakhpur's Got Latent?</label>
+            <textarea id="guestapplyclient-whyGgl" name="whyGgl" rows={3} value={formData.whyGgl} onChange={handleChange} placeholder="Tell us why you want to appear on the show..." className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:border-purple-500 outline-none leading-relaxed" />
           </div>
         </div>
 

@@ -14,7 +14,7 @@ export async function GET() {
     const sheets = [
       {
         id: 'performers_paid',
-        title: 'Paid Performers (₹199 Paid)',
+        title: 'Verified Paid Performers',
         category: 'Performers',
         folder: 'sheets/performers/',
         filename: 'paid_performers.csv',

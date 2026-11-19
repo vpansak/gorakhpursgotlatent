@@ -5,7 +5,7 @@ import { replicaSyncWorkflow } from '../workflows/replicaSync';
 export async function startReplicaWorker(_batchId: string) {
   try {
     const run = await start(replicaSyncWorkflow, [], {
-      experimental_hook: { token: 'ggl-replica:recovery-v5' },
+      experimental_hook: { token: 'ggl-replica:recovery-v6' },
     });
     return run.runId;
   } catch (error) {

@@ -219,10 +219,10 @@ ${data.about.trim()}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+            <label htmlFor="jointeamapplyclient-name" className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <User className="w-3.5 h-3.5 text-amber-400" /> Full Name (नाम) *
             </label>
-            <input
+            <input id="jointeamapplyclient-name"
               type="text"
               name="name"
               required
@@ -234,10 +234,10 @@ ${data.about.trim()}
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+            <label htmlFor="jointeamapplyclient-mobile" className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <Phone className="w-3.5 h-3.5 text-amber-400" /> Mobile Number (मोबाइल नं.) *
             </label>
-            <input
+            <input id="jointeamapplyclient-mobile"
               type="tel"
               name="mobile"
               required
@@ -249,10 +249,10 @@ ${data.about.trim()}
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+            <label htmlFor="jointeamapplyclient-email" className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <Mail className="w-3.5 h-3.5 text-amber-400" /> Email Address (ईमेल) *
             </label>
-            <input
+            <input id="jointeamapplyclient-email"
               type="email"
               name="email"
               required
@@ -264,10 +264,10 @@ ${data.about.trim()}
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+            <label htmlFor="jointeamapplyclient-age" className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 text-amber-400" /> Age (उम्र) *
             </label>
-            <select
+            <select id="jointeamapplyclient-age"
               name="age"
               required
               value={formData.age}
@@ -282,10 +282,10 @@ ${data.about.trim()}
           </div>
 
           <div className="space-y-1.5 sm:col-span-2">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+            <label htmlFor="jointeamapplyclient-address" className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-amber-400" /> Full Address & City (पता) *
             </label>
-            <input
+            <input id="jointeamapplyclient-address"
               type="text"
               name="address"
               required
@@ -297,10 +297,10 @@ ${data.about.trim()}
           </div>
 
           <div className="space-y-1.5 sm:col-span-2">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+            <label htmlFor="jointeamapplyclient-instagram" className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <InstagramIcon className="w-3.5 h-3.5 text-amber-400" /> Instagram Profile Link / Username (इंस्टाग्राम लिंक) *
             </label>
-            <input
+            <input id="jointeamapplyclient-instagram"
               type="text"
               name="instagram"
               required
@@ -312,10 +312,10 @@ ${data.about.trim()}
           </div>
 
           <div className="space-y-1.5 sm:col-span-2">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+            <label htmlFor="jointeamapplyclient-about" className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5 text-amber-400" /> About Yourself & Why You Want to Join (अपने बारे में बताएं) *
             </label>
-            <textarea
+            <textarea id="jointeamapplyclient-about"
               name="about"
               required
               rows={4}

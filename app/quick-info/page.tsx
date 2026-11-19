@@ -64,14 +64,14 @@ export default function QuickInfoPage() {
               Book Show Tickets 🎟️
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Episode 2 recording starts on Tuesday, 3 November 2026 at 1:00 PM IST at Mars Orbit Entertainment, Gorakhpur.
+              Book official Episode 3 audience tickets. Date, time and venue updates will be announced through official GGL channels.
             </p>
           </div>
           <Link
             href="/book-ticket"
             className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-black text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-[1.02] shadow-md mt-4"
           >
-            <span>Book Official Ticket — ₹99</span>
+            <span>Book Official Ticket — ₹149</span>
           </Link>
         </div>
 
@@ -82,17 +82,17 @@ export default function QuickInfoPage() {
               <Mic2 className="w-6 h-6" />
             </div>
             <h3 className="font-bebas text-2xl text-white uppercase tracking-wide">
-              Episode 2 Auditions 🎤
+              Episode 3 Auditions 🎤
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Episode 2 recording starts on Tuesday, 3 November 2026 at 1:00 PM IST at Mars Orbit Entertainment, Gorakhpur. Submit your talent profile through the performer form.
+              Episode 3 performer applications are open. Submit your talent profile through the official performer form. The next show schedule will be announced through official GGL channels.
             </p>
           </div>
           <Link
             href="/apply/performer"
             className="w-full py-3 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all mt-4"
           >
-            <span>Apply For Episode 2</span>
+            <span>Apply For Episode 3</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -112,10 +112,10 @@ export default function QuickInfoPage() {
           </div>
           <div className="flex gap-2 mt-4">
             <Link
-              href="/performers"
+              href="/apply/performer"
               className="flex-1 py-2.5 px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 text-[11px] font-black uppercase text-center transition-all"
             >
-              Performers
+              Performer applications
             </Link>
             <Link
               href="/guests"
@@ -136,7 +136,7 @@ export default function QuickInfoPage() {
               Venue & Support 📍
             </h3>
             <div className="space-y-1 text-xs text-slate-300">
-              <p className="font-semibold text-white">Recording: Tuesday, 3 November 2026 · 1:00 PM IST · Mars Orbit Entertainment, Gorakhpur</p>
+              <p className="font-semibold text-white">Episode 3: date, time and venue will be announced through official GGL channels.</p>
               <p>Email: <a href="mailto:help.gglatent@gmail.com" className="text-amber-400 underline">help.gglatent@gmail.com</a></p>
               <p>WhatsApp: <a href="https://wa.me/918423858424" target="_blank" rel="noreferrer" className="text-emerald-400 underline">+91 84238 58424</a></p>
             </div>

@@ -42,7 +42,7 @@ export function verifyRazorpaySignature(
     .createHmac('sha256', secret)
     .update(body.toString())
     .digest('hex');
-  return expectedSignature === signature;
+  return typeof signature==='string' && /^[a-f0-9]{64}$/i.test(signature) && crypto.timingSafeEqual(Buffer.from(expectedSignature,'hex'),Buffer.from(signature,'hex'));
 }
 
 export function verifyWebhookSignature(body: string, signature: string, webhookSecret: string): boolean {
@@ -51,7 +51,7 @@ export function verifyWebhookSignature(body: string, signature: string, webhookS
     .createHmac('sha256', webhookSecret)
     .update(body)
     .digest('hex');
-  return expectedSignature === signature;
+  return typeof signature==='string' && /^[a-f0-9]{64}$/i.test(signature) && crypto.timingSafeEqual(Buffer.from(expectedSignature,'hex'),Buffer.from(signature,'hex'));
 }
 
 export function processRazorpayRefund(

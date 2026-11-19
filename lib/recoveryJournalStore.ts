@@ -8,14 +8,14 @@ export function recoveryJournalStore() {
   return {
     async read(name: string) {
       // An eventually cached routing decision is unsafe. Always read origin storage.
-      const result = await get(path(name), { access: 'private', useCache: false, abortSignal: AbortSignal.timeout(15000), headers: { 'accept-encoding':'identity', 'cache-control':'no-cache, no-store' } });
+      const result = await get(path(name), { token:process.env.BLOB_READ_WRITE_TOKEN, access: 'private', useCache: false, abortSignal: AbortSignal.timeout(15000), headers: { 'accept-encoding':'identity', 'cache-control':'no-cache, no-store' } });
       if (!result) return null;
       if (result.statusCode !== 200 || !result.stream) throw new Error('JOURNAL_READ_FAILED');
       return { value: JSON.parse(await new Response(result.stream).text()), etag: result.blob.etag };
     },
     async create(name: string, value: unknown) {
       try {
-        const result = await put(path(name), JSON.stringify(value), { access: 'private', addRandomSuffix: false, allowOverwrite: false, contentType: 'application/json' });
+        const result = await put(path(name), JSON.stringify(value), { token:process.env.BLOB_READ_WRITE_TOKEN, access: 'private', addRandomSuffix: false, allowOverwrite: false, contentType: 'application/json' });
         return result.etag;
       } catch (error) {
         // SDKs use a separate error class for duplicate creates and failed CAS.
@@ -25,7 +25,7 @@ export function recoveryJournalStore() {
     },
     async cas(name: string, value: unknown, etag: string) {
       try {
-        const result = await put(path(name), JSON.stringify(value), { access: 'private', addRandomSuffix: false, allowOverwrite: true, ifMatch: etag, contentType: 'application/json' });
+        const result = await put(path(name), JSON.stringify(value), { token:process.env.BLOB_READ_WRITE_TOKEN, access: 'private', addRandomSuffix: false, allowOverwrite: true, ifMatch: etag, contentType: 'application/json' });
         return result.etag;
       } catch (error) {
         if (error instanceof BlobPreconditionFailedError) throw Object.assign(new Error('JOURNAL_CONFLICT'), { code: 'CONFLICT' });

@@ -1,3 +1,4 @@
+import { existingRecoverySchema } from './recoverySchema';
 import { startReplicaWorker } from './startReplicaWorker';
 import { Pool } from 'pg';
 import { createRecoveryJournal } from './recoveryJournal';
@@ -6,6 +7,7 @@ import { createRecoveryNode } from './recoveryNode';
 import { createRecoveryCoordinator } from './recoveryCoordinator';
 import { SUPABASE_ROOT_CA } from './supabaseTls';
 
+const verifiedSchema=new Set<string>();
 const pools:Partial<Record<'neon'|'supabase',Pool>>={};
 export function recoveryRuntime() {
   const store=recoveryJournalStore();
@@ -37,6 +39,11 @@ export async function managedRecoveryReady() {
 }
 export async function executeManagedQuery(sql:string,params:any[]) {
   const {coordinator}=recoveryRuntime();
+  if(/^\s*(CREATE|ALTER|DROP)\b/i.test(sql)){
+    if(verifiedSchema.has(sql))return [];
+    if(await existingRecoverySchema(sql,coordinator.read)){verifiedSchema.add(sql);return [];}
+    throw new Error('MANAGED_SCHEMA_MIGRATION_REQUIRED');
+  }
   if(!/^\s*(SELECT|SHOW|EXPLAIN)\b/i.test(sql))await startReplicaWorker('managed');
   return /^\s*(SELECT|SHOW|EXPLAIN)\b/i.test(sql)?coordinator.read(sql,params):coordinator.write(sql,params);
 }

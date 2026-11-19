@@ -12,6 +12,7 @@ import { prepareReplica } from '@/lib/prepareReplica';
 import { neon } from '@neondatabase/serverless';
 import { archiveReplicaEvents, verifyReplicaEvents, runReplicaMirror } from '@/lib/replicaMirror';
 import { startReplicaWorker } from '@/lib/startReplicaWorker';
+import { directDatabaseDiagnostic } from '@/lib/directDatabase';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -22,6 +23,7 @@ export async function POST(request: Request) {
   if (!secret || Buffer.byteLength(secret)!==Buffer.byteLength(supplied) || !timingSafeEqual(Buffer.from(secret),Buffer.from(supplied))) return Response.json({error:'Unauthorized'},{status:403,headers});
   const body=await request.json().catch(()=>null);
   try {
+    if(body?.action==='direct-diagnostic')return Response.json({success:true,databases:await directDatabaseDiagnostic()},{headers});
     if(body?.action==='activate')return Response.json({success:true,...await activateRecovery()},{headers});
     if(body?.action==='rotate-worker'){
       for(const token of ['ggl-replica:recovery-v2','ggl-replica:recovery-v3','ggl-replica:recovery-v4','ggl-replica:recovery-v5']) {

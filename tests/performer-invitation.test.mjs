@@ -46,3 +46,24 @@ test('submission without terms or trip fields persists application before email 
   assert.equal(sent.length,0);assert.equal(callbacks.length,2);await callbacks[1]();assert.equal(sent[0].email,person.email);
   assert.ok(queries[0][0].includes("'FREE'"));
 });
+test('retry reuses an existing personal payment link instead of creating another',async()=>{
+ const queries=[];
+ const lib=load('lib/performerInvitation.ts',{'crypto':{randomBytes},'@/lib/db':{db:{queryStrict:async(sql,params)=>{queries.push(sql);return sql.startsWith('SELECT token')?[{token:'existing-personal-token'}]:[];}}},'@/lib/emailjs':{sendNitrosendEmail:async()=>({success:true})}});
+ assert.equal(await lib.createPerformerInvitation('existing-app'),'https://www.gkpgotlatent.in/performer-payment/existing-personal-token');
+ assert.ok(!queries.some(sql=>sql.startsWith('INSERT')));
+});
+test('submission retry keeps the original application identity returned by the database',async()=>{
+ const ids=[],sent=[];let count=0;
+ const route=load('app/api/apply/performer/route.ts',{
+  'next/server':{after:()=>{},NextResponse:{json:(body,init)=>Response.json(body,init)}},
+  '@/lib/db':{db:{queryStrict:async(sql,params)=>{if(sql.includes('INSERT INTO performer_applications')){assert.match(sql,/ON CONFLICT\(id\).*RETURNING app_id/);ids.push(params[0]);return[{app_id:'original-application'}];}return[];},execute:async()=>{}}},
+  '@/lib/performerAdminNotification':{notifyPerformerAdmin:async()=>{}},'@/lib/storage':{},'@/lib/helpers':{generateAppId:()=>`different-candidate-${++count}`},
+  '@/lib/performerInvitation':{createPerformerInvitation:async appId=>{sent.push(appId);return person.paymentUrl;},emailPerformerInvitation:async()=>{}}
+ });
+ const body={fullName:'Rahul',email:person.email,mobile:person.mobile,submissionId:'32b59f61-e402-4ee4-90be-1d4e0315e381'};
+ for(let i=0;i<2;i++){
+  const response=await route.POST(new Request('https://example.test/api/apply/performer',{method:'POST',body:JSON.stringify(body)}));
+  assert.equal((await response.json()).appId,'original-application');
+ }
+ assert.equal(ids[0],ids[1]);assert.deepEqual(sent,['original-application','original-application']);
+});

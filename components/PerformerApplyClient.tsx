@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useRef,useState } from 'react';
 import Link from 'next/link';
 import { Mic2, CheckCircle2, ArrowRight, Loader2, Sparkles, MessageSquare, Mail, AlertCircle, CheckSquare } from 'lucide-react';
 import { parseResponse } from '@/lib/client-fetch';
@@ -24,6 +24,7 @@ const AGE_OPTIONS = [
 ];
 
 export default function PerformerApplyClient() {
+  const submissionId=useRef('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -46,6 +47,7 @@ export default function PerformerApplyClient() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    submissionId.current='';
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
@@ -92,11 +94,12 @@ export default function PerformerApplyClient() {
     try {
       const controller = new AbortController();
       // Allow enough time for the database write on slower mobile connections.
-      timeoutId = setTimeout(() => controller.abort(), 20000);
+      timeoutId = setTimeout(() => controller.abort(), 90000);
+      if(!submissionId.current)submissionId.current=crypto.randomUUID();
       const res = await fetch('/api/apply/performer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({...formData,submissionId:submissionId.current}),
         signal: controller.signal,
       });
 

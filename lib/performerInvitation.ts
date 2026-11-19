@@ -5,6 +5,8 @@ import { sendNitrosendEmail } from '@/lib/emailjs';
 export const PERFORMER_SEAT_AMOUNT = 799;
 export async function createPerformerInvitation(appId: string) {
   await db.queryStrict("CREATE TABLE IF NOT EXISTS performer_payment_links (token TEXT PRIMARY KEY, app_id TEXT NOT NULL, amount NUMERIC(10,2) NOT NULL, status TEXT NOT NULL DEFAULT 'PENDING', razorpay_order_id TEXT, razorpay_payment_id TEXT, created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, paid_at TIMESTAMPTZ)");
+  const existing=await db.queryStrict<{token:string}>('SELECT token FROM performer_payment_links WHERE app_id=? ORDER BY created_at DESC LIMIT 1',[appId]);
+  if(existing[0]?.token)return `https://www.gkpgotlatent.in/performer-payment/${existing[0].token}`;
   const token = randomBytes(24).toString('hex');
   await db.queryStrict("INSERT INTO performer_payment_links(token,app_id,amount,status) VALUES (?,?,?,'PENDING')", [token, appId, PERFORMER_SEAT_AMOUNT]);
   // Fixed official origin: never trust a submitted URL or forwarded Host header.

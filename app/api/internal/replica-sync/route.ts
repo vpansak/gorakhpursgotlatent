@@ -1,3 +1,4 @@
+import { db } from '@/lib/db';
 import { activateRecovery } from '@/lib/activateRecovery';
 import { recoveryRuntime,managedRecoveryReady } from '@/lib/recoveryRuntime';
 import { createRecoveryCoordinator } from '@/lib/recoveryCoordinator';
@@ -24,7 +25,12 @@ export async function POST(request: Request) {
       const runId=await startReplicaWorker('status');
       return Response.json({success:true,managed,automaticSyncEnabled:process.env.GGL_REPLICA_SYNC_ENABLED==='1',automaticFailoverEnabled:managed,recovery,runId,workerStatus:await getRun(runId).status},{headers});
     }
+    if(body?.action==='prepare'&&await managedRecoveryReady())return Response.json({error:'Managed recovery is already active; baseline refresh is disabled.'},{status:409,headers});
     if(body?.action==='prepare') return Response.json({success:true,...await prepareReplica()},{headers});
+    if(body?.action==='admin-read-test') {
+      const rows=await db.queryStrict('SELECT count(*)::int AS performers FROM performer_applications');
+      return Response.json({success:true,sharedAdminReadVerified:true,performers:rows[0].performers,managed:await managedRecoveryReady()},{headers});
+    }
     if(body?.action==='managed-self-test') {
       if(!await managedRecoveryReady())throw new Error('MANAGED_ROUTING_NOT_ACTIVE');
       const runtime=recoveryRuntime();

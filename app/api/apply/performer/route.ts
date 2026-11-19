@@ -31,19 +31,21 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Please enter your name, valid email and mobile number.' }, { status: 400 });
     }
 
-    const appId = generateAppId('PER');
-    const id = `per-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    let appId = generateAppId('PER');
+    const submissionId=typeof body.submissionId==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.submissionId)?body.submissionId:null;
+    const id = submissionId?`per-${submissionId}`: `per-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
     const parsedAge = parseInt((age || '').toString().replace(/\D/g, ''), 10) || 18;
     const parsedCount = parseInt((performerCount || '1').toString().replace(/\D/g, ''), 10) || 1;
 
-    await db.queryStrict(`
+    const saved=await db.queryStrict<{app_id:string}>(`
       INSERT INTO performer_applications (
         id, app_id, full_name, email, mobile_number, whatsapp_number, call_number,
         performance_category, performance_title, performance_description, performance_type,
         performer_count, performance_duration, performance_language, instagram_url,
         city, age, interested_in_talent_trip, payment_status, payment_amount, application_status, status
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'FREE', '0.00', 'SUBMITTED', 'SUBMITTED')
+      ON CONFLICT(id) DO UPDATE SET id=EXCLUDED.id RETURNING app_id
     `, [
       id,
       appId,
@@ -66,6 +68,7 @@ export async function POST(req: Request) {
     ]);
 
 
+    appId=saved[0]?.app_id || appId;
     try {
       await db.execute(`
         INSERT INTO application_status_history (id, app_type, app_id, old_status, new_status, changed_by, reason)

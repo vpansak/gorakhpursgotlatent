@@ -71,7 +71,7 @@ export default function BookMyShowPage() {
             <ArrowLeft className="h-4 w-4" /> Quick Info
           </Link>
           <div className="flex items-center gap-2 font-bold tracking-tight">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#f84464]"><Ticket className="h-4 w-4" /></span>
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#d72b4b]"><Ticket className="h-4 w-4" /></span>
             <span>GGL <span className="text-[#f84464]">TICKETS</span></span>
           </div>
         </div>
@@ -93,13 +93,13 @@ export default function BookMyShowPage() {
         {events.map((event) => (
           <article key={event.href} className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#1b1b22] transition duration-200 hover:-translate-y-1 hover:border-[#f84464]/60">
             <div className="flex min-h-40 items-end bg-gradient-to-br from-[#f84464]/25 via-[#5a2638]/20 to-[#24242c] p-6">
-              <span className="rounded-md bg-[#f84464] px-3 py-1.5 text-xs font-extrabold tracking-widest text-white">{event.tag}</span>
+              <span className="rounded-md bg-[#d72b4b] px-3 py-1.5 text-xs font-extrabold tracking-widest text-white">{event.tag}</span>
             </div>
             <div className="flex flex-1 flex-col p-6 sm:p-7">
               <p className="text-xs font-extrabold tracking-[0.16em] text-[#ff8297]">{event.label}</p>
               <h2 className="mt-3 text-2xl font-extrabold sm:text-3xl">{event.title}</h2>
               <p className="mt-3 flex-1 text-sm leading-6 text-white/60">{event.description}</p>
-              <a href={event.href} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#f84464] px-5 py-3 text-sm font-extrabold text-white transition hover:bg-[#e63758] focus:outline-none focus:ring-2 focus:ring-[#ff8297] focus:ring-offset-2 focus:ring-offset-[#1b1b22]">
+              <a href={event.href} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#d72b4b] px-5 py-3 text-sm font-extrabold text-white transition hover:bg-[#e63758] focus:outline-none focus:ring-2 focus:ring-[#ff8297] focus:ring-offset-2 focus:ring-offset-[#1b1b22]">
                 {event.label === 'EPISODE 2 TICKET' ? 'Episode 2 Ticket' : 'GGL Talent Tour'}
                 <ExternalLink className="h-4 w-4" />
               </a>

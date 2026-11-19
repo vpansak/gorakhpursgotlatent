@@ -281,7 +281,7 @@ export default function Episode1WinnersPage() {
             />
           </div>
 
-          <select
+          <select aria-label="Filter performers by category"
             value={filterCategory}
             onChange={e => setFilterCategory(e.target.value)}
             className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold focus:outline-none"

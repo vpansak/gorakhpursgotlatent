@@ -7,6 +7,7 @@ import { db } from '@/lib/db';
 import { ShieldCheck, LogOut, Sparkles } from 'lucide-react';
 import AdminOtpLogin from '@/components/AdminOtpLogin';
 import AdminApplicationPortal from '@/components/AdminApplicationPortal';
+import { getAdminDashboardExtras } from '@/lib/adminDashboardExtras';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,18 +19,20 @@ async function getAdminData() {
 
   await ensurePerformerDetailsTable();
 
-  // Fetch all 4 application streams directly from Neon PostgreSQL
-  const [performers, sponsors, team, guests, talentTrip] = await Promise.all([
+  // Resolve every card before publishing the dashboard's initial render.
+  const [performers, sponsors, team, guests, talentTrip, extras] = await Promise.all([
     db.queryStrict(performerSelect + performerOrder),
     db.queryStrict('SELECT * FROM sponsor_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC'),
     db.queryStrict('SELECT * FROM team_applications ORDER BY COALESCE(is_read, 0) ASC, created_at DESC'),
     db.queryStrict(guestSelect + guestOrder),
     db.queryStrict('SELECT COUNT(*)::int AS total FROM ggl_talent_trip_registrations'),
+    getAdminDashboardExtras(),
   ]);
 
   return {
     session,
     initialData: {
+      ...extras,
       performers: currentEpisodeRows(performers || [], 'performer'),
       sponsors: currentEpisodeRows(sponsors || [], 'sponsor'),
       team: team || [],

@@ -273,7 +273,7 @@ export default function FounderPage() {
                 <h3 className="relative mt-7 font-bebas text-3xl uppercase leading-tight tracking-wide sm:text-4xl">{pillar.title}</h3>
                 <p className="relative mt-4 text-sm leading-7 text-slate-400">{pillar.description}</p>
                 <div className="mt-7 h-px bg-gradient-to-r from-red-500/50 via-amber-400/20 to-transparent" />
-                <div className="mt-3 text-[9px] font-black uppercase tracking-[0.2em] text-slate-600">FOUNDER VISION</div>
+                <div className="mt-3 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">FOUNDER VISION</div>
               </article>
             ))}
           </div>

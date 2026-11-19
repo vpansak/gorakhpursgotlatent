@@ -181,7 +181,7 @@ export default function QuickInfoPage() {
           </div>
           <Link
             href="/bookmyshow"
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#f84464] px-6 py-3.5 text-xs font-black uppercase tracking-wider text-white transition hover:bg-[#e63758]"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#d72b4b] px-6 py-3.5 text-xs font-black uppercase tracking-wider text-white transition hover:bg-[#e63758]"
           >
             View Event Links <ArrowRight className="h-4 w-4" />
           </Link>

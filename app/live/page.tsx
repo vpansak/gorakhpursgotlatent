@@ -341,7 +341,7 @@ export default function OperatorControlRoomPage() {
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </button>
             <input
-              type="range"
+              type="range" aria-label="Master sound volume"
               min="0"
               max="100"
               value={isMuted ? 0 : masterVolume}
@@ -852,7 +852,7 @@ export default function OperatorControlRoomPage() {
                       disabled={actionLoading || !isAverageCalculated}
                       className={`w-full py-4 rounded-2xl font-black text-base uppercase tracking-widest shadow-2xl transition-all flex items-center justify-center gap-2 ${
                         isRevealed
-                          ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/30'
+                          ? 'bg-emerald-700 hover:bg-emerald-500 text-white shadow-emerald-500/30'
                           : isAverageCalculated
                           ? 'bg-gradient-to-r from-red-600 via-amber-500 to-red-600 text-white animate-pulse shadow-amber-500/30'
                           : 'bg-white/5 text-slate-500 border border-white/10 cursor-not-allowed'
@@ -1007,7 +1007,7 @@ export default function OperatorControlRoomPage() {
                     { id: 'APPLAUSE', label: 'Applause', color: 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30' },
                     { id: 'SUSPENSE', label: 'Suspense', color: 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30' },
                     { id: 'LAUGH', label: 'Laugh', color: 'bg-pink-500/20 text-pink-300 hover:bg-pink-500/30' },
-                    { id: 'WINNER', label: 'Winner!', color: 'bg-emerald-600 text-white hover:bg-emerald-500' }
+                    { id: 'WINNER', label: 'Winner!', color: 'bg-emerald-700 text-white hover:bg-emerald-500' }
                   ].map(s => {
                     const status = soundStates[s.id as SoundType] || 'READY';
                     return (
@@ -1258,7 +1258,7 @@ export default function OperatorControlRoomPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-slate-400 uppercase">VOLUME:</span>
                     <input
-                      type="range"
+                      type="range" aria-label="Master sound volume"
                       min="0"
                       max="100"
                       value={isMuted ? 0 : masterVolume}

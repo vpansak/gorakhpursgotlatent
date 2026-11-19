@@ -27,6 +27,9 @@ interface AdminApplicationPortalProps {
     team: any[];
     guests: any[];
     talentTripCount?: number;
+    computerJiScores: any[];
+    leads: any[];
+    ticketStats: { totalBooked:number;paidTickets:number };
   };
 }
 
@@ -35,10 +38,10 @@ type TabType = 'performer' | 'sponsor' | 'team' | 'guest' | 'computerji' | 'lead
 export default function AdminApplicationPortal({ session, initialData }: AdminApplicationPortalProps) {
   const [activeTab, setActiveTab] = useState<TabType>('performer');
   const [data, setData] = useState(initialData);
-  const [computerJiScores, setComputerJiScores] = useState<any[]>([]);
-  const [leads, setLeads] = useState<any[]>([]);
+  const [computerJiScores, setComputerJiScores] = useState<any[]>(initialData.computerJiScores);
+  const [leads, setLeads] = useState<any[]>(initialData.leads);
   const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
-  const [ticketStats, setTicketStats] = useState({ totalBooked: 0, paidTickets: 0 });
+  const [ticketStats, setTicketStats] = useState(initialData.ticketStats);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [detailFilter, setDetailFilter] = useState('ALL');
@@ -216,11 +219,6 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     }
   };
 
-  useEffect(() => {
-    fetchComputerJiScores();
-    fetchTicketStats();
-  }, []);
-
   // Keep background traffic low: only poll leads while the Leads tab is open.
   useEffect(() => {
     if (activeTab !== 'leads') return;
@@ -234,7 +232,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     if (activeTab !== 'performer') return;
     let polling = false;
     const pollPayments = async () => {
-      if (polling) return;
+      if (polling || document.visibilityState !== 'visible') return;
       polling = true;
       try {
         await fetch('/api/malik/performer-payment/reconcile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
@@ -247,7 +245,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
       finally { polling = false; }
     };
     pollPayments();
-    const timer = window.setInterval(pollPayments, 5000);
+    const timer = window.setInterval(pollPayments, 15000);
     return () => window.clearInterval(timer);
   }, [activeTab]);
 
@@ -260,8 +258,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
       if (json.success && json.data) {
         setData((prev) => ({ ...prev, ...json.data }));
       }
-      await fetchComputerJiScores();
-      await fetchLeads();
+      await Promise.all([fetchComputerJiScores(),fetchLeads(),fetchTicketStats()]);
     } catch (err) {
       console.error('Failed to refresh applications:', err);
     } finally {

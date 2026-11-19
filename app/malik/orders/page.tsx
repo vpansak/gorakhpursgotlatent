@@ -190,7 +190,7 @@ export default function OrdersLedgerPage() {
         <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/invitebyus"
-            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-barlow font-black text-xs uppercase flex items-center gap-1.5"
+            className="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-500 text-white font-barlow font-black text-xs uppercase flex items-center gap-1.5"
           >
             <Plus className="w-4 h-4" />
             <span>INVITE BY US</span>
@@ -356,7 +356,7 @@ export default function OrdersLedgerPage() {
                     {/* Payment Status */}
                     <td className="p-4">
                       <span className={`px-2.5 py-1 rounded-full font-black text-[10px] uppercase ${
-                        tck.payment_status === 'PAID' ? 'bg-emerald-600/30 text-emerald-400 border border-emerald-500/40' : 'bg-red-950 text-red-400 border border-red-500/40'
+                        tck.payment_status === 'PAID' ? 'bg-emerald-700/30 text-emerald-400 border border-emerald-500/40' : 'bg-red-950 text-red-400 border border-red-500/40'
                       }`}>
                         {tck.payment_status}
                       </span>
@@ -388,7 +388,7 @@ export default function OrdersLedgerPage() {
                       {tck.checked_in !== 1 && (
                         <button
                           onClick={() => handleCheckIn(tck.ticket_id)}
-                          className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] uppercase transition-all"
+                          className="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-500 text-white font-bold text-[11px] uppercase transition-all"
                         >
                           Check In
                         </button>
@@ -432,7 +432,7 @@ export default function OrdersLedgerPage() {
                 {selectedTicket.checked_in !== 1 ? (
                   <button
                     onClick={() => handleCheckIn(selectedTicket.ticket_id)}
-                    className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-wider"
+                    className="px-6 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-wider"
                   >
                     ✓ CHECK IN {getTicketQuantity(selectedTicket.quantity)} {getTicketQuantity(selectedTicket.quantity) === 1 ? 'PERSON' : 'PEOPLE'}
                   </button>

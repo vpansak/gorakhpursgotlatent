@@ -24,14 +24,14 @@ export default function DatabaseSetupPage() {
   return <main className="mx-auto max-w-4xl space-y-6 px-5 py-12 text-slate-100">
     <Link href="/malik" className="text-amber-300">← Admin dashboard / login</Link>
     <h1 className="text-3xl font-bold">Database recovery setup</h1>
-    <p className="text-slate-300">Both connections are configured. First copy the existing Neon records into the empty Supabase database and verify their contents.</p>
+    <p className="text-slate-300">Check database connections and the current synchronization configuration. Initial copy is only for an empty destination.</p>
     <div className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-5">
-      <p className="font-bold text-amber-200">Automatic failover and ongoing sync are not enabled yet.</p>
-      <p className="mt-2 text-sm">This step creates only the initial copy. New applications continue to use Neon. The copy refuses a non-empty destination and rolls back if verification fails.</p>
+      <p className="font-bold text-amber-200">{result?.automaticSyncEnabled ? 'Automatic Neon → Supabase sync enabled. Automatic switching is off.' : 'Check connections to see the current sync configuration. Automatic switching is off.'}</p>
+      <p className="mt-2 text-sm">New applications and admin reads currently use Neon. When synchronization is enabled, pending changes retry in the background. Database switching requires a separate recovery setup.</p>
     </div>
     <div className="flex flex-wrap gap-4">
       <button disabled={busy} onClick={() => run(false)} className="rounded-xl border border-slate-500 px-5 py-3 font-bold disabled:opacity-50">Check connections</button>
-      <button disabled={busy} onClick={() => run(true)} className="rounded-xl bg-amber-400 px-5 py-3 font-bold text-black disabled:opacity-50">Copy and verify initial data</button>
+      <button disabled={busy || result?.automaticSyncEnabled} onClick={() => run(true)} className="rounded-xl bg-amber-400 px-5 py-3 font-bold text-black disabled:opacity-50">Copy and verify initial data</button>
     </div>
     {busy && <p role="status">Working… Keep this page open. A complete copy can take several minutes.</p>}
     {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-red-200">{error}</p>}

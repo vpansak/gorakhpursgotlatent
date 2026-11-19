@@ -77,7 +77,8 @@ export async function GET() {
     schema: { compared, missingTables: compared ? missingTables : [], differingColumns: compared ? differingColumns : [] },
     dataCopyVerified: false,
     automaticFailoverEnabled: false,
-    automaticSyncEnabled: false,
+    automaticSyncEnabled: process.env.GGL_REPLICA_SYNC_ENABLED === '1',
+    syncDirection: process.env.GGL_REPLICA_SYNC_ENABLED === '1' ? 'neon_to_supabase' : null,
     databaseModified: false,
   }, { headers: { 'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff' } });
 }

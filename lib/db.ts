@@ -1,4 +1,7 @@
+import { startReplicaWorker } from './startReplicaWorker';
 import { neon } from '@neondatabase/serverless';
+import { archiveReplicaEvents } from './replicaMirror';
+import { scheduleReplicaMirror } from './scheduleReplicaMirror';
 
 let sqlClientInstance: any = null;
 
@@ -48,10 +51,23 @@ async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], re
   }
 
   const normalized = normalizeSql(sqlText);
+  const durableWrite = process.env.GGL_REPLICA_SYNC_ENABLED === '1' && !/^\s*(SELECT|SHOW|EXPLAIN)\b/i.test(normalized);
+  // Never blindly replay a mutation whose first commit may already have happened.
+  if (durableWrite) {
+    const result = await client.transaction([
+      client.query(normalized, params),
+      client.query('SELECT sequence::text,transaction_id::text,id::text,table_name,operation,old_row::text,new_row::text FROM ggl_replica.outbox WHERE transaction_id=txid_current() ORDER BY sequence'),
+    ]);
+    await archiveReplicaEvents(result[1] || []);
+    if (result[1]?.length) await startReplicaWorker(result[1][0].id);
+    scheduleReplicaMirror();
+    return (result[0] || []) as T[];
+  }
   let lastErr: any;
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const rows = await withTimeout(client.query(normalized, params), 10000);
+      scheduleReplicaMirror();
       return (rows || []) as T[];
     } catch (err: any) {
       lastErr = err;
@@ -71,13 +87,8 @@ async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], re
 
 export const pool = {
   query: async (sqlText: string, params: any[] = []) => {
-    try {
-      const rows = await executeWithRetry(sqlText, params);
+      const rows = await executeWithRetry(sqlText, params, 2, true);
       return { rows, rowCount: Array.isArray(rows) ? rows.length : 0 };
-    } catch (err) {
-      console.warn('pool.query notice:', err);
-      return { rows: [], rowCount: 0 };
-    }
   },
   end: async () => {},
 };
@@ -477,6 +488,7 @@ export async function query<T = any>(sql: string, params: any[] = []): Promise<T
     await ensureDatabaseSchema();
     return await executeWithRetry<T>(sql, params);
   } catch (err) {
+    if(process.env.GGL_REPLICA_SYNC_ENABLED === '1' && !/^\s*(SELECT|SHOW|EXPLAIN)\b/i.test(sql)) throw err;
     console.warn('db.query notice:', err);
     return [];
   }

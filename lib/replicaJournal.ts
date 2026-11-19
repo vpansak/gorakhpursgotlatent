@@ -30,22 +30,46 @@ export async function installReplicaJournal(query: Query, node: 'neon' | 'supaba
     sequence bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY, id uuid NOT NULL UNIQUE DEFAULT gen_random_uuid(),
     transaction_id bigint NOT NULL DEFAULT txid_current(), table_name text NOT NULL, operation text NOT NULL,
     old_row jsonb, new_row jsonb, created_at timestamptz NOT NULL DEFAULT clock_timestamp(), delivered_at timestamptz)`);
+  await query('CREATE INDEX IF NOT EXISTS outbox_transaction ON ggl_replica.outbox(transaction_id,sequence)');
   await query('CREATE INDEX IF NOT EXISTS outbox_pending ON ggl_replica.outbox(sequence) WHERE delivered_at IS NULL');
   await query(`CREATE TABLE IF NOT EXISTS ggl_replica.applied (id uuid PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT clock_timestamp())`);
+  await query("ALTER TABLE ggl_replica.outbox ADD COLUMN IF NOT EXISTS operation_id uuid");
+  await query("ALTER TABLE ggl_replica.node ADD COLUMN IF NOT EXISTS mode text NOT NULL DEFAULT 'LEGACY'");
+  await query('ALTER TABLE ggl_replica.node ADD COLUMN IF NOT EXISTS pause_until timestamptz');
+  await query(`CREATE TABLE IF NOT EXISTS ggl_replica.ledger_state(singleton boolean PRIMARY KEY DEFAULT true CHECK(singleton), position bigint NOT NULL DEFAULT 0, fence bigint NOT NULL DEFAULT 0)`);
+  await query('INSERT INTO ggl_replica.ledger_state(singleton) VALUES(true) ON CONFLICT(singleton) DO NOTHING');
+  await query(`CREATE TABLE IF NOT EXISTS ggl_replica.operations(id uuid PRIMARY KEY, sql_hash text NOT NULL, payload jsonb NOT NULL, created_at timestamptz NOT NULL DEFAULT clock_timestamp())`);
   await query(`CREATE OR REPLACE FUNCTION ggl_replica.capture() RETURNS trigger LANGUAGE plpgsql
     SECURITY DEFINER SET search_path=pg_catalog SET TimeZone='UTC' AS $capture$
     BEGIN
       IF current_setting('ggl_replica.apply',true)='on' THEN
         IF TG_OP='DELETE' THEN RETURN OLD; ELSE RETURN NEW; END IF;
       END IF;
-      INSERT INTO ggl_replica.outbox(table_name,operation,old_row,new_row)
+      INSERT INTO ggl_replica.outbox(table_name,operation,operation_id,old_row,new_row)
       VALUES(TG_TABLE_NAME,TG_OP,
+        NULLIF(current_setting('ggl_replica.operation_id',true),'')::uuid,
         CASE WHEN TG_OP IN ('DELETE','UPDATE') THEN to_jsonb(OLD) ELSE NULL END,
         CASE WHEN TG_OP IN ('INSERT','UPDATE') THEN to_jsonb(NEW) ELSE NULL END);
       IF TG_OP='DELETE' THEN RETURN OLD; ELSE RETURN NEW; END IF;
     END $capture$`);
   await query('REVOKE ALL ON FUNCTION ggl_replica.capture() FROM PUBLIC');
+  await query(`CREATE OR REPLACE FUNCTION ggl_replica.guard() RETURNS trigger LANGUAGE plpgsql
+    SECURITY DEFINER SET search_path=pg_catalog AS $guard$
+    DECLARE configured_mode text; paused_until timestamptz;
+    BEGIN
+      IF current_setting('ggl_replica.apply',true)='on' THEN RETURN NULL; END IF;
+      SELECT mode,pause_until INTO configured_mode,paused_until FROM ggl_replica.node WHERE singleton=true FOR SHARE;
+      IF configured_mode='PAUSED' AND (paused_until IS NULL OR paused_until>clock_timestamp()) THEN RAISE EXCEPTION 'Application writes temporarily paused for recovery setup' USING ERRCODE='55000'; END IF;
+      IF configured_mode='MANAGED' AND NULLIF(current_setting('ggl_replica.operation_id',true),'') IS NULL THEN
+        RAISE EXCEPTION 'Managed journal required for this write' USING ERRCODE='55000';
+      END IF;
+      RETURN NULL;
+    END $guard$`);
+  await query('REVOKE ALL ON FUNCTION ggl_replica.guard() FROM PUBLIC');
   for (const table of tables) {
+    await query(`DROP TRIGGER IF EXISTS ggl_replica_guard ON public.${quote(table.name)}`);
+    await query(`CREATE TRIGGER ggl_replica_guard BEFORE INSERT OR UPDATE OR DELETE OR TRUNCATE ON public.${quote(table.name)}
+      FOR EACH STATEMENT EXECUTE FUNCTION ggl_replica.guard()`);
     // The trigger and the application mutation commit or roll back together.
     await query(`DROP TRIGGER IF EXISTS ggl_replica_capture ON public.${quote(table.name)}`);
     await query(`CREATE TRIGGER ggl_replica_capture AFTER INSERT OR UPDATE OR DELETE ON public.${quote(table.name)}
@@ -65,14 +89,14 @@ function keyMatch(keys: string[], left: string, right: string) {
   return keys.map(key => `${left}.${quote(key)} IS NOT DISTINCT FROM ${right}.${quote(key)}`).join(' AND ');
 }
 
-export async function refreshReplicaContents(source: Query, target: Query) {
+export async function refreshReplicaContents(source: Query, target: Query, options: { allowQuarantinedWrites?: boolean } = {}) {
   const tables = await replicaTables(source);
   const secondary = await replicaTables(target);
   if (JSON.stringify(tables) !== JSON.stringify(secondary)) throw new Error('REPLICA_SCHEMA_MISMATCH');
   const [state] = await target('SELECT name,active_node FROM ggl_replica.node WHERE singleton=true');
   if (!state || state.name === state.active_node) throw new Error('REPLICA_DESTINATION_IS_ACTIVE');
   const [pending] = await target('SELECT count(*)::int AS count FROM ggl_replica.outbox WHERE delivered_at IS NULL');
-  if (pending.count) throw new Error('REPLICA_DESTINATION_HAS_UNSYNCED_WRITES');
+  if (pending.count && !options.allowQuarantinedWrites) throw new Error('REPLICA_DESTINATION_HAS_UNSYNCED_WRITES');
   const label = (name:string) => "'"+name.replace(/'/g,"''")+"'";
   // One source statement snapshot; JSON text never passes through JS number parsing.
   const [snapshot] = await source(`WITH timezone AS MATERIALIZED(SELECT set_config('TimeZone','UTC',true))
@@ -107,21 +131,35 @@ export async function refreshReplicaContents(source: Query, target: Query) {
   } catch(error) { await target('ROLLBACK'); throw error; }
 }
 
-export async function syncReplicaJournal(source: Query, target: Query) {
-  const events = await source(`WITH transactions AS (
+export async function pendingReplicaEvents(source: Query) {
+  return source(`WITH transactions AS (
     SELECT transaction_id,min(sequence) AS first_sequence FROM ggl_replica.outbox
     WHERE delivered_at IS NULL GROUP BY transaction_id ORDER BY min(sequence) LIMIT 20)
-    SELECT o.id::text,o.table_name,o.operation,o.old_row::text,o.new_row::text
+    SELECT o.sequence::text,o.transaction_id::text,o.id::text,o.table_name,o.operation,o.old_row::text,o.new_row::text
     FROM ggl_replica.outbox o JOIN transactions t USING(transaction_id)
     WHERE o.delivered_at IS NULL ORDER BY o.sequence`);
+}
+export async function syncReplicaJournal(source: Query, target: Query, selectedEvents?: Row[]) {
+  const events = selectedEvents || await pendingReplicaEvents(source);
   if (!events.length) return { delivered: 0 };
-  const tables = new Map((await replicaTables(target)).map(t => [t.name,t]));
   await target('BEGIN');
   try {
     await target('SELECT pg_advisory_xact_lock(714033921)');
     await target("SELECT set_config('ggl_replica.apply','on',true)");
     await target("SET LOCAL TIME ZONE 'UTC'");
     await target('SET CONSTRAINTS ALL DEFERRED');
+    await applyReplicaEvents(target,events);
+    await target('COMMIT');
+  } catch(error) { await target('ROLLBACK'); throw error; }
+  // Acknowledgement follows the destination commit. A failed acknowledgement merely
+  // replays the batch; the unique applied-event IDs prevent duplicate application.
+  await source('UPDATE ggl_replica.outbox SET delivered_at=clock_timestamp() WHERE id=ANY($1::uuid[])',[events.map(e=>e.id)]);
+  return { delivered: events.length };
+}
+
+// Caller must hold a database transaction and set ggl_replica.apply before applying.
+export async function applyReplicaEvents(target: Query, events: Row[]) {
+  const tables = new Map((await replicaTables(target)).map(t => [t.name,t]));
     for (const event of events) {
       const table = tables.get(event.table_name);
       if (!table) throw new Error('REPLICA_SCHEMA_MISMATCH');
@@ -149,10 +187,4 @@ export async function syncReplicaJournal(source: Query, target: Query) {
         if (verified?.matches !== true) throw new Error('REPLICA_EVENT_VERIFICATION_FAILED');
       } else if (event.operation !== 'DELETE') throw new Error('REPLICA_UNKNOWN_OPERATION');
     }
-    await target('COMMIT');
-  } catch(error) { await target('ROLLBACK'); throw error; }
-  // Acknowledgement follows the destination commit. A failed acknowledgement merely
-  // replays the batch; the unique applied-event IDs prevent duplicate application.
-  await source('UPDATE ggl_replica.outbox SET delivered_at=clock_timestamp() WHERE id=ANY($1::uuid[])',[events.map(e=>e.id)]);
-  return { delivered: events.length };
 }

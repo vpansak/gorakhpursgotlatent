@@ -1,3 +1,4 @@
+import { withWorkflow } from 'workflow/next';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ['bcryptjs', '@resvg/resvg-js'],
@@ -30,4 +31,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withWorkflow(nextConfig);

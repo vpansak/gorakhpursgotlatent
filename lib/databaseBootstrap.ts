@@ -44,9 +44,9 @@ export async function bootstrapReplica(source: Query, target: Query) {
   if (Object.values(counts[0] || {}).some(count => Number(count) > 20000)) throw new Error('SOURCE_TOO_LARGE_FOR_ONLINE_COPY');
   const snapshot = await source(`WITH timezone AS MATERIALIZED (SELECT set_config('TimeZone','UTC',true))
     SELECT jsonb_build_object(${tables.map(t => `${literal(t.name)},(SELECT jsonb_build_object(
-      'rows',COALESCE(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text),'[]'::jsonb),
+      'rowsText',COALESCE(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text),'[]'::jsonb)::text,
       'count',count(*),'digest',md5(COALESCE(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text),'[]'::jsonb)::text))
-      FROM public.${ident(t.name)} r)`).join(',')}) AS data FROM timezone`);
+      FROM public.${ident(t.name)} r CROSS JOIN timezone)`).join(',')}) AS data FROM timezone`);
   const data = snapshot[0]?.data;
   if (!data) throw new Error('SOURCE_SNAPSHOT_FAILED');
   await target('BEGIN');
@@ -80,11 +80,15 @@ export async function bootstrapReplica(source: Query, target: Query) {
       await target(`REVOKE ALL ON TABLE public.${ident(table.name)} FROM anon, authenticated`);
       await target(`ALTER TABLE public.${ident(table.name)} ENABLE ROW LEVEL SECURITY`);
       const columns = table.columns.filter((c: Row) => !c.generated).map((c: Row) => ident(c.name)).join(',');
-      const rows = data[table.name]?.rows;
-      if (!Array.isArray(rows)) throw new Error('SOURCE_SNAPSHOT_INCOMPLETE');
-      for (let offset = 0; offset < rows.length; offset += 100) {
+      const rowsText = data[table.name]?.rowsText;
+      const count = Number(data[table.name]?.count);
+      if (typeof rowsText !== 'string' || !Number.isInteger(count) || count < 0) throw new Error('SOURCE_SNAPSHOT_INCOMPLETE');
+      if (count > 20000) throw new Error('SOURCE_TOO_LARGE_FOR_ONLINE_COPY');
+      if (count) {
+        // Preserve PostgreSQL's JSON text verbatim: parsing/stringifying in JS rounds
+        // bigint values and changes JSON numeric scales (e.g. 799.00 becomes 799).
         await target(`INSERT INTO public.${ident(table.name)} (${columns}) OVERRIDING SYSTEM VALUE
-          SELECT ${columns} FROM jsonb_populate_recordset(NULL::public.${ident(table.name)},$1::jsonb)`, [JSON.stringify(rows.slice(offset, offset + 100))]);
+          SELECT ${columns} FROM jsonb_populate_recordset(NULL::public.${ident(table.name)},$1::jsonb)`, [rowsText]);
       }
     }
     for (const c of constraints) await target(`ALTER TABLE public.${ident(c.table_name)} ADD CONSTRAINT ${ident(c.name)} ${c.definition}`);
@@ -118,7 +122,12 @@ export async function bootstrapReplica(source: Query, target: Query) {
         md5(COALESCE(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text),'[]'::jsonb)::text) AS digest
         FROM public.${ident(table.name)} r`);
       const expected = data[table.name];
-      if (Number(actual.count) !== Number(expected.count) || actual.digest !== expected.digest) throw new Error('COPY_VERIFICATION_FAILED');
+      if (Number(actual.count) !== Number(expected.count) || actual.digest !== expected.digest) {
+        throw Object.assign(new Error('COPY_VERIFICATION_FAILED'), { verification: {
+          table: table.name, expectedRows: Number(expected.count), actualRows: Number(actual.count),
+          mismatch: Number(actual.count) !== Number(expected.count) ? 'ROW_COUNT' : 'CONTENT',
+        } });
+      }
       verified.push({ table: table.name, count: Number(actual.count) });
     }
     await target('COMMIT');

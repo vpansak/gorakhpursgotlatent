@@ -36,7 +36,9 @@ export async function POST(request: Request) {
   } catch (error) {
     const message = error instanceof Error ? error.message : '';
     const known = new Set(['SOURCE_SCHEMA_NOT_READY', 'UNSUPPORTED_TABLE_STRUCTURE', 'CUSTOM_DATABASE_LOGIC_REQUIRES_MIGRATION', 'SOURCE_TOO_LARGE_FOR_ONLINE_COPY', 'SOURCE_SNAPSHOT_FAILED', 'DESTINATION_NOT_EMPTY', 'INVALID_SEQUENCE', 'INVALID_SEQUENCE_TYPE', 'UNSUPPORTED_GENERATED_COLUMN', 'SOURCE_SNAPSHOT_INCOMPLETE', 'VIEW_MIGRATION_FAILED', 'COPY_VERIFICATION_FAILED', 'INVALID_DESTINATION']);
-    return NextResponse.json({ success: false, code: known.has(message) ? message : 'COPY_FAILED', error: 'Baseline copy did not complete. Neon was not modified; automatic switching remains off.' }, { status: 409, headers });
+    const detail = (error as { verification?: { table: string; expectedRows: number; actualRows: number; mismatch: string } })?.verification;
+    const verification = message === 'COPY_VERIFICATION_FAILED' && detail ? { table: detail.table, expectedRows: detail.expectedRows, actualRows: detail.actualRows, mismatch: detail.mismatch } : undefined;
+    return NextResponse.json({ success: false, code: known.has(message) ? message : 'COPY_FAILED', verification, error: 'Baseline copy did not complete. Neon was not modified; automatic switching remains off.' }, { status: 409, headers });
   } finally {
     client?.release();
     if (pool) await pool.end().catch(() => {});

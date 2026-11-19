@@ -56,3 +56,37 @@ test('copy failure rolls the destination back to empty', async () => {
     assert.equal((await f.read('SELECT count(*) AS count FROM performer_applications'))[0].count, 1);
   } finally { await Promise.all([f.source.close(), f.target.close()]); }
 });
+test('preserves nested JSON numbers above JavaScript safe range and decimal scale', async () => {
+  const f = await fixtures();
+  try {
+    await f.source.exec(`UPDATE performer_applications SET answers='{"reference":9007199254740993,"fee":799.00,"scores":[8.0,7.50]}'::jsonb`);
+    await bootstrapReplica(f.read, f.write);
+    assert.deepEqual(await f.write('SELECT answers::text FROM performer_applications'), await f.read('SELECT answers::text FROM performer_applications'));
+  } finally { await Promise.all([f.source.close(), f.target.close()]); }
+});
+test('copy verifies timestamps even when source session uses another timezone', async () => {
+  const f = await fixtures();
+  try {
+    await f.source.exec("SET TIME ZONE 'Asia/Kolkata'");
+    await bootstrapReplica(f.read, f.write);
+    assert.deepEqual(await f.write('SELECT extract(epoch FROM created_at)::text AS instant FROM performer_applications'), await f.read('SELECT extract(epoch FROM created_at)::text AS instant FROM performer_applications'));
+  } finally { await Promise.all([f.source.close(), f.target.close()]); }
+});
+test('content mismatch still aborts and reports only table/count metadata', async () => {
+  const f = await fixtures();
+  try {
+    const corrupt = async (sql,p) => {
+      const rows = await f.write(sql,p);
+      if (sql.includes('AS digest') && sql.includes('FROM public."performer_applications"')) rows[0].digest = 'deliberate mismatch';
+      return rows;
+    };
+    await assert.rejects(bootstrapReplica(f.read, corrupt), error => {
+      assert.equal(error.message,'COPY_VERIFICATION_FAILED');
+      assert.equal(error.verification.table,'performer_applications');
+      assert.equal(error.verification.mismatch,'CONTENT');
+      assert.equal(error.verification.expectedRows,1);
+      return true;
+    });
+    assert.equal((await f.write("SELECT count(*) AS count FROM pg_tables WHERE schemaname='public'"))[0].count,0);
+  } finally { await Promise.all([f.source.close(), f.target.close()]); }
+});

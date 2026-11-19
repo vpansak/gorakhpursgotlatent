@@ -4,7 +4,8 @@ import { neon } from '@neondatabase/serverless';
 import { Pool } from 'pg';
 import { installReplicaJournal,refreshReplicaContents } from './replicaJournal';
 import { SUPABASE_ROOT_CA } from './supabaseTls';
-export async function prepareReplica() {
+export async function prepareReplica(options:{beforeResume?:(source:(sql:string,params?:any[])=>Promise<any[]>,target:(sql:string,params?:any[])=>Promise<any[]>)=>Promise<void>}={}) {
+let managed=false;
 let pool:Pool|undefined,client:any;
 try{
   if(!process.env.DATABASE_URL||!process.env.SUPABASE_DATABASE_URL||!process.env.BLOB_READ_WRITE_TOKEN)throw new Error('CONFIGURATION_MISSING');
@@ -28,8 +29,9 @@ try{
     if(!lease.valid) throw new Error('PREPARE_PAUSE_EXPIRED');
     if(pending.length) await query('UPDATE ggl_replica.outbox SET delivered_at=clock_timestamp() WHERE id=ANY($1::uuid[])',[pending.map(row=>row.id)]);
     delivered=pending.length;
+    if(options.beforeResume){await options.beforeResume(query,target);managed=true;}
   } finally {
-    await query("UPDATE ggl_replica.node SET mode='LEGACY',pause_until=NULL WHERE singleton=true");
+    if(!managed)await query("UPDATE ggl_replica.node SET mode='LEGACY',pause_until=NULL WHERE singleton=true");
   }
   await query('UPDATE ggl_replica.node SET ready=true WHERE singleton=true');
   await target('UPDATE ggl_replica.node SET ready=true WHERE singleton=true');

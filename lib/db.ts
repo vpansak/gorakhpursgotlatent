@@ -1,3 +1,4 @@
+import { managedRecoveryReady, executeManagedQuery } from './recoveryRuntime';
 import { startReplicaWorker } from './startReplicaWorker';
 import { neon } from '@neondatabase/serverless';
 import { archiveReplicaEvents } from './replicaMirror';
@@ -44,13 +45,18 @@ function withTimeout<T>(promise: Promise<T>, ms: number = 10000): Promise<T> {
  * Executes queries using stateless HTTP client with automatic retry logic for transient errors
  */
 async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], retries = 2, strict = false): Promise<T[]> {
+  const normalized = normalizeSql(sqlText);
+  if (await managedRecoveryReady()) {
+    const rows=await executeManagedQuery(normalized,params);
+    if(!/^\s*(SELECT|SHOW|EXPLAIN)\b/i.test(normalized))scheduleReplicaMirror();
+    return rows as T[];
+  }
   const client = getSqlClient();
   if (!client) {
     if (strict) throw new Error("Database is not configured");
     return [];
   }
 
-  const normalized = normalizeSql(sqlText);
   const durableWrite = process.env.GGL_REPLICA_SYNC_ENABLED === '1' && !/^\s*(SELECT|SHOW|EXPLAIN)\b/i.test(normalized);
   // Never blindly replay a mutation whose first commit may already have happened.
   if (durableWrite) {
@@ -107,6 +113,7 @@ export interface AppDatabase {
  * Ensures all required PostgreSQL tables exist in Neon DB
  */
 export async function ensureDatabaseSchema() {
+  if (await managedRecoveryReady()) return;
   if (global._isSchemaReady) return;
   if (global._schemaInitPromise) return global._schemaInitPromise;
 
@@ -488,6 +495,7 @@ export async function query<T = any>(sql: string, params: any[] = []): Promise<T
     await ensureDatabaseSchema();
     return await executeWithRetry<T>(sql, params);
   } catch (err) {
+    if(process.env.GGL_RECOVERY_ENABLED === '1') throw err;
     if(process.env.GGL_REPLICA_SYNC_ENABLED === '1' && !/^\s*(SELECT|SHOW|EXPLAIN)\b/i.test(sql)) throw err;
     console.warn('db.query notice:', err);
     return [];

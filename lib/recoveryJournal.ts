@@ -43,6 +43,7 @@ export function createRecoveryJournal(store: Store, options: { now?:()=>number; 
     const etag=await store.cas(rootPath,state,current.etag);
     return {owner,state,etag} as Lease;
   }
+  async function renew(lease:Lease) {await update(lease,{...lease.state,lease:{owner:lease.owner,expires:now()+leaseMs}});}
   async function begin(lease:Lease,intent:unknown) {
     if(lease.state.status!=='READY') throw new Error('JOURNAL_NOT_READY');
     if(lease.state.pending) throw new Error('JOURNAL_PENDING_RECOVERY_REQUIRED');
@@ -120,5 +121,5 @@ export function createRecoveryJournal(store: Store, options: { now?:()=>number; 
     for(let i=1;i<requested.length;i++) if(requested[i].sequence!==requested[i-1].sequence+1) throw new Error('JOURNAL_SEQUENCE_GAP');
     return requested;
   }
-  return {read,initialize,acquire,begin,touch,commit,markSynced,activate,release,entriesAfter,assertLease,abortTouch,abortIntent,switchActive};
+  return {read,initialize,acquire,begin,touch,commit,markSynced,activate,release,entriesAfter,assertLease,renew,abortTouch,abortIntent,switchActive};
 }

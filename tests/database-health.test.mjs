@@ -6,6 +6,7 @@ function setup({ role = 'ADMIN', password = 'test', fail, source = [], destinati
   const calls = [];
   let closed = false;
   const route = load('app/api/malik/database-health/route.ts', {
+    '@/lib/recoveryRuntime':{managedRecoveryReady:async()=>false},
     'next/server': { NextResponse: { json: (body, init) => Response.json(body, init) } },
     '@/lib/auth': { getSession: async () => role ? { role } : null },
     '@/lib/supabaseTls': load('lib/supabaseTls.ts', {}),

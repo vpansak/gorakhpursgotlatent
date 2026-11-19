@@ -1,3 +1,7 @@
+import { activateRecovery } from '@/lib/activateRecovery';
+import { recoveryRuntime,managedRecoveryReady } from '@/lib/recoveryRuntime';
+import { createRecoveryCoordinator } from '@/lib/recoveryCoordinator';
+import { getRun } from 'workflow/api';
 import { timingSafeEqual } from 'node:crypto';
 import { prepareReplica } from '@/lib/prepareReplica';
 import { neon } from '@neondatabase/serverless';
@@ -13,7 +17,32 @@ export async function POST(request: Request) {
   if (!secret || Buffer.byteLength(secret)!==Buffer.byteLength(supplied) || !timingSafeEqual(Buffer.from(secret),Buffer.from(supplied))) return Response.json({error:'Unauthorized'},{status:403,headers});
   const body=await request.json().catch(()=>null);
   try {
+    if(body?.action==='activate')return Response.json({success:true,...await activateRecovery()},{headers});
+    if(body?.action==='status'){
+      const managed=await managedRecoveryReady();
+      const recovery=managed?await recoveryRuntime().coordinator.recover():null;
+      const runId=await startReplicaWorker('status');
+      return Response.json({success:true,managed,automaticSyncEnabled:process.env.GGL_REPLICA_SYNC_ENABLED==='1',automaticFailoverEnabled:managed,recovery,runId,workerStatus:await getRun(runId).status},{headers});
+    }
     if(body?.action==='prepare') return Response.json({success:true,...await prepareReplica()},{headers});
+    if(body?.action==='managed-self-test') {
+      if(!await managedRecoveryReady())throw new Error('MANAGED_ROUTING_NOT_ACTIVE');
+      const runtime=recoveryRuntime();
+      const results=[];
+      for(const unavailable of ['neon','supabase'] as const) {
+        const unavailableNode=new Proxy(runtime.nodes[unavailable],{get(target,key){if(key==='name'||key==='decodeRows')return target[key];return async()=>{throw new Error('Isolated outage simulation');};}});
+        const nodes={...runtime.nodes,[unavailable]:unavailableNode};
+        const test=createRecoveryCoordinator(runtime.journal,nodes,runtime.store);
+        const key='__ggl_recovery_test_'+crypto.randomUUID();
+        await test.write(`DO $test$ BEGIN INSERT INTO settings(key,value) VALUES('${key}','recovery-test'); DELETE FROM settings WHERE key='${key}'; END $test$`);
+        const active=(await runtime.journal.read()).state.active;
+        const rows=await runtime.coordinator.read('SELECT count(*)::int AS count FROM settings WHERE key=$1',[key]);
+        if(rows[0].count!==0||active===unavailable)throw new Error('MANAGED_TEST_FAILED');
+        await runtime.coordinator.recover();
+        results.push({unavailable,storedOn:active,adminReadVerified:true,testRecordPersisted:false});
+      }
+      return Response.json({success:true,tests:results,recovery:await runtime.coordinator.recover(),automaticFailoverEnabled:true},{headers});
+    }
     if(body?.action==='self-test') {
       const source=neon(process.env.DATABASE_URL!);
       const key='__ggl_replica_test_'+crypto.randomUUID();
@@ -32,6 +61,7 @@ export async function POST(request: Request) {
       return Response.json({success:true,captureVerified:true,privateArchiveVerified:true,targetDeliveryVerified:true,testRecordPersisted:false,runId,automaticFailoverEnabled:false},{headers});
     }
     if(body?.action==='sync') {
+      if(await managedRecoveryReady())return Response.json({success:true,automaticFailoverEnabled:true,...await recoveryRuntime().coordinator.recover()},{headers});
       const runId=await startReplicaWorker('operator-'+crypto.randomUUID());
       return Response.json({success:true,runId,...await runReplicaMirror(10),automaticSyncEnabled:process.env.GGL_REPLICA_SYNC_ENABLED==='1',automaticFailoverEnabled:false},{headers});
     }

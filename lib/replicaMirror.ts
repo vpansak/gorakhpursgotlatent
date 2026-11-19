@@ -22,6 +22,8 @@ export async function archiveReplicaEvents(events:Record<string,any>[]) {
 export async function runReplicaMirror(maxBatches=3) {
   if(mirrorWork)return mirrorWork;
   mirrorWork=(async()=>{
+    const manifest=await recoveryJournalStore().read('ggl-recovery/control.json');
+    if(manifest?.value.status==='READY')return {delivered:0,pending:0};
     if(!process.env.DATABASE_URL||!process.env.SUPABASE_DATABASE_URL)throw new Error('REPLICA_NOT_CONFIGURED');
     const source=neon(process.env.DATABASE_URL);
     const query=async(sql:string,params:any[]=[])=>await source.query(sql,params);

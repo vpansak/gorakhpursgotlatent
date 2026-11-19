@@ -26,8 +26,8 @@ export default function DatabaseSetupPage() {
     <h1 className="text-3xl font-bold">Database recovery setup</h1>
     <p className="text-slate-300">Check database connections and the current synchronization configuration. Initial copy is only for an empty destination.</p>
     <div className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-5">
-      <p className="font-bold text-amber-200">{result?.automaticSyncEnabled ? 'Automatic Neon → Supabase sync enabled. Automatic switching is off.' : 'Check connections to see the current sync configuration. Automatic switching is off.'}</p>
-      <p className="mt-2 text-sm">New applications and admin reads currently use Neon. When synchronization is enabled, pending changes retry in the background. Database switching requires a separate recovery setup.</p>
+      <p className="font-bold text-amber-200">{result?.automaticFailoverEnabled ? 'Automatic recovery and synchronization enabled between Neon and Supabase.' : result?.automaticSyncEnabled ? 'Automatic Neon → Supabase sync enabled. Automatic switching is off.' : 'Check connections to see the current sync configuration.'}</p>
+      <p className="mt-2 text-sm">{result?.automaticFailoverEnabled ? `Applications and admin reads use the same active database: ${result.activeDatabase || 'see status'}. Committed changes are retained in the private recovery journal and retried in the background.` : 'New applications and admin reads currently use Neon. Pending changes retry in the background when synchronization is enabled.'}</p>
     </div>
     <div className="flex flex-wrap gap-4">
       <button disabled={busy} onClick={() => run(false)} className="rounded-xl border border-slate-500 px-5 py-3 font-bold disabled:opacity-50">Check connections</button>

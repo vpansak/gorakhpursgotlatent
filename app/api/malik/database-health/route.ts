@@ -1,3 +1,4 @@
+import { managedRecoveryReady,recoveryRuntime } from '@/lib/recoveryRuntime';
 import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
 import { Pool } from 'pg';
@@ -72,13 +73,17 @@ export async function GET() {
     const other = destination.get(`${c.table_name}.${c.column_name}`);
     return !other || other.data_type !== c.data_type || other.is_nullable !== c.is_nullable;
   }).map(c => `${c.table_name}.${c.column_name}`);
+  let recovery:any=null;
+  try {if(await managedRecoveryReady())recovery=(await recoveryRuntime().journal.read()).state;}catch{}
   return NextResponse.json({
     databases: [primary, secondary].map(({ provider, status, columns }) => ({ provider, status, publicTableCount: tables(columns).length })),
     schema: { compared, missingTables: compared ? missingTables : [], differingColumns: compared ? differingColumns : [] },
-    dataCopyVerified: false,
-    automaticFailoverEnabled: false,
+    dataCopyVerified: !!recovery,
+    automaticFailoverEnabled: !!recovery,
+    activeDatabase: recovery?.active || 'neon',
+    recovery: recovery?{head:recovery.head,nodes:recovery.nodes,pendingOperation:!!recovery.pending}:null,
     automaticSyncEnabled: process.env.GGL_REPLICA_SYNC_ENABLED === '1',
-    syncDirection: process.env.GGL_REPLICA_SYNC_ENABLED === '1' ? 'neon_to_supabase' : null,
+    syncDirection: recovery?'bidirectional':process.env.GGL_REPLICA_SYNC_ENABLED === '1' ? 'neon_to_supabase' : null,
     databaseModified: false,
   }, { headers: { 'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff' } });
 }

@@ -188,3 +188,21 @@ export async function applyReplicaEvents(target: Query, events: Row[]) {
       } else if (event.operation !== 'DELETE') throw new Error('REPLICA_UNKNOWN_OPERATION');
     }
 }
+
+export async function alignReplicaSequences(query:Query, tableNames?:string[]) {
+  const sequences=await query(`SELECT c.relname AS table_name,a.attname AS column_name,
+    pg_get_serial_sequence(format('%I.%I',n.nspname,c.relname),a.attname) AS sequence_name
+    FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
+    JOIN pg_attribute a ON a.attrelid=c.oid AND a.attnum>0 AND NOT a.attisdropped
+    WHERE n.nspname='public' AND c.relkind='r'
+    AND pg_get_serial_sequence(format('%I.%I',n.nspname,c.relname),a.attname) IS NOT NULL`);
+  for(const sequence of sequences) {
+    if(tableNames&&!tableNames.includes(sequence.table_name))continue;
+    const [value]=await query(`SELECT max(${quote(sequence.column_name)})::text AS maximum FROM public.${quote(sequence.table_name)}`);
+    if(value.maximum!==null) {
+      const [state]=await query('SELECT last_value::text,increment_by::text FROM pg_sequences WHERE schemaname=$1 AND sequencename=$2',['public',sequence.sequence_name.replace(/^public\./,'').replace(/^\"|\"$/g,'')]);
+      if(Number(state?.increment_by||1)<0)throw new Error('UNSUPPORTED_DESCENDING_SEQUENCE');
+      await query('SELECT setval($1::regclass,GREATEST($2::bigint,$3::bigint),true)',[sequence.sequence_name,value.maximum,state?.last_value||value.maximum]);
+    }
+  }
+}

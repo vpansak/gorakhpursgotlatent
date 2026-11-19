@@ -1,3 +1,6 @@
+import { getHookByToken,start } from 'workflow/api';
+import { HookNotFoundError,HookConflictError } from 'workflow/errors';
+import { retiredLegacyMirrorWorkflow } from '@/workflows/replicaSync';
 import { db } from '@/lib/db';
 import { activateRecovery } from '@/lib/activateRecovery';
 import { recoveryRuntime,managedRecoveryReady } from '@/lib/recoveryRuntime';
@@ -19,6 +22,12 @@ export async function POST(request: Request) {
   const body=await request.json().catch(()=>null);
   try {
     if(body?.action==='activate')return Response.json({success:true,...await activateRecovery()},{headers});
+    if(body?.action==='rotate-worker'){
+      const token='ggl-replica:recovery-v2';
+      try{const hook=await getHookByToken(token);await getRun(hook.runId).cancel();}catch(error){if(!HookNotFoundError.is(error))throw error;}
+      try{await start(retiredLegacyMirrorWorkflow,[],{experimental_hook:{token}});}catch(error){if(!HookConflictError.is(error))throw error;}
+      return Response.json({success:true,runId:await startReplicaWorker('upgrade')},{headers});
+    }
     if(body?.action==='status'){
       const managed=await managedRecoveryReady();
       const state=managed?(await recoveryRuntime().journal.read()).state:null;

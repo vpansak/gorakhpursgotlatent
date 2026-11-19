@@ -50,7 +50,7 @@ export async function directDatabaseDiagnostic() {
         fingerprints.push({ table: tablename, count:Number(result.count),fingerprint:result.fingerprint });
       }
       await connection.query('COMMIT');
-      return { provider, state, ...log, ...pending, currentEpisode, tables: fingerprints };
+      return { provider, state, operations:Number(log.operations),pending:Number(pending.pending),currentEpisode, tables: fingerprints };
     } catch (error) { await connection.query('ROLLBACK').catch(() => {}); throw error; }
     finally { connection.close(); }
   }));

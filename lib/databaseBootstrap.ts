@@ -44,8 +44,8 @@ export async function bootstrapReplica(source: Query, target: Query) {
   if (Object.values(counts[0] || {}).some(count => Number(count) > 20000)) throw new Error('SOURCE_TOO_LARGE_FOR_ONLINE_COPY');
   const snapshot = await source(`WITH timezone AS MATERIALIZED (SELECT set_config('TimeZone','UTC',true))
     SELECT jsonb_build_object(${tables.map(t => `${literal(t.name)},(SELECT jsonb_build_object(
-      'rowsText',COALESCE(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text),'[]'::jsonb)::text,
-      'count',count(*),'digest',md5(COALESCE(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text),'[]'::jsonb)::text))
+      'rowsText',COALESCE(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text COLLATE "C"),'[]'::jsonb)::text,
+      'count',count(*),'digest',md5(COALESCE(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text COLLATE "C"),'[]'::jsonb)::text))
       FROM public.${ident(t.name)} r CROSS JOIN timezone)`).join(',')}) AS data FROM timezone`);
   const data = snapshot[0]?.data;
   if (!data) throw new Error('SOURCE_SNAPSHOT_FAILED');
@@ -119,13 +119,38 @@ export async function bootstrapReplica(source: Query, target: Query) {
     const verified: { table: string; count: number }[] = [];
     for (const table of tables) {
       const [actual] = await target(`SELECT count(*) AS count,
-        md5(COALESCE(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text),'[]'::jsonb)::text) AS digest
+        md5(COALESCE(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text COLLATE "C"),'[]'::jsonb)::text) AS digest
         FROM public.${ident(table.name)} r`);
       const expected = data[table.name];
-      if (Number(actual.count) !== Number(expected.count) || actual.digest !== expected.digest) {
+      let matches = Number(actual.count) === Number(expected.count) && actual.digest === expected.digest;
+      if (!matches && Number(actual.count) === Number(expected.count)) {
+        // A textual digest can differ across PostgreSQL locales/JSON renderers.
+        // EXCEPT ALL verifies the complete row multiset, including duplicates, in both directions.
+        const [comparison] = await target(`WITH expected AS (SELECT value AS row FROM jsonb_array_elements($1::jsonb)),
+          actual AS (SELECT to_jsonb(r) AS row FROM public.${ident(table.name)} r)
+          SELECT NOT EXISTS (SELECT 1 FROM (
+            (SELECT row FROM expected EXCEPT ALL SELECT row FROM actual)
+            UNION ALL (SELECT row FROM actual EXCEPT ALL SELECT row FROM expected)
+          ) differences) AS matches`, [expected.rowsText]);
+        matches = comparison?.matches === true;
+      }
+      if (!matches) {
+        const differingColumns: string[] = [];
+        if (Number(actual.count) === Number(expected.count)) {
+          for (const column of table.columns) {
+            const [comparison] = await target(`WITH expected AS (SELECT value->${literal(column.name)} AS value FROM jsonb_array_elements($1::jsonb)),
+              actual AS (SELECT to_jsonb(r)->${literal(column.name)} AS value FROM public.${ident(table.name)} r)
+              SELECT EXISTS (SELECT 1 FROM (
+                (SELECT value FROM expected EXCEPT ALL SELECT value FROM actual)
+                UNION ALL (SELECT value FROM actual EXCEPT ALL SELECT value FROM expected)
+              ) differences) AS differs`, [expected.rowsText]);
+            if (comparison?.differs === true) differingColumns.push(column.name);
+          }
+        }
         throw Object.assign(new Error('COPY_VERIFICATION_FAILED'), { verification: {
           table: table.name, expectedRows: Number(expected.count), actualRows: Number(actual.count),
           mismatch: Number(actual.count) !== Number(expected.count) ? 'ROW_COUNT' : 'CONTENT',
+          differingColumns,
         } });
       }
       verified.push({ table: table.name, count: Number(actual.count) });

@@ -76,17 +76,39 @@ test('content mismatch still aborts and reports only table/count metadata', asyn
   const f = await fixtures();
   try {
     const corrupt = async (sql,p) => {
-      const rows = await f.write(sql,p);
-      if (sql.includes('AS digest') && sql.includes('FROM public."performer_applications"')) rows[0].digest = 'deliberate mismatch';
-      return rows;
+      if (sql.includes('AS digest') && sql.includes('FROM public."performer_applications"')) await f.write('UPDATE performer_applications SET user_id=NULL');
+      return f.write(sql,p);
     };
     await assert.rejects(bootstrapReplica(f.read, corrupt), error => {
       assert.equal(error.message,'COPY_VERIFICATION_FAILED');
       assert.equal(error.verification.table,'performer_applications');
       assert.equal(error.verification.mismatch,'CONTENT');
       assert.equal(error.verification.expectedRows,1);
+      assert.deepEqual(Array.from(error.verification.differingColumns),['user_id']);
       return true;
     });
     assert.equal((await f.write("SELECT count(*) AS count FROM pg_tables WHERE schemaname='public'"))[0].count,0);
+  } finally { await Promise.all([f.source.close(), f.target.close()]); }
+});
+test('row verification is independent of different source and destination collations', async () => {
+  const f = await fixtures();
+  try {
+    await f.source.exec("INSERT INTO users VALUES ('a','lowercase'),('A','uppercase'),('á','accented'),('B','upper B'),('b','lower B')");
+    const differentCollation = (sql,p) => f.write(sql.includes('COLLATE "C"') ? sql : sql.replaceAll('ORDER BY to_jsonb(r)::text', 'ORDER BY to_jsonb(r)::text COLLATE "und-x-icu"'),p);
+    await bootstrapReplica(f.read,differentCollation);
+  } finally { await Promise.all([f.source.close(), f.target.close()]); }
+});
+test('digest formatting mismatch must pass exact SQL multiset comparison before committing', async () => {
+  const f = await fixtures();
+  let comparisons=0;
+  try {
+    const differentRenderer=async(sql,p)=>{
+      const rows=await f.write(sql,p);
+      if (sql.includes('AS digest')) rows[0].digest='different textual rendering';
+      if (sql.includes('AS matches')) comparisons++;
+      return rows;
+    };
+    await bootstrapReplica(f.read,differentRenderer);
+    assert.equal(comparisons,2);
   } finally { await Promise.all([f.source.close(), f.target.close()]); }
 });

@@ -1,3 +1,4 @@
+import { head } from '@vercel/blob';
 import { getHookByToken,start } from 'workflow/api';
 import { HookNotFoundError,HookConflictError } from 'workflow/errors';
 import { retiredLegacyMirrorWorkflow } from '@/workflows/replicaSync';
@@ -27,6 +28,10 @@ export async function POST(request: Request) {
       try{const hook=await getHookByToken(token);await getRun(hook.runId).cancel();}catch(error){if(!HookNotFoundError.is(error))throw error;}
       try{await start(retiredLegacyMirrorWorkflow,[],{experimental_hook:{token}});}catch(error){if(!HookConflictError.is(error))throw error;}
       return Response.json({success:true,runId:await startReplicaWorker('upgrade')},{headers});
+    }
+    if(body?.action==='journal-diagnostic'){
+      const [document,metadata]=await Promise.all([recoveryRuntime().store.read('ggl-recovery/control.json'),head('ggl-recovery/control.json')]);
+      return Response.json({success:true,readETag:document?.etag,storageETag:metadata.etag,sameETag:document?.etag===metadata.etag,size:metadata.size,head:document?.value.head,pending:!!document?.value.pending},{headers});
     }
     if(body?.action==='status'){
       const managed=await managedRecoveryReady();

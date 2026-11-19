@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
+import { queryPrimaryDatabase } from '@/lib/directDatabase';
 import { getSession } from '@/lib/auth';
 import { BACKUP_GROUPS, BACKUP_RELATED_TABLES, backupCsv, backupZip, fileHash } from '@/lib/episodeBackup';
 
@@ -13,7 +14,7 @@ export async function GET() {
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: 'Database unavailable; no data was changed.' }, { status: 503 });
   try {
     // Deliberately bypass schema/TTL helpers: a backup must never modify or purge records.
-    const sql = neon(process.env.DATABASE_URL);
+    const sql = process.env.GGL_PRIMARY_DATABASE==='supabase'?{query:queryPrimaryDatabase}:neon(process.env.DATABASE_URL);
     const available = await sql.query("SELECT table_name, column_name FROM information_schema.columns WHERE table_schema='public' ORDER BY table_name, ordinal_position");
     const columns = new Map<string, string[]>();
     for (const row of available) columns.set(row.table_name, [...(columns.get(row.table_name) || []), row.column_name]);

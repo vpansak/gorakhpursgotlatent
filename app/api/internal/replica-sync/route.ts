@@ -12,7 +12,7 @@ import { prepareReplica } from '@/lib/prepareReplica';
 import { neon } from '@neondatabase/serverless';
 import { archiveReplicaEvents, verifyReplicaEvents, runReplicaMirror } from '@/lib/replicaMirror';
 import { startReplicaWorker } from '@/lib/startReplicaWorker';
-import { directDatabaseDiagnostic } from '@/lib/directDatabase';
+import { directDatabaseDiagnostic,activateSupabasePrimary } from '@/lib/directDatabase';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -24,6 +24,21 @@ export async function POST(request: Request) {
   const body=await request.json().catch(()=>null);
   try {
     if(body?.action==='direct-diagnostic')return Response.json({success:true,databases:await directDatabaseDiagnostic()},{headers});
+    if(body?.action==='supabase-cutover'){
+      for(const token of ['ggl-replica:neon-mirror-v1','ggl-replica:recovery-v2','ggl-replica:recovery-v3','ggl-replica:recovery-v4','ggl-replica:recovery-v5','ggl-replica:recovery-v6']){
+        try{const hook=await getHookByToken(token);await getRun(hook.runId).cancel();}catch(error){if(!HookNotFoundError.is(error))throw error;}
+        try{await start(retiredLegacyMirrorWorkflow,[],{experimental_hook:{token}});}catch(error){if(!HookConflictError.is(error))throw error;}
+      }
+      return Response.json({success:true,...await activateSupabasePrimary()},{headers});
+    }
+    if(process.env.GGL_PRIMARY_DATABASE==='supabase'){
+      if(body?.action==='admin-read-test'){
+        const rows=await db.queryStrict('SELECT count(*)::int AS performers FROM performer_applications');
+        return Response.json({success:true,sharedAdminReadVerified:true,performers:rows[0].performers,activeDatabase:'supabase'},{headers});
+      }
+      if(body?.action==='status')return Response.json({success:true,activeDatabase:'supabase',automaticSyncEnabled:false,automaticFailoverEnabled:false},{headers});
+      return Response.json({error:'Supabase is the primary database. Legacy replication actions are disabled.'},{status:409,headers});
+    }
     if(body?.action==='activate')return Response.json({success:true,...await activateRecovery()},{headers});
     if(body?.action==='rotate-worker'){
       for(const token of ['ggl-replica:recovery-v2','ggl-replica:recovery-v3','ggl-replica:recovery-v4','ggl-replica:recovery-v5']) {

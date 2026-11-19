@@ -38,6 +38,7 @@ export default function DatabaseSetupPage() {
       <p className="font-bold">{unknown?(busy?'Checking the current recovery status…':'Recovery status has not been verified.'):enabled?'Automatic sync and failover are enabled.':health.automaticSyncEnabled?'Automatic synchronization is configured; automatic switching is not enabled.':'Automatic synchronization is not enabled.'}</p>
       {health?.recoveryStatus==='UNAVAILABLE'&&<p className="mt-2 text-amber-200">Recovery status could not be verified. Refresh to check again; this does not mean switching has been disabled.</p>}
       {enabled&&<p className="mt-2 text-sm">Applications and admin reads use the same active database: <strong>{health.activeDatabase}</strong>. Committed changes are retained in the private recovery journal.</p>}
+      {health?.recoveryStatus==='SUPABASE_PRIMARY'&&<p className="mt-2 text-sm">Supabase is the primary database for applications, payments and admin reads. Neon is retained as the previous copy. Automatic switching is disabled; application saves do not depend on Vercel Blob.</p>}
     </div>
     <button disabled={busy} onClick={()=>void refresh()} className="rounded-xl border border-slate-500 px-5 py-3 font-bold disabled:opacity-50">{busy?'Checking…':'Refresh status'}</button>
     {error&&<p role="alert" className="rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-red-200">{error}</p>}

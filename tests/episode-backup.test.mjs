@@ -22,6 +22,6 @@ test('all eight categories are present and only team and talent trip are retaine
  assert.deepEqual(Array.from(backup.BACKUP_GROUPS.filter(g=>g.keepOnWebsite),g=>g.table).sort(),['ggl_talent_trip_registrations','team_applications']);
 });
 test('unauthenticated backup requests return before reading any database',async()=>{
- const route=load('app/api/malik/episode-backup/route.ts',{'next/server':{NextResponse:{json:(body,init)=>Response.json(body,init)}},'@neondatabase/serverless':{neon:()=>{throw Error('Must not access DB')}},'@/lib/auth':{getSession:async()=>null},'@/lib/episodeBackup':backup,process:{env:{}}});
+ const route=load('app/api/malik/episode-backup/route.ts',{'next/server':{NextResponse:{json:(body,init)=>Response.json(body,init)}},'@neondatabase/serverless':{neon:()=>{throw Error('Must not access DB')}},'@/lib/directDatabase':{queryPrimaryDatabase:async()=>{throw new Error('Unexpected primary call');}},'@/lib/auth':{getSession:async()=>null},'@/lib/episodeBackup':backup,process:{env:{}}});
  assert.equal((await route.GET()).status,403);
 });

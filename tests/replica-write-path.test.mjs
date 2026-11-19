@@ -6,6 +6,7 @@ function fixture(failArchive=false){
   const client={query(sql,params){const promise=Promise.resolve([]);promise.sql=sql;promise.params=params;return promise;},async transaction(queries){state.transactions++;assert.match(queries[1].sql,/transaction_id=txid_current/);return[[{app_id:'new-app'}],[{id:'event',new_row:'full details'}]];}};
   const db=load('lib/db.ts',{
     './recoveryRuntime':{managedRecoveryReady:async()=>false,executeManagedQuery:async()=>{throw new Error('Unexpected managed call');}},
+    './directDatabase':{queryPrimaryDatabase:async()=>{throw new Error('Unexpected primary call');}},
     './startReplicaWorker':{startReplicaWorker:async()=> 'test-run'},
     '@neondatabase/serverless':{neon:()=>client},
     './replicaMirror':{archiveReplicaEvents:async(events)=>{assert.equal(events.length,1);if(failArchive)throw new Error('archive offline');state.archived=true;}},
@@ -25,6 +26,7 @@ test('managed application saves and admin reads use shared routing even when Neo
   const calls=[];
   const database=load('lib/db.ts',{
     './recoveryRuntime':{managedRecoveryReady:async()=>true,executeManagedQuery:async(sql,params)=>{calls.push({sql,params});return [{app_id:'managed-app'}];}},
+    './directDatabase':{queryPrimaryDatabase:async()=>{throw new Error('Unexpected primary call');}},
     './startReplicaWorker':{startReplicaWorker:async()=> 'run'},
     '@neondatabase/serverless':{neon:()=>{throw new Error('Must not use Neon directly');}},
     './replicaMirror':{archiveReplicaEvents:async()=>{}},

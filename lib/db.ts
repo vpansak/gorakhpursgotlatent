@@ -3,10 +3,12 @@ import { startReplicaWorker } from './startReplicaWorker';
 import { neon } from '@neondatabase/serverless';
 import { archiveReplicaEvents } from './replicaMirror';
 import { scheduleReplicaMirror } from './scheduleReplicaMirror';
+import { queryPrimaryDatabase } from './directDatabase';
 
 let sqlClientInstance: any = null;
 
 function getSqlClient() {
+  if (process.env.GGL_PRIMARY_DATABASE === 'supabase') return { query: queryPrimaryDatabase };
   const url = process.env.DATABASE_URL;
   if (!url) {
     console.warn('⚠️ DATABASE_URL environment variable is not configured.');
@@ -46,6 +48,9 @@ function withTimeout<T>(promise: Promise<T>, ms: number = 10000): Promise<T> {
  */
 async function executeWithRetry<T = any>(sqlText: string, params: any[] = [], retries = 2, strict = false): Promise<T[]> {
   const normalized = normalizeSql(sqlText);
+  // A single primary avoids the suspended external journal. Never retry an
+  // uncertain mutation or silently return an empty successful submission.
+  if (process.env.GGL_PRIMARY_DATABASE === 'supabase') return await queryPrimaryDatabase(normalized, params) as T[];
   if (await managedRecoveryReady()) {
     const rows=await executeManagedQuery(normalized,params);
     if(!/^\s*(SELECT|SHOW|EXPLAIN)\b/i.test(normalized))scheduleReplicaMirror();
@@ -113,6 +118,9 @@ export interface AppDatabase {
  * Ensures all required PostgreSQL tables exist in Neon DB
  */
 export async function ensureDatabaseSchema() {
+  // The primary cutover verifies the existing schema. Do not run legacy Neon
+  // bootstrap/seed statements on an already populated production database.
+  if (process.env.GGL_PRIMARY_DATABASE === 'supabase') return;
   if (await managedRecoveryReady()) return;
   if (global._isSchemaReady) return;
   if (global._schemaInitPromise) return global._schemaInitPromise;
@@ -495,6 +503,7 @@ export async function query<T = any>(sql: string, params: any[] = []): Promise<T
     await ensureDatabaseSchema();
     return await executeWithRetry<T>(sql, params);
   } catch (err) {
+    if(process.env.GGL_PRIMARY_DATABASE === 'supabase') throw err;
     if(process.env.GGL_RECOVERY_ENABLED === '1') throw err;
     if(process.env.GGL_REPLICA_SYNC_ENABLED === '1' && !/^\s*(SELECT|SHOW|EXPLAIN)\b/i.test(sql)) throw err;
     console.warn('db.query notice:', err);

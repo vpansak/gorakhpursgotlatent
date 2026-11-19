@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   if (request.headers.get('origin') !== new URL(request.url).origin) return NextResponse.json({ error: 'Same-origin request required.' }, { status: 403, headers });
   const body = await request.json().catch(() => null);
   if (body?.action !== 'copy-baseline-to-empty-supabase') return NextResponse.json({ error: 'Invalid action.' }, { status: 400, headers });
-  if(process.env.GGL_REPLICA_SYNC_ENABLED==='1'||process.env.GGL_RECOVERY_ENABLED==='1') return NextResponse.json({success:false,code:'INITIAL_COPY_DISABLED',error:'Initial copy is disabled because synchronization is already configured. Refresh database status. No existing data was changed.'},{status:409,headers});
+  if(process.env.GGL_PRIMARY_DATABASE==='supabase'||process.env.GGL_REPLICA_SYNC_ENABLED==='1'||process.env.GGL_RECOVERY_ENABLED==='1') return NextResponse.json({success:false,code:'INITIAL_COPY_DISABLED',error:'Initial copy is disabled because the destination is in use. Refresh database status. No existing data was changed.'},{status:409,headers});
   const sourceUrl = process.env.DATABASE_URL;
   const targetUrl = process.env.SUPABASE_DATABASE_URL;
   if (!sourceUrl || !targetUrl) return NextResponse.json({ error: 'Database configuration is incomplete.' }, { status: 503, headers });

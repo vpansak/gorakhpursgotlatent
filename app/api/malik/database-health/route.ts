@@ -75,17 +75,19 @@ export async function GET() {
   }).map(c => `${c.table_name}.${c.column_name}`);
   let recovery:any=null;
   let recoveryStatus='NOT_ENABLED';
-  try {if(await managedRecoveryReady()){recovery=(await recoveryRuntime().journal.read()).state;recoveryStatus='READY';}}catch{recoveryStatus='UNAVAILABLE';}
+  const singlePrimary=process.env.GGL_PRIMARY_DATABASE==='supabase';
+  if(singlePrimary)recoveryStatus='SUPABASE_PRIMARY';
+  else try {if(await managedRecoveryReady()){recovery=(await recoveryRuntime().journal.read()).state;recoveryStatus='READY';}}catch{recoveryStatus='UNAVAILABLE';}
   return NextResponse.json({
     databases: [primary, secondary].map(({ provider, status, columns }) => ({ provider, status, publicTableCount: tables(columns).length })),
     schema: { compared, missingTables: compared ? missingTables : [], differingColumns: compared ? differingColumns : [] },
     dataCopyVerified: !!recovery,
     automaticFailoverEnabled: recoveryStatus==='UNAVAILABLE'?null:!!recovery,
     recoveryStatus,
-    activeDatabase: recovery?.active || (recoveryStatus==='UNAVAILABLE'?null:'neon'),
+    activeDatabase: singlePrimary?'supabase':recovery?.active || (recoveryStatus==='UNAVAILABLE'?null:'neon'),
     recovery: recovery?{head:recovery.head,nodes:recovery.nodes,pendingOperation:!!recovery.pending}:null,
-    automaticSyncEnabled: process.env.GGL_REPLICA_SYNC_ENABLED === '1',
-    syncDirection: recovery?'bidirectional':process.env.GGL_REPLICA_SYNC_ENABLED === '1' ? 'neon_to_supabase' : null,
+    automaticSyncEnabled: !singlePrimary&&process.env.GGL_REPLICA_SYNC_ENABLED === '1',
+    syncDirection: singlePrimary?null:recovery?'bidirectional':process.env.GGL_REPLICA_SYNC_ENABLED === '1' ? 'neon_to_supabase' : null,
     databaseModified: false,
   }, { headers: { 'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff' } });
 }

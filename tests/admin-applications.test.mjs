@@ -47,6 +47,7 @@ test('database outage returns an error instead of a successful empty list', asyn
 });
 test('strict database access rejects missing configuration', async () => {
   const database = load('lib/db.ts', { './recoveryRuntime':{managedRecoveryReady:async()=>false,executeManagedQuery:async()=>{throw new Error('Unexpected managed call');}},
+    './directDatabase':{queryPrimaryDatabase:async()=>{throw new Error('Unexpected primary call');}},
     './startReplicaWorker':{startReplicaWorker:async()=> 'test-run'},
     '@neondatabase/serverless': { neon: () => { throw new Error('Unexpected connection'); } }, './replicaMirror':{archiveReplicaEvents:async()=>{}},'./scheduleReplicaMirror':{scheduleReplicaMirror:()=>{}} });
   await assert.rejects(database.queryStrict('SELECT 1'), /not configured/);

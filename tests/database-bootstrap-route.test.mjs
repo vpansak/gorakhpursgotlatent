@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { load } from './helpers/load.mjs';
 
-function setup({role = 'ADMIN', failure} = {}) {
+function setup({role = 'ADMIN', failure,syncEnabled=false} = {}) {
   const state = { connected: 0, copied: 0, released: false, closed: false };
   const route = load('app/api/malik/database-bootstrap/route.ts', {
     'next/server': { NextResponse: { json: (data, init) => Response.json(data, init) } },
@@ -14,7 +14,7 @@ function setup({role = 'ADMIN', failure} = {}) {
       async connect() {state.connected++; return {query:async()=>({rows:[]}),release:()=>{state.released=true;}};}
       async end() {state.closed=true;}
     } },
-  }, {process:{env:{DATABASE_URL:'postgresql://user:test@neon.example/db', SUPABASE_DATABASE_URL:'postgresql://postgres:test@aws-0-test.pooler.supabase.com:6543/postgres'}}});
+  }, {process:{env:{GGL_REPLICA_SYNC_ENABLED:syncEnabled?'1':undefined,DATABASE_URL:'postgresql://user:test@neon.example/db', SUPABASE_DATABASE_URL:'postgresql://postgres:test@aws-0-test.pooler.supabase.com:6543/postgres'}}});
   return {route,state};
 }
 const request = (origin = 'https://www.gkpgotlatent.in') => new Request('https://www.gkpgotlatent.in/api/malik/database-bootstrap', {method:'POST',headers:{origin,'Content-Type':'application/json'},body:JSON.stringify({action:'copy-baseline-to-empty-supabase'})});
@@ -30,4 +30,10 @@ test('successful bootstrap releases connection and returns no credentials',async
 });
 test('failed bootstrap closes connection and hides raw database errors',async()=>{
   const {route,state}=setup({failure:new Error('password-secret SQL user@example.com')});const r=await route.POST(request());assert.equal(r.status,409);assert.ok(state.released&&state.closed);assert.doesNotMatch(await r.text(),/password-secret|user@example/);
+});
+
+test('configured synchronization blocks obsolete copy before database connections or changes',async()=>{
+ const {route,state}=setup({syncEnabled:true});const response=await route.POST(request());
+ assert.equal(response.status,409);const data=await response.json();assert.equal(data.code,'INITIAL_COPY_DISABLED');
+ assert.doesNotMatch(data.error,/switching remains off/);assert.equal(state.connected,0);assert.equal(state.copied,0);
 });

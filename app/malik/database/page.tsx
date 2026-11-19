@@ -1,41 +1,58 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback,useEffect,useState } from 'react';
 import Link from 'next/link';
 
+type Health={
+  databases:{provider:string;status:string;publicTableCount:number}[];
+  automaticFailoverEnabled:boolean|null;
+  automaticSyncEnabled:boolean;
+  activeDatabase:string|null;
+  recoveryStatus?:string;
+  recovery:{head:number;nodes:Record<string,{applied:number;dirty:boolean}>;pendingOperation:boolean}|null;
+};
 export default function DatabaseSetupPage() {
-  const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<Record<string, any> | null>(null);
-  const [error, setError] = useState('');
-  async function run(copy: boolean) {
-    if (busy) return;
-    setBusy(true); setError(''); setResult(null);
+  const [busy,setBusy]=useState(true);
+  const [health,setHealth]=useState<Health|null>(null);
+  const [error,setError]=useState('');
+  const refresh=useCallback(async(signal?:AbortSignal)=>{
+    setBusy(true);setError('');
     try {
-      const response = await fetch(copy ? '/api/malik/database-bootstrap' : '/api/malik/database-health', copy ? {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'copy-baseline-to-empty-supabase' }),
-      } : { cache: 'no-store' });
-      const data = await response.json();
-      setResult(data);
-      if (!response.ok) setError(data.error || 'This step could not complete.');
-    } catch {
-      setError('Connection interrupted. Check connections before retrying the copy; do not clear either database.');
-    } finally { setBusy(false); }
-  }
+      const response=await fetch('/api/malik/database-health',{cache:'no-store',signal});
+      const data=await response.json();
+      if(!response.ok)throw new Error(data.error||'Could not load current database status.');
+      if(!signal?.aborted)setHealth(data);
+    }catch(cause){
+      if(!signal?.aborted)setError(cause instanceof Error?cause.message:'Could not load current database status.');
+    }finally{if(!signal?.aborted)setBusy(false);}
+  },[]);
+  useEffect(()=>{const controller=new AbortController();void refresh(controller.signal);return()=>controller.abort();},[refresh]);
+  const enabled=health?.automaticFailoverEnabled===true;
+  const unknown=!health||health.recoveryStatus==='UNAVAILABLE';
+  const pending=health?.recovery?Math.max(0,...Object.values(health.recovery.nodes).map(node=>health.recovery!.head-node.applied)):null;
   return <main className="mx-auto max-w-4xl space-y-6 px-5 py-12 text-slate-100">
     <Link href="/malik" className="text-amber-300">← Admin dashboard / login</Link>
-    <h1 className="text-3xl font-bold">Database recovery setup</h1>
-    <p className="text-slate-300">Check database connections and the current synchronization configuration. Initial copy is only for an empty destination.</p>
-    <div className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-5">
-      <p className="font-bold text-amber-200">{result?.automaticFailoverEnabled ? 'Automatic recovery and synchronization enabled between Neon and Supabase.' : result?.automaticSyncEnabled ? 'Automatic Neon → Supabase sync enabled. Automatic switching is off.' : 'Check connections to see the current sync configuration.'}</p>
-      <p className="mt-2 text-sm">{result?.automaticFailoverEnabled ? `Applications and admin reads use the same active database: ${result.activeDatabase || 'see status'}. Committed changes are retained in the private recovery journal and retried in the background.` : 'New applications and admin reads currently use Neon. Pending changes retry in the background when synchronization is enabled.'}</p>
+    <h1 className="text-3xl font-bold">Database sync status</h1>
+    <p className="text-slate-300">Current Neon and Supabase recovery status. This page checks status without copying or changing application records.</p>
+    <div className={`rounded-xl border p-5 ${enabled?'border-emerald-400/30 bg-emerald-400/10':'border-amber-400/30 bg-amber-400/10'}`}>
+      <p className="font-bold">{unknown?(busy?'Checking the current recovery status…':'Recovery status has not been verified.'):enabled?'Automatic sync and failover are enabled.':health.automaticSyncEnabled?'Automatic synchronization is configured; automatic switching is not enabled.':'Automatic synchronization is not enabled.'}</p>
+      {health?.recoveryStatus==='UNAVAILABLE'&&<p className="mt-2 text-amber-200">Recovery status could not be verified. Refresh to check again; this does not mean switching has been disabled.</p>}
+      {enabled&&<p className="mt-2 text-sm">Applications and admin reads use the same active database: <strong>{health.activeDatabase}</strong>. Committed changes are retained in the private recovery journal.</p>}
     </div>
-    <div className="flex flex-wrap gap-4">
-      <button disabled={busy} onClick={() => run(false)} className="rounded-xl border border-slate-500 px-5 py-3 font-bold disabled:opacity-50">Check connections</button>
-      <button disabled={busy || result?.automaticSyncEnabled} onClick={() => run(true)} className="rounded-xl bg-amber-400 px-5 py-3 font-bold text-black disabled:opacity-50">Copy and verify initial data</button>
-    </div>
-    {busy && <p role="status">Working… Keep this page open. A complete copy can take several minutes.</p>}
-    {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-red-200">{error}</p>}
-    {result?.success && <p role="status" className="text-emerald-300">Initial copy verified. Ongoing sync and automatic failover still require setup.</p>}
-    {result && <pre className="max-h-[34rem] overflow-auto whitespace-pre-wrap break-words rounded-xl bg-slate-900 p-5 text-sm">{JSON.stringify(result, null, 2)}</pre>}
+    <button disabled={busy} onClick={()=>void refresh()} className="rounded-xl border border-slate-500 px-5 py-3 font-bold disabled:opacity-50">{busy?'Checking…':'Refresh status'}</button>
+    {error&&<p role="alert" className="rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-red-200">{error}</p>}
+    {health&&<>
+      <div className="grid gap-4 sm:grid-cols-2">{health.databases.map(database=>{
+        const node=health.recovery?.nodes[database.provider];
+        const caughtUp=!!node&&!node.dirty&&node.applied===health.recovery!.head;
+        return <section key={database.provider} className="rounded-xl border border-slate-700 bg-slate-900 p-5">
+          <h2 className="text-xl font-bold capitalize">{database.provider}{health.activeDatabase===database.provider?' · Active':''}</h2>
+          <p className={database.status==='CONNECTED'?'mt-2 text-emerald-300':'mt-2 text-amber-300'}>{database.status}</p>
+          {node&&<p className="mt-2">{caughtUp?'Caught up':'Recovery pending'} · Sequence {node.applied} / {health.recovery!.head}</p>}
+        </section>;
+      })}</div>
+      {pending!==null&&<p role="status">Pending journal positions: <strong>{pending}</strong>{health.recovery?.pendingOperation?' · A save is being recovered.':''}</p>}
+      <details className="rounded-xl border border-slate-700 p-4"><summary className="cursor-pointer">Technical status</summary><pre className="mt-4 max-h-96 overflow-auto whitespace-pre-wrap break-words text-sm">{JSON.stringify(health,null,2)}</pre></details>
+    </>}
   </main>;
 }

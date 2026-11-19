@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { load } from './helpers/load.mjs';
 
-function setup({ role = 'ADMIN', password = 'test', fail, source = [], destination = [] } = {}) {
+function setup({ role = 'ADMIN', password = 'test', fail, source = [], destination = [],recovery=null,recoveryFailure=false } = {}) {
   const calls = [];
   let closed = false;
   const route = load('app/api/malik/database-health/route.ts', {
-    '@/lib/recoveryRuntime':{managedRecoveryReady:async()=>false},
+    '@/lib/recoveryRuntime':{managedRecoveryReady:async()=>{if(recoveryFailure)throw new Error('journal unavailable');return !!recovery;},recoveryRuntime:()=>({journal:{read:async()=>({state:recovery})}})},
     'next/server': { NextResponse: { json: (body, init) => Response.json(body, init) } },
     '@/lib/auth': { getSession: async () => role ? { role } : null },
     '@/lib/supabaseTls': load('lib/supabaseTls.ts', {}),
@@ -53,4 +53,14 @@ test('rejects leftover password placeholder', async () => {
   const data = await (await route.GET()).json();
   assert.equal(data.databases[1].status, 'INVALID_CONNECTION_STRING');
   assert.equal(calls.length, 1);
+});
+
+test('health reports active managed routing without confusing it with bootstrap status',async()=>{
+ const recovery={active:'supabase',head:63,nodes:{neon:{applied:63,dirty:false},supabase:{applied:63,dirty:false}},pending:null};
+ const {route}=setup({recovery});const data=await(await route.GET()).json();
+ assert.equal(data.automaticFailoverEnabled,true);assert.equal(data.activeDatabase,'supabase');assert.equal(data.recoveryStatus,'READY');assert.equal(data.recovery.head,63);
+});
+test('unavailable journal is unknown rather than a false disabled status',async()=>{
+ const {route}=setup({recoveryFailure:true});const data=await(await route.GET()).json();
+ assert.equal(data.automaticFailoverEnabled,null);assert.equal(data.activeDatabase,null);assert.equal(data.recoveryStatus,'UNAVAILABLE');
 });

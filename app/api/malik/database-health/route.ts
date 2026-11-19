@@ -74,13 +74,15 @@ export async function GET() {
     return !other || other.data_type !== c.data_type || other.is_nullable !== c.is_nullable;
   }).map(c => `${c.table_name}.${c.column_name}`);
   let recovery:any=null;
-  try {if(await managedRecoveryReady())recovery=(await recoveryRuntime().journal.read()).state;}catch{}
+  let recoveryStatus='NOT_ENABLED';
+  try {if(await managedRecoveryReady()){recovery=(await recoveryRuntime().journal.read()).state;recoveryStatus='READY';}}catch{recoveryStatus='UNAVAILABLE';}
   return NextResponse.json({
     databases: [primary, secondary].map(({ provider, status, columns }) => ({ provider, status, publicTableCount: tables(columns).length })),
     schema: { compared, missingTables: compared ? missingTables : [], differingColumns: compared ? differingColumns : [] },
     dataCopyVerified: !!recovery,
-    automaticFailoverEnabled: !!recovery,
-    activeDatabase: recovery?.active || 'neon',
+    automaticFailoverEnabled: recoveryStatus==='UNAVAILABLE'?null:!!recovery,
+    recoveryStatus,
+    activeDatabase: recovery?.active || (recoveryStatus==='UNAVAILABLE'?null:'neon'),
     recovery: recovery?{head:recovery.head,nodes:recovery.nodes,pendingOperation:!!recovery.pending}:null,
     automaticSyncEnabled: process.env.GGL_REPLICA_SYNC_ENABLED === '1',
     syncDirection: recovery?'bidirectional':process.env.GGL_REPLICA_SYNC_ENABLED === '1' ? 'neon_to_supabase' : null,

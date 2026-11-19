@@ -8,9 +8,10 @@ function setup({ role = 'ADMIN', password = 'test', fail, source = [], destinati
   const route = load('app/api/malik/database-health/route.ts', {
     'next/server': { NextResponse: { json: (body, init) => Response.json(body, init) } },
     '@/lib/auth': { getSession: async () => role ? { role } : null },
+    '@/lib/supabaseTls': load('lib/supabaseTls.ts', {}),
     '@neondatabase/serverless': { neon: () => ({ query: async sql => { calls.push(sql); return source; } }) },
     pg: { Pool: class {
-      constructor(config) { assert.equal(config.ssl.rejectUnauthorized, true); }
+      constructor(config) { assert.equal(config.ssl.rejectUnauthorized, true); assert.match(config.ssl.ca, /BEGIN CERTIFICATE/); }
       async query(sql) { calls.push(sql); if (fail) throw fail; return { rows: destination }; }
       async end() { closed = true; }
     } },
@@ -41,6 +42,10 @@ test('never leaks credentials or underlying error messages', async () => {
   const data = await (await route.GET()).text();
   assert.match(data, /AUTHENTICATION_FAILED/);
   assert.doesNotMatch(data, /SECRET|password@|private.host/);
+  const result = JSON.parse(data);
+  assert.equal(result.schema.compared, false);
+  assert.deepEqual(result.schema.missingTables, []);
+  assert.deepEqual(result.schema.differingColumns, []);
 });
 test('rejects leftover password placeholder', async () => {
   const { route, calls } = setup({ password: '[YOUR-PASSWORD]' });

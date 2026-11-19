@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
 import { Pool } from 'pg';
 import { getSession } from '@/lib/auth';
+import { SUPABASE_ROOT_CA } from '@/lib/supabaseTls';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -40,7 +41,8 @@ async function inspect(provider: 'neon' | 'supabase') {
     } else {
       // Enforce certificate verification rather than silently disabling TLS checks.
       ['sslmode', 'sslcert', 'sslkey', 'sslrootcert'].forEach(key => url.searchParams.delete(key));
-      pool = new Pool({ connectionString: url.toString(), ssl: { rejectUnauthorized: true }, max: 1, connectionTimeoutMillis: 8000, query_timeout: 10000, statement_timeout: 8000, idleTimeoutMillis: 1000 });
+      const ca = process.env.SUPABASE_CA_CERT?.replace(/\\n/g, '\n') || SUPABASE_ROOT_CA;
+      pool = new Pool({ connectionString: url.toString(), ssl: { ca, rejectUnauthorized: true }, max: 1, connectionTimeoutMillis: 8000, query_timeout: 10000, statement_timeout: 8000, idleTimeoutMillis: 1000 });
       query = pool.query(catalog).then(result => result.rows);
     }
     const columns = await Promise.race([query, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error('Connection check timeout')), 12000); })]);
@@ -60,6 +62,7 @@ export async function GET() {
     return NextResponse.json({ error: 'Admin login required.' }, { status: 403, headers: { 'Cache-Control': 'private, no-store' } });
   }
   const [primary, secondary] = await Promise.all([inspect('neon'), inspect('supabase')]);
+  const compared = primary.status === 'CONNECTED' && secondary.status === 'CONNECTED';
   const tables = (columns: Record<string, string>[]) => [...new Set(columns.map(c => c.table_name))];
   const sourceTables = tables(primary.columns);
   const destinationTables = tables(secondary.columns);
@@ -71,7 +74,7 @@ export async function GET() {
   }).map(c => `${c.table_name}.${c.column_name}`);
   return NextResponse.json({
     databases: [primary, secondary].map(({ provider, status, columns }) => ({ provider, status, publicTableCount: tables(columns).length })),
-    schema: { compared: primary.status === 'CONNECTED' && secondary.status === 'CONNECTED', missingTables, differingColumns },
+    schema: { compared, missingTables: compared ? missingTables : [], differingColumns: compared ? differingColumns : [] },
     dataCopyVerified: false,
     automaticFailoverEnabled: false,
     automaticSyncEnabled: false,

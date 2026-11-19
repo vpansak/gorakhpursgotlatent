@@ -21,7 +21,8 @@ export async function POST(request: Request) {
     if(body?.action==='activate')return Response.json({success:true,...await activateRecovery()},{headers});
     if(body?.action==='status'){
       const managed=await managedRecoveryReady();
-      const recovery=managed?await recoveryRuntime().coordinator.recover():null;
+      const state=managed?(await recoveryRuntime().journal.read()).state:null;
+      const recovery=state?{active:state.active,head:state.head,nodes:state.nodes,pendingOperation:!!state.pending,writerBusy:!!state.lease&&state.lease.expires>Date.now(),leaseExpires:state.lease?.expires}:null;
       const runId=await startReplicaWorker('status');
       return Response.json({success:true,managed,automaticSyncEnabled:process.env.GGL_REPLICA_SYNC_ENABLED==='1',automaticFailoverEnabled:managed,recovery,runId,workerStatus:await getRun(runId).status},{headers});
     }
@@ -73,7 +74,9 @@ export async function POST(request: Request) {
     }
     return Response.json({error:'Invalid action'},{status:400,headers});
   } catch(error) {
-    console.error('Replica operation failed',{code:(error as {code?:string})?.code || 'REPLICA_OPERATION_FAILED'});
-    return Response.json({success:false,code:'REPLICA_OPERATION_FAILED',automaticFailoverEnabled:false},{status:503,headers});
+    const message=(error as Error)?.message||'';
+    const code=/^[A-Z][A-Z0-9_]{2,80}$/.test(message)?message:String((error as {code?:string})?.code||'REPLICA_OPERATION_FAILED');
+    console.error('Replica operation failed',{code,errorType:(error as Error)?.name});
+    return Response.json({success:false,code},{status:503,headers});
   }
 }

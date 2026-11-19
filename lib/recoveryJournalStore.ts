@@ -8,7 +8,7 @@ export function recoveryJournalStore() {
   return {
     async read(name: string) {
       // An eventually cached routing decision is unsafe. Always read origin storage.
-      const result = await get(path(name), { access: 'private', useCache: false, headers: { 'accept-encoding':'identity', 'cache-control':'no-cache, no-store' } });
+      const result = await get(path(name), { access: 'private', useCache: false, abortSignal: AbortSignal.timeout(15000), headers: { 'accept-encoding':'identity', 'cache-control':'no-cache, no-store' } });
       if (!result) return null;
       if (result.statusCode !== 200 || !result.stream) throw new Error('JOURNAL_READ_FAILED');
       return { value: JSON.parse(await new Response(result.stream).text()), etag: result.blob.etag };

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "schedules": {
+    "ggl-meta-hourly": {
+      "schedule": "0 * * * *",
+      "timezone": "Asia/Kolkata",
+      "jitter": 15,
+      "path": "/api/meta/process",
+      "requestMethod": "POST"
+    }
+  }
+}

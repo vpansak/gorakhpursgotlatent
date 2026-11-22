@@ -12,13 +12,20 @@ export async function openDirectDatabase(provider: Provider) {
     if (!allowed) throw new Error('INVALID_DATABASE_HOST');
     ['sslmode', 'sslcert', 'sslkey', 'sslrootcert'].forEach(key => url.searchParams.delete(key));
     pools[provider] = new Pool({ connectionString: url.toString(), ssl: provider === 'supabase' ? { ca: SUPABASE_ROOT_CA, rejectUnauthorized: true } : { rejectUnauthorized: true }, max: 4, connectionTimeoutMillis: 10000, statement_timeout: 45000, query_timeout: 50000, idleTimeoutMillis: 5000, allowExitOnIdle: true });
+    // Idle clients can fail after the request has released them. pg removes
+    // these clients automatically; a listener prevents an uncaught process error.
+    pools[provider]!.on('error', error => {
+      const rawCode = String((error as { code?: string }).code || '');
+      console.warn('Database idle connection closed', { provider, code: /^[A-Z0-9_]{1,40}$/.test(rawCode) ? rawCode : 'CONNECTION_ERROR' });
+    });
   }
   const client = await pools[provider]!.connect();
-  return { query: async (sql: string, params: any[] = []) => (await client.query(sql, params)).rows, close: () => client.release() };
+  return { query: async (sql: string, params: any[] = []) => (await client.query(sql, params)).rows, close: (destroy = false) => client.release(destroy) };
 }
 
 export async function queryPrimaryDatabase(sql: string, params: any[] = []) {
   const connection = await openDirectDatabase('supabase');
+  let discard = false;
   try {
     await connection.query('BEGIN');
     const [state] = await connection.query('SELECT mode FROM ggl_replica.node WHERE singleton=true FOR SHARE');
@@ -26,8 +33,11 @@ export async function queryPrimaryDatabase(sql: string, params: any[] = []) {
     const rows = await connection.query(sql, params);
     await connection.query('COMMIT');
     return rows;
-  } catch (error) { await connection.query('ROLLBACK').catch(() => {}); throw error; }
-  finally { connection.close(); }
+  } catch (error) {
+    try { await connection.query('ROLLBACK'); } catch { discard = true; }
+    throw error;
+  }
+  finally { connection.close(discard); }
 }
 
 export async function directDatabaseDiagnostic() {

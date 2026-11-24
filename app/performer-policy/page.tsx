@@ -4,18 +4,18 @@ import { ChevronLeft, ShieldCheck } from 'lucide-react';
 
 export const metadata = {
   title: "Performer Terms & Conditions | Gorakhpur's Got Latent",
-  description: "Read the application fee, selection, additional charges and refund policy for GGL Episode 2 performer applications.",
+  description: "Read the application fee, selection, additional charges and refund policy for GGL performer applications.",
 };
 
 const sections = [
-  { title: "Episode 2 winner prize — 3× verified participation payment", body: WINNER_PRIZE_SUMMARY + " Example: ₹799 paid and verified → ₹2,397 total winner prize. " + WINNER_PRIZE_DETAILS },
+  { title: "Winner prize — 2× verified participation payment", body: WINNER_PRIZE_SUMMARY + " " + WINNER_PRIZE_DETAILS },
   {
     title: "Previous-episode performers and non-refundable payments",
     body: "If you have performed in any previous GGL episode, you must disclose this to the GGL team before making any payment for a later episode and obtain confirmation that you are eligible to participate again. If a previous-episode performer applies again and pays without this confirmation, and their previous participation is identified after payment, the payment is non-refundable, including if repeat participation is declined. For example, this applies to an Episode 1 performer applying for Episode 2, or an Episode 2 performer applying for Episode 3. No refund will be provided in these circumstances, except where a refund is required by applicable law."
   },
   {
     title: "1. Application form and separate payment links",
-    body: "Submitting the performer audition form is free. If GGL sends you a separate official payment link, review the amount and purpose shown on that page before paying. The current performer payment-link flow is ₹799. Payment does not guarantee shortlisting, selection or a performance slot."
+    body: "Submitting the performer audition form is free. If GGL sends you a separate official payment link, review the amount and purpose shown on that page before paying. After shortlisting, the GGL team decides and communicates the participation amount before payment. Pay only the amount confirmed by the team and displayed on your official payment link. Payment does not guarantee shortlisting, selection or a performance slot."
   },
   {
     title: "2. Selection and shortlisting",
@@ -23,11 +23,11 @@ const sections = [
   },
   {
     title: "3. Additional charges after shortlisting",
-    body: "If an applicant is shortlisted or selected, additional charges may apply for a later stage or a separately offered service, such as participation, a show ticket, training, travel, accommodation or other clearly described arrangements. These are not included in the stated application fee. Any applicable amount, purpose, due date and conditions must be communicated separately before the applicant is asked to pay. Do not assume any additional payment is required unless GGL communicates it through an official channel, and ask for clarification if details are unclear."
+    body: "If an applicant is shortlisted or selected, additional charges may apply for a later stage or a separately offered service, such as participation, a show ticket, training, travel, accommodation or other clearly described arrangements. The audition application is free. Any separately offered service is distinct from the team-confirmed participation payment. Any applicable amount, purpose, due date and conditions must be communicated separately before the applicant is asked to pay. Do not assume any additional payment is required unless GGL communicates it through an official channel, and ask for clarification if details are unclear."
   },
   {
-    title: "4. Non-refundable application fee",
-    body: "Once the stated application payment has been successfully completed and recorded, it is non-refundable because it is charged for application processing/consideration. The fee is not refundable merely because an applicant is not shortlisted, is not selected, changes their mind, does not attend a later stage, or the event date is postponed. This policy does not override any refund or remedy required by applicable law. If you are charged more than once for the same application, or money is debited but the payment/application is not recorded, contact GGL with the payment reference so the transaction can be checked and any confirmed duplicate or failed transaction can be resolved."
+    title: "4. Non-refundable participation payment",
+    body: "The audition application is free. Once the team-confirmed participation payment has been successfully completed and recorded, it is non-refundable, subject to applicable law. The fee is not refundable merely because an applicant is not shortlisted, is not selected, changes their mind, does not attend a later stage, or the event date is postponed. This policy does not override any refund or remedy required by applicable law. If you are charged more than once for the same application, or money is debited but the payment/application is not recorded, contact GGL with the payment reference so the transaction can be checked and any confirmed duplicate or failed transaction can be resolved."
   },
   {
     title: "5. Event date changes or cancellation",
@@ -56,10 +56,10 @@ export default function PerformerPolicyPage() {
             <p className="text-xs font-black uppercase tracking-[0.18em]">Official GGL Policy</p>
           </div>
           <h1 className="mt-4 text-3xl font-black uppercase sm:text-4xl">Performer Terms & Conditions</h1>
-          <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">Gorakhpur's Got Latent (GGL) · Episode 2</p>
+          <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">Gorakhpur's Got Latent (GGL) · Performer participation</p>
           <div className="mt-5 rounded-xl border border-amber-400/30 bg-black/40 p-4">
             <p className="font-extrabold text-amber-200">Important: The audition application form is free.</p>
-            <p className="mt-1 text-sm leading-6 text-slate-200">A separate official performer payment link shows ₹799. Review the displayed amount and the communicated payment conditions before paying.</p>
+            <p className="mt-1 text-sm leading-6 text-slate-200">After shortlisting, the GGL team will decide and communicate your participation amount before payment. Review the amount on your official payment link. The officially declared winner receives a total prize equal to twice their verified participation payment for that episode.</p>
           </div>
         </header>
         <div className="mt-6 space-y-4">
@@ -78,3 +78,4 @@ export default function PerformerPolicyPage() {
     </main>
   );
 }
+

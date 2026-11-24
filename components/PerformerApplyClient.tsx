@@ -177,8 +177,8 @@ export default function PerformerApplyClient() {
 
         <div className="space-y-3 max-w-md mx-auto pt-2">
           {paymentUrl && <>
-            <p className="text-sm text-slate-300">Your personal ₹799 payment link is being emailed to {formData.email}. Please check your inbox and spam folder.</p>
-            <a href={paymentUrl} className="block rounded-xl bg-amber-400 px-6 py-4 text-center font-bold text-black">Pay ₹799 to confirm your seat</a>
+            <p className="text-sm text-slate-300">The GGL team will confirm your participation amount before payment. Review the amount on your official payment link.</p>
+            <a href={paymentUrl} className="block rounded-xl bg-amber-400 px-6 py-4 text-center font-bold text-black">Review official participation payment</a>
           </>}
           <a
             href={generatedWhatsAppUrl}
@@ -350,8 +350,9 @@ export default function PerformerApplyClient() {
             </>
           )}
         </button>
-        <p className="pt-1 text-center text-[10px] leading-relaxed text-slate-400">If shortlisted, you’ll need to pay ₹799 to confirm your participation.</p>
+        <p className="pt-1 text-center text-[10px] leading-relaxed text-slate-400">Applying is free. After shortlisting, the GGL team will decide and communicate the participation amount before payment. The officially declared winner receives a total prize of 2× their verified participation payment for that episode.</p>
     </form>
     </div>
   );
 }
+

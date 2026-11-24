@@ -53,7 +53,7 @@ export default function AfterShortlistPage() {
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-400/15 text-2xl">🏆</div>
             <h2 className="text-xl font-bold">3. Winner ko 2× prize</h2>
             <p className="mt-3 leading-7 text-zinc-300">
-              {WINNER_PRIZE_SUMMARY} Example: ₹799 verified participation payment par total prize ₹1,598. {WINNER_PRIZE_DETAILS}
+              {WINNER_PRIZE_SUMMARY} {WINNER_PRIZE_DETAILS}
             </p>
           </article>
           <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
@@ -88,3 +88,4 @@ export default function AfterShortlistPage() {
     </main>
   );
 }
+

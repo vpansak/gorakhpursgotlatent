@@ -21,8 +21,8 @@ export default function ApplyPage() {
       btnBg: 'bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-black hover:opacity-95',
       btnText: 'APPLY FOR EPISODE 3 AUDITION',
       alertBox: {
-        tag: 'FREE APPLICATION · ₹799 AFTER SHORTLIST',
-        text: 'Applying and submitting your audition clip is FREE. After shortlisting, selected performers will be contacted for the registration process. Shortlisted performers must pay the ₹799 performer registration fee to confirm their participation.',
+        tag: 'FREE APPLICATION · TEAM-CONFIRMED AMOUNT',
+        text: 'Applying and submitting your audition clip is FREE. After shortlisting, selected performers will be contacted for the registration process. The GGL team will decide and communicate the participation amount before payment. Shortlisted performers must pay that confirmed amount through their official payment link.',
       },
     },
     {
@@ -89,7 +89,7 @@ export default function ApplyPage() {
               </strong>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed font-semibold">
-              Apply and submit your performance clip on WhatsApp (<strong className="text-amber-400">+91 8423858424</strong>) <strong className="text-emerald-300">FREE OF CHARGE</strong>. Only after shortlisting, selected performers must pay ₹799 to confirm participation.
+              Apply and submit your performance clip on WhatsApp (<strong className="text-amber-400">+91 8423858424</strong>) <strong className="text-emerald-300">FREE OF CHARGE</strong>. After shortlisting, the GGL team will decide and communicate the participation amount before payment.
             </p>
           </div>
         </div>
@@ -161,3 +161,4 @@ export default function ApplyPage() {
     </div>
   );
 }
+

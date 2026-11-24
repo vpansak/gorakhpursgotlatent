@@ -10,18 +10,18 @@ function fixture(sendResult = {success:true}) {
   return {lib,queries,emails};
 }
 const person={appId:'APP-RAHUL',name:'Rahul <script>',mobile:'9999999999',age:22,instagram:'@rahul',email:'rahul@example.com',paymentUrl:'https://www.gkpgotlatent.in/performer-payment/token-rahul'};
-test('each applicant receives a separate unpredictable official payment link bound to 799',async()=>{
+test('each applicant receives a separate unpredictable official payment link bound to the team-decided amount',async()=>{
   const {lib,queries}=fixture();
-  const a=await lib.createPerformerInvitation('APP-RAHUL'),b=await lib.createPerformerInvitation('APP-ROHIT');
+  const a=await lib.createPerformerInvitation('APP-RAHUL',650),b=await lib.createPerformerInvitation('APP-ROHIT',1250.50);
   assert.notEqual(a,b);assert.match(a,/^https:\/\/www.gkpgotlatent.in\/performer-payment\/[a-f0-9]{48}$/);
   const inserts=queries.filter(([sql])=>sql.startsWith('INSERT'));
   assert.equal(inserts[0][1][1],'APP-RAHUL');assert.equal(inserts[1][1][1],'APP-ROHIT');
-  assert.equal(inserts[0][1][2],799);
+  assert.equal(inserts[0][1][2],650);
 });
 test('email contains applicant fields and personal CTA, safely escapes HTML, uses NitroSend stable retry key',async()=>{
   const {lib,queries,emails}=fixture();await lib.emailPerformerInvitation(person);
   const [to,subject,body,html,key]=emails[0];
-  assert.equal(to,person.email);assert.match(subject,/799/);
+  assert.equal(to,person.email);assert.match(subject,/Received/);assert.ok(!body.includes("799"));
   for(const value of [person.appId,person.mobile,'22','@rahul',person.paymentUrl])assert.ok(body.includes(value));
   assert.ok(html.includes('Rahul &lt;script&gt;'));assert.ok(!html.includes('Rahul <script>'));
   assert.ok(html.includes(`href="${person.paymentUrl}"`));assert.equal(key,'ggl-performer-invitation-APP-RAHUL');
@@ -42,14 +42,14 @@ test('submission without terms or trip fields persists application before email 
   const req=body=>new Request('https://www.gkpgotlatent.in/api/apply/performer',{method:'POST',body:JSON.stringify(body)});
   assert.equal((await route.POST(req({termsAccepted:true,email:'bad'}))).status,400);
   const res=await route.POST(req({fullName:'Rahul',email:person.email,mobile:person.mobile,age:22,instagram:'rahul'}));
-  const json=await res.json();assert.equal(json.success,true);assert.equal(json.paymentUrl,person.paymentUrl);
+  const json=await res.json();assert.equal(json.success,true);assert.equal(json.paymentUrl,undefined);
   assert.equal(sent.length,0);assert.equal(callbacks.length,2);await callbacks[1]();assert.equal(sent[0].email,person.email);
   assert.ok(queries[0][0].includes("'FREE'"));
 });
 test('retry reuses an existing personal payment link instead of creating another',async()=>{
  const queries=[];
  const lib=load('lib/performerInvitation.ts',{'crypto':{randomBytes},'@/lib/db':{db:{queryStrict:async(sql,params)=>{queries.push(sql);return sql.startsWith('SELECT token')?[{token:'existing-personal-token'}]:[];}}},'@/lib/emailjs':{sendNitrosendEmail:async()=>({success:true})}});
- assert.equal(await lib.createPerformerInvitation('existing-app'),'https://www.gkpgotlatent.in/performer-payment/existing-personal-token');
+ assert.equal(await lib.createPerformerInvitation('existing-app',650),'https://www.gkpgotlatent.in/performer-payment/existing-personal-token');
  assert.ok(!queries.some(sql=>sql.startsWith('INSERT')));
 });
 test('submission retry keeps the original application identity returned by the database',async()=>{
@@ -65,5 +65,9 @@ test('submission retry keeps the original application identity returned by the d
   const response=await route.POST(new Request('https://example.test/api/apply/performer',{method:'POST',body:JSON.stringify(body)}));
   assert.equal((await response.json()).appId,'original-application');
  }
- assert.equal(ids[0],ids[1]);assert.deepEqual(sent,['original-application','original-application']);
+ assert.equal(ids[0],ids[1]);assert.deepEqual(sent,[]);
 });
+
+
+test('a team-decided amount is required before creating any payment link', async()=>{const {lib,queries}=fixture();for(const amount of [undefined,0,-1,NaN,Infinity,1000001,1.001])await assert.rejects(lib.createPerformerInvitation('APP',amount));assert.equal(queries.length,0);});
+test('free application acknowledgment has no payment demand or checkout link',()=>{const {lib}=fixture();const message=lib.performerInvitationMessage({...person,paymentUrl:undefined});assert.match(message.body,/application is free/);assert.match(message.body,/team will decide/);assert.ok(!message.html.includes('/performer-payment/'));assert.ok(!message.body.includes('undefined'));});

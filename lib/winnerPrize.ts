@@ -1,6 +1,6 @@
-/** Episode 2 performer prize announcement. Display calculation only; not an automatic payout. */
+/** Performer prize announcement. Display calculation only; not an automatic payout. */
 export const WINNER_PRIZE_MULTIPLIER = 2;
-export const WINNER_PRIZE_SUMMARY = 'Episode 2 ke officially declared winner ko usi episode ke liye apne verified performer participation payment ka 2× total prize milega.';
+export const WINNER_PRIZE_SUMMARY = 'GGL team shortlisting ke baad participation amount decide karke official channel par payment se pehle batayegi. Officially declared winner ko usi episode ke liye apne verified performer participation payment ka 2× total prize milega.';
 export const WINNER_PRIZE_DETAILS = 'Yeh total prize amount hai. Payment karna winner banne ya selection ki guarantee nahi hai. Prize settlement ki process aur timing GGL team official channel par confirm karegi.';
 export function winnerPrizeAmount(amount: number | string): number | null {
   if (typeof amount === 'string' && !/^\d+(\.\d{1,2})?$/.test(amount.trim())) return null;
@@ -9,3 +9,4 @@ export function winnerPrizeAmount(amount: number | string): number | null {
   if (!Number.isFinite(value) || paise <= 0 || !Number.isSafeInteger(paise * WINNER_PRIZE_MULTIPLIER)) return null;
   return paise * WINNER_PRIZE_MULTIPLIER / 100;
 }
+

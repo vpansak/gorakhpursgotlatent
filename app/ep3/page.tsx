@@ -26,7 +26,7 @@ export default function Episode3Page() {
           <h2 className="text-xl font-black text-white">Perform at GGL</h2>
           <p className="mt-2 text-sm leading-6 text-slate-300">Have a unique talent, comedy act, mimicry, magic or an unusual performance? Apply online and share your performance clip with the team.</p>
           <Link href="/apply/performer" className="mt-5 inline-flex rounded-xl border border-amber-400/50 px-5 py-3 font-black text-amber-200">APPLY FOR EPISODE 3 →</Link>
-          <p className="mt-4 text-[11px] leading-5 text-slate-400">Application is free. Shortlisted performers must pay ₹799 to confirm their participation.</p>
+          <p className="mt-4 text-[11px] leading-5 text-slate-400">Application is free. After shortlisting, the GGL team will decide and communicate the participation amount before payment.</p>
         </section>
       </div>
       <p className="mt-8 rounded-xl border border-white/10 bg-white/[.03] p-4 text-sm leading-6 text-slate-400">Episode 3 date, time and venue will be announced through GGL's official website and social channels. Please rely only on official announcements for schedule updates.</p>
@@ -34,3 +34,4 @@ export default function Episode3Page() {
     </article>
   </main>;
 }
+

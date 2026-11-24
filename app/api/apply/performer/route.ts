@@ -1,6 +1,6 @@
 import { notifyPerformerAdmin } from '@/lib/performerAdminNotification';
 import { after, NextResponse } from 'next/server';
-import { createPerformerInvitation, emailPerformerInvitation } from '@/lib/performerInvitation';
+import { emailPerformerInvitation } from '@/lib/performerInvitation';
 
 export const maxDuration = 180;
 import { db } from '@/lib/db';
@@ -80,7 +80,6 @@ export async function POST(req: Request) {
 
     let paymentUrl: string | undefined;
     try {
-      paymentUrl = await createPerformerInvitation(appId);
       const invitation = {appId, email: effectiveEmail, name: effectiveFullName, mobile: effectiveMobile, age: parsedAge, instagram: formattedInstagram, paymentUrl};
       after(async () => {
         try { await emailPerformerInvitation(invitation); }
@@ -95,7 +94,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       paymentUrl,
-      emailStatus: paymentUrl ? 'PENDING' : 'FAILED',
+      emailStatus: 'PENDING',
       message: 'Free application saved successfully.',
       appId,
       status: 'SUBMITTED',
@@ -105,3 +104,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: err.message || 'Submission failed' }, { status: 500 });
   }
 }
+

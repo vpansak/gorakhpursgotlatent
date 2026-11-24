@@ -85,7 +85,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
   const [manualPaymentStatus, setManualPaymentStatus] = useState('PAID');
   const [manualPaymentMethod, setManualPaymentMethod] = useState('');
   const [manualCorrectionReason, setManualCorrectionReason] = useState('');
-  const [manualAmount, setManualAmount] = useState('799');
+  const [manualAmount, setManualAmount] = useState('');
   const [manualReference, setManualReference] = useState('');
   const [manualConfirmed, setManualConfirmed] = useState(false);
   const [manualPaymentError, setManualPaymentError] = useState('');
@@ -94,7 +94,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     setManualPaymentStatus('PAID');
     setManualPaymentMethod(editing ? item.manual_payment_method || '' : '');
     setManualCorrectionReason('');
-    setManualAmount(editing ? String(item.payment_amount) : '799');
+    setManualAmount(editing ? String(item.payment_amount) : '');
     setManualReference(editing ? item.manual_payment_reference || '' : '');
     setManualConfirmed(false);
     setManualPaymentError('');
@@ -1398,7 +1398,7 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
                                 })()
                               )}
                               {activeTab === 'performer' && !isPaid && (
-                                <button onClick={async () => { const waTab = window.open('about:blank', '_blank'); if (!waTab) { window.alert('Please allow pop-ups for this site, then click Get Paid again.'); return; } waTab.document.title = 'Opening WhatsApp…'; waTab.document.body.innerHTML = '<p style="font-family:system-ui;padding:24px">Generating payment link and opening WhatsApp…</p>'; try { const res = await fetch('/api/malik/performer-payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: item.app_id || item.id, amount: 799 }) }); const json = await res.json(); if (!res.ok || !json.success || !json.whatsappUrl) throw new Error(json.error || 'Could not create payment link'); waTab.location.href = json.whatsappUrl; } catch (e: any) { waTab.close(); window.alert(e.message || 'Could not create payment link'); } }} className="mt-2 px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-[10px] font-extrabold inline-flex items-center gap-1.5" title="Create ₹799 payment link and immediately open WhatsApp"><CreditCard className="w-3 h-3" /> Get Paid ₹799</button>
+                                <button onClick={async () => { const enteredAmount = window.prompt('Enter the team-decided participation amount (INR):'); if (enteredAmount === null) return; const amount = Number(enteredAmount); if (!/^\d+(\.\d{1,2})?$/.test(enteredAmount.trim()) || !Number.isFinite(amount) || amount <= 0 || amount > 1000000) { window.alert('Enter a valid amount with up to two decimal places.'); return; } const waTab = window.open('about:blank', '_blank'); if (!waTab) { window.alert('Please allow pop-ups for this site, then click Get Paid again.'); return; } waTab.document.title = 'Opening WhatsApp…'; waTab.document.body.innerHTML = '<p style="font-family:system-ui;padding:24px">Generating payment link and opening WhatsApp…</p>'; try { const res = await fetch('/api/malik/performer-payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ appId: item.app_id || item.id, amount }) }); const json = await res.json(); if (!res.ok || !json.success || !json.whatsappUrl) throw new Error(json.error || 'Could not create payment link'); waTab.location.href = json.whatsappUrl; } catch (e: any) { waTab.close(); window.alert(e.message || 'Could not create payment link'); } }} className="mt-2 px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-[10px] font-extrabold inline-flex items-center gap-1.5" title="Enter participation amount and create payment link"><CreditCard className="w-3 h-3" /> Get Paid</button>
                               )}
                               {activeTab === 'performer' && !isPaid && !['REFUNDED', 'REJECTED_REFUND'].includes(item.status) && item.payment_status !== 'REFUNDED' && (
                                 <button onClick={() => openManualPayment(item)} disabled={markingPaid !== null} className="ml-2 mt-2 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-2.5 py-1.5 text-[10px] font-bold text-emerald-200 disabled:opacity-50" title="Record a scanner / QR payment you have received">{markingPaid === item.app_id ? 'Saving…' : 'Mark as Paid'}</button>
@@ -2022,3 +2022,4 @@ export default function AdminApplicationPortal({ session, initialData }: AdminAp
     </div>
   );
 }
+
